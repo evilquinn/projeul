@@ -1,11 +1,12 @@
 #include <iostream>
 #include "pe27.hpp"
+#include "pe29.hpp"
+#include "pe30.hpp"
 
 
 int main(int argc, char* argv[])
 {
-    pe27 ex27;
-    ex27.run();
-    std::cout << "hello" << std::endl;
+    pe30 ex30;
+    ex30.run();
     return 0;
 }
