@@ -6,4 +6,5 @@ add_executable(projeul main.cpp
                        pe29.cpp
                        pe30.cpp
                        pe31.cpp
-                       pe32.cpp)
+                       pe32.cpp
+                       pe33.cpp)
