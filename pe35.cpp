@@ -12,7 +12,7 @@
 #include <set>
 #include <boost/foreach.hpp>
 
-int num_digits(int n);
+int num_digits(long long unsigned n);
 int cycle_ints(int n);
 
 std::string& pe35::name()
@@ -70,7 +70,7 @@ int cycle_ints(int n)
     return w+(last*(pow(10, num_digits(w))));
 }
 
-int num_digits(int n)
+int num_digits(long long unsigned n)
 {
     int num_digits = 0;
     while(n>0)
