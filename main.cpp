@@ -6,11 +6,12 @@
 #include "pe32.hpp"
 #include "pe33.hpp"
 #include "pe34.hpp"
+#include "pe35.hpp"
 
 
 int main(int argc, char* argv[])
 {
-    pe34 ex34;
-    ex34.run();
+    pe35 ex35;
+    ex35.run();
     return 0;
 }
