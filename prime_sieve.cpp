@@ -16,6 +16,7 @@ prime_sieve::prime_sieve(int max) :
 {
     memset(sieve_, true, sizeof(bool) * (limit_ + 1));
     sieve_[0] = false; // indices represent numbers, 0 isn't prime
+    sieve_[1] = false; // indices represent numbers, 1 isn't prime
 
     calc_primes();
 }

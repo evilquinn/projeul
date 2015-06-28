@@ -39,11 +39,11 @@ void pe37::run()
 
     int total = 0;
 
-    for(int i = 11; i<10000; ++i)
+    for(int i = 11; i<1000000; ++i)
     {
         if( is_trunc_prime(i) )
         {
-            std::cout << i << std::endl;
+            std::cout << i << " wins" << std::endl;
             total += i;
         }
     }
@@ -60,7 +60,8 @@ bool pe37::is_trunc_prime_rtl(int n)
 
     if( n/10 > 0 )
     {
-        return is_trunc_prime_rtl(n%10);
+        int new_n = n/10;
+        return is_trunc_prime_rtl( new_n );
     }
 
     return true;
@@ -75,7 +76,16 @@ bool pe37::is_trunc_prime_ltr(int n)
 
     if( n/10 > 0 )
     {
-        return is_trunc_prime_ltr( n%(int)(pow(10, num_digits(n)-1 )) );
+        int num_digits_n = num_digits(n);
+        int num_digits_new_n = num_digits_n-1;
+        int mod_factor = pow(10, num_digits_new_n );
+        int new_n = n%mod_factor;
+        if(num_digits(new_n) != num_digits_new_n)
+        {
+            //leading zero, chuck
+            return false;
+        }
+        return is_trunc_prime_ltr( new_n );
     }
 
     return true;
