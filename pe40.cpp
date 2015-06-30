@@ -42,32 +42,32 @@ void pe40::run()
             result *= select_digit(n, d == 1 ? 0 : num_digits(n) - (d-1));
             done1 = true;
         }
-        if ( d >= 10 )
+        if ( !done10 && d >= 10 )
         {
             result *= select_digit(n, d == 10 ? 0 : num_digits(n) - (d-10));
             done10 = true;
         }
-        if ( d >= 100 )
+        if ( !done100 && d >= 100 )
         {
             result *= select_digit(n, d == 100 ? 0 : num_digits(n) - (d-100));
             done100 = true;
         }
-        if ( d >= 1000 )
+        if ( !done1000 && d >= 1000 )
         {
             result *= select_digit(n, d == 1000 ? 0 : num_digits(n) - (d-1000));
             done1000 = true;
         }
-        if ( d >= 10000 )
+        if ( !done10000 && d >= 10000 )
         {
             result *= select_digit(n, d == 10000 ? 0 : num_digits(n) - (d-10000));
             done10000 = true;
         }
-        if ( d >= 100000 )
+        if ( !done100000 && d >= 100000 )
         {
             result *= select_digit(n, d == 100000 ? 0 : num_digits(n) - (d-100000));
             done100000 = true;
         }
-        if ( d >= 1000000 )
+        if ( !done1000000 && d >= 1000000 )
         {
             result *= select_digit(n, d == 1000000 ? 0 : num_digits(n) - (d-1000000));
             done1000000 = true;
