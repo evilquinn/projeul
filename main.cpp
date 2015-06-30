@@ -1,4 +1,5 @@
 #include <iostream>
+#include "utils.hpp"
 #include "pe27.hpp"
 #include "pe29.hpp"
 #include "pe30.hpp"
@@ -10,11 +11,14 @@
 #include "pe36.hpp"
 #include "pe37.hpp"
 #include "pe38.hpp"
+#include "pe39.hpp"
+#include "pe40.hpp"
 
 
 int main(int argc, char* argv[])
 {
-    pe38 ex38;
-    ex38.run();
+    pe40 ex;
+    ex.run();
+
     return 0;
 }
