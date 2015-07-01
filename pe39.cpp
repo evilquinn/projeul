@@ -40,13 +40,10 @@ void pe39::run()
             for(int b = a; b < p; ++b)
             {
                 int c_sqrd = pow(a, 2) + pow(b, 2);
-                if ( c_sqrd == c_sqrd%1 )
+                double c = sqrt(c_sqrd);
+                if ( a + b + c == p )
                 {
-                    // c is int!
-                    if ( a + b + sqrt(c_sqrd) == p )
-                    {
-                        ++curr_p_max_sols;
-                    }
+                    ++curr_p_max_sols;
                 }
             }
         }
@@ -57,7 +54,6 @@ void pe39::run()
             p_with_max_sols = p;
         }
     }
-
 
     std::cout << "PE39 " << p_with_max_sols << std::endl;
 }
