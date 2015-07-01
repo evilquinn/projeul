@@ -14,4 +14,5 @@ add_executable(projeul main.cpp
                        pe37.cpp
                        pe38.cpp
                        pe39.cpp
-                       pe40.cpp)
+                       pe40.cpp
+                       pe41.cpp)
