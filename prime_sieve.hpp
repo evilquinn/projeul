@@ -8,20 +8,23 @@
 #ifndef PRIME_SIEVE_HPP_
 #define PRIME_SIEVE_HPP_
 
+#include <stddef.h>
+#include <bitset>
+
 class prime_sieve
 {
 public:
-    prime_sieve(int max);
+    prime_sieve(size_t max);
     virtual ~prime_sieve();
 
     void print();
-    bool is_prime(int n);
+    bool is_prime(size_t n);
 
 private:
     void calc_primes();
 
-    int   limit_;
-    bool* sieve_;
+    size_t   limit_;
+    std::bitset<1000000> sieve_;
 };
 
 #endif /* PRIME_SIEVE_HPP_ */

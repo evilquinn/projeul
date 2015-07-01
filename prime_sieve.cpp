@@ -10,32 +10,34 @@
 #include <string.h>
 #include <iostream>
 
-prime_sieve::prime_sieve(int max) :
+prime_sieve::prime_sieve(size_t max) :
     limit_(max),
-    sieve_(new bool[limit_+1])
+    sieve_()
 {
-    memset(sieve_, true, sizeof(bool) * (limit_ + 1));
-    sieve_[0] = false; // indices represent numbers, 0 isn't prime
-    sieve_[1] = false; // indices represent numbers, 1 isn't prime
+    // set all valid, we'll mark off the ones not prime
+    sieve_.set();
+
+    // 0 and 1 aren't prime
+    sieve_.reset(0);
+    sieve_.reset(1);
 
     calc_primes();
 }
 
 prime_sieve::~prime_sieve()
 {
-    delete[] sieve_;
 }
 
 void prime_sieve::calc_primes()
 {
-    int n = 2;
+    size_t n = 2;
     while ( n < limit_ )
     {
         if ( sieve_[n] )
         {
-            for ( int i = n + n; i < limit_; i += n )
+            for ( size_t i = n + n; i < limit_; i += n )
             {
-                sieve_[i] = false;
+                sieve_.reset(i);
             }
         }
 
@@ -50,7 +52,7 @@ void prime_sieve::calc_primes()
 
 void prime_sieve::print()
 {
-    for ( int i = 1; i < limit_; ++i)
+    for ( size_t i = 1; i < limit_; ++i)
     {
         if ( sieve_[i] )
         {
@@ -59,7 +61,7 @@ void prime_sieve::print()
     }
 }
 
-bool prime_sieve::is_prime(int n)
+bool prime_sieve::is_prime(size_t n)
 {
     if ( n > 0 && n < limit_ )
     {
