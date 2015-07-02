@@ -16,7 +16,7 @@ class pe41 : public pe
 {
 public:
     pe41() :
-        primes_(1000000),
+        primes_(8000000),
         name_("pe41")
     {};
     virtual ~pe41()

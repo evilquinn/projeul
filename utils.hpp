@@ -35,7 +35,7 @@ int num_digits_array(long long unsigned* ints, int ints_size);
  * @return      TRUE if the concatenation of the ints in the array is
  *              pandigital for the supplied range, FALSE otherwise.
  */
-bool is_pandigital_for_range(int start, int end, int* ints, int ints_size);
+bool is_pandigital_for_range(int start, int end, size_t* ints, int ints_size);
 
 
 #endif // UTILS_HPP_

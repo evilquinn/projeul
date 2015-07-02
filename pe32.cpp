@@ -13,9 +13,9 @@
 #include <boost/foreach.hpp>
 
 typedef std::map<int, bool> digit_map;
-bool is_pandigital_for_range(int start, int end, int* ints, int ints_size);
-bool spy_the_digits(int min, int max, int n, digit_map& reqd_digits);
-int len_n(int min);
+bool is_pandigital_for_range(int start, int end, size_t* ints, int ints_size);
+bool spy_the_digits(int min, int max, size_t n, digit_map& reqd_digits);
+int len_n(size_t min);
 
 std::string& pe32::name()
 {
@@ -50,7 +50,7 @@ void pe32::run()
         for(int mier = 1; mier < 10000; ++mier)
         {
             int prod = mand * mier;
-            int nums[] = { mand, mier, prod };
+            size_t nums[] = { mand, mier, prod };
             int full_len = len_n(mand);
             full_len += len_n(mier);
             full_len += len_n(prod);
@@ -71,7 +71,7 @@ void pe32::run()
     std::cout << "PE32 " << total << std::endl;
 }
 
-bool is_pandigital_for_range(int start, int end, int* ints, int ints_size)
+bool is_pandigital_for_range(int start, int end, size_t* ints, int ints_size)
 {
     digit_map reqd_digits;
     // do we add or subtract from start to reach end?
@@ -115,12 +115,12 @@ bool is_pandigital_for_range(int start, int end, int* ints, int ints_size)
     return true;
 }
 
-bool spy_the_digits(int min, int max, int n, digit_map& reqd_digits)
+bool spy_the_digits(int min, int max, size_t n, digit_map& reqd_digits)
 {
-    int left = n;
+    size_t left = n;
     while(left>0)
     {
-        int mod = left%10;
+        size_t mod = left%10;
         if ( mod < min || mod > max )
         {
             // a digit outside the required range
@@ -138,7 +138,7 @@ bool spy_the_digits(int min, int max, int n, digit_map& reqd_digits)
     return true;
 }
 
-int len_n(int n)
+int len_n(size_t n)
 {
     int len = 1;
     while(n>9)

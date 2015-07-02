@@ -10,6 +10,9 @@
 
 #include <stddef.h>
 #include <bitset>
+#include <boost/dynamic_bitset.hpp>
+
+#define PRIME_SIEVE_MAX_PRIME 67000000
 
 class prime_sieve
 {
@@ -24,7 +27,8 @@ private:
     void calc_primes();
 
     size_t   limit_;
-    std::bitset<1000000> sieve_;
+    std::bitset<PRIME_SIEVE_MAX_PRIME> sieve2_;
+    boost::dynamic_bitset<>            sieve_;
 };
 
 #endif /* PRIME_SIEVE_HPP_ */

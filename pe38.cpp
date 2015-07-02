@@ -14,7 +14,7 @@
 #include "utils.hpp"
 #include <stdio.h>
 
-int num_digits_array(long long unsigned* ints, int ints_size);
+int num_digits_array(size_t* ints, int ints_size);
 
 std::string& pe38::name()
 {
@@ -45,14 +45,14 @@ void pe38::run()
     int range_start = 1;
     int range_end   = 9;
     int range       = range_end - range_start + 1;
-    long unsigned i_limit = 10000;
-    for(long unsigned i = 9; i < i_limit; ++i)
+    size_t i_limit = 10000;
+    for(size_t i = 9; i < i_limit; ++i)
     {
         int n_limit = 10;
         for( int n = 2; n < n_limit; ++n)
         {
             int ints[n];
-            long long unsigned lluints[n];
+            size_t lluints[n];
             for(int to_n = 0; to_n < n; ++to_n)
             {
                 ints[to_n] = i*(to_n+1);
@@ -66,7 +66,7 @@ void pe38::run()
 
             if ( is_pandigital_for_range(range_start,
                                          range_end,
-                                         ints,
+                                         lluints,
                                          n) )
             {
                 std::cout << "prod of " << i
@@ -90,7 +90,7 @@ void pe38::run()
     std::cout << "PE38 " << largest << std::endl;
 }
 
-int num_digits_array(long long unsigned* ints, int ints_size)
+int num_digits_array(size_t* ints, int ints_size)
 {
     int total = 0;
     for(int i=0;i<ints_size;++i)

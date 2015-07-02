@@ -30,6 +30,17 @@ void pe41::run()
      * What is the largest n-digit pandigital prime that exists?
      *
      */
+
     int result = 1;
+
+    for(size_t i = 8000000; i>1; --i)
+    {
+        int d = num_digits(i);
+        if( primes_.is_prime(i) && is_pandigital_for_range(1, d, &i, 1) )
+        {
+            result = i;
+            break;
+        }
+    }
     std::cout << "PE41 " << result << std::endl;
 }
