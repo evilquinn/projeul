@@ -19,3 +19,5 @@ add_executable(projeul main.cpp
                        pe41.cpp)
 
 target_link_libraries(projeul prime_sieve)
+
+add_subdirectory(test)
