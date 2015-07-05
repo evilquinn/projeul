@@ -8,29 +8,24 @@ using ::testing::Eq;
 
 class PrimeSieveTest : public ::testing::Test
 {
-protected:
+public:
     PrimeSieveTest(){}
     ~PrimeSieveTest(){}
 
     virtual void SetUp(){}
     virtual void TearDown(){}
+protected:
 };
 
-TEST_F(PrimeSieveTest, constructor_createsEmptyList)
+TEST_F(PrimeSieveTest, testAgainstKnownPrimes)
 {
-    size_t limit = 104730;
+    //size_t limit = 104730;
+    size_t limit = 100;
     prime_sieve primes(limit);
-    std::set<size_t>::iterator past_the_end = known_primes.end();
+    known_primes known;
 
     for(size_t i = 0; i < limit; ++i)
     {
-        if(known_primes.find(i) != past_the_end)
-        {
-            EXPECT_THAT(true, Eq(primes.is_prime(i)));
-        }
-        else
-        {
-            EXPECT_THAT(false, Eq(primes.is_prime(i)));
-        }
+        EXPECT_THAT(known.set().find(i) != known.set().end(), Eq(primes.is_prime(i)));
     }
 }
