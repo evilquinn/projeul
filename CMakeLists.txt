@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 include_directories($ENV{BOOST_ROOT})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -16,7 +18,8 @@ add_executable(projeul main.cpp
                        pe38.cpp
                        pe39.cpp
                        pe40.cpp
-                       pe41.cpp)
+                       pe41.cpp
+                       pe42.cpp)
 
 target_link_libraries(projeul prime_sieve)
 
