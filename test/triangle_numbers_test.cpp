@@ -18,17 +18,12 @@ protected:
 
 TEST_F(TriangleNumbersTest, checkFirstTenTriangleNumbers)
 {
-    size_t terms = 10;
-    triangle_numbers triangles(terms);
+    std::set<size_t> known_triangles = { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 };
+    triangle_numbers triangles(known_triangles.size());
 
-    ASSERT_THAT(true, Eq(triangles.is_triangle(1)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(3)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(6)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(10)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(15)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(21)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(28)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(36)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(45)));
-    ASSERT_THAT(true, Eq(triangles.is_triangle(55)));
+    for(size_t i = 0; i <= 55; ++i)
+    {
+        ASSERT_THAT( known_triangles.find(i) != known_triangles.end(),
+                     Eq(triangles.is_triangle(i))                     );
+    }
 }
