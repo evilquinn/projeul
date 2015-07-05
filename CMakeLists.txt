@@ -22,6 +22,7 @@ add_executable(projeul main.cpp
                        pe41.cpp
                        pe42.cpp)
 
-target_link_libraries(projeul prime_sieve)
+target_link_libraries(projeul prime_sieve
+                              triangle_numbers)
 
 add_subdirectory(test)

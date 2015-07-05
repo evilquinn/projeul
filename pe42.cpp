@@ -36,15 +36,26 @@ void pe42::run()
      * If the word value is a triangle number then we shall call the word a
      * triangle word.
      *
-     * Using ./data/words.txt, a 16K text file containing nearly two-thousand
-     * common English words, how many are triangle words?
+     * Using ./data/pe42_words.txt, a 16K text file containing nearly
+     * two-thousand common English words, how many are triangle words?
      *
      */
 
+    const char* words[] = {
+        // pe42_words.txt is already formatted like an initialiser list,
+        // just get the preprocessor to include the file
+        #include "data/pe42_words.txt"
+    };
+    const size_t num_words = 1786; // I counted the words in the file
+
     size_t result = 0;
-
-    result = word_value_alpha_pos("SKY");
-
+    for(size_t i = 0; i < num_words; ++i)
+    {
+        if( tris_.is_triangle(word_value_alpha_pos(words[i])) )
+        {
+            ++result;
+        }
+    }
 
     std::cout << "PE42 " << result << std::endl;
 }
