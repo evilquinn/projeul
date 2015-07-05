@@ -26,9 +26,8 @@ public:
 private:
     void calc_primes();
 
-    size_t   limit_;
-    std::bitset<PRIME_SIEVE_MAX_PRIME> sieve2_;
-    boost::dynamic_bitset<>            sieve_;
+    size_t                  limit_;
+    boost::dynamic_bitset<> sieve_;
 };
 
 #endif /* PRIME_SIEVE_HPP_ */

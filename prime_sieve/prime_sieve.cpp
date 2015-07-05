@@ -10,20 +10,16 @@
 #include <string.h>
 #include <iostream>
 
-prime_sieve::prime_sieve(size_t max) :
-    limit_(max),
-    sieve2_(),
-    sieve_(max)
+prime_sieve::prime_sieve(size_t limit) :
+    limit_(limit),
+    sieve_(limit)
 {
     // set all valid, we'll mark off the ones not prime
     sieve_.set();
-    sieve2_.set();
 
     // 0 and 1 aren't prime
     sieve_.reset(0);
     sieve_.reset(1);
-    sieve2_.reset(0);
-    sieve2_.reset(1);
 
     std::cout << "Calc'ing all primes from 2 to "
               << limit_
@@ -56,7 +52,7 @@ void prime_sieve::calc_primes()
             // increment, skipping the one's already marked
             ++n;
         }
-        while( !sieve_[n] );
+        while( n < limit_ && !sieve_[n] );
     }
 }
 
