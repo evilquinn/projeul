@@ -20,7 +20,8 @@ add_executable(projeul main.cpp
                        pe39.cpp
                        pe40.cpp
                        pe41.cpp
-                       pe42.cpp)
+                       pe42.cpp
+                       pe43.cpp)
 
 target_link_libraries(projeul prime_sieve
                               triangle_numbers)
