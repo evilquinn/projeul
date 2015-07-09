@@ -1,0 +1,1 @@
+add_library(pentagonal_numbers STATIC pentagonal_numbers.cpp)
