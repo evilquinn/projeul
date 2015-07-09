@@ -153,6 +153,17 @@ void pe43::run()
                                             if(has_subdivisibility_property(
                                                    nums, 10) )
                                             {
+                                                /*std::cout << first
+                                                          << second
+                                                          << third
+                                                          << fourth
+                                                          << fifth
+                                                          << sixth
+                                                          << seventh
+                                                          << eighth
+                                                          << ninth
+                                                          << tenth
+                                                          << std::endl;*/
                                                 result += num_array_to_num(
                                                               nums, 10);
                                             }
@@ -175,11 +186,35 @@ void pe43::run()
 
 bool has_subdivisibility_property(size_t* nums, size_t num_nums)
 {
-    return false;
+    size_t divisors[] = { 1, 2, 3, 5, 7, 11, 13, 17 };
+
+    // foreach triplet of numbers in the nums array, ignoring first digit
+    for(size_t i = 1; i < num_nums - 2; ++i)
+    {
+        // check that the num represented by the triplet is divisible
+        // by the appropriate prime in the range above
+        if( num_array_to_num(nums+i, 3) % divisors[i] != 0)
+        {
+            // if any fail, return false
+            return false;
+        }
+    }
+
+    // all triplets divisible by appropriate divisor
+    return true;
 }
+
+// (probably) only works for single digits nums
 size_t num_array_to_num(size_t* nums, size_t num_nums)
 {
     size_t result = 0;
+
+    // generate the number by adding each digit multiplied by appropriate
+    // power of 10
+    for(size_t i = 0; i < num_nums; ++i)
+    {
+        result += nums[i] * pow(10, num_nums - i - 1);
+    }
 
     return result;
 }
