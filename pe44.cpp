@@ -38,7 +38,41 @@ void pe44::run()
      *
      */
 
-    size_t result = 0;
+    size_t result = (size_t)-1;
+
+    for(size_t j = 0; j < 1000; ++j)
+    {
+        for(size_t k = j + 1; k < 1000; ++k)
+        {
+            //bool diff = true;
+            //bool sum = true;
+            size_t pent_j = pents_.get_term(j);
+            size_t pent_k = pents_.get_term(k);
+
+            size_t pents_diff = pent_k - pent_j;
+            if ( ! pents_.is_pentagonal(pents_diff) )
+            {
+                //diff = false;
+                continue;
+            }
+            size_t pents_sum = pent_j + pent_k;
+            if ( ! pents_.is_pentagonal(pents_sum) )
+            {
+                //sum = false;
+                continue;
+            }
+//            std::cout << "P(" << j << ")=" << pent_j
+//                      << ", and P(" << k << ")=" << pent_k
+//                      << ", sum: " << pents_sum << "(" << sum
+//                      << "), diff: " << pents_diff << "(" << diff << ")"
+//                      << std::endl;
+
+            if ( pents_diff < result )
+            {
+                result = pents_diff;
+            }
+        }
+    }
 
     std::cout << "PE44 " << result << std::endl;
 }

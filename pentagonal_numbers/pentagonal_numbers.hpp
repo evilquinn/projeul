@@ -27,6 +27,7 @@ private:
 
     size_t   num_;
     std::set<size_t> pentagonals_;
+    size_t max_;
 };
 
 #endif /* PENTAGONAL_NUMBERS_HPP_ */

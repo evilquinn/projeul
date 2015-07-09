@@ -9,12 +9,15 @@
 #define PE44_HPP_
 
 #include "pe.hpp"
+#include "pentagonal_numbers/pentagonal_numbers.hpp"
 
+#define PE44_NUM_PENTS 100000
 
 class pe44 : public pe
 {
 public:
     pe44() :
+        pents_(PE44_NUM_PENTS),
         name_("pe44")
     {};
     virtual ~pe44()
@@ -23,6 +26,7 @@ public:
     virtual std::string& name();
     virtual void run();
 private:
+    pentagonal_numbers pents_;
     std::string name_;
 };
 

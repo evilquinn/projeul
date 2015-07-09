@@ -12,11 +12,13 @@
 
 pentagonal_numbers::pentagonal_numbers(size_t num) :
     num_(num),
-    pentagonals_()
+    pentagonals_(),
+    max_()
 {
     std::cout << "Calc'ing the first " << num_ << " pentagonal numbers ... ";
 
     calc_pentagonal_numbers();
+    max_ = get_term(num_-1);
 
     std::cout << "Done." << std::endl;
 }
@@ -50,23 +52,25 @@ size_t pentagonal_numbers::calc_pentagonal_number_for_term(size_t n)
 
 bool pentagonal_numbers::is_pentagonal(size_t n)
 {
-    return pentagonals_.find(n) != pentagonals_.end();
+//    if ( n >= max_ )
+//    {
+//        std::cout << n << " largeqr than max " << max_ << std::endl;
+//        return false;
+//    }
+    bool result = pentagonals_.find(n) != pentagonals_.end();
+    return result;
 }
 
 size_t pentagonal_numbers::get_term(size_t n)
 {
+//    if ( n >= num_ )
+//    {
+//        std::cout << "too high term: " << n << std::endl;
+//        return 0;
+//    }
+
     std::set<size_t>::iterator it = pentagonals_.begin();
-
-    while ( it != pentagonals_.end() && n > 0 )
-    {
-        ++it;
-        --n;
-    }
-
-    if ( it == pentagonals_.end() )
-    {
-        return 0;
-    }
+    std::advance(it, n);
 
     return *it;
 }
