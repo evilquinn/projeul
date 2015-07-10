@@ -11,7 +11,7 @@
 #include "pe.hpp"
 #include "pentagonal_numbers/pentagonal_numbers.hpp"
 
-#define PE44_NUM_PENTS 100000
+#define PE44_NUM_PENTS 1000000
 
 class pe44 : public pe
 {
