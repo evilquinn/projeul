@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <pentagonal_numbers/pentagonal_numbers.hpp>
+#include <pentagonal_numbers.hpp>
 #include <known_primes.hpp>
 
 using ::testing::Eq;

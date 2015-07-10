@@ -9,7 +9,7 @@
 #define PE44_HPP_
 
 #include "pe.hpp"
-#include "pentagonal_numbers/pentagonal_numbers.hpp"
+#include <pentagonal_numbers.hpp>
 
 #define PE44_NUM_PENTS 1000000
 

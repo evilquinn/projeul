@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <triangle_numbers/triangle_numbers.hpp>
+#include <triangle_numbers.hpp>
 #include <known_primes.hpp>
 
 using ::testing::Eq;

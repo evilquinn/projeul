@@ -9,7 +9,7 @@
 #define PE42_HPP_
 
 #include "pe.hpp"
-#include <triangle_numbers/triangle_numbers.hpp>
+#include <triangle_numbers.hpp>
 
 
 class pe42 : public pe

@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <prime_sieve/prime_sieve.hpp>
+#include <prime_sieve.hpp>
 #include <known_primes.hpp>
 
 using ::testing::Eq;

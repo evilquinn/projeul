@@ -3,9 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 include_directories($ENV{BOOST_ROOT})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(prime_sieve)
-add_subdirectory(triangle_numbers)
-add_subdirectory(pentagonal_numbers)
+include_directories(number_lists)
+add_subdirectory(number_lists)
 add_executable(projeul main.cpp
                        pe27.cpp
                        pe29.cpp
@@ -25,8 +24,6 @@ add_executable(projeul main.cpp
                        pe43.cpp
                        pe44.cpp)
 
-target_link_libraries(projeul prime_sieve
-                              triangle_numbers
-                              pentagonal_numbers)
+target_link_libraries(projeul number_lists)
 
 add_subdirectory(test)

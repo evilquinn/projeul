@@ -9,7 +9,6 @@
 #define PE39_HPP_
 
 #include "pe.hpp"
-#include "prime_sieve/prime_sieve.hpp"
 
 
 class pe39 : public pe
