@@ -20,10 +20,10 @@ public:
     void print();
     bool is_pentagonal(size_t n);
     size_t get_term(size_t n);
+    static size_t calc_pentagonal_number_for_term(size_t n);
 
 private:
     void calc_pentagonal_numbers();
-    size_t calc_pentagonal_number_for_term(size_t n);
 
     size_t   num_;
     std::set<size_t> pentagonals_;

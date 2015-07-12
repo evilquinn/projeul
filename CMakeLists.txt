@@ -27,3 +27,4 @@ add_executable(projeul main.cpp
 target_link_libraries(projeul number_lists)
 
 add_subdirectory(test)
+add_subdirectory(profile)

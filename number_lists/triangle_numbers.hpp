@@ -19,10 +19,11 @@ public:
 
     void print();
     bool is_triangle(size_t n);
+    size_t get_term(size_t n);
+    static size_t calc_triangle_number_for_term(size_t n);
 
 private:
     void calc_triangle_numbers();
-    size_t calc_triangle_number_for_term(size_t n);
 
     size_t   num_;
     std::set<size_t> triangles_;

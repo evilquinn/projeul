@@ -26,4 +26,13 @@ TEST_F(TriangleNumbersTest, checkFirstTenTriangleNumbers)
         ASSERT_THAT( known_triangles.find(i) != known_triangles.end(),
                      Eq(triangles.is_triangle(i))                     );
     }
+
+    std::set<size_t>::iterator it = known_triangles.begin();
+    size_t i = 0;
+    while( it != known_triangles.end() )
+    {
+        ASSERT_EQ ( *it, triangles.get_term(i) );
+        ++it;
+        ++i;
+    }
 }

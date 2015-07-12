@@ -52,3 +52,17 @@ bool triangle_numbers::is_triangle(size_t n)
 {
     return triangles_.find(n) != triangles_.end();
 }
+
+size_t triangle_numbers::get_term(size_t n)
+{
+//    if ( n >= num_ )
+//    {
+//        std::cout << "too high term: " << n << std::endl;
+//        return 0;
+//    }
+
+    std::set<size_t>::iterator it = triangles_.begin();
+    std::advance(it, n);
+
+    return *it;
+}
