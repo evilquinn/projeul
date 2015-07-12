@@ -22,7 +22,8 @@ add_executable(projeul main.cpp
                        pe41.cpp
                        pe42.cpp
                        pe43.cpp
-                       pe44.cpp)
+                       pe44.cpp
+                       pe45.cpp)
 
 target_link_libraries(projeul number_lists)
 
