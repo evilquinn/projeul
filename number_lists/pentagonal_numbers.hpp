@@ -9,7 +9,7 @@
 #define PENTAGONAL_NUMBERS_HPP_
 
 #include <stddef.h>
-#include <set>
+#include <vector>
 
 class pentagonal_numbers
 {
@@ -26,7 +26,7 @@ private:
     void calc_pentagonal_numbers();
 
     size_t   num_;
-    std::set<size_t> pentagonals_;
+    std::vector<size_t> pentagonals_;
     size_t max_;
 };
 

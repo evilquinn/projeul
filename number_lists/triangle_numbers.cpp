@@ -9,10 +9,11 @@
 
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 
 triangle_numbers::triangle_numbers(size_t num) :
     num_(num),
-    triangles_()
+    triangles_(num_ + 1)
 {
     std::cout << "Calc'ing the first " << num_ << " triangle numbers ... ";
 
@@ -29,13 +30,13 @@ void triangle_numbers::calc_triangle_numbers()
 {
     for(size_t i = 1; i <= num_; ++i)
     {
-        triangles_.insert(calc_triangle_number_for_term(i));
+        triangles_[i] = calc_triangle_number_for_term(i);
     }
 }
 
 void triangle_numbers::print()
 {
-    for ( std::set<size_t>::iterator i = triangles_.begin();
+    for ( std::vector<size_t>::iterator i = triangles_.begin();
           i != triangles_.end();
           ++i)
     {
@@ -50,7 +51,7 @@ size_t triangle_numbers::calc_triangle_number_for_term(size_t n)
 
 bool triangle_numbers::is_triangle(size_t n)
 {
-    return triangles_.find(n) != triangles_.end();
+    return std::binary_search(triangles_.begin(), triangles_.end(), n);
 }
 
 size_t triangle_numbers::get_term(size_t n)
@@ -60,9 +61,5 @@ size_t triangle_numbers::get_term(size_t n)
 //        std::cout << "too high term: " << n << std::endl;
 //        return 0;
 //    }
-
-    std::set<size_t>::iterator it = triangles_.begin();
-    std::advance(it, n);
-
-    return *it;
+    return triangles_[n];
 }

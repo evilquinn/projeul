@@ -21,14 +21,14 @@ TEST_F(TriangleNumbersTest, checkFirstTenTriangleNumbers)
     std::set<size_t> known_triangles = { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 };
     triangle_numbers triangles(known_triangles.size());
 
-    for(size_t i = 0; i <= 55; ++i)
+    for(size_t i = 1; i <= 55; ++i)
     {
-        ASSERT_THAT( known_triangles.find(i) != known_triangles.end(),
-                     Eq(triangles.is_triangle(i))                     );
+        ASSERT_THAT( triangles.is_triangle(i),
+                     Eq(known_triangles.find(i) != known_triangles.end()) );
     }
 
     std::set<size_t>::iterator it = known_triangles.begin();
-    size_t i = 0;
+    size_t i = 1;
     while( it != known_triangles.end() )
     {
         ASSERT_EQ ( *it, triangles.get_term(i) );

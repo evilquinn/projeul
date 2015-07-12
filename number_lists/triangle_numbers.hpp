@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <set>
+#include <vector>
 
 class triangle_numbers
 {
@@ -26,7 +27,7 @@ private:
     void calc_triangle_numbers();
 
     size_t   num_;
-    std::set<size_t> triangles_;
+    std::vector<size_t> triangles_;
 };
 
 #endif /* TRIANGLE_NUMBERS_HPP_ */

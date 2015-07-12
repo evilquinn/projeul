@@ -5,27 +5,30 @@
 
 using ::testing::Eq;
 
-#define TRIANGLE_NUMBERS_PROFILE_NUMBER 40000
+#define TRIANGLE_NUMBERS_PROFILE_NUMBER 100000
 
 class TriangleNumbersProfile : public ::testing::Test
 {
 protected:
     TriangleNumbersProfile() :
-        triangles_(TRIANGLE_NUMBERS_PROFILE_NUMBER)
+        triangles_(new triangle_numbers(TRIANGLE_NUMBERS_PROFILE_NUMBER))
     {}
-    ~TriangleNumbersProfile(){}
+    ~TriangleNumbersProfile()
+    {
+        delete triangles_;
+    }
 
     virtual void SetUp(){}
     virtual void TearDown(){}
 
-    triangle_numbers triangles_;
+    triangle_numbers* triangles_;
 };
 
 TEST_F(TriangleNumbersProfile, profileTriangleNumbersGetTerm)
 {
     for(size_t i = 1; i <= TRIANGLE_NUMBERS_PROFILE_NUMBER; ++i)
     {
-        size_t result = triangles_.get_term(i);
+        size_t result = triangles_->get_term(i);
     }
 }
 
