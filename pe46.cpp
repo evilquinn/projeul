@@ -50,7 +50,7 @@ void pe46::run()
         squares_[i] = pow(i, 2);
     }
 
-    for(size_t i = 1001; i < 10000; i += 2)
+    for(size_t i = 35; i < 10000; i += 2)
     {
         if ( ! primes_.is_prime(i) )
         {
@@ -72,28 +72,33 @@ bool pe46::fulfills_goldbachs_conjecture(size_t i)
     do
     {
         prev = prev_prime(prev);
-        size_t diff = i - prev;
-        if ( diff % 2 != 0 )
+        if ( prev == 2 )
         {
             continue;
         }
+        size_t diff = i - prev;
         size_t poss_square = diff / 2;
         if(std::binary_search(squares_.begin(), squares_.end(), poss_square))
         {
             return true;
         }
     }
-    while(prev > 1);
+    while(prev > 2);
 
     return false;
 }
 
 size_t pe46::prev_prime(size_t i)
 {
+    if ( i < 3 )
+    {
+        return 2;
+    }
+
     do
     {
         i -= 2;
     }
-    while(i >= 1 && !primes_.is_prime(i) );
+    while(i > 1 && !primes_.is_prime(i) );
     return i;
 }
