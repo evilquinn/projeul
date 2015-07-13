@@ -74,7 +74,62 @@ bool pe47::num_has_n_distinct_prime_factors(size_t num, size_t n)
         return false;
     }
 
+    // populate the array of n prime factor candidates
+    size_t try_primes[n];
+    // init
+    try_primes[0] = 0;
+    increment_array_primes_first_n_fixed(try_primes, n, primes_, 0);
+
+    size_t prod = prod_of_num_array(try_primes, n);
+    int diff = num - prod;
+    size_t num_fixed = n - 1;
+
+    if(diff == 0)
+    {
+        return true;
+    }
+    if(diff < 0)
+    {
+        if(num_fixed == 0)
+        {
+            return false;
+        }
+        --num_fixed;
+    }
+
+    increment_array_primes_first_n_fixed(try_primes, num_fixed
+
+    diff = 
+
+
+    int inc_idx = n - 1;
+
+    while(inc_idx >= 0)
+    {
+        prod = prod_of_num_array(try_primes, n);
+        if(prod>num)
+        {
+            --inc_idx;
+            continue;
+        }
+
+
+
+    }
+
     return false;
+}
+
+size_t prod_of_num_array(size_t* num, size_t num_nums)
+{
+    size_t result = 1;
+    do
+    {
+        result *= nums[num_nums-1];
+        --num_nums;
+    }
+    while(num_nums>0);
+    return result;
 }
 
 size_t next_prime(size_t i, prime_sieve& primes)
@@ -93,11 +148,23 @@ size_t next_prime(size_t i, prime_sieve& primes)
     return i;
 }
 
-void increment_array_primes(size_t*      nums,
-                            size_t       num_nums,
-                            size_t       inc_idx,
-                            prime_sieve& primes)
+void increment_array_primes_first_n_fixed(size_t*      nums,
+                                          size_t       num_nums,
+                                          prime_sieve& primes,
+                                          size_t       n)
 {
+    if(n>=num_nums)
+    {
+        return;
+    }
+
+    nums[n] = next_prime(nums[n], primes);
+    ++n;
+    while(n<num_nums)
+    {
+        nums[n] = next_prime(nums[n-1]);
+        ++n;
+    }
 }
 
 
