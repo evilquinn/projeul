@@ -27,7 +27,6 @@ public:
     virtual std::string& name();
     virtual void run();
     bool fulfills_goldbachs_conjecture(size_t i);
-    size_t prev_prime(size_t i);
 private:
     prime_sieve primes_;
     std::vector<size_t> squares_;

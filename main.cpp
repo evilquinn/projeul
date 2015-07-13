@@ -19,11 +19,12 @@
 #include "pe44.hpp"
 #include "pe45.hpp"
 #include "pe46.hpp"
+#include "pe47.hpp"
 
 
 int main(int argc, char* argv[])
 {
-    pe46 ex;
+    pe47 ex;
     ex.run();
 
     return 0;

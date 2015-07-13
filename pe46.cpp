@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+size_t prev_prime(size_t i, prime_sieve& primes);
 
 std::string& pe46::name()
 {
@@ -71,7 +72,7 @@ bool pe46::fulfills_goldbachs_conjecture(size_t i)
     size_t prev = i;
     do
     {
-        prev = prev_prime(prev);
+        prev = prev_prime(prev, primes_);
         if ( prev == 2 )
         {
             continue;
@@ -88,17 +89,17 @@ bool pe46::fulfills_goldbachs_conjecture(size_t i)
     return false;
 }
 
-size_t pe46::prev_prime(size_t i)
+size_t prev_prime(size_t i, prime_sieve& primes)
 {
-    if ( i < 3 )
+    if ( i <= 2 )
     {
-        return 2;
+        return 0;
     }
 
     do
     {
-        i -= 2;
+        --i;
     }
-    while(i > 1 && !primes_.is_prime(i) );
+    while(i > 2 && !primes.is_prime(i) );
     return i;
 }

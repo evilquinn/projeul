@@ -2,6 +2,8 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+class prime_sieve;
+
 /*
  * counts the number of digits in a number
  * @param n  The number to count the digits of
@@ -40,5 +42,14 @@ bool is_pandigital_for_range(size_t start,
                              size_t* ints,
                              size_t ints_size);
 
+/*
+ * determines largest prime number which is less that supplied number
+ *
+ * @param i number for which to determine the largest preceding prime number
+ * @param primes ref to a prime_sieve
+ *
+ * @return largest prime number which is less than i, or 0 if i <=2
+ */
+size_t prev_prime(size_t i, prime_sieve& primes);
 
 #endif // UTILS_HPP_
