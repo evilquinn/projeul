@@ -11,7 +11,7 @@
 #include "pe.hpp"
 #include <prime_sieve.hpp>
 
-#define PE47_NUM_PRIMES 100000
+#define PE47_NUM_PRIMES 10000000
 
 class pe47 : public pe
 {

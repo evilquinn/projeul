@@ -52,4 +52,13 @@ bool is_pandigital_for_range(size_t start,
  */
 size_t prev_prime(size_t i, prime_sieve& primes);
 
+/*
+ * calculates the prime factors for a number and prints result to std::cout
+ *
+ * @param num the number to prime factorise
+ * @param primes a prime sieve
+ *
+ */
+size_t calc_prime_factors(size_t num, prime_sieve& primes);
+
 #endif // UTILS_HPP_

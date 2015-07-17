@@ -16,6 +16,8 @@
 #include <ctype.h>
 
 size_t next_prime(size_t i, prime_sieve& primes);
+size_t prod_of_num_array(size_t* num, size_t num_nums);
+size_t calc_prime_factors(size_t num, prime_sieve& primes);
 
 std::string& pe47::name()
 {
@@ -56,6 +58,7 @@ void pe47::run()
         }
     }
 
+
     std::cout << "PE47 " << result << std::endl;
 }
 
@@ -67,70 +70,53 @@ bool pe47::n_consecutive_nums_have_n_distinct_prime_factors(size_t first,
     return false;
 }
 
+
 bool pe47::num_has_n_distinct_prime_factors(size_t num, size_t n)
 {
-    if ( n < 1 )
-    {
-        return false;
-    }
-
-    // populate the array of n prime factor candidates
-    size_t try_primes[n];
-    // init
-    try_primes[0] = 0;
-    increment_array_primes_first_n_fixed(try_primes, n, primes_, 0);
-
-    size_t prod = prod_of_num_array(try_primes, n);
-    int diff = num - prod;
-    size_t num_fixed = n - 1;
-
-    if(diff == 0)
-    {
-        return true;
-    }
-    if(diff < 0)
-    {
-        if(num_fixed == 0)
-        {
-            return false;
-        }
-        --num_fixed;
-    }
-
-    increment_array_primes_first_n_fixed(try_primes, num_fixed
-
-    diff = 
-
-
-    int inc_idx = n - 1;
-
-    while(inc_idx >= 0)
-    {
-        prod = prod_of_num_array(try_primes, n);
-        if(prod>num)
-        {
-            --inc_idx;
-            continue;
-        }
-
-
-
-    }
 
     return false;
 }
 
-size_t prod_of_num_array(size_t* num, size_t num_nums)
+size_t calc_prime_factors(size_t num, prime_sieve& primes)
 {
-    size_t result = 1;
-    do
+    std::vector<size_t> prime_factors;
+
+    // try dividing num by 2, then 3, then 5, etc, etc
+    // each time a division works (no remainders), cache the
+    // prime factor, and move on to working out the next prime
+    // factor, starting dividing from the first prime again
+    //
+    size_t curr_num = num;
+
+    while(curr_num > 1)
     {
-        result *= nums[num_nums-1];
-        --num_nums;
+        if(primes.is_prime(curr_num))
+        {
+            prime_factors.push_back(curr_num);
+            break;
+        }
+
+        size_t try_prime = 2;
+        while(curr_num % try_prime != 0)
+        {
+            try_prime = next_prime(try_prime, primes);
+        }
+
+        prime_factors.push_back(try_prime);
+        curr_num /= try_prime;
     }
-    while(num_nums>0);
-    return result;
+
+//    std::cout << "prime factors of " << num << " are ";
+//    BOOST_FOREACH(size_t i, prime_factors )
+//    {
+//        std::cout << i << ", ";
+//    }
+//    std::cout << std::endl;
+
+    return 0;
+
 }
+
 
 size_t next_prime(size_t i, prime_sieve& primes)
 {
@@ -162,7 +148,7 @@ void increment_array_primes_first_n_fixed(size_t*      nums,
     ++n;
     while(n<num_nums)
     {
-        nums[n] = next_prime(nums[n-1]);
+        nums[n] = next_prime(nums[n-1], primes);
         ++n;
     }
 }
