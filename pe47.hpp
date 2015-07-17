@@ -25,8 +25,6 @@ public:
     };
     virtual std::string& name();
     virtual void run();
-    bool n_consecutive_nums_have_n_distinct_prime_factors(size_t first,
-                                                          size_t n);
     bool num_has_n_distinct_prime_factors(size_t num, size_t n);
 private:
     prime_sieve primes_;

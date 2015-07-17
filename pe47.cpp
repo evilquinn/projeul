@@ -44,35 +44,38 @@ void pe47::run()
      *
      */
 
-    size_t result = 0;
-    const size_t n = 2;
+    const size_t n = 4;
 
-    for(size_t i = 1; i < 20; ++i)
+    size_t found_n_consecutives = 0;
+    size_t num = 1;
+    while(found_n_consecutives < n && num < 1000000)
     {
-        if(n_consecutive_nums_have_n_distinct_prime_factors(i, n))
+        if(num_has_n_distinct_prime_factors(num, n))
         {
-            result = i;
-            break;
+            ++found_n_consecutives;
         }
+        else
+        {
+            found_n_consecutives = 0;
+        }
+        ++num;
     }
 
-    std::vector<size_t> prime_factors;
-    calc_prime_factors(100003, prime_factors, primes_);
-
-    std::cout << "PE47 " << result << std::endl;
+    std::cout << "PE47 " << num-n << std::endl;
 }
-
-bool pe47::n_consecutive_nums_have_n_distinct_prime_factors(size_t first,
-                                                            size_t n)
-{
-
-
-    return false;
-}
-
 
 bool pe47::num_has_n_distinct_prime_factors(size_t num, size_t n)
 {
+    std::vector<size_t> prime_factors;
+    calc_prime_factors(num, prime_factors, primes_);
+
+    std::set<size_t> distinct_prime_factors(prime_factors.begin(),
+                                            prime_factors.end());
+
+    if( n == distinct_prime_factors.size() )
+    {
+        return true;
+    }
 
     return false;
 }
