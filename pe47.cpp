@@ -15,9 +15,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-size_t next_prime(size_t i, prime_sieve& primes);
 size_t prod_of_num_array(size_t* num, size_t num_nums);
-size_t calc_prime_factors(size_t num, prime_sieve& primes);
 
 std::string& pe47::name()
 {
@@ -58,6 +56,8 @@ void pe47::run()
         }
     }
 
+    std::vector<size_t> prime_factors;
+    calc_prime_factors(100003, prime_factors, primes_);
 
     std::cout << "PE47 " << result << std::endl;
 }
@@ -77,9 +77,10 @@ bool pe47::num_has_n_distinct_prime_factors(size_t num, size_t n)
     return false;
 }
 
-size_t calc_prime_factors(size_t num, prime_sieve& primes)
+size_t calc_prime_factors(size_t num,
+                          std::vector<size_t>& prime_factors,
+                          prime_sieve& primes)
 {
-    std::vector<size_t> prime_factors;
 
     // try dividing num by 2, then 3, then 5, etc, etc
     // each time a division works (no remainders), cache the
@@ -133,30 +134,3 @@ size_t next_prime(size_t i, prime_sieve& primes)
 
     return i;
 }
-
-void increment_array_primes_first_n_fixed(size_t*      nums,
-                                          size_t       num_nums,
-                                          prime_sieve& primes,
-                                          size_t       n)
-{
-    if(n>=num_nums)
-    {
-        return;
-    }
-
-    nums[n] = next_prime(nums[n], primes);
-    ++n;
-    while(n<num_nums)
-    {
-        nums[n] = next_prime(nums[n-1], primes);
-        ++n;
-    }
-}
-
-
-
-
-
-
-
-

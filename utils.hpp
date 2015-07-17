@@ -2,6 +2,8 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+#include <vector>
+
 class prime_sieve;
 
 /*
@@ -53,12 +55,24 @@ bool is_pandigital_for_range(size_t start,
 size_t prev_prime(size_t i, prime_sieve& primes);
 
 /*
+ * determines smallest prime number which is greater than supplied number
+ *
+ * @param i number for which to determine the smallest subsequent prime number
+ * @param primes ref to a prime_sieve
+ *
+ * @return smallest prime number greater than i or 0 if i >= primes.max
+ */
+size_t next_prime(size_t i, prime_sieve& primes);
+
+/*
  * calculates the prime factors for a number and prints result to std::cout
  *
  * @param num the number to prime factorise
  * @param primes a prime sieve
  *
  */
-size_t calc_prime_factors(size_t num, prime_sieve& primes);
+size_t calc_prime_factors(size_t num,
+                          std::vector<size_t>& prime_factors,
+                          prime_sieve& primes);
 
 #endif // UTILS_HPP_

@@ -27,9 +27,11 @@ protected:
 
 TEST_F(CalcPrimeFactorsProfile, profileCalcingPrimeFactors)
 {
+    std::vector<size_t> prime_factors;
     for(size_t i = 100000; i <= 130000; ++i)
     {
-       calc_prime_factors(i, *primes_);
+       calc_prime_factors(i, prime_factors, *primes_);
+
     }
-    calc_prime_factors(100003, *primes_);
+    calc_prime_factors(100003, prime_factors, *primes_);
 }
