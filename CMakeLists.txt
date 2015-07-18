@@ -6,6 +6,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(number_lists)
 add_subdirectory(number_lists)
 add_executable(projeul main.cpp
+                       num_utils.cpp
                        pe27.cpp
                        pe29.cpp
                        pe30.cpp

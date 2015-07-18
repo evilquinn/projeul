@@ -2,6 +2,7 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+#include <stddef.h>
 #include <vector>
 
 class prime_sieve;
@@ -74,5 +75,35 @@ size_t next_prime(size_t i, prime_sieve& primes);
 size_t calc_prime_factors(size_t num,
                           std::vector<size_t>& prime_factors,
                           prime_sieve& primes);
+
+/*
+ * return a digit array representing the supplied number
+ *
+ * @param num The number
+ * @param digit_array upon return will point to array of digits for num
+ * @param digit_array_length upon return will be set to length of digit array
+ */
+void num_to_digit_array(size_t  num,
+                        int*&   digit_array,
+                        size_t& digit_array_length);
+
+/*
+ * Adds supplied number to the digit array
+ */
+void add_to_digit_array(int* add_to, size_t add_to_len, size_t add);
+
+/*
+ * Add two digit arrays (numbers, in the form of an array, where each element
+ * represents each digit of the number) together, returning the result in the
+ * add_to digit array
+ *
+ * @param add_to     The digit array to add to, where the result will be stored
+ * @param add_to_len The length of the digit array to add to
+ * @param add        The digit array to add
+ * @param add_len    The length of the digit array to add
+ */
+void add_digit_arrays(int* add_to, size_t add_to_len, int* add, size_t add_len);
+
+
 
 #endif // UTILS_HPP_
