@@ -104,6 +104,10 @@ void add_to_digit_array(int* add_to, size_t add_to_len, size_t add);
  */
 void add_digit_arrays(int* add_to, size_t add_to_len, int* add, size_t add_len);
 
+/*
+ * Multiplies the digit array by supplied number, result in digit array
+ */
+void mult_digit_array_by(int* mult, size_t mult_len, size_t mult_by);
 
 
 #endif // UTILS_HPP_

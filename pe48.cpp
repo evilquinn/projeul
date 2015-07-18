@@ -36,16 +36,21 @@ void pe48::run()
      */
 
     int digit_array[PE48_NUM_DIGITS] = { 0 };
-    for(size_t i = 1; i <= PE48_NUM_DIGITS; ++i)
+    for(size_t i = 1; i <= 1000; ++i)
     {
-        int term_digit_array[PE48_NUM_DIGITS] = { 0 };
-        for(size_t j = 0; j < i; ++j)
+        // i*i = i + i + i + ... + i ( i times )
+        // i^i = i * i * i * ... * i ( i times )
+        //
+        // work out i * i
+        int mult_digit_array[PE48_NUM_DIGITS] = { 0 };
+        mult_digit_array[PE48_NUM_DIGITS-1] = 1;
+        for(size_t k = 0; k < i; ++k)
         {
-            add_to_digit_array(term_digit_array, PE48_NUM_DIGITS, i);
+            mult_digit_array_by(mult_digit_array, PE48_NUM_DIGITS, i);
         }
-
+        // then add that to term
         add_digit_arrays(digit_array,      PE48_NUM_DIGITS,
-                         term_digit_array, PE48_NUM_DIGITS);
+                         mult_digit_array, PE48_NUM_DIGITS);
     }
 
 
