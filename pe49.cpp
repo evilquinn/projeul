@@ -43,13 +43,43 @@ void pe49::run()
      * this sequence?
      *
      */
-    size_t first = next_prime(1000, primes_);
-    size_t second = next_prime_with_same_digits(first, primes_);
+    size_t first = 1487;
+    size_t second;
+    size_t third;
+    bool solved = false;
+
+    do
+    {
+        first = next_prime(first, primes_);
+        if ( first == 0 )
+        {
+            break;
+        }
+
+        second = first;
+        do
+        {
+            second = next_prime_with_same_digits(second, primes_);
+            if ( second <= first )
+            {
+                break;
+            }
+
+            third = second + second - first;
+
+            if ( third < PE49_MAX_PRIMES &&
+                 primes_.is_prime(third) &&
+                 same_digits(second, third) )
+            {
+                solved = true;
+            }
+        }
+        while(!solved && second < PE49_MAX_PRIMES);
+    }
+    while(!solved && first < PE49_MAX_PRIMES);
 
 
-
-
-    std::cout << "PE49 " << first << second << std::endl;
+    std::cout << "PE49 " << first << second << third << std::endl;
 }
 
 size_t next_prime_with_same_digits(size_t start, prime_sieve& primes)
@@ -59,7 +89,7 @@ size_t next_prime_with_same_digits(size_t start, prime_sieve& primes)
     {
         result = next_prime(result, primes);
     }
-    while(!same_digits(start, result));
+    while(result != 0 && !same_digits(start, result));
 
     return result;
 }
