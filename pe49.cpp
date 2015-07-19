@@ -18,6 +18,9 @@
 #define PE49_NUM_DIGITS 10
 
 
+size_t next_prime_with_same_digits(size_t start, prime_sieve& primes);
+bool same_digits(size_t lhs, size_t rhs);
+
 std::string& pe49::name()
 {
     return name_;
@@ -40,7 +43,54 @@ void pe49::run()
      * this sequence?
      *
      */
+    size_t first = next_prime(1000, primes_);
+    size_t second = next_prime_with_same_digits(first, primes_);
 
-    std::cout << "PE49 " << std::endl;
+
+
+
+    std::cout << "PE49 " << first << second << std::endl;
+}
+
+size_t next_prime_with_same_digits(size_t start, prime_sieve& primes)
+{
+    size_t result = start;
+    do
+    {
+        result = next_prime(result, primes);
+    }
+    while(!same_digits(start, result));
+
+    return result;
+}
+
+bool same_digits(size_t lhs, size_t rhs)
+{
+    std::multiset<uint8_t> lhs_digits;
+    unsigned expected_count = 0;
+    unsigned compare_count = 0;
+    while(lhs>0)
+    {
+        lhs_digits.insert(lhs%10);
+        lhs /= 10;
+        ++expected_count;
+    }
+
+    while(rhs>0)
+    {
+        auto it = lhs_digits.find(rhs%10);
+        if ( it != lhs_digits.end() )
+        {
+            lhs_digits.erase(it);
+            ++compare_count;
+            rhs /= 10;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return expected_count == compare_count;
 }
 

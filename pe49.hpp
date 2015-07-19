@@ -9,12 +9,15 @@
 #define PE49_HPP_
 
 #include "pe.hpp"
+#include "prime_sieve.hpp"
 
+#define PE49_MAX_PRIMES 10000
 
 class pe49 : public pe
 {
 public:
     pe49() :
+        primes_(PE49_MAX_PRIMES),
         name_("pe49")
     {};
     virtual ~pe49()
@@ -23,6 +26,7 @@ public:
     virtual std::string& name();
     virtual void run();
 private:
+    prime_sieve primes_;
     std::string name_;
 };
 
