@@ -46,26 +46,31 @@ void pe50::run()
     size_t most_primes = 0;
     size_t result = 0;
 
-    std::vector<size_t> longest_sum;
+    std::vector<size_t> max_list;
     size_t sum = 0;
 
+    // work out a good start point, which is every prime when summed is greater
+    // than limit
     do
     {
         start = next_prime(start, primes_);
-        longest_sum.push_back(start);
+        max_list.push_back(start);
         sum += start;
     }
     while(sum < 1000000);
 
+    // work out a reasonable first guess, count back the primes until the sum
+    // is prime
     do
     {
-        sum -= longest_sum.back();
-        longest_sum.pop_back();
+        sum -= max_list.back();
+        max_list.pop_back();
     }
     while(!primes_.is_prime(sum));
 
 
-    std::cout << "PE50 " << sum << " has " << longest_sum.size() << std::endl;
+
+    std::cout << "PE50 " << sum << " has " << max_list.size() << std::endl;
 }
 
 size_t sum_vector(std::vector<size_t>& vec)
