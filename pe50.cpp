@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#define PE50_LIMIT 1000
+
 size_t number_consecutive_primes_sum(size_t num, prime_sieve& primes);
 
 std::string& pe50::name()
@@ -57,20 +59,55 @@ void pe50::run()
         max_list.push_back(start);
         sum += start;
     }
-    while(sum < 1000000);
+    while(sum < PE50_LIMIT);
 
     // work out a reasonable first guess, count back the primes until the sum
     // is prime
+    std::vector<size_t> starting_list = max_list;
     do
     {
-        sum -= max_list.back();
-        max_list.pop_back();
+        sum -= starting_list.back();
+        starting_list.pop_back();
     }
     while(!primes_.is_prime(sum));
 
+    // now examine all possible better solutions
+    std::vector<size_t> curr_list = max_list;
+    size_t starting_size = max_list.size();
+    size_t starting_sum = sum;
+    size_t result_size = 0;
+    std::vector<size_t> result_list;
+    do
+    {
+        starting_sum -= curr_list[0];
+        curr_list.erase(curr_list.begin());
+        --starting_size;
+        size_t curr_sum = starting_sum;
+        do
+        {
+            if(curr_sum < PE50_LIMIT &&
+               primes_.is_prime(curr_sum) &&
+               curr_list.size() > result_size &&
+               curr_sum > sum )
+            {
+                sum = curr_sum;
+                result_size = curr_list.size();
+                result_list = curr_list;
+                break;
+            }
 
+            curr_sum -= curr_list.back();
+            curr_list.pop_back();
+        }
+        while(curr_list.size() > max_list.size());
+    }
+    while(starting_size > starting_list.size());
 
-    std::cout << "PE50 " << sum << " has " << max_list.size() << std::endl;
+    std::cout << "PE50 " << sum << " has " << result_size << " : " << std::endl;
+    BOOST_FOREACH(size_t val, result_list)
+    {
+        std::cout << val << " ";
+    }
 }
 
 size_t sum_vector(std::vector<size_t>& vec)
