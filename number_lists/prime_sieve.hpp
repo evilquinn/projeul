@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <bitset>
 #include <boost/dynamic_bitset.hpp>
+#include <deque>
 
 #define PRIME_SIEVE_MAX_PRIME 67000000
 
@@ -26,6 +27,7 @@ public:
     size_t shit_next_prime(size_t from);
     size_t next_prime(size_t from);
     size_t prev_prime(size_t from);
+    size_t sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees);
 
 private:
 

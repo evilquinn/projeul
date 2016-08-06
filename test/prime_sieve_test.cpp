@@ -56,3 +56,23 @@ TEST_F(PrimeSieveTest, testPrevPrimeReturnsExpected)
     EXPECT_THAT(primes_.prev_prime(1000), Eq(997));
     EXPECT_THAT(primes_.prev_prime(PRIME_SIEVE_TEST_LIMIT), Eq(104729));
 }
+
+TEST_F(PrimeSieveTest, testSumRangeReturnsExpected)
+{
+
+    std::deque<size_t> sumees;
+    EXPECT_THAT(primes_.sum_range(0, 0, sumees), Eq(0));
+    EXPECT_THAT(primes_.sum_range(1, 0, sumees), Eq(0));
+    EXPECT_THAT(primes_.sum_range(2, 1, sumees), Eq(0));
+    EXPECT_THAT(primes_.sum_range(2, 2, sumees), Eq(2));
+    EXPECT_THAT(primes_.sum_range(2, 3, sumees), Eq(5));
+    EXPECT_THAT(primes_.sum_range(2, 7, sumees), Eq(17));
+    EXPECT_THAT(primes_.sum_range(2, 10, sumees), Eq(17));
+    EXPECT_THAT(primes_.sum_range(2, 12, sumees), Eq(28));
+    EXPECT_THAT(primes_.sum_range(2, PRIME_SIEVE_TEST_LIMIT, sumees),
+                Eq(496165411));
+    EXPECT_THAT(primes_.sum_range(PRIME_SIEVE_TEST_LIMIT,
+                                  PRIME_SIEVE_TEST_LIMIT,
+                                  sumees),
+                Eq(0));
+}

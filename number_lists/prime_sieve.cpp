@@ -90,13 +90,9 @@ size_t prime_sieve::next_prime(size_t from)
 
 size_t prime_sieve::prev_prime(size_t from)
 {
-    if ( from == 0 )
-    {
-        return from;
-    }
     if ( --from >= limit_ )
     {
-        from = limit_ - 1;
+        return 0;
     }
 
     size_t result;
@@ -108,3 +104,36 @@ size_t prime_sieve::prev_prime(size_t from)
 
     return result;
 }
+
+size_t prime_sieve::sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees)
+{
+    sumees.clear();
+
+    if ( lower > upper )
+    {
+        return 0;
+    }
+    if ( lower == upper )
+    {
+        if ( is_prime(lower) )
+        {
+            sumees.push_back(lower);
+            return lower;
+        }
+
+        return 0;
+    }
+
+    size_t current = is_prime(lower) ? lower : next_prime(lower);
+    size_t result = 0;
+
+    while ( current <= upper && current < limit_)
+    {
+        result += current;
+        sumees.push_back(current);
+        current = next_prime(current);
+    }
+
+    return result;
+}
+
