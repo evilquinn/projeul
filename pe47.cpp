@@ -122,18 +122,3 @@ size_t calc_prime_factors(size_t num,
 }
 
 
-size_t next_prime(size_t i, prime_sieve& primes)
-{
-    if ( i >= PE47_NUM_PRIMES )
-    {
-        return 0;
-    }
-
-    do
-    {
-        ++i;
-    }
-    while( i < PE47_NUM_PRIMES && ! primes.is_prime(i) );
-
-    return i;
-}

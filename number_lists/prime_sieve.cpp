@@ -34,6 +34,11 @@ prime_sieve::~prime_sieve()
 {
 }
 
+size_t prime_sieve::limit()
+{
+    return limit_;
+}
+
 void prime_sieve::calc_primes()
 {
     size_t n = 2;
@@ -75,4 +80,31 @@ bool prime_sieve::is_prime(size_t n)
     }
 
     return false;
+}
+
+
+size_t prime_sieve::next_prime(size_t from)
+{
+    return sieve_.find_next(from);
+}
+
+size_t prime_sieve::prev_prime(size_t from)
+{
+    if ( from == 0 )
+    {
+        return from;
+    }
+    if ( --from >= limit_ )
+    {
+        from = limit_ - 1;
+    }
+
+    size_t result;
+    for ( result = from;
+          !sieve_[result] && result != 0;
+          --result)
+    {
+    }
+
+    return result;
 }

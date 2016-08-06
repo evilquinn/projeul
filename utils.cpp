@@ -2,6 +2,36 @@
 
 #include <utils.hpp>
 #include <string.h>
+#include <prime_sieve.hpp>
+
+
+int num_digits(long long unsigned n)
+{
+    int num_digits = 0;
+    while(n>0)
+    {
+        ++num_digits;
+        n/=10;
+    }
+    return num_digits;
+}
+
+size_t next_prime(size_t i, prime_sieve& primes)
+{
+    size_t primes_limit = primes.limit();
+    if ( i >= primes_limit )
+    {
+        return 0;
+    }
+
+    do
+    {
+        ++i;
+    }
+    while( i < primes_limit && ! primes.is_prime(i) );
+
+    return i;
+}
 
 void num_to_digit_array(size_t  num,
                         int*&   digit_array,

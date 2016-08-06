@@ -21,9 +21,20 @@ public:
     virtual ~prime_sieve();
 
     void print();
+    size_t limit();
     bool is_prime(size_t n);
+    size_t shit_next_prime(size_t from);
+    size_t next_prime(size_t from);
+    size_t prev_prime(size_t from);
 
 private:
+
+    enum find_direction
+    {
+        PREV,
+        NEXT
+    };
+    size_t prev_or_next(size_t from, enum find_direction direction);
     void calc_primes();
 
     size_t                  limit_;
