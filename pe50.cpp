@@ -17,7 +17,6 @@
 
 #define PE50_LIMIT 1000
 
-size_t number_consecutive_primes_sum(size_t num, prime_sieve& primes);
 
 std::string& pe50::name()
 {
@@ -109,15 +108,3 @@ void pe50::run()
         std::cout << val << " ";
     }
 }
-
-size_t sum_vector(std::vector<size_t>& vec)
-{
-    size_t result = 0;
-    BOOST_FOREACH(size_t val, vec)
-    {
-        result += val;
-    }
-
-    return result;
-}
-
