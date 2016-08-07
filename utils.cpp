@@ -17,19 +17,57 @@ int num_digits(long long unsigned n)
     return num_digits;
 }
 
-int num_digits_matching(long long unsigned n, short d)
+
+void set_of_digits(size_t n, digit_set_t& digits)
 {
-    int num_digits = 0;
+    digits.clear();
     while(n>0)
     {
-        int curr_digit = n%10;
-        if(curr_digit == d)
-        {
-            ++num_digits;
-        }
+        digits.insert(n%10);
         n/=10;
     }
-    return num_digits;
+    return;
+}
+
+bool same_digits(size_t lhs, size_t rhs)
+{
+    std::multiset<uint8_t> lhs_digits;
+    unsigned expected_count = 0;
+    unsigned compare_count = 0;
+    while(lhs>0)
+    {
+        lhs_digits.insert(lhs%10);
+        lhs /= 10;
+        ++expected_count;
+    }
+
+    while(rhs>0)
+    {
+        auto it = lhs_digits.find(rhs%10);
+        if ( it != lhs_digits.end() )
+        {
+            lhs_digits.erase(it);
+            ++compare_count;
+            rhs /= 10;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return expected_count == compare_count;
+}
+
+
+bool same_digits_old(size_t lhs, size_t rhs)
+{
+    digit_set_t lhs_digits;
+    digit_set_t rhs_digits;
+    set_of_digits(rhs, rhs_digits);
+    set_of_digits(lhs, lhs_digits);
+
+    return lhs_digits == rhs_digits;
 }
 
 

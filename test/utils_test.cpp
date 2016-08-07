@@ -67,3 +67,30 @@ TEST_F(UtilsTest, testDigitPatternWorksExpectedExtended)
     EXPECT_THAT(digit_pattern[8], Eq(0));
     EXPECT_THAT(digit_pattern[9], Eq(1000000000));
 }
+
+TEST_F(UtilsTest, testSameDigitsWorksExpected)
+{
+    for ( int i = 0; i< 10000; ++i)
+    {
+    EXPECT_TRUE(same_digits(123, 321));
+    EXPECT_FALSE(same_digits(123, 320));
+    EXPECT_FALSE(same_digits(123456, 321));
+    EXPECT_TRUE(same_digits(123456, 321456));
+    EXPECT_FALSE(same_digits(123456, 36621));
+    EXPECT_TRUE(same_digits(123999, 321999));
+    }
+}
+
+
+TEST_F(UtilsTest, testSameDigitsOldWorksExpected)
+{
+    for ( int i = 0; i< 10000; ++i)
+    {
+    EXPECT_TRUE(same_digits_old(123, 321));
+    EXPECT_FALSE(same_digits_old(123, 320));
+    EXPECT_FALSE(same_digits_old(123456, 321));
+    EXPECT_TRUE(same_digits_old(123456, 321456));
+    EXPECT_FALSE(same_digits_old(123456, 36621));
+    EXPECT_TRUE(same_digits_old(123999, 321999));
+    }
+}

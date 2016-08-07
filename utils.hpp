@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <vector>
 #include <map>
+#include <set>
 
 class prime_sieve;
 
@@ -15,14 +16,20 @@ class prime_sieve;
  */
 int num_digits(long long unsigned n);
 
+/*
+ * returns a set containing each digit in the number supplied
+ * @param n The number to get digits off
+ * @param digits The set will contain the digits
+ */
+typedef std::set<short> digit_set_t;
+void set_of_digits(size_t n, digit_set_t& digits);
 
 /*
- * counts the number of digits in a number which match a supplied digit
- * @param n  The number to count the digits of
- * @param d  The digit to match against
- * @return   The number of digits in supplied n
+ * returns true is two nums have same digits, false otherwise
  */
-int num_digits_matching(long long unsigned n, short d);
+bool same_digits(size_t lhs, size_t rhs);
+bool same_digits_old(size_t lhs, size_t rhs);
+
 
 /*
  * performs digit pattern analysing.  Returns a map containing a count for each
