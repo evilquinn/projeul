@@ -130,7 +130,39 @@ size_t prime_sieve::num_in_range(size_t lower, size_t upper)
 }
 
 
-size_t prime_sieve::sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees)
+size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
+{
+    if ( lower > upper )
+    {
+        return 0;
+    }
+    if ( lower == upper )
+    {
+        if ( is_prime(lower) )
+        {
+            num_in_range = 1;
+            return lower;
+        }
+
+        return 0;
+    }
+
+    size_t current = is_prime(lower) ? lower : next_prime(lower);
+    size_t result = 0;
+    num_in_range = 0;
+
+    while ( current <= upper && current < limit_)
+    {
+        result += current;
+        ++num_in_range;
+        current = next_prime(current);
+    }
+
+    return result;
+}
+
+
+size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees)
 {
     sumees.clear();
 

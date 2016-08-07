@@ -60,18 +60,38 @@ TEST_F(PrimeSieveTest, testPrevPrimeReturnsExpected)
 TEST_F(PrimeSieveTest, testSumRangeReturnsExpected)
 {
 
-    std::deque<size_t> sumees;
-    EXPECT_THAT(primes_.sum_range(0, 0, sumees), Eq(0));
-    EXPECT_THAT(primes_.sum_range(1, 0, sumees), Eq(0));
-    EXPECT_THAT(primes_.sum_range(2, 1, sumees), Eq(0));
-    EXPECT_THAT(primes_.sum_range(2, 2, sumees), Eq(2));
-    EXPECT_THAT(primes_.sum_range(2, 3, sumees), Eq(5));
-    EXPECT_THAT(primes_.sum_range(2, 7, sumees), Eq(17));
-    EXPECT_THAT(primes_.sum_range(2, 10, sumees), Eq(17));
-    EXPECT_THAT(primes_.sum_range(2, 12, sumees), Eq(28));
-    EXPECT_THAT(primes_.sum_range(2, PRIME_SIEVE_TEST_LIMIT, sumees),
+    size_t num_in_range;
+    EXPECT_THAT(primes_.sum_range(0, 0, num_in_range), Eq(0));
+    EXPECT_THAT(primes_.sum_range(1, 0, num_in_range), Eq(0));
+    EXPECT_THAT(primes_.sum_range(2, 1, num_in_range), Eq(0));
+    EXPECT_THAT(primes_.sum_range(2, 2, num_in_range), Eq(2));
+    EXPECT_THAT(primes_.sum_range(2, 3, num_in_range), Eq(5));
+    EXPECT_THAT(primes_.sum_range(2, 7, num_in_range), Eq(17));
+    EXPECT_THAT(primes_.sum_range(2, 10, num_in_range), Eq(17));
+    EXPECT_THAT(primes_.sum_range(2, 12, num_in_range), Eq(28));
+    EXPECT_THAT(primes_.sum_range(2, PRIME_SIEVE_TEST_LIMIT, num_in_range),
                 Eq(496165411));
     EXPECT_THAT(primes_.sum_range(PRIME_SIEVE_TEST_LIMIT,
+                                  PRIME_SIEVE_TEST_LIMIT,
+                                  num_in_range),
+                Eq(0));
+}
+
+TEST_F(PrimeSieveTest, testShitSumRangeReturnsExpected)
+{
+
+    std::deque<size_t> sumees;
+    EXPECT_THAT(primes_.shit_sum_range(0, 0, sumees), Eq(0));
+    EXPECT_THAT(primes_.shit_sum_range(1, 0, sumees), Eq(0));
+    EXPECT_THAT(primes_.shit_sum_range(2, 1, sumees), Eq(0));
+    EXPECT_THAT(primes_.shit_sum_range(2, 2, sumees), Eq(2));
+    EXPECT_THAT(primes_.shit_sum_range(2, 3, sumees), Eq(5));
+    EXPECT_THAT(primes_.shit_sum_range(2, 7, sumees), Eq(17));
+    EXPECT_THAT(primes_.shit_sum_range(2, 10, sumees), Eq(17));
+    EXPECT_THAT(primes_.shit_sum_range(2, 12, sumees), Eq(28));
+    EXPECT_THAT(primes_.shit_sum_range(2, PRIME_SIEVE_TEST_LIMIT, sumees),
+                Eq(496165411));
+    EXPECT_THAT(primes_.shit_sum_range(PRIME_SIEVE_TEST_LIMIT,
                                   PRIME_SIEVE_TEST_LIMIT,
                                   sumees),
                 Eq(0));

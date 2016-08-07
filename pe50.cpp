@@ -51,13 +51,13 @@ void pe50::run()
     std::deque<size_t> max_list;
     size_t sum = 0;
 
-    size_t hard_limit = 100000;
-    size_t working_limit = hard_limit;
+    size_t hard_limit = 1000000;
+    size_t working_limit = 4000;
     size_t upper = primes_.prev_prime(working_limit);
     size_t lower = primes_.next_prime(0);
 
-    std::deque<size_t> best_guess;
-    std::deque<size_t> working_list;
+    size_t best_range = 0;
+    size_t working_range = 0;
     size_t best_sum = 0;
     size_t working_sum = 0;
 
@@ -66,23 +66,21 @@ void pe50::run()
         upper = primes_.prev_prime(working_limit);
         while ( upper > lower )
         {
-            size_t range = primes_.num_in_range(lower, upper);
-            if ( range < best_guess.size() )
-            {
-                break;
-            }
-
-            working_sum = primes_.sum_range(lower, upper, working_list);
+            working_sum = primes_.sum_range(lower, upper, working_range);
             if ( working_sum > hard_limit )
             {
                 working_limit = upper;
                 upper = primes_.prev_prime(upper);
                 continue;
             }
-            if ( primes_.is_prime(working_sum) &&
-                 working_list.size() > best_guess.size() )
+            if ( working_range < best_range )
             {
-                best_guess = working_list;
+                break;
+            }
+            if ( primes_.is_prime(working_sum) &&
+                 working_range > best_range )
+            {
+                best_range = working_range;
                 best_sum = working_sum;
                 break;
             }
@@ -94,5 +92,5 @@ void pe50::run()
     }
 
     std::cout << "best     : " << best_sum << std::endl;
-    std::cout << "best size: " << best_guess.size() << std::endl;
+    std::cout << "best size: " << best_range << std::endl;
 }
