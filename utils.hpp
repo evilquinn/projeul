@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 #include <vector>
+#include <map>
 
 class prime_sieve;
 
@@ -13,6 +14,33 @@ class prime_sieve;
  * @return   The number of digits in supplied n
  */
 int num_digits(long long unsigned n);
+
+
+/*
+ * counts the number of digits in a number which match a supplied digit
+ * @param n  The number to count the digits of
+ * @param d  The digit to match against
+ * @return   The number of digits in supplied n
+ */
+int num_digits_matching(long long unsigned n, short d);
+
+/*
+ * performs digit pattern analysing.  Returns a map containing a count for each
+ * digit encountered, and a map containing an value representing the pattern
+ * of each digit encountered, e.g.
+ *   12123 =>
+ *     digit_count => { 1 => 2, 2 => 2, 3 => 1 }
+ *     digit_pattern => { 1=> 10100, 2 => 1010, 3 => 1 }
+ *
+ * @param digit_count map will contain the count for each digit
+ * @param digit_pattern map will contain the pattern for each digit
+ * @return distinct number of digits
+ */
+typedef std::map<short, size_t> digit_pattern_map_t;
+typedef std::map<short, short> digit_count_map_t;
+size_t pattern_of_matching_digits(size_t num,
+                                  digit_count_map_t& digit_count,
+                                  digit_pattern_map_t& digit_pattern);
 
 /*
  * counts the number of digits in an array of numbers
