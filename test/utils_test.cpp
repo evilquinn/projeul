@@ -24,7 +24,7 @@ TEST_F(UtilsTest, testDigitPatternWorksExpected)
     digit_count_map_t digit_count;
     digit_pattern_map_t digit_pattern;
 
-    size_t digits = pattern_of_matching_digits(num, digit_count, digit_pattern);
+    size_t digits = pattern_of_digits(num, digit_count, digit_pattern);
 
     EXPECT_THAT(digits, Eq(3));
     EXPECT_THAT(digit_count[0], Eq(0));
@@ -43,7 +43,7 @@ TEST_F(UtilsTest, testDigitPatternWorksExpectedExtended)
     digit_count_map_t digit_count;
     digit_pattern_map_t digit_pattern;
 
-    size_t digits = pattern_of_matching_digits(num, digit_count, digit_pattern);
+    size_t digits = pattern_of_digits(num, digit_count, digit_pattern);
 
     EXPECT_THAT(digits, Eq(8));
     EXPECT_THAT(digit_count[0], Eq(1));

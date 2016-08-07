@@ -38,9 +38,9 @@ int num_digits_matching(long long unsigned n, short d);
  */
 typedef std::map<short, size_t> digit_pattern_map_t;
 typedef std::map<short, short> digit_count_map_t;
-size_t pattern_of_matching_digits(size_t num,
-                                  digit_count_map_t& digit_count,
-                                  digit_pattern_map_t& digit_pattern);
+size_t pattern_of_digits(size_t num,
+                         digit_count_map_t& digit_count,
+                         digit_pattern_map_t& digit_pattern);
 
 /*
  * counts the number of digits in an array of numbers
