@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#define PE50_LIMIT 1000
+#define PE50_LIMIT 1000000
 
 
 std::string& pe50::name()
@@ -51,74 +51,48 @@ void pe50::run()
     std::deque<size_t> max_list;
     size_t sum = 0;
 
-    // work out a good start point, which is every prime when summed is greater
-    // than limit
-    do
+    size_t hard_limit = 100000;
+    size_t working_limit = hard_limit;
+    size_t upper = primes_.prev_prime(working_limit);
+    size_t lower = primes_.next_prime(0);
+
+    std::deque<size_t> best_guess;
+    std::deque<size_t> working_list;
+    size_t best_sum = 0;
+    size_t working_sum = 0;
+
+    while ( lower < upper )
     {
-        start = primes_.next_prime(start);
-        max_list.push_back(start);
-        sum += start;
+        upper = primes_.prev_prime(working_limit);
+        while ( upper > lower )
+        {
+            size_t range = primes_.num_in_range(lower, upper);
+            if ( range < best_guess.size() )
+            {
+                break;
+            }
+
+            working_sum = primes_.sum_range(lower, upper, working_list);
+            if ( working_sum > hard_limit )
+            {
+                working_limit = upper;
+                upper = primes_.prev_prime(upper);
+                continue;
+            }
+            if ( primes_.is_prime(working_sum) &&
+                 working_list.size() > best_guess.size() )
+            {
+                best_guess = working_list;
+                best_sum = working_sum;
+                break;
+            }
+
+            upper = primes_.prev_prime(upper);
+        }
+
+        lower = primes_.next_prime(lower);
     }
-    while(sum < PE50_LIMIT);
 
-//    // DEBUG : print that list ffs
-//    std::cout << "max list " << std::endl;
-//    size_t tots = 0;
-//    BOOST_FOREACH(size_t val, max_list)
-//    {
-//        std::cout << val << " ";
-//        tots += val;
-//    }
-//    std::cout << std::endl << "max " << tots << std::endl;
-//
-//    return;
-
-    // work out a reasonable first guess, count back the primes until the sum
-    // is prime
-    std::deque<size_t> starting_list = max_list;
-    do
-    {
-        sum -= starting_list.back();
-        starting_list.pop_back();
-    }
-    while(!primes_.is_prime(sum));
-
-//    // now examine all possible better solutions
-//    std::deque<size_t> curr_list = max_list;
-//    size_t starting_size = max_list.size();
-//    size_t starting_sum = sum;
-//    size_t result_size = 0;
-//    std::deque<size_t> result_list;
-//    do
-//    {
-//        starting_sum -= curr_list[0];
-//        curr_list.erase(curr_list.begin());
-//        --starting_size;
-//        size_t curr_sum = starting_sum;
-//        do
-//        {
-//            if(curr_sum < PE50_LIMIT &&
-//               primes_.is_prime(curr_sum) &&
-//               curr_list.size() > result_size &&
-//               curr_sum > sum )
-//            {
-//                sum = curr_sum;
-//                result_size = curr_list.size();
-//                result_list = curr_list;
-//                break;
-//            }
-//
-//            curr_sum -= curr_list.back();
-//            curr_list.pop_back();
-//        }
-//        while(curr_list.size() > max_list.size());
-//    }
-//    while(starting_size > starting_list.size());
-
-    std::cout << "PE50 " << sum << " has " << starting_list.size() << " : " << std::endl;
-    BOOST_FOREACH(size_t val, starting_list)
-    {
-        std::cout << val << " ";
-    }
-    std::cout << std::endl;
+    std::cout << "best     : " << best_sum << std::endl;
+    std::cout << "best size: " << best_guess.size() << std::endl;
 }

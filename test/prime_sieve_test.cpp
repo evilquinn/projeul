@@ -76,3 +76,17 @@ TEST_F(PrimeSieveTest, testSumRangeReturnsExpected)
                                   sumees),
                 Eq(0));
 }
+
+TEST_F(PrimeSieveTest, testNumInRangeReturnsExpected)
+{
+    EXPECT_THAT(primes_.num_in_range(0, 0), Eq(0));
+    EXPECT_THAT(primes_.num_in_range(0, 1), Eq(0));
+    EXPECT_THAT(primes_.num_in_range(1, 1), Eq(0));
+    EXPECT_THAT(primes_.num_in_range(1, 2), Eq(1));
+    EXPECT_THAT(primes_.num_in_range(0, 2), Eq(1));
+    EXPECT_THAT(primes_.num_in_range(0, 3), Eq(2));
+    EXPECT_THAT(primes_.num_in_range(1, 3), Eq(2));
+    EXPECT_THAT(primes_.num_in_range(2, 3), Eq(2));
+    EXPECT_THAT(primes_.num_in_range(2, 5), Eq(3));
+    EXPECT_THAT(primes_.num_in_range(2, 10), Eq(4));
+}

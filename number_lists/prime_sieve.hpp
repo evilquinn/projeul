@@ -28,6 +28,7 @@ public:
     size_t next_prime(size_t from);
     size_t prev_prime(size_t from);
     size_t sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees);
+    size_t num_in_range(size_t lower, size_t upper);
 
 private:
 

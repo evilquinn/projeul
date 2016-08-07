@@ -105,6 +105,31 @@ size_t prime_sieve::prev_prime(size_t from)
     return result;
 }
 
+size_t prime_sieve::num_in_range(size_t lower, size_t upper)
+{
+    lower = is_prime(lower) ? lower : next_prime(lower);
+    upper = is_prime(upper) ? upper : prev_prime(upper);
+
+    if ( lower > upper )
+    {
+        return 0;
+    }
+    if ( lower == upper )
+    {
+        return 1;
+    }
+    size_t result = 0;
+    do
+    {
+        ++result;
+        lower = next_prime(lower);
+    }
+    while ( lower <= upper );
+
+    return result;
+}
+
+
 size_t prime_sieve::sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees)
 {
     sumees.clear();
