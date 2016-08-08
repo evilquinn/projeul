@@ -44,13 +44,6 @@ void pe50::run()
      * consecutive primes?
      *
      */
-    size_t start = 0;
-    size_t most_primes = 0;
-    size_t result = 0;
-
-    std::deque<size_t> max_list;
-    size_t sum = 0;
-
     size_t hard_limit = 1000000;
     size_t working_limit = 4000;
     size_t upper = primes_.prev_prime(working_limit);

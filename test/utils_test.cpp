@@ -94,3 +94,19 @@ TEST_F(UtilsTest, testSameDigitsOldWorksExpected)
     EXPECT_TRUE(same_digits_old(123999, 321999));
     }
 }
+
+TEST_F(UtilsTest, testNCRReturnsExpected)
+{
+    EXPECT_THAT(n_c_r(5, 3), Eq(10));
+    EXPECT_THAT(n_c_r(1, 1), Eq(1));
+    EXPECT_THAT(n_c_r(1, 2), Eq(2));
+
+    for ( size_t n = 1; n < 100; ++n )
+    {
+        for ( size_t r = 1; r <= n; ++r )
+        {
+            size_t ncr = n_c_r(n, r);
+            printf("%zu\t%zu\t%zu\n", ncr, n, r);
+        }
+    }
+}

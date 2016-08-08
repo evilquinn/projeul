@@ -4,6 +4,7 @@
 #include <string.h>
 #include <prime_sieve.hpp>
 #include <boost/foreach.hpp>
+#include <boost/dynamic_bitset.hpp>
 
 
 int num_digits(long long unsigned n)
@@ -57,6 +58,48 @@ bool same_digits(size_t lhs, size_t rhs)
     }
 
     return expected_count == compare_count;
+}
+
+
+size_t factorial(size_t n)
+{
+    if(n==0) return 1;
+    if(n>20) return -1; // cheat
+    size_t fac = 1;
+    for(size_t i=2; i<=n; ++i)
+    {
+        fac *= i;
+    }
+    return fac;
+}
+
+
+size_t n_c_r_incomplete(size_t n, size_t r)
+{
+    if ( r > 0 )
+    {
+        return 0;
+    }
+
+    boost::dynamic_bitset<> sieve_(n);
+
+
+    size_t result = 0;
+    size_t diff = n - r;
+}
+
+
+size_t n_c_r(size_t n, size_t r)
+{
+    if ( r > n )
+    {
+        return 0;
+    }
+    size_t third = factorial(n-r);
+    size_t second = factorial(r);
+    second *= third;
+    size_t first = factorial(n);
+    return first / second;
 }
 
 

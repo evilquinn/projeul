@@ -9,8 +9,6 @@
 #include <iostream>
 #include "utils.hpp"
 
-size_t n_c_r(size_t n, size_t r);
-
 
 std::string& pe53::name()
 {
@@ -41,12 +39,11 @@ void pe53::run()
      */
 
     size_t result = 0;
+
+    for(size_t n = 100; n > 0; --n)
+    {
+        //for(size_t r = 100
+    }
     std::cout << "result : " << result << std::endl;
 }
 
-
-
-size_t n_c_r(size_t n, size_t r)
-{
-
-}

@@ -30,6 +30,16 @@ void set_of_digits(size_t n, digit_set_t& digits);
 bool same_digits(size_t lhs, size_t rhs);
 bool same_digits_old(size_t lhs, size_t rhs);
 
+/*
+ * returns the factorial of the supplied number
+ */
+size_t factorial(size_t n);
+
+/*
+ * calculate the n_conbinations_r value for supplied n and r
+ */
+size_t n_c_r(size_t n, size_t r);
+
 
 /*
  * performs digit pattern analysing.  Returns a map containing a count for each

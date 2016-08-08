@@ -47,8 +47,6 @@ void pe51::run()
      *
      */
 
-    size_t result = 0;
-
     size_t current = primes_.next_prime(PE51_BEGIN);
     bool done = false;
 
@@ -63,8 +61,6 @@ void pe51::run()
         // check is got two zeros
         digit_count_map_t digit_count;
         digit_pattern_map_t digit_pattern;
-
-        size_t digits = pattern_of_digits(current, digit_count, digit_pattern);
 
         BOOST_FOREACH ( digit_count_map_t::value_type& p, digit_count )
         {
