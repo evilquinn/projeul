@@ -7,12 +7,14 @@ add_subdirectory($ENV{GMOCK_ROOT}
 
 add_executable(test_projeul ../utils.cpp
                             prime_sieve_test.cpp
+                            card_test.cpp
                             triangle_numbers_test.cpp
                             pentagonal_numbers_test.cpp
                             hexagonal_numbers_test.cpp
                             known_primes.cpp
                             utils_test.cpp)
 
-target_link_libraries(test_projeul number_lists
+target_link_libraries(test_projeul poker
+                                   number_lists
                                    gmock_main)
 
