@@ -39,6 +39,7 @@ size_t factorial(size_t n);
  * calculate the n_conbinations_r value for supplied n and r
  */
 size_t n_c_r(size_t n, size_t r);
+size_t n_c_r_shit(size_t n, size_t r);
 
 
 /*

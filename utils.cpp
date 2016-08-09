@@ -73,23 +73,24 @@ size_t factorial(size_t n)
     return fac;
 }
 
-
-size_t n_c_r_incomplete(size_t n, size_t r)
+size_t n_c_r(size_t n, size_t r)
 {
-    if ( r > 0 )
+    if ( r > n )
     {
         return 0;
     }
 
-    boost::dynamic_bitset<> sieve_(n);
+    if ( r == n )
+    {
+        return 1;
+    }
 
 
-    size_t result = 0;
-    size_t diff = n - r;
+    return ( n_c_r(n-1, r) + n_c_r(n-1, r-1) );
 }
 
 
-size_t n_c_r(size_t n, size_t r)
+size_t n_c_r_shit(size_t n, size_t r)
 {
     if ( r > n )
     {
