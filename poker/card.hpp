@@ -50,6 +50,7 @@ public:
 
     suit_k  suit_;
     value_k value_;
+    bool operator<(const card& rhs) const;
 
 private:
     suit_k char_to_suit(char s);

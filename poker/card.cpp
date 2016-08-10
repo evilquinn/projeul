@@ -56,3 +56,9 @@ card::value_k card::char_to_value(char v)
         default  : return VALUE_UNINIT;
     }
 }
+
+bool card::operator<(const card& rhs) const
+{
+   return value_ == rhs.value_ ? suit_  < rhs.suit_ :
+                                 value_ < rhs.value_ ;
+}
