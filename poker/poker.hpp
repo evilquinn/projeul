@@ -23,14 +23,28 @@ int game(const hand& player1, const hand& player2);
 class scored_hand
 {
 public:
-    scored_hand(hand);
+    enum rank_k
+    {
+        RANK_UNINIT = 0,
+        HIGH_CARD = 1,
+        ONE_PAIR  = 2,
+        TWO_PAIRS = 3,
+        THREE_OF_KIND = 4,
+        STRAIGHT = 5,
+        FLUSH = 6,
+        FOUR_OF_KIND = 7,
+        STRAIGHT_FLUSH = 8,
+        ROYAL_FLUSH = 9
+    };
+    scored_hand(const hand& hand);
     virtual ~scored_hand(){};
 
 private:
     rank_k  rank_;
+    hand    rank_cards_;
     hand    remaining_;
 
-} // class scored_hand
+}; // class scored_hand
 
 } // namespace poker
 

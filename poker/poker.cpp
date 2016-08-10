@@ -27,10 +27,13 @@ void poker::make_hand(const std::string& hand_string, poker::hand& hand)
     return;
 }
 
-void poker::scored_hand::scored_hand(const poker::hand& hand) :
+poker::scored_hand::scored_hand(const poker::hand& hand) :
     rank_(RANK_UNINIT),
+    rank_cards_(),
     remaining_()
-{};
+{
+
+};
 
 int poker::game(const poker::hand& player1,
                 const poker::hand& player2)
