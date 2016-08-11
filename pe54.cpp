@@ -9,6 +9,9 @@
 #include <iostream>
 #include "utils.hpp"
 
+#include <poker.hpp>
+#include "pe54_poker.hpp"
+
 
 std::string& pe54::name()
 {
@@ -76,6 +79,28 @@ void pe54::run()
 
     size_t result = 0;
 
-    std::cout << "result : " << result << std::endl;
+    const size_t player_length = 14;
+    size_t p1_offset = 0;
+    size_t p2_offset = p1_offset + player_length + 1;
+    size_t p1_count = 0;
+
+    for(size_t i = 0; i < 1000; ++i)
+    {
+        poker::hand p1;
+        poker::hand p2;
+        poker::make_hand(pe54_poker_games.substr(p1_offset, player_length),
+                         p1);
+        poker::make_hand(pe54_poker_games.substr(p2_offset, player_length),
+                         p2);
+
+        if ( poker::game(p1, p2) < 0 )
+        {
+            ++p1_count;
+        }
+        p1_offset = p1_offset + (player_length + 1 + player_length);
+        p2_offset = p1_offset + player_length + 1;
+    }
+
+    std::cout << "result : " << p1_count << std::endl;
 }
 

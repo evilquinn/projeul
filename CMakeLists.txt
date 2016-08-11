@@ -37,7 +37,8 @@ add_executable(projeul main.cpp
                        pe53.cpp
                        pe54.cpp)
 
-target_link_libraries(projeul number_lists)
+target_link_libraries(projeul number_lists
+                              poker)
 
 add_subdirectory(test)
 add_subdirectory(profile)
