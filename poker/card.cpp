@@ -17,7 +17,7 @@ card::card() :
     ival_(0)
 {}
 
-card::card(const char* string_value) :
+card::card(const std::string& string_value) :
     suit_(SUIT_UNINIT),
     value_(VALUE_UNINIT),
     ival_(0)
@@ -34,7 +34,7 @@ card::~card()
 }
 
 
-card::suit_k card::char_to_suit(char s)
+card::suit_k card::char_to_suit(const char s) const
 {
     switch ( s )
     {
@@ -46,7 +46,7 @@ card::suit_k card::char_to_suit(char s)
     }
 }
 
-int card::char_to_int(char v)
+int card::char_to_int(const char v) const
 {
     switch ( v )
     {
@@ -68,7 +68,7 @@ int card::char_to_int(char v)
 }
 
 
-card::value_k card::char_to_value(char v)
+card::value_k card::char_to_value(const char v) const
 {
     switch ( v )
     {
@@ -91,6 +91,15 @@ card::value_k card::char_to_value(char v)
 
 bool card::operator<(const card& rhs) const
 {
-   return value_ == rhs.value_ ? suit_  < rhs.suit_ :
-                                 value_ < rhs.value_ ;
+    std::cout << "my value: " << value_ << std::endl
+              << "my_ival:  " << ival_  << std::endl
+              << "my_suit:  " << suit_  << std::endl
+              << "his value: " << rhs.value_ << std::endl
+              << "his ival:  " << rhs.ival_  << std::endl
+              << "his suit:  " << rhs.suit_  << std::endl;
+    bool result = value_ == rhs.value_ ?
+                      suit_  < rhs.suit_ :
+                      value_ < rhs.value_ ;
+    std::cout << "my result: " << result << std::endl;
+    return result;
 }

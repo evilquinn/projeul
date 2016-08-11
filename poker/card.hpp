@@ -8,19 +8,14 @@
 #ifndef CARD_HPP_
 #define CARD_HPP_
 
-#include <stddef.h>
-#include <bitset>
-#include <boost/dynamic_bitset.hpp>
-#include <deque>
-
-#define PRIME_SIEVE_MAX_PRIME 67000000
+#include <string>
 
 class card
 {
 public:
     enum suit_k
     {
-        SUIT_UNINIT,
+        SUIT_UNINIT = 0,
         HEARTS,
         DIAMONDS,
         SPADES,
@@ -46,7 +41,7 @@ public:
     };
 
     card();
-    card(const char* string_value);
+    card(const std::string& string_value);
     virtual ~card();
 
     suit_k  suit_;
@@ -55,9 +50,9 @@ public:
     bool operator<(const card& rhs) const;
 
 private:
-    suit_k char_to_suit(char s);
-    value_k char_to_value(char v);
-    int  char_to_int(char v);
+    suit_k char_to_suit(const char s) const;
+    value_k char_to_value(const char v) const;
+    int  char_to_int(const char v) const;
 };
 
 #endif /* CARD_HPP_ */

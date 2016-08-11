@@ -20,7 +20,8 @@ void poker::make_hand(const std::string& hand_string, poker::hand& hand)
                                                         sep);
     BOOST_FOREACH (const std::string& card_string, card_strings)
     {
-        card c(card_string.c_str());
+        std::cout << "wha: " << card_string << " ? so there" << std::endl;
+        card c(card_string);
         hand.insert(c);
     }
 
@@ -96,29 +97,63 @@ int poker::scored_hand::play(const poker::scored_hand& enemy)
     }
     else if ( rank_ == enemy.rank_ )
     {
-        if ( *(rank_cards_.rbegin()) < *(enemy.rank_cards_.rbegin()) )
+        if ( ! rank_cards_.empty() &&
+             ! enemy.rank_cards_.empty() )
         {
-            return -1;
-        }
-        else if ( *(enemy.rank_cards_.rbegin()) < *(rank_cards_.rbegin()) )
-        {
-            return 1;
-        }
-        // rank is same, and winning rank cards are same,
-        // need to check HIGH_CARD
-        else if ( *(remaining_.rbegin()) < *(enemy.remaining_.rbegin()) )
-        {
-            return -1;
-        }
-        else if ( *(enemy.remaining_.rbegin()) < *(remaining_.rbegin()) )
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
+            const hand::reverse_iterator my_highest_rank =
+                rank_cards_.rbegin();
+            const hand::reverse_iterator his_highest_rank =
+                enemy.rank_cards_.rbegin();
+            if ( *my_highest_rank < *his_highest_rank )
+            {
+                return -1;
+            }
+            else if ( *his_highest_rank < *my_highest_rank )
+            {
+                return 1;
+            }
         }
 
+        if ( ! rank_cards_.empty() )
+        {
+            return 1;
+        }
+
+        if ( ! enemy.rank_cards_.empty() )
+        {
+            return -1;
+        }
+
+        // rank is same, and winning rank cards are same,
+        // need to check HIGH_CARD
+        if ( ! remaining_.empty() &&
+             ! enemy.remaining_.empty() )
+        {
+            const hand::reverse_iterator my_highest_remaining =
+                remaining_.rbegin();
+            const hand::reverse_iterator his_highest_remaining =
+                enemy.remaining_.rbegin();
+            if ( *my_highest_remaining < *his_highest_remaining )
+            {
+                return -1;
+            }
+            else if ( *his_highest_remaining < *my_highest_remaining )
+            {
+                return 1;
+            }
+        }
+
+        if ( ! remaining_.empty() )
+        {
+            return 1;
+        }
+
+        if ( ! enemy.remaining_.empty() )
+        {
+            return -1;
+        }
+
+        return 0;
     }
     else
     {
@@ -226,5 +261,5 @@ int poker::game(const poker::hand& player1,
     // p1 wins == -1; draw == 0; p2 wins == 1
     scored_hand p1(player1);
     scored_hand p2(player2);
-    return p2.play(p1); // draw
+    return p2.play(p1);
 }

@@ -27,7 +27,7 @@ TEST_F(PokerTest, testMakeHandWorksExpected)
     poker::hand player1;
     poker::hand player2;
     poker::make_hand("KH 2H 3H 4H 5H", player1);
-    poker::make_hand("JC 2D AH AC 5H", player2);
+    //poker::make_hand("JC 2D AH AC 5H", player2);
 
     EXPECT_THAT(player1, UnorderedElementsAre(
                              AllOf(Field(&card::value_, card::KING),
@@ -41,7 +41,7 @@ TEST_F(PokerTest, testMakeHandWorksExpected)
                              AllOf(Field(&card::value_, card::FIVE),
                                    Field(&card::suit_,  card::HEARTS))));
 
-
+/*
     EXPECT_THAT(player2, UnorderedElementsAre(
                              AllOf(Field(&card::value_, card::JACK),
                                    Field(&card::suit_,  card::CLUBS)),
@@ -53,6 +53,7 @@ TEST_F(PokerTest, testMakeHandWorksExpected)
                                    Field(&card::suit_,  card::CLUBS)),
                              AllOf(Field(&card::value_, card::FIVE),
                                    Field(&card::suit_,  card::HEARTS))));
+                                   */
 }
 
 TEST_F(PokerTest, testScoredHandConstructorWorks)
