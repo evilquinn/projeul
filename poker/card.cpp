@@ -10,13 +10,23 @@
 #include <string.h>
 #include <iostream>
 
+
+card::card() :
+    suit_(SUIT_UNINIT),
+    value_(VALUE_UNINIT),
+    ival_(0)
+{}
+
 card::card(const char* string_value) :
     suit_(SUIT_UNINIT),
-    value_(VALUE_UNINIT)
+    value_(VALUE_UNINIT),
+    ival_(0)
 {
     // assume valid, EEK!
     value_ = char_to_value(string_value[0]);
+    ival_  = char_to_int(string_value[0]);
     suit_ = char_to_suit(string_value[1]);
+
 }
 
 card::~card()
@@ -35,6 +45,28 @@ card::suit_k card::char_to_suit(char s)
         default  : return SUIT_UNINIT;
     }
 }
+
+int card::char_to_int(char v)
+{
+    switch ( v )
+    {
+        case '2' : return 2;
+        case '3' : return 3;
+        case '4' : return 4;
+        case '5' : return 5;
+        case '6' : return 6;
+        case '7' : return 7;
+        case '8' : return 8;
+        case '9' : return 9;
+        case 'T' : return 10;
+        case 'J' : return 11;
+        case 'Q' : return 12;
+        case 'K' : return 13;
+        case 'A' : return 14;
+        default  : return 0;
+    }
+}
+
 
 card::value_k card::char_to_value(char v)
 {

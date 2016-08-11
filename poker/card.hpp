@@ -45,16 +45,19 @@ public:
         ACE   = 14
     };
 
+    card();
     card(const char* string_value);
     virtual ~card();
 
     suit_k  suit_;
     value_k value_;
+    int ival_;
     bool operator<(const card& rhs) const;
 
 private:
     suit_k char_to_suit(char s);
     value_k char_to_value(char v);
+    int  char_to_int(char v);
 };
 
 #endif /* CARD_HPP_ */

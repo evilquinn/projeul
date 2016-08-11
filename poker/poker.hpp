@@ -10,6 +10,7 @@
 
 #include <set>
 #include <string>
+#include <map>
 #include <card.hpp>
 
 namespace poker
@@ -32,17 +33,24 @@ public:
         THREE_OF_KIND = 4,
         STRAIGHT = 5,
         FLUSH = 6,
-        FOUR_OF_KIND = 7,
-        STRAIGHT_FLUSH = 8,
-        ROYAL_FLUSH = 9
+        FULL_HOUSE = 7,
+        FOUR_OF_KIND = 8,
+        STRAIGHT_FLUSH = 9,
+        ROYAL_FLUSH = 10
     };
+    typedef std::map<int, hand> card_count_map_t;
     scored_hand(const hand& hand);
     virtual ~scored_hand(){};
 
-private:
+    int play(const scored_hand& enemy);
+
+//private:
+    void analyse_for_straight_flush();
+    bool upgrade_rank(rank_k new_rank);
     rank_k  rank_;
     hand    rank_cards_;
     hand    remaining_;
+    const hand& hand_;
 
 }; // class scored_hand
 
