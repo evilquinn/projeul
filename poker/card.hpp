@@ -42,6 +42,7 @@ public:
 
     card();
     card(const std::string& string_value);
+    card(const card& copy);
     virtual ~card();
 
     suit_k  suit_;

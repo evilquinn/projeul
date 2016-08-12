@@ -13,7 +13,10 @@
 
 void poker::make_hand(const std::string& hand_string, poker::hand& hand)
 {
-    hand.clear();
+    if ( ! hand.empty() )
+    {
+        hand.clear();
+    }
     boost::char_separator<char> sep(" ");
     boost::tokenizer< boost::char_separator<char> > card_strings(
                                                         hand_string,

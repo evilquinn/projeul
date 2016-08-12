@@ -5,6 +5,7 @@
 #include <string>
 
 using ::testing::Eq;
+using ::testing::ElementsAre;
 using ::testing::UnorderedElementsAre;
 using ::testing::AllOf;
 using ::testing::Field;
@@ -25,35 +26,31 @@ protected:
 TEST_F(PokerTest, testMakeHandWorksExpected)
 {
     poker::hand player1;
-    poker::hand player2;
-    poker::make_hand("KH 2H 3H 4H 5H", player1);
-    //poker::make_hand("JC 2D AH AC 5H", player2);
+//    poker::make_hand("KH 2H 3H 4H 5H", player1);
+
+    card c1("KH");
+    card c2("2H");
+    card c3("3H");
+    card c4("4H");
+    card c5("5H");
+    player1.insert(c1);
+    player1.insert(c2);
+    player1.insert(c3);
+    player1.insert(c4);
+    player1.insert(c5);
+
 
     EXPECT_THAT(player1, UnorderedElementsAre(
-                             AllOf(Field(&card::value_, card::KING),
-                                   Field(&card::suit_,  card::HEARTS)),
-                             AllOf(Field(&card::value_, card::TWO),
-                                   Field(&card::suit_,  card::HEARTS)),
-                             AllOf(Field(&card::value_, card::THREE),
-                                   Field(&card::suit_,  card::HEARTS)),
-                             AllOf(Field(&card::value_, card::FOUR),
-                                   Field(&card::suit_,  card::HEARTS)),
-                             AllOf(Field(&card::value_, card::FIVE),
-                                   Field(&card::suit_,  card::HEARTS))));
-
-/*
-    EXPECT_THAT(player2, UnorderedElementsAre(
-                             AllOf(Field(&card::value_, card::JACK),
-                                   Field(&card::suit_,  card::CLUBS)),
-                             AllOf(Field(&card::value_, card::TWO),
-                                   Field(&card::suit_,  card::DIAMONDS)),
-                             AllOf(Field(&card::value_, card::ACE),
-                                   Field(&card::suit_,  card::HEARTS)),
-                             AllOf(Field(&card::value_, card::ACE),
-                                   Field(&card::suit_,  card::CLUBS)),
-                             AllOf(Field(&card::value_, card::FIVE),
-                                   Field(&card::suit_,  card::HEARTS))));
-                                   */
+                             AllOf(Field(&card::value_, Eq(card::KING)),
+                                   Field(&card::suit_,  Eq(card::HEARTS))),
+                             AllOf(Field(&card::value_, Eq(card::TWO)),
+                                   Field(&card::suit_,  Eq(card::HEARTS))),
+                             AllOf(Field(&card::value_, Eq(card::THREE)),
+                                   Field(&card::suit_,  Eq(card::HEARTS))),
+                             AllOf(Field(&card::value_, Eq(card::FOUR)),
+                                   Field(&card::suit_,  Eq(card::HEARTS))),
+                             AllOf(Field(&card::value_, Eq(card::FIVE)),
+                                   Field(&card::suit_,  Eq(card::HEARTS)))));
 }
 
 TEST_F(PokerTest, testScoredHandConstructorWorks)
@@ -71,6 +68,9 @@ TEST_F(PokerTest, testScoredHandConstructorWorks)
     poker::make_hand("2H 3H 4H 5H 7H", player1);
     poker::scored_hand scored4(player1);
     EXPECT_THAT(scored4.rank_, Eq(poker::scored_hand::FLUSH));
+    poker::make_hand("KH 2H 3H 4H 5H", player1);
+    poker::scored_hand scored5(player1);
+    EXPECT_THAT(scored5.rank_, Eq(poker::scored_hand::FLUSH));
 }
 
 TEST_F(PokerTest, testScoredHandGameWorks)

@@ -17,6 +17,12 @@ card::card() :
     ival_(0)
 {}
 
+card::card(const card& copy) :
+    suit_(copy.suit_),
+    value_(copy.value_),
+    ival_(copy.ival_)
+{}
+
 card::card(const std::string& string_value) :
     suit_(SUIT_UNINIT),
     value_(VALUE_UNINIT),
