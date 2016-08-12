@@ -35,7 +35,8 @@ add_executable(projeul main.cpp
                        pe51.cpp
                        pe52.cpp
                        pe53.cpp
-                       pe54.cpp)
+                       pe54.cpp
+                       pe55.cpp)
 
 add_executable(shit_test test/shit_test.cpp)
 target_link_libraries(shit_test gmock)
