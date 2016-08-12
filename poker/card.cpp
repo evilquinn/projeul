@@ -97,15 +97,8 @@ card::value_k card::char_to_value(const char v) const
 
 bool card::operator<(const card& rhs) const
 {
-    std::cout << "my value: " << value_ << std::endl
-              << "my_ival:  " << ival_  << std::endl
-              << "my_suit:  " << suit_  << std::endl
-              << "his value: " << rhs.value_ << std::endl
-              << "his ival:  " << rhs.ival_  << std::endl
-              << "his suit:  " << rhs.suit_  << std::endl;
     bool result = value_ == rhs.value_ ?
                       suit_  < rhs.suit_ :
                       value_ < rhs.value_ ;
-    std::cout << "my result: " << result << std::endl;
     return result;
 }

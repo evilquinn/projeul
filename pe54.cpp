@@ -84,7 +84,6 @@ void pe54::run()
     size_t p2_offset = p1_offset + player_length + 1;
     size_t p1_count = 0;
 
-    std::cout << "poker games:\n" << pe54_poker_games << std::endl;
 
     for(size_t i = 0; i < 1000; ++i)
     {

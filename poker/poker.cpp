@@ -13,17 +13,13 @@
 
 void poker::make_hand(const std::string& hand_string, poker::hand& hand)
 {
-    if ( ! hand.empty() )
-    {
-        hand.clear();
-    }
+    hand.clear();
     boost::char_separator<char> sep(" ");
     boost::tokenizer< boost::char_separator<char> > card_strings(
                                                         hand_string,
                                                         sep);
     BOOST_FOREACH (const std::string& card_string, card_strings)
     {
-        std::cout << "wha: " << card_string << " ? so there" << std::endl;
         card c(card_string);
         hand.insert(c);
     }
@@ -48,10 +44,6 @@ poker::scored_hand::scored_hand(const poker::hand& hand) :
     }
     BOOST_FOREACH ( const card_count_map_t::value_type& card_count, seen_cards )
     {
-        std::cout << "saw " << card_count.first
-                  << " " << card_count.second.size()
-                  << " time(s)" << std::endl;
-
         if ( card_count.second.size() > 4 )
         {
             std::cout << "WTF!!!" << std::endl;
@@ -211,7 +203,6 @@ void poker::scored_hand::analyse_for_straight_flush()
             starting = false;
             continue;
         }
-        std::cout << c.ival_ << "   :   " << last->ival_ << std::endl;
 
         if ( c.ival_ == last->ival_ + 1 )
         {
