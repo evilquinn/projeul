@@ -109,14 +109,14 @@ int poker::scored_hand::play(const poker::scored_hand& enemy)
             }
         }
 
-        if ( ! rank_cards_.empty() )
-        {
-            return 1;
-        }
-
-        if ( ! enemy.rank_cards_.empty() )
+        else if ( ! rank_cards_.empty() )
         {
             return -1;
+        }
+
+        else if ( ! enemy.rank_cards_.empty() )
+        {
+            return 1;
         }
 
         // rank is same, and winning rank cards are same,
@@ -138,14 +138,14 @@ int poker::scored_hand::play(const poker::scored_hand& enemy)
             }
         }
 
-        if ( ! remaining_.empty() )
-        {
-            return 1;
-        }
-
-        if ( ! enemy.remaining_.empty() )
+        else if ( ! remaining_.empty() )
         {
             return -1;
+        }
+
+        else if ( ! enemy.remaining_.empty() )
+        {
+            return 1;
         }
 
         return 0;
