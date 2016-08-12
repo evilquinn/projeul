@@ -37,6 +37,9 @@ add_executable(projeul main.cpp
                        pe53.cpp
                        pe54.cpp)
 
+add_executable(shit_test test/shit_test.cpp)
+target_link_libraries(shit_test gmock)
+
 target_link_libraries(projeul number_lists
                               poker)
 
