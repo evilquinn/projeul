@@ -5,10 +5,11 @@ include_directories($ENV{BOOST_ROOT})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(number_lists)
 include_directories(poker)
+include_directories(utils)
 add_subdirectory(number_lists)
 add_subdirectory(poker)
+add_subdirectory(utils)
 add_executable(projeul main.cpp
-                       utils.cpp
                        pe27.cpp
                        pe29.cpp
                        pe30.cpp
@@ -41,7 +42,8 @@ add_executable(projeul main.cpp
 add_executable(shit_test test/shit_test.cpp)
 target_link_libraries(shit_test gmock)
 
-target_link_libraries(projeul number_lists
+target_link_libraries(projeul utils
+                              number_lists
                               poker)
 
 add_subdirectory(test)

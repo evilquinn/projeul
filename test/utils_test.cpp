@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <utils.hpp>
+#include <gint.hpp>
 
 using ::testing::Eq;
 
@@ -98,4 +99,12 @@ TEST_F(UtilsTest, testSameDigitsOldWorksExpected)
 TEST_F(UtilsTest, testNCRReturnsExpected)
 {
     EXPECT_THAT(n_c_r(5, 3), Eq(10));
+}
+
+TEST_F(UtilsTest, testGintConstructorWorksExpected)
+{
+    gint giant_int(1234);
+    giant_int.print();
+
+
 }

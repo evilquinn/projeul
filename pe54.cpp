@@ -77,7 +77,6 @@ void pe54::run()
      *
      */
 
-    size_t result = 0;
 
     const size_t player_length = 14;
     size_t p1_offset = 0;

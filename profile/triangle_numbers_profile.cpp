@@ -26,16 +26,26 @@ protected:
 
 TEST_F(TriangleNumbersProfile, profileTriangleNumbersGetTerm)
 {
+    size_t result;
     for(size_t i = 1; i <= TRIANGLE_NUMBERS_PROFILE_NUMBER; ++i)
     {
-        size_t result = triangles_->get_term(i);
+        result = triangles_->get_term(i);
+    }
+    if ( result )
+    {
+        // no op
     }
 }
 
 TEST_F(TriangleNumbersProfile, profileTriangleNumbersCalcTriangleForTerm)
 {
+    size_t result;
     for(size_t i = 1; i <= TRIANGLE_NUMBERS_PROFILE_NUMBER; ++i)
     {
-        size_t result = triangle_numbers::calc_triangle_number_for_term(i);
+        result = triangle_numbers::calc_triangle_number_for_term(i);
+    }
+    if ( result )
+    {
+        // no op
     }
 }
