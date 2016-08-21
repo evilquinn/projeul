@@ -19,11 +19,19 @@ public:
     gint(size_t n);
     virtual ~gint();
 
+    gint& add(const gint& rhs);
+    gint& add_reverse_of(const gint rhs);
+    gint& add(size_t rhs);
+
+    bool is_palindrome();
+
     void print();
 
 private:
-
-    std::deque<uint8_t> n_;
+    gint& add_self(const gint rhs);
+    gint& add_digit_at_pos(size_t& pos, uint8_t digit);
+    typedef std::deque<uint8_t> gint_digits_t;
+    gint_digits_t n_;
 };
 
 #endif /* GINT_HPP_ */

@@ -103,8 +103,33 @@ TEST_F(UtilsTest, testNCRReturnsExpected)
 
 TEST_F(UtilsTest, testGintConstructorWorksExpected)
 {
-    gint giant_int(1234);
-    giant_int.print();
+    gint gi(1234);
+    gint gd(1234);
+    gi.print();
+
+    gi.add(1234);
+    gi.print();
+
+    gi.add(1234);
+    gi.print();
+
+    gi.add(1234).add(1234);
+    gi.add(1234).add(1234);
+    gi.add(1234).add(gd).add(1234);
+    gi.print();
+
+    gi.add(gi);
+    gi.print();
+
+}
 
 
+TEST_F(UtilsTest, testGintIsPalindromeWorksExpected)
+{
+    gint p1(1234);
+    gint p2(1221);
+    gint p3(1);
+    EXPECT_FALSE(p1.is_palindrome());
+    EXPECT_TRUE(p2.is_palindrome());
+    EXPECT_TRUE(p3.is_palindrome());
 }
