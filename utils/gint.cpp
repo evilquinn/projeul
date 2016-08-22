@@ -99,18 +99,19 @@ gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
 
     n_[pos] += digit;
 
-    int carry_on_pos = pos;
+    size_t carry_on_pos = pos;
     while(n_[carry_on_pos] >= 10)
     {
         n_[carry_on_pos] -= 10;
-        if(--carry_on_pos >= 0)
+        if(--carry_on_pos < pos)
         {
-            ++n_[carry_on_pos];
+            ++(n_[carry_on_pos]);
         }
         else
         {
             n_.push_front(1);
             ++pos;
+            break;
         }
     }
     return *this;
