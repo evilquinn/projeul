@@ -115,7 +115,7 @@ TEST_F(UtilsTest, testGintConstructorWorksExpected)
 
     gi.add(1234).add(1234);
     gi.add(1234).add(1234);
-    gi.add(1234).add(gd).add(1234);
+    gi.add_reverse_of(4321).add(gd).add(1234);
     gi.print();
 
     gi.add(gi);

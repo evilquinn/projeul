@@ -120,6 +120,7 @@ gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
 gint& gint::add_reverse_of(const gint rhs)
 {
     // already took a copy, safe in case this == &rhs
+    // (which it probably will be in my use case)
     // consider: making a copy and non-copy variant
     size_t add_to_pos = n_.size() - 1;
 
