@@ -7,7 +7,11 @@
 
 #include "pe55.hpp"
 #include <iostream>
-#include "utils.hpp"
+#include <utils.hpp>
+#include <gint.hpp>
+
+bool is_lychrel(size_t i);
+
 
 std::string& pe55::name()
 {
@@ -51,6 +55,32 @@ void pe55::run()
 
     size_t result = 0;
 
+    for ( size_t i = 1; i < 10000; ++i )
+    {
+        if ( is_lychrel(i) )
+        {
+            std::cout << i << std::endl;
+            ++result;
+        }
+    }
+
     std::cout << "result : " << result << std::endl;
+}
+
+bool is_lychrel(size_t i)
+{
+    gint gi(i);
+    size_t iterations = 1;
+
+    while ( iterations < 50 )
+    {
+        gi.add_reverse_of(gi);
+        if ( gi.is_palindrome() )
+        {
+            break;
+        }
+        ++iterations;
+    }
+    return iterations >= 50;
 }
 
