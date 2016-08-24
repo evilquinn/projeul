@@ -22,6 +22,8 @@ public:
     gint& add(const gint& rhs);
     gint& add_reverse_of(const gint rhs);
     gint& add(size_t rhs);
+    gint& multiply_by(size_t rhs);
+    size_t sum_digits();
 
     bool is_palindrome();
 

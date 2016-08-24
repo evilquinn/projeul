@@ -13,7 +13,9 @@
 
 gint::gint() :
     n_()
-{}
+{
+    n_.push_front(0);
+}
 
 gint::gint(size_t n) :
     n_()
@@ -166,4 +168,30 @@ void gint::print()
     }
     std::cout << std::endl;
 }
+
+
+gint& gint::multiply_by(size_t mult_by)
+{
+    gint add_to;
+
+    for(size_t i = 0; i < mult_by; ++i)
+    {
+        add_to.add(*this);
+    }
+
+    *this = add_to;
+
+    return *this;
+}
+
+size_t gint::sum_digits()
+{
+    size_t result = 0;
+    BOOST_FOREACH ( const uint8_t digit, n_ )
+    {
+        result += digit;
+    }
+    return result;
+}
+
 
