@@ -27,6 +27,11 @@ gint::gint(size_t n) :
     }
 }
 
+gint::gint(const gint& rhs) :
+    n_(rhs.n_)
+{
+}
+
 gint::~gint()
 {
 }
@@ -169,8 +174,7 @@ void gint::print()
     std::cout << std::endl;
 }
 
-
-gint& gint::multiply_by(size_t mult_by)
+gint& gint::multiply_by_by_adding(size_t mult_by)
 {
     gint add_to;
 
@@ -180,6 +184,79 @@ gint& gint::multiply_by(size_t mult_by)
     }
 
     *this = add_to;
+
+    return *this;
+}
+
+gint& gint::multiply_by(size_t mult_by)
+{
+    if ( mult_by == 0 )
+    {
+        n_.clear();
+        n_.push_front(0);
+        return *this;
+    }
+
+    size_t pow_ten = 0;
+    size_t limit = mult_by;
+    gint result;
+
+    while ( mult_by <= limit && mult_by > 0 )
+    {
+        uint8_t mult_digit = mult_by % 10;
+        gint interim(*this);
+        if ( mult_digit != 0 )
+        {
+            interim.multiply_by_digit(mult_digit);
+        }
+
+        for ( size_t i = 0; i < pow_ten; ++i )
+        {
+            interim.n_.push_back(0);
+        }
+        result.add(interim);
+        ++pow_ten;
+        mult_by /= 10;
+    }
+
+    *this = result;
+
+    return *this;
+}
+
+gint& gint::multiply_by_digit(uint8_t digit)
+{
+    if ( digit > 9 )
+    {
+        throw std::invalid_argument("digit arguement isn't a single digit");
+    }
+
+
+    size_t start = n_.size() - 1;
+    size_t pos = start;
+    size_t carry_on = 0;
+    while( pos < n_.size() )
+    {
+        n_[pos] *= digit;
+        n_[pos] += carry_on;
+        if ( n_[pos] > 9 )
+        {
+            carry_on = n_[pos] / 10;
+            n_[pos] %= 10;
+        }
+        else
+        {
+            carry_on = 0;
+        }
+
+        --pos;
+    }
+
+    while ( carry_on > 0 )
+    {
+        n_.push_front(carry_on % 10);
+        carry_on /= 10;
+    }
 
     return *this;
 }

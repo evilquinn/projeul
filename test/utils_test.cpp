@@ -133,3 +133,12 @@ TEST_F(UtilsTest, testGintIsPalindromeWorksExpected)
     EXPECT_TRUE(p2.is_palindrome());
     EXPECT_TRUE(p3.is_palindrome());
 }
+
+TEST_F(UtilsTest, testGintMultiplyBy)
+{
+    gint g1(1234);
+    g1.multiply_by(28456212);
+    g1.print();
+    size_t expected = 1234ll * 28456212;
+    std::cout << expected << std::endl;
+}

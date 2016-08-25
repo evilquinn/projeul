@@ -17,6 +17,7 @@ class gint
 public:
     gint();
     gint(size_t n);
+    gint(const gint& rhs);
     virtual ~gint();
 
     gint& add(const gint& rhs);
@@ -32,6 +33,8 @@ public:
 private:
     gint& add_self(const gint rhs);
     gint& add_digit_at_pos(size_t& pos, uint8_t digit);
+    gint& multiply_by_digit(uint8_t digit);
+    gint& multiply_by_by_adding(size_t rhs);
     typedef std::deque<uint8_t> gint_digits_t;
     gint_digits_t n_;
 };

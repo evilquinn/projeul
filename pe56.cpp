@@ -30,7 +30,7 @@ void pe56::run()
 
     size_t result = 0;
 
-    for ( size_t a = 99; a > 90; --a )
+    for ( size_t a = 99; a > 0; --a )
     {
         gint ga(a);
         for ( size_t b = 0; b < 100; ++b )
