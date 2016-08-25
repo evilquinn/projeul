@@ -92,6 +92,83 @@ gint& gint::add(size_t rhs)
     return *this;
 }
 
+gint& gint::operator+= (const gint& rhs)
+{
+    return add(rhs);
+}
+
+gint gint::operator+ (const gint& rhs) const
+{
+    gint result(*this);
+    return result.add(rhs);
+}
+
+bool gint::less_than_or_equal(const gint& rhs, bool or_equal = true) const
+{
+    size_t my_size = n_.size();
+    size_t their_size = rhs.n_.size();
+    if ( my_size < their_size )
+    {
+        return true;
+    }
+    if ( my_size > their_size )
+    {
+        return false;
+    }
+
+    for ( size_t i = 0; i < my_size; ++i )
+    {
+        if ( n_[i] < rhs.n_[i] )
+        {
+            return true;
+        }
+        if ( n_[i] > rhs.n_[i] )
+        {
+            return false;
+        }
+    }
+
+    return or_equal;
+}
+
+bool gint::operator< (const gint& rhs) const
+{
+    return less_than_or_equal(rhs, false);
+}
+
+bool gint::operator<= (const gint& rhs) const
+{
+    return less_than_or_equal(rhs, true);
+}
+
+bool gint::operator== (const gint& rhs) const
+{
+    size_t my_size = n_.size();
+    size_t their_size = rhs.n_.size();
+
+    if ( my_size == their_size )
+    {
+        for ( size_t i = 0; i < my_size; ++i )
+        {
+            if ( n_[i] != rhs.n_[i] )
+            {
+                return false;
+            }
+            return true;
+    }
+    return false;
+}
+
+bool gint::operator>= (const gint& rhs) const
+{
+    return ! (*this < rhs);
+}
+
+bool gint::operator> (const gint& rhs) const
+{
+    return ! (*this <= rhs);
+}
+
 
 gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
 {

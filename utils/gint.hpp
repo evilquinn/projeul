@@ -21,16 +21,27 @@ public:
     virtual ~gint();
 
     gint& add(const gint& rhs);
-    gint& add_reverse_of(const gint rhs);
     gint& add(size_t rhs);
     gint& multiply_by(size_t rhs);
+
+    // operators
+    gint& operator+= (const gint& rhs);
+    gint operator+ (const gint& rhs) const;
+    bool operator< (const gint& rhs) const;
+    bool operator<= (const gint& rhs) const;
+    bool operator== (const gint& rhs) const;
+    bool operator>= (const gint& rhs) const;
+    bool operator> (const gint& rhs) const;
+
+
+    // utility
+    gint& add_reverse_of(const gint rhs);
     size_t sum_digits();
-
     bool is_palindrome();
-
     void print();
 
 private:
+    bool less_than_or_equal(const gint& rhs, bool or_equal) const;
     gint& add_self(const gint rhs);
     gint& add_digit_at_pos(size_t& pos, uint8_t digit);
     gint& multiply_by_digit(uint8_t digit);
