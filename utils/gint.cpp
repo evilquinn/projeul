@@ -92,24 +92,18 @@ gint& gint::add(size_t rhs)
     return *this;
 }
 
-gint& gint::operator+= (const gint& rhs)
+gint& gint::operator += (const gint& rhs)
 {
     return add(rhs);
 }
 
-gint gint::operator+ (const gint& rhs) const
-{
-    gint result(*this);
-    return result.add(rhs);
-}
-
-bool gint::less_than_or_equal(const gint& rhs, bool or_equal = true) const
+bool gint::less_than_xor_equal(const gint& rhs, bool equal) const
 {
     size_t my_size = n_.size();
     size_t their_size = rhs.n_.size();
     if ( my_size < their_size )
     {
-        return true;
+        return !equal;
     }
     if ( my_size > their_size )
     {
@@ -120,7 +114,7 @@ bool gint::less_than_or_equal(const gint& rhs, bool or_equal = true) const
     {
         if ( n_[i] < rhs.n_[i] )
         {
-            return true;
+            return !equal;
         }
         if ( n_[i] > rhs.n_[i] )
         {
@@ -128,47 +122,21 @@ bool gint::less_than_or_equal(const gint& rhs, bool or_equal = true) const
         }
     }
 
-    return or_equal;
+    return equal;
 }
 
-bool gint::operator< (const gint& rhs) const
+gint& gint::operator++()
 {
-    return less_than_or_equal(rhs, false);
+    size_t end = n_.size() - 1;
+    return add_digit_at_pos(end, 1);
 }
 
-bool gint::operator<= (const gint& rhs) const
+gint gint::operator++(int)
 {
-    return less_than_or_equal(rhs, true);
+    gint tmp(*this);
+    operator++();
+    return tmp;
 }
-
-bool gint::operator== (const gint& rhs) const
-{
-    size_t my_size = n_.size();
-    size_t their_size = rhs.n_.size();
-
-    if ( my_size == their_size )
-    {
-        for ( size_t i = 0; i < my_size; ++i )
-        {
-            if ( n_[i] != rhs.n_[i] )
-            {
-                return false;
-            }
-            return true;
-    }
-    return false;
-}
-
-bool gint::operator>= (const gint& rhs) const
-{
-    return ! (*this < rhs);
-}
-
-bool gint::operator> (const gint& rhs) const
-{
-    return ! (*this <= rhs);
-}
-
 
 gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
 {
@@ -197,6 +165,44 @@ gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
             ++pos;
             break;
         }
+    }
+    return *this;
+}
+
+
+gint& gint::subtract_digit_at_pos(size_t& pos, uint8_t digit)
+{
+    if ( digit > 9 )
+    {
+        throw std::invalid_argument("digit arguement isn't a single digit");
+    }
+    if ( pos >= n_.size() )
+    {
+        throw std::invalid_argument("pos argument greater than number size");
+    }
+    if ( n_.size() == 1 && n_[0] <= digit )
+    {
+        n_.clear();
+        n_.push_front(0);
+        return *this;
+    }
+
+    while ( pos < n_.size() )
+    {
+        uint8_t borrowed = 0;
+        if ( n_[pos] < digit )
+        {
+            n_[pos] += 10;
+            ++borrowed;
+        }
+        n_[pos] -= digit;
+        digit = borrowed;
+        --pos;
+    }
+
+    while ( n_.size() > 1 && n_[0] == 0 )
+    {
+        n_.pop_front();
     }
     return *this;
 }
