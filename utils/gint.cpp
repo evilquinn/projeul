@@ -390,6 +390,7 @@ gint& gint::multiply_by(const gint& mult_by)
         --pos;
     }
 
+    result.is_negative = is_negative != mult_by.is_negative;
     *this = result;
 
     return *this;
