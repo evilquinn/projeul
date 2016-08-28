@@ -25,7 +25,6 @@ public:
 
     gint& add(const gint& rhs);
     gint& subtract(const gint& rhs);
-    gint& add(size_t rhs);
     gint& multiply_by(const gint& rhs);
     gint abs() const;
 

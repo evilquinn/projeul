@@ -102,27 +102,75 @@ gint& gint::add(const gint& rhs)
     return *this;
 }
 
-gint& gint::add(size_t rhs)
+gint& gint::subtract(const gint& rhs)
 {
-    size_t add_to_pos = n_.size() - 1;
-    while(rhs>0)
+    if ( rhs.is_negative )
     {
-        if(add_to_pos < n_.size())
+        return add(rhs.abs());
+    }
+
+    if ( is_negative )
+    {
+        *this = rhs + this->abs();
+        is_negative = true;
+        return *this;
+    }
+
+    if ( *this == rhs )
+    {
+        n_.clear();
+        is_negative = false;
+        n_.push_front(0);
+        return *this;
+    }
+
+    if ( *this < rhs )
+    {
+        *this = rhs - this->abs();
+        is_negative = true;
+        return *this;
+    }
+
+    // we need to take a copy if we're adding a ref to myself
+    if ( this == &rhs )
+    {
+        gint rhs_copy(rhs);
+        return subtract(rhs_copy);
+    }
+
+    size_t rhs_pos = rhs.n_.size() - 1;
+    size_t my_pos = n_.size() - 1;
+    uint8_t part_subtract = 0;
+    uint8_t borrowed = 0;
+    while ( rhs_pos < rhs.n_.size() || borrowed != 0 )
+    {
+        part_subtract = borrowed;
+        if ( rhs_pos < rhs.n_.size() )
         {
-            uint8_t digit_to_add = rhs % 10;
-            add_digit_at_pos(add_to_pos, digit_to_add);
-            --add_to_pos;
-        }
-        else
-        {
-            n_.push_front(rhs % 10);
+            part_subtract += rhs.n_[rhs_pos];
         }
 
-        rhs /= 10;
+        borrowed = 0;
+        while ( n_[my_pos] < part_subtract )
+        {
+            ++borrowed;
+            n_[my_pos] += 10;
+        }
+
+        n_[my_pos] -= part_subtract;
+        --rhs_pos;
+        --my_pos;
+    }
+
+    // truncate leading zeros
+    while ( n_.size() > 1 && n_[0] == 0 )
+    {
+        n_.pop_front();
     }
 
     return *this;
 }
+
 
 gint& gint::operator += (const gint& rhs)
 {
@@ -229,70 +277,6 @@ gint gint::abs() const
     gint absolute(*this);
     absolute.is_negative = false;
     return absolute;
-}
-
-gint& gint::subtract(const gint& rhs)
-{
-    if ( rhs.is_negative )
-    {
-        return add(rhs.abs());
-    }
-
-    if ( is_negative )
-    {
-        gint temp(*this);
-        temp.is_negative = false;
-        *this = rhs - temp;
-        return *this;
-    }
-
-    if ( *this <= rhs )
-    {
-        gint temp(*this);
-        *this = rhs;
-        subtract(temp);
-        is_negative = *this != 0;
-        return *this;
-    }
-
-    // we need to take a copy if we're adding a ref to myself
-    if ( this == &rhs )
-    {
-        gint rhs_copy(rhs);
-        return subtract(rhs_copy);
-    }
-
-    size_t rhs_pos = rhs.n_.size() - 1;
-    size_t my_pos = n_.size() - 1;
-    uint8_t part_subtract = 0;
-    uint8_t borrowed = 0;
-    while ( rhs_pos < rhs.n_.size() || borrowed != 0 )
-    {
-        part_subtract = borrowed;
-        if ( rhs_pos < rhs.n_.size() )
-        {
-            part_subtract += rhs.n_[rhs_pos];
-        }
-
-        borrowed = 0;
-        while ( n_[my_pos] < part_subtract )
-        {
-            ++borrowed;
-            n_[my_pos] += 10;
-        }
-
-        n_[my_pos] -= part_subtract;
-        --rhs_pos;
-        --my_pos;
-    }
-
-    // truncate leading zeros
-    while ( n_.size() > 1 && n_[0] == 0 )
-    {
-        n_.pop_front();
-    }
-
-    return *this;
 }
 
 

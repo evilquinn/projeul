@@ -173,24 +173,24 @@ TEST_F(GintTest, testGintAddSubtractWorks)
     EXPECT_EQ(gint(100) + (-200), 100 + (-200));
     EXPECT_EQ(gint(100) + (-100), 100 + (-100));
     EXPECT_EQ(gint(200) + (-100), 200 + (-100));
-//    EXPECT_EQ(gint(-100) + 200, (-100) + 200);
-//    EXPECT_EQ(gint(-100) + 100, (-100) + 100);
-//    EXPECT_EQ(gint(-200) + 100, (-200) + 100);
-//    EXPECT_EQ(gint(-100) + (-200), (-100) + (-200));
-//    EXPECT_EQ(gint(-100) + (-100), (-100) + (-100));
-//    EXPECT_EQ(gint(-200) + (-100), (-200) + (-100));
-//    EXPECT_EQ(gint(100) - 200, 100 - 200);
-//    EXPECT_EQ(gint(100) - 100, 100 - 100);
-//    EXPECT_EQ(gint(200) - 100, 200 - 100);
-//    EXPECT_EQ(gint(100) - (-200), 100 - (-200));
-//    EXPECT_EQ(gint(100) - (-100), 100 - (-100));
-//    EXPECT_EQ(gint(200) - (-100), 200 - (-100));
-//    EXPECT_EQ(gint(-100) - 200, (-100) - 200);
-//    EXPECT_EQ(gint(-100) - 100, (-100) - 100);
-//    EXPECT_EQ(gint(-200) - 100, (-200) - 100);
-//    EXPECT_EQ(gint(-100) - (-200), (-100) - (-200));
-//    EXPECT_EQ(gint(-100) - (-100), (-100) - (-100));
-//    EXPECT_EQ(gint(-200) - (-100), (-200) - (-100));
+    EXPECT_EQ(gint(-100) + 200, (-100) + 200);
+    EXPECT_EQ(gint(-100) + 100, (-100) + 100);
+    EXPECT_EQ(gint(-200) + 100, (-200) + 100);
+    EXPECT_EQ(gint(-100) + (-200), (-100) + (-200));
+    EXPECT_EQ(gint(-100) + (-100), (-100) + (-100));
+    EXPECT_EQ(gint(-200) + (-100), (-200) + (-100));
+    EXPECT_EQ(gint(100) - 200, 100 - 200);
+    EXPECT_EQ(gint(100) - 100, 100 - 100);
+    EXPECT_EQ(gint(200) - 100, 200 - 100);
+    EXPECT_EQ(gint(100) - (-200), 100 - (-200));
+    EXPECT_EQ(gint(100) - (-100), 100 - (-100));
+    EXPECT_EQ(gint(200) - (-100), 200 - (-100));
+    EXPECT_EQ(gint(-100) - 200, (-100) - 200);
+    EXPECT_EQ(gint(-100) - 100, (-100) - 100);
+    EXPECT_EQ(gint(-200) - 100, (-200) - 100);
+    EXPECT_EQ(gint(-100) - (-200), (-100) - (-200));
+    EXPECT_EQ(gint(-100) - (-100), (-100) - (-100));
+    EXPECT_EQ(gint(-200) - (-100), (-200) - (-100));
 }
 
 
