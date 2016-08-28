@@ -132,7 +132,74 @@ TEST_F(GintTest, testGintSubtractWorksExpected)
     EXPECT_EQ(g1.subtract(123), 988);
     EXPECT_EQ(g1.subtract(980), 8);
     EXPECT_EQ(g1.subtract(10), -2);
-    EXPECT_EQ(g1.subtract(100), -102);
+    EXPECT_EQ(-102, g1.subtract(100));
+    EXPECT_EQ(g1 - 111, -213);
+    EXPECT_EQ(g1 + 111, 9);
     g1.print();
 }
 
+TEST_F(GintTest, testGintAddSubtractWorks)
+{
+    /*
+     * a + b, where a < b
+     * a + b, where a == b
+     * a + b, where a > b
+     * a + -b, where a < b
+     * a + -b, where a == b
+     * a + -b, where a > b
+     * -a + b, where a < b
+     * -a + b, where a == b
+     * -a + b, where a > b
+     * -a + -b, where a < b
+     * -a + -b, where a == b
+     * -a + -b, where a > b
+     * a - b, where a < b
+     * a - b, where a == b
+     * a - b, where a > b
+     * a - -b, where a < b
+     * a - -b, where a == b
+     * a - -b, where a > b
+     * -a - b, where a < b
+     * -a - b, where a == b
+     * -a - b, where a > b
+     * -a - -b, where a < b
+     * -a - -b, where a == b
+     * -a - -b, where a > b
+     */
+
+    EXPECT_EQ(gint(100) + 200, 100 + 200);
+    EXPECT_EQ(gint(100) + 100, 100 + 100);
+    EXPECT_EQ(gint(200) + 100, 200 + 100);
+    EXPECT_EQ(gint(100) + (-200), 100 + (-200));
+    EXPECT_EQ(gint(100) + (-100), 100 + (-100));
+    EXPECT_EQ(gint(200) + (-100), 200 + (-100));
+//    EXPECT_EQ(gint(-100) + 200, (-100) + 200);
+//    EXPECT_EQ(gint(-100) + 100, (-100) + 100);
+//    EXPECT_EQ(gint(-200) + 100, (-200) + 100);
+//    EXPECT_EQ(gint(-100) + (-200), (-100) + (-200));
+//    EXPECT_EQ(gint(-100) + (-100), (-100) + (-100));
+//    EXPECT_EQ(gint(-200) + (-100), (-200) + (-100));
+//    EXPECT_EQ(gint(100) - 200, 100 - 200);
+//    EXPECT_EQ(gint(100) - 100, 100 - 100);
+//    EXPECT_EQ(gint(200) - 100, 200 - 100);
+//    EXPECT_EQ(gint(100) - (-200), 100 - (-200));
+//    EXPECT_EQ(gint(100) - (-100), 100 - (-100));
+//    EXPECT_EQ(gint(200) - (-100), 200 - (-100));
+//    EXPECT_EQ(gint(-100) - 200, (-100) - 200);
+//    EXPECT_EQ(gint(-100) - 100, (-100) - 100);
+//    EXPECT_EQ(gint(-200) - 100, (-200) - 100);
+//    EXPECT_EQ(gint(-100) - (-200), (-100) - (-200));
+//    EXPECT_EQ(gint(-100) - (-100), (-100) - (-100));
+//    EXPECT_EQ(gint(-200) - (-100), (-200) - (-100));
+}
+
+
+
+TEST_F(GintTest, testGintStreamOutWorks)
+{
+    gint g1(1234);
+    std::cout << g1 * 2 << std::endl;
+    std::cout << g1 - 2 << std::endl;
+    std::cout << g1 - 2000 << std::endl;
+
+}

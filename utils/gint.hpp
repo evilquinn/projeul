@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <deque>
+#include <iostream>
 
 class gint
 {
@@ -39,7 +40,8 @@ public:
     gint& add_reverse_of(const gint& rhs);
     size_t sum_digits();
     bool is_palindrome();
-    void print();
+    void print() const;
+    std::ostream& stream_out(std::ostream& os) const;
     bool less_than_xor_equal(const gint& rhs, bool equal) const;
 
 private:
@@ -91,6 +93,11 @@ inline gint operator* (gint lhs, const gint& rhs)
 {
     lhs *= rhs;
     return lhs;
+}
+inline std::ostream& operator<<(std::ostream& os, const gint& obj)
+{
+    // write obj to stream
+    return obj.stream_out(os);
 }
 
 

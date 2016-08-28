@@ -7,7 +7,6 @@
 
 #include "gint.hpp"
 
-#include <iostream>
 #include <cstdlib>
 #include <stdexcept>
 #include <boost/foreach.hpp>
@@ -68,6 +67,13 @@ gint& gint::add(const gint& rhs)
     if ( rhs.is_negative )
     {
         return subtract(rhs.abs());
+    }
+
+    if ( is_negative )
+    {
+        is_negative = false;
+        *this = rhs - *this;
+        return *this;
     }
 
     if ( this == &rhs )
@@ -232,10 +238,18 @@ gint& gint::subtract(const gint& rhs)
         return add(rhs.abs());
     }
 
+    if ( is_negative )
+    {
+        gint temp(*this);
+        temp.is_negative = false;
+        *this = rhs - temp;
+        return *this;
+    }
+
     if ( *this <= rhs )
     {
         gint temp(*this);
-        n_ = rhs.n_;
+        *this = rhs;
         subtract(temp);
         is_negative = *this != 0;
         return *this;
@@ -327,17 +341,22 @@ bool gint::is_palindrome()
     return true;
 }
 
-void gint::print()
+void gint::print() const
+{
+    stream_out(std::cout) << std::endl;
+}
+
+std::ostream& gint::stream_out(std::ostream& os) const
 {
     if ( is_negative )
     {
-        std::cout << '-';
+        os << '-';
     }
-    BOOST_FOREACH(const short digit, n_)
+    for ( size_t i = 0; i < n_.size(); ++i )
     {
-        std::cout << digit;
+        os << static_cast<short>(n_[i]);
     }
-    std::cout << std::endl;
+    return os;
 }
 
 gint& gint::multiply_by_by_adding(size_t mult_by)
