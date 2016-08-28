@@ -8,18 +8,43 @@
 #include "gint.hpp"
 
 #include <iostream>
+#include <cstdlib>
 #include <stdexcept>
 #include <boost/foreach.hpp>
 
 gint::gint() :
-    n_()
+    n_(),
+    is_negative(false)
 {
     n_.push_front(0);
 }
 
 gint::gint(size_t n) :
-    n_()
+    n_(),
+    is_negative(false)
 {
+    construct_digits_from_positive(n);
+}
+
+gint::gint(long int n) :
+    n_(),
+    is_negative(n<0)
+{
+    construct_digits_from_positive( n<0 ? -n : n );
+}
+
+gint::gint(int n) :
+    gint(static_cast<long int>(n))
+{}
+
+
+void gint::construct_digits_from_positive(size_t n)
+{
+    if ( n == 0 )
+    {
+        n_.push_front(0);
+        return;
+    }
     while(n>0)
     {
         n_.push_front(n%10);
@@ -27,8 +52,10 @@ gint::gint(size_t n) :
     }
 }
 
+
 gint::gint(const gint& rhs) :
-    n_(rhs.n_)
+    n_(rhs.n_),
+    is_negative(rhs.is_negative)
 {
 }
 
@@ -38,9 +65,15 @@ gint::~gint()
 
 gint& gint::add(const gint& rhs)
 {
+    if ( rhs.is_negative )
+    {
+        return subtract(rhs.abs());
+    }
+
     if ( this == &rhs )
     {
-        return add_self(rhs);
+        gint rhs_copy(rhs);
+        return add(rhs_copy);
     }
 
     size_t add_to_pos = n_.size() - 1;
@@ -61,13 +94,6 @@ gint& gint::add(const gint& rhs)
     }
 
     return *this;
-}
-
-gint& gint::add_self(const gint rhs)
-{
-    // this function took a copy of whatever was passed in, so it's safe
-    // to just do the add
-    return add(rhs);
 }
 
 gint& gint::add(size_t rhs)
@@ -97,8 +123,31 @@ gint& gint::operator += (const gint& rhs)
     return add(rhs);
 }
 
+gint& gint::operator -= (const gint& rhs)
+{
+    return subtract(rhs);
+}
+
+gint& gint::operator *= (const gint& rhs)
+{
+    return multiply_by(rhs);
+}
+
+
+
 bool gint::less_than_xor_equal(const gint& rhs, bool equal) const
 {
+    if ( is_negative )
+    {
+        if ( !rhs.is_negative )
+        {
+            return !equal;
+        }
+        else
+        {
+            return rhs.abs().less_than_xor_equal(abs(), equal);
+        }
+    }
     size_t my_size = n_.size();
     size_t their_size = rhs.n_.size();
     if ( my_size < their_size )
@@ -169,49 +218,79 @@ gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
     return *this;
 }
 
-
-gint& gint::subtract_digit_at_pos(size_t& pos, uint8_t digit)
+gint gint::abs() const
 {
-    if ( digit > 9 )
+    gint absolute(*this);
+    absolute.is_negative = false;
+    return absolute;
+}
+
+gint& gint::subtract(const gint& rhs)
+{
+    if ( rhs.is_negative )
     {
-        throw std::invalid_argument("digit arguement isn't a single digit");
+        return add(rhs.abs());
     }
-    if ( pos >= n_.size() )
+
+    if ( *this <= rhs )
     {
-        throw std::invalid_argument("pos argument greater than number size");
-    }
-    if ( n_.size() == 1 && n_[0] <= digit )
-    {
-        n_.clear();
-        n_.push_front(0);
+        gint temp(*this);
+        n_ = rhs.n_;
+        subtract(temp);
+        is_negative = *this != 0;
         return *this;
     }
 
-    while ( pos < n_.size() )
+    // we need to take a copy if we're adding a ref to myself
+    if ( this == &rhs )
     {
-        uint8_t borrowed = 0;
-        if ( n_[pos] < digit )
-        {
-            n_[pos] += 10;
-            ++borrowed;
-        }
-        n_[pos] -= digit;
-        digit = borrowed;
-        --pos;
+        gint rhs_copy(rhs);
+        return subtract(rhs_copy);
     }
 
+    size_t rhs_pos = rhs.n_.size() - 1;
+    size_t my_pos = n_.size() - 1;
+    uint8_t part_subtract = 0;
+    uint8_t borrowed = 0;
+    while ( rhs_pos < rhs.n_.size() || borrowed != 0 )
+    {
+        part_subtract = borrowed;
+        if ( rhs_pos < rhs.n_.size() )
+        {
+            part_subtract += rhs.n_[rhs_pos];
+        }
+
+        borrowed = 0;
+        while ( n_[my_pos] < part_subtract )
+        {
+            ++borrowed;
+            n_[my_pos] += 10;
+        }
+
+        n_[my_pos] -= part_subtract;
+        --rhs_pos;
+        --my_pos;
+    }
+
+    // truncate leading zeros
     while ( n_.size() > 1 && n_[0] == 0 )
     {
         n_.pop_front();
     }
+
     return *this;
 }
 
-gint& gint::add_reverse_of(const gint rhs)
+
+gint& gint::add_reverse_of(const gint& rhs)
 {
-    // already took a copy, safe in case this == &rhs
-    // (which it probably will be in my use case)
-    // consider: making a copy and non-copy variant
+    // take copy if necessary
+    if ( this == &rhs )
+    {
+        gint rhs_copy(rhs);
+        return add_reverse_of(rhs_copy);
+    }
+
     size_t add_to_pos = n_.size() - 1;
 
     gint_digits_t::const_iterator digit_to_add = rhs.n_.cbegin();
@@ -250,6 +329,10 @@ bool gint::is_palindrome()
 
 void gint::print()
 {
+    if ( is_negative )
+    {
+        std::cout << '-';
+    }
     BOOST_FOREACH(const short digit, n_)
     {
         std::cout << digit;
@@ -271,22 +354,27 @@ gint& gint::multiply_by_by_adding(size_t mult_by)
     return *this;
 }
 
-gint& gint::multiply_by(size_t mult_by)
+gint& gint::multiply_by(const gint& mult_by)
 {
     if ( mult_by == 0 )
     {
-        n_.clear();
-        n_.push_front(0);
+        *this = mult_by;
         return *this;
     }
 
+    if ( this == &mult_by )
+    {
+        gint copy(mult_by);
+        return multiply_by(copy);
+    }
+
     size_t pow_ten = 0;
-    size_t limit = mult_by;
+    size_t pos = mult_by.n_.size() - 1;
     gint result;
 
-    while ( mult_by <= limit && mult_by > 0 )
+    while ( pos < mult_by.n_.size() )
     {
-        uint8_t mult_digit = mult_by % 10;
+        uint8_t mult_digit = mult_by.n_[pos];
         gint interim(*this);
         if ( mult_digit != 0 )
         {
@@ -299,7 +387,7 @@ gint& gint::multiply_by(size_t mult_by)
         }
         result.add(interim);
         ++pow_ten;
-        mult_by /= 10;
+        --pos;
     }
 
     *this = result;

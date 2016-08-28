@@ -124,3 +124,15 @@ TEST_F(GintTest, testGintIncrement)
     EXPECT_EQ(gi, 24);
 }
 
+
+TEST_F(GintTest, testGintSubtractWorksExpected)
+{
+    gint g1(1234);
+    EXPECT_EQ(g1.subtract(123), 1111);
+    EXPECT_EQ(g1.subtract(123), 988);
+    EXPECT_EQ(g1.subtract(980), 8);
+    EXPECT_EQ(g1.subtract(10), -2);
+    EXPECT_EQ(g1.subtract(100), -102);
+    g1.print();
+}
+
