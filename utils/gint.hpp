@@ -39,6 +39,7 @@ public:
 
     // utility
     gint& add_reverse_of(const gint& rhs);
+    gint& reset();
     size_t sum_digits();
     bool is_palindrome();
     void print() const;

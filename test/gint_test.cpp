@@ -23,24 +23,14 @@ TEST_F(GintTest, testGintConstructorWorksExpected)
 {
     gint gi(1234);
     gint gd(1234);
-    gi.print();
-
-    gi.add(1234);
-    gi.print();
-
-    gi.add(1234);
-    gi.print();
-
-    gi.add(1234).add(1234);
-    gi.add(1234).add(1234);
-    gi.add_reverse_of(4321).add(gd).add(1234);
-    gi.print();
-
-    gi.add(gi);
-    gi.print();
+    EXPECT_EQ(gi, gd);
 
     size_t largest = static_cast<size_t>(-1);
     EXPECT_EQ(largest, gint(largest));
+
+    gint* hegi = new gint(1234);
+    EXPECT_EQ(*hegi, 1234);
+    delete hegi;
 }
 
 
@@ -54,14 +44,6 @@ TEST_F(GintTest, testGintIsPalindromeWorksExpected)
     EXPECT_TRUE(p3.is_palindrome());
 }
 
-TEST_F(GintTest, testGintMultiplyBy)
-{
-    gint g1(1234);
-    g1.multiply_by(28456212);
-    g1.print();
-    size_t expected = 1234ll * 28456212;
-    std::cout << expected << std::endl;
-}
 
 TEST_F(GintTest, testGintOperatorEquals)
 {

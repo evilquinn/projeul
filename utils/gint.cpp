@@ -62,6 +62,15 @@ gint::~gint()
 {
 }
 
+gint& gint::reset()
+{
+    n_.clear();
+    n_.push_front(0);
+    is_negative = false;
+    return *this;
+}
+
+
 gint& gint::add(const gint& rhs)
 {
     if ( rhs.is_negative )
@@ -125,10 +134,7 @@ gint& gint::subtract(const gint& rhs)
 
     if ( *this == rhs )
     {
-        n_.clear();
-        is_negative = false;
-        n_.push_front(0);
-        return *this;
+        return this->reset();
     }
 
     if ( *this < rhs )
@@ -363,8 +369,7 @@ gint& gint::multiply_by(const gint& mult_by)
 {
     if ( mult_by == 0 )
     {
-        *this = mult_by;
-        return *this;
+        return reset();
     }
 
     if ( this == &mult_by )
@@ -403,7 +408,6 @@ gint& gint::multiply_by(const gint& mult_by)
 
 gint& gint::multiply_by_digit(uint8_t digit)
 {
-
     size_t start = n_.size() - 1;
     size_t pos = start;
     size_t carry_on = 0;
