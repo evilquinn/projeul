@@ -447,4 +447,9 @@ size_t gint::sum_digits()
     return result;
 }
 
+size_t gint::num_digits()
+{
+    return n_.size();
+}
+
 

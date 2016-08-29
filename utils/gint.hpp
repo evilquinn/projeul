@@ -41,6 +41,7 @@ public:
     gint& add_reverse_of(const gint& rhs);
     gint& reset();
     size_t sum_digits();
+    size_t num_digits();
     bool is_palindrome();
     void print() const;
     std::ostream& stream_out(std::ostream& os) const;
