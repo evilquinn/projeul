@@ -34,6 +34,8 @@ public:
     gint& operator *= (const gint& rhs);
     gint& operator++();
     gint operator++(int);
+    gint& operator--();
+    gint operator--(int);
 
     // utility
     gint& add_reverse_of(const gint& rhs);
@@ -47,7 +49,6 @@ private:
     void construct_digits_from_positive(size_t post);
     gint& add_digit_at_pos(size_t& pos, uint8_t digit);
     gint& multiply_by_digit(uint8_t digit);
-    gint& multiply_by_by_adding(size_t rhs);
     typedef std::deque<uint8_t> gint_digits_t;
     gint_digits_t n_;
     bool is_negative;

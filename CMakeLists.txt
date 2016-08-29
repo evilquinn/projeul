@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
 include_directories($ENV{BOOST_ROOT})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(number_lists)
@@ -40,8 +40,6 @@ add_executable(projeul main.cpp
                        pe55.cpp
                        pe56.cpp)
 
-add_executable(shit_test test/shit_test.cpp)
-target_link_libraries(shit_test gmock)
 
 target_link_libraries(projeul utils
                               number_lists

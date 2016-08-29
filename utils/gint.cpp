@@ -116,6 +116,13 @@ gint& gint::subtract(const gint& rhs)
         return *this;
     }
 
+    if ( this == &rhs )
+    {
+        // we need to take a copy if we're adding a ref to myself
+        gint rhs_copy(rhs);
+        return subtract(rhs_copy);
+    }
+
     if ( *this == rhs )
     {
         n_.clear();
@@ -129,13 +136,6 @@ gint& gint::subtract(const gint& rhs)
         *this = rhs - this->abs();
         is_negative = true;
         return *this;
-    }
-
-    // we need to take a copy if we're adding a ref to myself
-    if ( this == &rhs )
-    {
-        gint rhs_copy(rhs);
-        return subtract(rhs_copy);
     }
 
     size_t rhs_pos = rhs.n_.size() - 1;
@@ -230,8 +230,7 @@ bool gint::less_than_xor_equal(const gint& rhs, bool equal) const
 
 gint& gint::operator++()
 {
-    size_t end = n_.size() - 1;
-    return add_digit_at_pos(end, 1);
+    return add(1);
 }
 
 gint gint::operator++(int)
@@ -241,8 +240,25 @@ gint gint::operator++(int)
     return tmp;
 }
 
+gint& gint::operator--()
+{
+    return subtract(1);
+}
+
+gint gint::operator--(int)
+{
+    gint tmp(*this);
+    operator--();
+    return tmp;
+}
+
 gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
 {
+
+    /*
+     * Removing following error section because this is private and I can
+     * no errors
+     *
     if ( digit > 9 )
     {
         throw std::invalid_argument("digit arguement isn't a single digit");
@@ -251,6 +267,9 @@ gint& gint::add_digit_at_pos(size_t& pos, uint8_t digit)
     {
         throw std::invalid_argument("pos argument greater than number size");
     }
+     *
+     * Done.
+     */
 
     n_[pos] += digit;
 
@@ -299,10 +318,6 @@ gint& gint::add_reverse_of(const gint& rhs)
             add_digit_at_pos(add_to_pos, *digit_to_add);
             --add_to_pos;
         }
-        else
-        {
-            n_.push_front(*digit_to_add);
-        }
         ++digit_to_add;
     }
 
@@ -343,19 +358,6 @@ std::ostream& gint::stream_out(std::ostream& os) const
     return os;
 }
 
-gint& gint::multiply_by_by_adding(size_t mult_by)
-{
-    gint add_to;
-
-    for(size_t i = 0; i < mult_by; ++i)
-    {
-        add_to.add(*this);
-    }
-
-    *this = add_to;
-
-    return *this;
-}
 
 gint& gint::multiply_by(const gint& mult_by)
 {
@@ -382,13 +384,13 @@ gint& gint::multiply_by(const gint& mult_by)
         if ( mult_digit != 0 )
         {
             interim.multiply_by_digit(mult_digit);
+            for ( size_t i = 0; i < pow_ten; ++i )
+            {
+                interim.n_.push_back(0);
+            }
+            result.add(interim);
         }
 
-        for ( size_t i = 0; i < pow_ten; ++i )
-        {
-            interim.n_.push_back(0);
-        }
-        result.add(interim);
         ++pow_ten;
         --pos;
     }
@@ -401,11 +403,6 @@ gint& gint::multiply_by(const gint& mult_by)
 
 gint& gint::multiply_by_digit(uint8_t digit)
 {
-    if ( digit > 9 )
-    {
-        throw std::invalid_argument("digit arguement isn't a single digit");
-    }
-
 
     size_t start = n_.size() - 1;
     size_t pos = start;

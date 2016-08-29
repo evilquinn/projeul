@@ -39,6 +39,8 @@ TEST_F(GintTest, testGintConstructorWorksExpected)
     gi.add(gi);
     gi.print();
 
+    size_t largest = static_cast<size_t>(-1);
+    EXPECT_EQ(largest, gint(largest));
 }
 
 
@@ -95,17 +97,13 @@ TEST_F(GintTest, testGintOperators)
     EXPECT_LE(gint(81792879281171948), 81792879281171948);
 }
 
-TEST_F(GintTest, testGintIncrement)
+
+TEST_F(GintTest, testGintIncrementDecrementWorks)
 {
-    gint gi(4);
-    ++gi;
-    ++gi;
-    EXPECT_EQ(gi, 6);
-    ++gi;
-    ++gi;
-    ++gi;
-    ++gi;
-    EXPECT_EQ(gi, 10);
+    gint gi(-5);
+    --gi;
+    --gi;
+    EXPECT_EQ(--gi, -8);
     ++gi;
     ++gi;
     ++gi;
@@ -113,30 +111,25 @@ TEST_F(GintTest, testGintIncrement)
     ++gi;
     ++gi;
     ++gi;
+    EXPECT_EQ(++gi, 0);
+    EXPECT_EQ(gi++, 0);
     ++gi;
     ++gi;
     ++gi;
     ++gi;
     ++gi;
-    EXPECT_EQ(gi, 22);
-    EXPECT_EQ(gi++, 22);
-    EXPECT_EQ(gi++, 23);
-    EXPECT_EQ(gi, 24);
+    EXPECT_EQ(--gi, 5);
+    EXPECT_EQ(gi--, 5);
+    --gi;
+    --gi;
+    --gi;
+    EXPECT_EQ(--gi, 0);
+    EXPECT_EQ(gi--, 0);
+    --gi;
+    EXPECT_EQ(--gi, -3);
 }
 
 
-TEST_F(GintTest, testGintSubtractWorksExpected)
-{
-    gint g1(1234);
-    EXPECT_EQ(g1.subtract(123), 1111);
-    EXPECT_EQ(g1.subtract(123), 988);
-    EXPECT_EQ(g1.subtract(980), 8);
-    EXPECT_EQ(g1.subtract(10), -2);
-    EXPECT_EQ(-102, g1.subtract(100));
-    EXPECT_EQ(g1 - 111, -213);
-    EXPECT_EQ(g1 + 111, 9);
-    g1.print();
-}
 
 TEST_F(GintTest, testGintAddSubtractWorks)
 {
@@ -191,6 +184,42 @@ TEST_F(GintTest, testGintAddSubtractWorks)
     EXPECT_EQ(gint(-100) - (-200), (-100) - (-200));
     EXPECT_EQ(gint(-100) - (-100), (-100) - (-100));
     EXPECT_EQ(gint(-200) - (-100), (-200) - (-100));
+
+    gint self(1234);
+    EXPECT_EQ(self.subtract(self), 0);
+    self = 1234;
+    EXPECT_EQ(self.add_reverse_of(self), 5555);
+    EXPECT_EQ(self.add_reverse_of(9999999999), 9999999999 + 5555);
+    EXPECT_EQ(self.add_reverse_of(12), 9999999999 + 5555 + 21);
+}
+
+
+TEST_F(GintTest, testGintMultiplyWorks)
+{
+    EXPECT_EQ(gint(100) * 0, 0);
+    EXPECT_EQ(gint(100) * 200, 100 * 200);
+    EXPECT_EQ(gint(100) * 100, 100 * 100);
+    EXPECT_EQ(gint(200) * 100, 200 * 100);
+    EXPECT_EQ(gint(100) * (-200), 100 * (-200));
+    EXPECT_EQ(gint(100) * (-100), 100 * (-100));
+    EXPECT_EQ(gint(200) * (-100), 200 * (-100));
+    EXPECT_EQ(gint(-100) * 200, (-100) * 200);
+    EXPECT_EQ(gint(-100) * 100, (-100) * 100);
+    EXPECT_EQ(gint(-200) * 100, (-200) * 100);
+    EXPECT_EQ(gint(-100) * (-200), (-100) * (-200));
+    EXPECT_EQ(gint(-100) * (-100), (-100) * (-100));
+    EXPECT_EQ(gint(-200) * (-100), (-200) * (-100));
+
+    gint self(1234);
+    EXPECT_EQ(self.multiply_by(self), 1234 * 1234);
+    EXPECT_EQ(gint(999) * 999999, 999 * 999999);
+    EXPECT_EQ(gint(999) * 999, 999 * 999);
+    EXPECT_EQ(gint(999999) * 999, 999 * 999999);
+}
+
+TEST_F(GintTest, testSumDigitsWorks)
+{
+    EXPECT_EQ(gint(1234).sum_digits(), 10);
 }
 
 
