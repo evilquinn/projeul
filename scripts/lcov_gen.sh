@@ -12,6 +12,6 @@ lcov --capture --directory $1 --output-file $outputlcov
 
 lcov --extract $outputlcov "*projeul*" -o $outputlcov
 
-genhtml $outputlcov --output-directory $outputdir
+genhtml --branch-coverage $outputlcov --output-directory $outputdir
 
 
