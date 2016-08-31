@@ -8,6 +8,7 @@
 #include "gint.hpp"
 
 #include <cstdlib>
+#include <cmath>
 #include <stdexcept>
 #include <boost/foreach.hpp>
 
@@ -193,6 +194,10 @@ gint& gint::operator *= (const gint& rhs)
     return multiply_by(rhs);
 }
 
+gint& gint::operator /= (const gint& rhs)
+{
+    return divide_by(rhs);
+}
 
 
 bool gint::less_than_xor_equal(const gint& rhs, bool equal) const
@@ -367,7 +372,7 @@ std::ostream& gint::stream_out(std::ostream& os) const
 
 gint& gint::multiply_by(const gint& mult_by)
 {
-    if ( mult_by == 0 )
+    if ( mult_by == 0 || *this == 0 )
     {
         return reset();
     }
@@ -453,3 +458,68 @@ size_t gint::num_digits()
 }
 
 
+size_t gint::to_size_t()
+{
+    size_t result = 0;
+    size_t pow_ten = n_.size() - 1;
+    for ( size_t i = 0; i < n_.size(); ++i )
+    {
+        result += n_[i] * pow_ten;
+        --pow_ten;
+    }
+    return result;
+}
+
+gint& gint::divide_by(const gint& rhs)
+{
+    if ( rhs == 0 )
+    {
+        throw std::invalid_argument("can't divide by zero");
+    }
+
+    if ( this == &rhs )
+    {
+        reset();
+        ++(*this);
+        return *this;
+    }
+
+    bool result_is_negative = is_negative != rhs.is_negative;
+    is_negative = false;
+    gint rhs_abs(rhs.abs());
+
+    if ( *this < rhs_abs )
+    {
+        return reset();
+    }
+    if ( *this == rhs_abs )
+    {
+        reset();
+        ++(*this);
+        is_negative = result_is_negative;
+        return *this;
+    }
+
+    gint quotient = 0;
+    gint remainder = 0;
+
+    for ( size_t i = 0; i < n_.size(); ++i )
+    {
+        remainder *= 10;
+        quotient  *= 10;
+        remainder += n_[i];
+        uint8_t quotient_digit = 0;
+
+        while ( remainder >= rhs_abs )
+        {
+            remainder -= rhs_abs;
+            ++quotient_digit;
+        }
+        quotient += quotient_digit;
+    }
+
+    quotient.is_negative = result_is_negative;
+
+    *this = quotient;
+    return *this;
+}

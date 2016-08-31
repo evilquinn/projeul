@@ -26,18 +26,21 @@ public:
     gint& add(const gint& rhs);
     gint& subtract(const gint& rhs);
     gint& multiply_by(const gint& rhs);
+    gint& divide_by(const gint& rhs);
     gint abs() const;
 
     // operators
     gint& operator += (const gint& rhs);
     gint& operator -= (const gint& rhs);
     gint& operator *= (const gint& rhs);
+    gint& operator /= (const gint& rhs);
     gint& operator++();
     gint operator++(int);
     gint& operator--();
     gint operator--(int);
 
     // utility
+    size_t to_size_t();
     gint& add_reverse_of(const gint& rhs);
     gint& reset();
     size_t sum_digits();
@@ -94,6 +97,11 @@ inline gint operator- (gint lhs, const gint& rhs)
 inline gint operator* (gint lhs, const gint& rhs)
 {
     lhs *= rhs;
+    return lhs;
+}
+inline gint operator/ (gint lhs, const gint& rhs)
+{
+    lhs /= rhs;
     return lhs;
 }
 inline std::ostream& operator<<(std::ostream& os, const gint& obj)
