@@ -43,7 +43,32 @@ void pe58::run()
      */
 
     size_t result = 0;
+    size_t i = 1;
+    size_t step_to_corner = 2;
+    double corners = 1;
+    size_t prime_corners = 0;
 
-    std::cout << "result : " << result << std::endl;
+    while ( true )
+    {
+        for ( size_t j = 0; j < 4; ++j ) // 4 to count each corner
+        {
+            ++corners;
+            i += step_to_corner;
+            if ( primes_.is_prime( i ) )
+            {
+                ++prime_corners;
+            }
+        }
+
+        double ratio = prime_corners / corners;
+        if ( ratio < 0.10 )
+        {
+            break;
+        }
+
+        step_to_corner += 2;
+    }
+
+    std::cout << "result : " << step_to_corner + 1 << std::endl;
 }
 

@@ -52,12 +52,7 @@ void prime_sieve::calc_primes()
             }
         }
 
-        do
-        {
-            // increment, skipping the one's already marked
-            ++n;
-        }
-        while( n < limit_ && !sieve_[n] );
+        n = sieve_.find_next(n);
     }
 }
 
