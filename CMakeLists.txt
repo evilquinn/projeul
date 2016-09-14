@@ -44,7 +44,8 @@ add_executable(projeul main.cpp
                        pe55.cpp
                        pe56.cpp
                        pe57.cpp
-                       pe58.cpp)
+                       pe58.cpp
+                       pe59.cpp)
 
 
 target_link_libraries(projeul utils

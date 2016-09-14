@@ -31,11 +31,12 @@
 #include "pe56.hpp"
 #include "pe57.hpp"
 #include "pe58.hpp"
+#include "pe59.hpp"
 
 
 int main(int argc, char* argv[])
 {
-    pe58 ex;
+    pe59 ex;
     ex.run();
 
     return 0;
