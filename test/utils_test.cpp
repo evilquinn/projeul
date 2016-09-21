@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <utils.hpp>
+#include <prime_sieve.hpp>
 #include <gint.hpp>
 
 using ::testing::Eq;
@@ -101,3 +102,22 @@ TEST_F(UtilsTest, testNCRReturnsExpected)
     EXPECT_THAT(n_c_r(5, 3), Eq(10));
 }
 
+TEST_F(UtilsTest, testConcat)
+{
+    EXPECT_EQ(123456789, concat(1, 23456789));
+    EXPECT_EQ(123456789, concat(123, 456789));
+    EXPECT_EQ(123456789, concat(12345, 6789));
+    EXPECT_EQ(123456789, concat(123456, 789));
+    EXPECT_EQ(123456789, concat(1234567, 89));
+    EXPECT_EQ(123456789, concat(12345678, 9));
+}
+
+TEST_F(UtilsTest, testIsPrime)
+{
+    prime_sieve primes(1000);
+
+    for ( size_t i = 0; i < 1000; ++i )
+    {
+        EXPECT_EQ(primes.is_prime(i), is_prime(primes, i)) << i;
+    }
+}

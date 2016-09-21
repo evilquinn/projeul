@@ -5,6 +5,7 @@
 #include <prime_sieve.hpp>
 #include <boost/foreach.hpp>
 #include <boost/dynamic_bitset.hpp>
+#include <cmath>
 
 
 int num_digits(long long unsigned n)
@@ -16,6 +17,40 @@ int num_digits(long long unsigned n)
         n/=10;
     }
     return num_digits;
+}
+
+size_t concat(size_t left, size_t right)
+{
+    int mult = pow(10, num_digits(right));
+    size_t result = left * mult;
+    result += right;
+
+    return result;
+}
+
+bool is_prime(prime_sieve& primes, size_t n)
+{
+    if ( n < 2 )
+    {
+        return false;
+    }
+    if ( n == 2 )
+    {
+        return true;
+    }
+    if ( n % 2 == 0 )
+    {
+        return false;
+    }
+    size_t sqrt_n = sqrt(n);
+    for(size_t i = 3; i <= sqrt_n; i = primes.next_prime(i))
+    {
+        if ( n % i == 0 )
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 

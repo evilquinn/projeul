@@ -42,7 +42,6 @@ void pe58::run()
      *
      */
 
-    size_t result = 0;
     size_t i = 1;
     size_t step_to_corner = 2;
     double corners = 1;
@@ -54,7 +53,7 @@ void pe58::run()
         {
             ++corners;
             i += step_to_corner;
-            if ( primes_.is_prime( i ) )
+            if ( is_prime( primes_, i ) )
             {
                 ++prime_corners;
             }

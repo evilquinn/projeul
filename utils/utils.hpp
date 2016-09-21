@@ -17,6 +17,13 @@ class prime_sieve;
 int num_digits(long long unsigned n);
 
 /*
+ * concatenates two numbers
+ */
+size_t concat(size_t left, size_t right);
+
+bool is_prime(prime_sieve& primes, size_t n);
+
+/*
  * returns a set containing each digit in the number supplied
  * @param n The number to get digits off
  * @param digits The set will contain the digits

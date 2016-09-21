@@ -1,26 +1,26 @@
 /*
- * pe58.h
+ * pe60.h
  *
  *  Created on: 13 Jun 2015
  *      Author: evilquinn
  */
 
-#ifndef PE58_HPP_
-#define PE58_HPP_
+#ifndef PE60_HPP_
+#define PE60_HPP_
 
 #include "pe.hpp"
 #include <prime_sieve.hpp>
 
-#define PE58_MAX_PRIME 30000
+#define PE60_MAX_PRIME 1000
 
-class pe58 : public pe
+class pe60 : public pe
 {
 public:
-    pe58() :
-        name_("pe58"),
-        primes_(PE58_MAX_PRIME)
+    pe60() :
+        name_("pe60"),
+        primes_(PE60_MAX_PRIME)
     {};
-    virtual ~pe58()
+    virtual ~pe60()
     {
     };
     virtual std::string& name();
@@ -30,4 +30,4 @@ private:
     prime_sieve primes_;
 };
 
-#endif /* PE58_HPP_ */
+#endif /* PE60_HPP_ */
