@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <prime_sieve.hpp>
+#include <utils.hpp>
 #include <known_primes.hpp>
 
 using ::testing::Eq;
@@ -25,14 +26,34 @@ protected:
 
 TEST_F(PrimeSieveTest, testAgainstKnownPrimes)
 {
-    size_t limit = 104730;
-    prime_sieve primes(limit);
     known_primes known;
 
-    for(size_t i = 0; i < limit; ++i)
+    for(size_t i = 0; i < primes_.limit(); ++i)
     {
         EXPECT_THAT(known.set().find(i) != known.set().end(),
-                    Eq(primes.is_prime(i)));
+                    Eq(primes_.is_prime(i)));
+        EXPECT_THAT(known.set().find(i) != known.set().end(),
+                    Eq(is_prime(primes_, i)));
+    }
+
+/*    for(size_t i = primes_.limit(); i < primes_.limit() + 100; ++i)
+    {
+        EXPECT_THAT(known.set().find(i) != known.set().end(),
+                    Eq(is_prime(primes_, i))) << i;
+    }
+*/
+}
+
+TEST_F(PrimeSieveTest, testIsPrimeLarger)
+{
+    known_primes known;
+
+    size_t limit = primes_.limit() + 100;
+
+    for(size_t i = primes_.limit(); i < limit; ++i)
+    {
+        EXPECT_THAT(known.set().find(i) != known.set().end(),
+                    Eq(primes_.is_prime(i))) << i;
     }
 }
 
@@ -43,7 +64,7 @@ TEST_F(PrimeSieveTest, testNextPrimeReturnsExpected)
     EXPECT_THAT(primes_.next_prime(3), Eq(5));
     EXPECT_THAT(primes_.next_prime(100), Eq(101));
     EXPECT_THAT(primes_.next_prime(1000), Eq(1009));
-    EXPECT_THAT(primes_.next_prime(PRIME_SIEVE_TEST_LIMIT), Eq(-1));
+    EXPECT_ANY_THROW(primes_.next_prime(PRIME_SIEVE_TEST_LIMIT));
 }
 
 
@@ -110,3 +131,4 @@ TEST_F(PrimeSieveTest, testNumInRangeReturnsExpected)
     EXPECT_THAT(primes_.num_in_range(2, 5), Eq(3));
     EXPECT_THAT(primes_.num_in_range(2, 10), Eq(4));
 }
+

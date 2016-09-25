@@ -6,6 +6,7 @@
  */
 
 #include "prime_sieve.hpp"
+#include <utils.hpp>
 
 #include <string.h>
 #include <iostream>
@@ -69,18 +70,22 @@ void prime_sieve::print()
 
 bool prime_sieve::is_prime(size_t n)
 {
-    if ( n > 0 && n < limit_ )
+    if ( n > limit_ )
     {
-        return sieve_[n];
+        return ::is_prime(*this, n);
     }
-
-    return false;
+    return sieve_[n];
 }
 
 
 size_t prime_sieve::next_prime(size_t from)
 {
-    return sieve_.find_next(from);
+    size_t result = sieve_.find_next(from);
+    if ( result == sieve_.npos )
+    {
+        throw std::invalid_argument( "can't determine next prime" );
+    }
+    return result;
 }
 
 size_t prime_sieve::prev_prime(size_t from)
@@ -142,7 +147,16 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
         return 0;
     }
 
-    size_t current = is_prime(lower) ? lower : next_prime(lower);
+    size_t current;
+    try
+    {
+        current = is_prime(lower) ? lower : next_prime(lower);
+    }
+    catch ( std::invalid_argument e )
+    {
+        return 0;
+    }
+
     size_t result = 0;
     num_in_range = 0;
 
@@ -150,7 +164,14 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
     {
         result += current;
         ++num_in_range;
-        current = next_prime(current);
+        try
+        {
+            current = next_prime(current);
+        }
+        catch ( std::invalid_argument e )
+        {
+            break;
+        }
     }
 
     return result;
@@ -176,14 +197,30 @@ size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t
         return 0;
     }
 
-    size_t current = is_prime(lower) ? lower : next_prime(lower);
+    size_t current;
+    try
+    {
+        current = is_prime(lower) ? lower : next_prime(lower);
+    }
+    catch ( std::invalid_argument e )
+    {
+        return 0;
+    }
+
     size_t result = 0;
 
     while ( current <= upper && current < limit_)
     {
         result += current;
         sumees.push_back(current);
-        current = next_prime(current);
+        try
+        {
+            current = next_prime(current);
+        }
+        catch ( std::invalid_argument e )
+        {
+            break;
+        }
     }
 
     return result;

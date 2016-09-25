@@ -38,16 +38,16 @@ bool is_prime(prime_sieve& primes, size_t n)
     {
         return true;
     }
-    if ( n % 2 == 0 )
-    {
-        return false;
-    }
-    size_t sqrt_n = sqrt(n);
-    for(size_t i = 3; i <= sqrt_n; i = primes.next_prime(i))
+
+    for(size_t i = 2; true; i = primes.next_prime(i))
     {
         if ( n % i == 0 )
         {
             return false;
+        }
+        if ( n / i < i )
+        {
+            return true;
         }
     }
     return true;
