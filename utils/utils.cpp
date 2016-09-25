@@ -32,21 +32,26 @@ bool is_prime(prime_sieve& primes, size_t n)
 {
     if ( n < 2 )
     {
+        // 0 and 1 aren't prime
         return false;
     }
     if ( n == 2 )
     {
+        // 2 is prime
         return true;
     }
 
     for(size_t i = 2; true; i = primes.next_prime(i))
     {
+        // if any prime between 2 and sqrt(n) is a factor, then
+        // n isn't prime
         if ( n % i == 0 )
         {
             return false;
         }
         if ( n / i < i )
         {
+            // this means we've checked all prime i from 2 to sqrt(n)
             return true;
         }
     }
