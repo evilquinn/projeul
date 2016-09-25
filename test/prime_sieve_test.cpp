@@ -39,7 +39,7 @@ TEST_F(PrimeSieveTest, testAgainstKnownPrimes)
     }
 
     prime_sieve small_sieve(10);
-    EXPECT_ANY_THROW(small_sieve.is_prime(113));
+    EXPECT_TRUE(small_sieve.is_prime(113));
 }
 
 
@@ -50,7 +50,7 @@ TEST_F(PrimeSieveTest, testNextPrimeReturnsExpected)
     EXPECT_THAT(primes_.next_prime(3), Eq(5));
     EXPECT_THAT(primes_.next_prime(100), Eq(101));
     EXPECT_THAT(primes_.next_prime(1000), Eq(1009));
-    EXPECT_ANY_THROW(primes_.next_prime(PRIME_SIEVE_TEST_LIMIT));
+    EXPECT_THAT(primes_.next_prime(PRIME_SIEVE_TEST_LIMIT), Eq(100003));
 
     EXPECT_THAT(next_prime(primes_, 1), Eq(2));
     EXPECT_THAT(next_prime(primes_, 2), Eq(3));
@@ -58,6 +58,11 @@ TEST_F(PrimeSieveTest, testNextPrimeReturnsExpected)
     EXPECT_THAT(next_prime(primes_, 100), Eq(101));
     EXPECT_THAT(next_prime(primes_, 1000), Eq(1009));
     EXPECT_THAT(next_prime(primes_, PRIME_SIEVE_TEST_LIMIT), Eq(100003));
+
+    prime_sieve small_sieve(10);
+    EXPECT_THAT(next_prime(small_sieve, 110), Eq(113));
+    EXPECT_THAT(next_prime(small_sieve, PRIME_SIEVE_TEST_LIMIT), Eq(100003));
+    EXPECT_THAT(small_sieve.next_prime(PRIME_SIEVE_TEST_LIMIT), Eq(100003));
 }
 
 

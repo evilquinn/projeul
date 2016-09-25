@@ -83,7 +83,7 @@ size_t prime_sieve::next_prime(size_t from)
     size_t result = sieve_.find_next(from);
     if ( result == sieve_.npos )
     {
-        throw std::invalid_argument( "can't determine next prime" );
+        return ::next_prime(*this, from);
     }
     return result;
 }

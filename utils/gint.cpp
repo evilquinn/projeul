@@ -464,7 +464,7 @@ size_t gint::to_size_t()
     size_t pow_ten = n_.size() - 1;
     for ( size_t i = 0; i < n_.size(); ++i )
     {
-        result += n_[i] * pow_ten;
+        result += n_[i] * pow(10, pow_ten);
         --pow_ten;
     }
     return result;

@@ -235,9 +235,11 @@ TEST_F(GintTest, testNumDigitsWorks)
 
 TEST_F(GintTest, testGintToSizeTWorks)
 {
-    gint gi(1234);
-    size_t from_gint = gi.to_size_t();
-    EXPECT_EQ(1234, from_gint);
+    for ( size_t i = 0; i < 1234; ++i )
+    {
+        gint gi(i);
+        EXPECT_EQ(i, gi.to_size_t());
+    }
 }
 
 TEST_F(GintTest, testGintDivide)
