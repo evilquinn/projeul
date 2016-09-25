@@ -37,7 +37,7 @@
 
 int main(int argc, char* argv[])
 {
-    pe58 ex;
+    pe60 ex;
     ex.run();
 
     return 0;

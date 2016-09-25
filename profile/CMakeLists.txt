@@ -1,9 +1,6 @@
 include_directories($ENV{GMOCK_ROOT}/include $ENV{GTEST_ROOT}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
-
 add_executable(profile_triangles triangle_numbers_profile.cpp)
 target_link_libraries(profile_triangles number_lists
                                         gmock_main)

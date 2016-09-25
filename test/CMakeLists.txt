@@ -2,9 +2,6 @@ include_directories($ENV{GMOCK_ROOT}/include
                     $ENV{GTEST_ROOT}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
-
 add_executable(shit_test shit_test.cpp)
 target_link_libraries(shit_test gmock)
 

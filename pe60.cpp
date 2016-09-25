@@ -35,6 +35,39 @@ void pe60::run()
 
     size_t result = 0;
 
+    size_t base_set[] = { 3, 7, 109, 673 };
+
+    size_t limit = (size_t)-1;
+
+    for ( size_t i = primes_.next_prime(1);
+          i < limit;
+          i = primes_.next_prime(i) )
+    {
+        bool next_i = false;
+        size_t base_size = sizeof(base_set) / sizeof(size_t);
+        for ( size_t j = 0; j < base_size; ++j )
+        {
+            //std::cout << "checking " << base_set[j] << i << " and " << i << base_set[j] << std::endl;
+            if ( ! is_prime(primes_, concat(base_set[j], i)) ||
+                 ! is_prime(primes_, concat(i, base_set[j])) )
+            {
+                next_i = true;
+                break;
+            }
+            if ( j == base_size - 1 )
+            {
+                // win!
+                result = i;
+                break;
+            }
+        }
+        if ( next_i )
+        {
+            continue;
+        }
+        break;
+    }
+
     std::cout << "result: " << result << std::endl;
 }
 
