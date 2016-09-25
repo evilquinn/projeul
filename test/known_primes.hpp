@@ -4,6 +4,8 @@
 #include <set>
 #include <stddef.h>
 
+#define KNOWN_PRIMES_LIMIT 104729
+
 class known_primes
 {
 public:

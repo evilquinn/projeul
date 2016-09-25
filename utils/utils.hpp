@@ -21,6 +21,7 @@ int num_digits(long long unsigned n);
  */
 size_t concat(size_t left, size_t right);
 
+size_t next_prime(prime_sieve& primes, size_t n);
 bool is_prime(prime_sieve& primes, size_t n);
 
 /*

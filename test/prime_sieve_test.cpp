@@ -7,7 +7,7 @@
 
 using ::testing::Eq;
 
-#define PRIME_SIEVE_TEST_LIMIT 104730
+#define PRIME_SIEVE_TEST_LIMIT 100000
 
 class PrimeSieveTest : public ::testing::Test
 {
@@ -28,34 +28,20 @@ TEST_F(PrimeSieveTest, testAgainstKnownPrimes)
 {
     known_primes known;
 
-    for(size_t i = 0; i < primes_.limit(); ++i)
+    for(size_t i = 0; i <= KNOWN_PRIMES_LIMIT; ++i)
     {
+        // given that primes_.limit() < KNOWN_PRIMES_LIMIT, this therefore
+        // tests the is prime algorithm for numbers > primes_.limit()
         EXPECT_THAT(known.set().find(i) != known.set().end(),
                     Eq(primes_.is_prime(i)));
         EXPECT_THAT(known.set().find(i) != known.set().end(),
                     Eq(is_prime(primes_, i)));
     }
 
-/*    for(size_t i = primes_.limit(); i < primes_.limit() + 100; ++i)
-    {
-        EXPECT_THAT(known.set().find(i) != known.set().end(),
-                    Eq(is_prime(primes_, i))) << i;
-    }
-*/
+    prime_sieve small_sieve(10);
+    EXPECT_ANY_THROW(small_sieve.is_prime(113));
 }
 
-TEST_F(PrimeSieveTest, testIsPrimeLarger)
-{
-    known_primes known;
-
-    size_t limit = primes_.limit() + 100;
-
-    for(size_t i = primes_.limit(); i < limit; ++i)
-    {
-        EXPECT_THAT(known.set().find(i) != known.set().end(),
-                    Eq(primes_.is_prime(i))) << i;
-    }
-}
 
 TEST_F(PrimeSieveTest, testNextPrimeReturnsExpected)
 {
@@ -65,6 +51,13 @@ TEST_F(PrimeSieveTest, testNextPrimeReturnsExpected)
     EXPECT_THAT(primes_.next_prime(100), Eq(101));
     EXPECT_THAT(primes_.next_prime(1000), Eq(1009));
     EXPECT_ANY_THROW(primes_.next_prime(PRIME_SIEVE_TEST_LIMIT));
+
+    EXPECT_THAT(next_prime(primes_, 1), Eq(2));
+    EXPECT_THAT(next_prime(primes_, 2), Eq(3));
+    EXPECT_THAT(next_prime(primes_, 3), Eq(5));
+    EXPECT_THAT(next_prime(primes_, 100), Eq(101));
+    EXPECT_THAT(next_prime(primes_, 1000), Eq(1009));
+    EXPECT_THAT(next_prime(primes_, PRIME_SIEVE_TEST_LIMIT), Eq(100003));
 }
 
 
@@ -75,7 +68,7 @@ TEST_F(PrimeSieveTest, testPrevPrimeReturnsExpected)
     EXPECT_THAT(primes_.prev_prime(3), Eq(2));
     EXPECT_THAT(primes_.prev_prime(100), Eq(97));
     EXPECT_THAT(primes_.prev_prime(1000), Eq(997));
-    EXPECT_THAT(primes_.prev_prime(PRIME_SIEVE_TEST_LIMIT), Eq(104729));
+    EXPECT_THAT(primes_.prev_prime(PRIME_SIEVE_TEST_LIMIT), Eq(99991));
 }
 
 TEST_F(PrimeSieveTest, testSumRangeReturnsExpected)
@@ -91,7 +84,7 @@ TEST_F(PrimeSieveTest, testSumRangeReturnsExpected)
     EXPECT_THAT(primes_.sum_range(2, 10, num_in_range), Eq(17));
     EXPECT_THAT(primes_.sum_range(2, 12, num_in_range), Eq(28));
     EXPECT_THAT(primes_.sum_range(2, PRIME_SIEVE_TEST_LIMIT, num_in_range),
-                Eq(496165411));
+                Eq(454396537));
     EXPECT_THAT(primes_.sum_range(PRIME_SIEVE_TEST_LIMIT,
                                   PRIME_SIEVE_TEST_LIMIT,
                                   num_in_range),
@@ -111,7 +104,7 @@ TEST_F(PrimeSieveTest, testShitSumRangeReturnsExpected)
     EXPECT_THAT(primes_.shit_sum_range(2, 10, sumees), Eq(17));
     EXPECT_THAT(primes_.shit_sum_range(2, 12, sumees), Eq(28));
     EXPECT_THAT(primes_.shit_sum_range(2, PRIME_SIEVE_TEST_LIMIT, sumees),
-                Eq(496165411));
+                Eq(454396537));
     EXPECT_THAT(primes_.shit_sum_range(PRIME_SIEVE_TEST_LIMIT,
                                   PRIME_SIEVE_TEST_LIMIT,
                                   sumees),

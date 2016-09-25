@@ -2,6 +2,7 @@
 
 #include <utils.hpp>
 #include <string.h>
+#include <iostream>
 #include <prime_sieve.hpp>
 #include <boost/foreach.hpp>
 #include <boost/dynamic_bitset.hpp>
@@ -26,6 +27,29 @@ size_t concat(size_t left, size_t right)
     result += right;
 
     return result;
+}
+
+size_t next_prime(prime_sieve& primes, size_t n)
+{
+    if ( n < 2 )
+    {
+        return 2;
+    }
+
+    if ( n & 1 )
+    {
+        // odd
+        n += 2;
+    }
+    else
+    {
+        ++n;
+    }
+
+    for ( ; ! primes.is_prime(n); n += 2 )
+    {
+    }
+    return n;
 }
 
 bool is_prime(prime_sieve& primes, size_t n)
