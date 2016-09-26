@@ -35,11 +35,14 @@ void pe60::run()
 
     size_t result = 0;
 
-    size_t base_set[] = { 3, 7, 109, 673 };
+    size_t goal_size = 4;
+    size_t found = 0;
 
-    size_t limit = (size_t)-1;
+    size_t base_set[goal_size] = { 0 };
 
-    for ( size_t i = primes_.next_prime(1);
+    size_t limit = 1000;
+
+    for ( size_t i = primes_.next_prime(11);
           i < limit;
           i = primes_.next_prime(i) )
     {
