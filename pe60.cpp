@@ -36,7 +36,6 @@ void pe60::run()
     size_t result = 0;
 
     size_t goal_size = 4;
-    size_t found = 0;
 
     size_t base_set[goal_size] = { 0 };
 

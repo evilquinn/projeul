@@ -77,7 +77,7 @@ void pe59::run()
     //              << "; cipher: " << c
     //              << "; plain: " << p << std::endl;
         result += p;
-        password_idx = ++password_idx % 3;
+        password_idx = ( password_idx + 1 ) % 3;
     }
     std::cout << std::endl;
 
