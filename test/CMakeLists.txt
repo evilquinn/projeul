@@ -1,9 +1,4 @@
-include_directories($ENV{GMOCK_ROOT}/include
-                    $ENV{GTEST_ROOT}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(shit_test shit_test.cpp)
-target_link_libraries(shit_test gmock)
 
 add_executable(test_projeul prime_sieve_test.cpp
                             poker_test.cpp
