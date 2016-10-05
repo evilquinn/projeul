@@ -3,6 +3,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(test_projeul prime_sieve_test.cpp
                             poker_test.cpp
                             card_test.cpp
+                            polygonal_numbers_test.cpp
                             triangle_numbers_test.cpp
                             pentagonal_numbers_test.cpp
                             hexagonal_numbers_test.cpp
