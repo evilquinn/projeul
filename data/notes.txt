@@ -1,0 +1,12 @@
+4 digit octagonals start at [19] = 1045
+4 digit heptagonals start at [21] = 1071
+4 digit hexagonals start at [23] = 1035
+4 digit pentagonals start at [26] = 1001
+4 digit triangles start at [45] = 1035
+4 digit squares start at [45] = 2025
+4 digit octagonals end at [59] = 10325
+4 digit heptagonals end at [64] = 10144
+4 digit hexagonals end at [71] = 10011
+4 digit pentagonals end at [82] = 10045
+4 digit squares end at [100] = 10000
+4 digit triangles end at [141] = 10011

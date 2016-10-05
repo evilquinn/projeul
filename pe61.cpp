@@ -7,11 +7,7 @@
 
 #include "pe61.hpp"
 #include <iostream>
-#include <fstream>
-#include <utils.hpp>
-#include <gint.hpp>
-#include <boost/tokenizer.hpp>
-#include <boost/foreach.hpp>
+#include <polygonal_numbers.hpp>
 
 std::string& pe61::name()
 {
@@ -50,4 +46,113 @@ void pe61::run()
      *
      */
 
+    // find range for 4 digit numbers of lists
+    polygonal_numbers triangles(150, polygonal_numbers::triangle);
+    polygonal_numbers squares(100, polygonal_numbers::square);
+    polygonal_numbers pentagonals(82, polygonal_numbers::pentagonal);
+    polygonal_numbers hexagonals(71, polygonal_numbers::hexagonal);
+    polygonal_numbers heptagonals(64, polygonal_numbers::heptagonal);
+    polygonal_numbers octagonals(59, polygonal_numbers::octagonal);
+
+
+    bool check_triangles_start = true;
+    bool check_triangles_end   = true;
+    bool check_squares_start = true;
+    bool check_squares_end   = true;
+    bool check_pentagonals_start = true;
+    bool check_pentagonals_end   = true;
+    bool check_hexagonals_start = true;
+    bool check_hexagonals_end   = true;
+    bool check_heptagonals_start = true;
+    bool check_heptagonals_end   = true;
+    bool check_octagonals_start = true;
+    bool check_octagonals_end   = true;
+
+    for ( size_t i = 0; i < 10000; ++i )
+    {
+        if ( check_triangles_start &&
+             triangles.get_term(i) > 1000 )
+        {
+            check_triangles_start = false;
+            std::cout << "4 digit triangles start at [" << i << "] = "
+                      << triangles.get_term(i) << std::endl;
+        }
+        if ( check_triangles_end &&
+             triangles.get_term(i) > 9999 )
+        {
+            check_triangles_end = false;
+            std::cout << "4 digit triangles end at [" << i << "] = "
+                      << triangles.get_term(i) << std::endl;
+        }
+        if ( check_squares_start &&
+             triangles.get_term(i) > 1000 )
+        {
+            check_squares_start = false;
+            std::cout << "4 digit squares start at [" << i << "] = "
+                      << squares.get_term(i) << std::endl;
+        }
+        if ( check_squares_end &&
+             squares.get_term(i) > 9999 )
+        {
+            check_squares_end = false;
+            std::cout << "4 digit squares end at [" << i << "] = "
+                      << squares.get_term(i) << std::endl;
+        }
+        if ( check_pentagonals_start &&
+             pentagonals.get_term(i) > 1000 )
+        {
+            check_pentagonals_start = false;
+            std::cout << "4 digit pentagonals start at [" << i << "] = "
+                      << pentagonals.get_term(i) << std::endl;
+        }
+        if ( check_pentagonals_end &&
+             pentagonals.get_term(i) > 9999 )
+        {
+            check_pentagonals_end = false;
+            std::cout << "4 digit pentagonals end at [" << i << "] = "
+                      << pentagonals.get_term(i) << std::endl;
+        }
+        if ( check_hexagonals_start &&
+             hexagonals.get_term(i) > 1000 )
+        {
+            check_hexagonals_start = false;
+            std::cout << "4 digit hexagonals start at [" << i << "] = "
+                      << hexagonals.get_term(i) << std::endl;
+        }
+        if ( check_hexagonals_end &&
+             hexagonals.get_term(i) > 9999 )
+        {
+            check_hexagonals_end = false;
+            std::cout << "4 digit hexagonals end at [" << i << "] = "
+                      << hexagonals.get_term(i) << std::endl;
+        }
+        if ( check_heptagonals_start &&
+             heptagonals.get_term(i) > 1000 )
+        {
+            check_heptagonals_start = false;
+            std::cout << "4 digit heptagonals start at [" << i << "] = "
+                      << heptagonals.get_term(i) << std::endl;
+        }
+        if ( check_heptagonals_end &&
+             heptagonals.get_term(i) > 9999 )
+        {
+            check_heptagonals_end = false;
+            std::cout << "4 digit heptagonals end at [" << i << "] = "
+                      << heptagonals.get_term(i) << std::endl;
+        }
+        if ( check_octagonals_start &&
+             octagonals.get_term(i) > 1000 )
+        {
+            check_octagonals_start = false;
+            std::cout << "4 digit octagonals start at [" << i << "] = "
+                      << octagonals.get_term(i) << std::endl;
+        }
+        if ( check_octagonals_end &&
+             octagonals.get_term(i) > 9999 )
+        {
+            check_octagonals_end = false;
+            std::cout << "4 digit octagonals end at [" << i << "] = "
+                      << octagonals.get_term(i) << std::endl;
+        }
+    }
 }
