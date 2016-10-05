@@ -28,6 +28,30 @@ void pe63::run()
 
     size_t result = 0;
 
+    for ( size_t i = 1; i <= 20; ++i ) // increment powers
+    {
+        for ( size_t j = 1; true; ++j ) // increment number
+        {
+            size_t powed = pow(j, i);
+            if ( powed == 0 ) break;
+            size_t length = num_digits(powed);
+            std::cout << "testing: " << j << "^" << i << " = " << powed
+                      << " (" << length << ")" << std::endl;
+            if ( length < i )
+            {
+                continue;
+            }
+            else if ( length == i )
+            {
+                ++result;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     std::cout << "result: " << result << std::endl;
 
 }
