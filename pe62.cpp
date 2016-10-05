@@ -41,11 +41,11 @@ void pe62::run()
         size_t limit = pow(10, cand_length);
         size_t count = 1;
         // does cand have four other cube permutations?
+        size_t perm_cand;
         for ( size_t perm_cand_term = i + 1;
-              cubes.get_term(perm_cand_term) < limit;
+              ( perm_cand = cubes.get_term(perm_cand_term) ) < limit;
               ++perm_cand_term )
         {
-            size_t perm_cand = cubes.get_term(perm_cand_term);
             if ( same_digits(perm_cand, cand) )
             {
                 ++count;
