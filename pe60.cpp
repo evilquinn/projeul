@@ -13,6 +13,8 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 
+size_t pe60_sum_array(const size_t* nums, size_t nums_size);
+
 std::string& pe60::name()
 {
     return name_;
@@ -73,3 +75,13 @@ void pe60::run()
     std::cout << "result: " << result << std::endl;
 }
 
+
+size_t pe60_sum_array(const size_t* nums, size_t nums_size)
+{
+    size_t result = 0;
+    for ( size_t i = 0; i < nums_size; ++i )
+    {
+        result += nums[i];
+    }
+    return result;
+}
