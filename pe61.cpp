@@ -46,113 +46,141 @@ void pe61::run()
      *
      */
 
-    // find range for 4 digit numbers of lists
-    polygonal_numbers triangles(150, polygonal_numbers::triangle);
-    polygonal_numbers squares(100, polygonal_numbers::square);
-    polygonal_numbers pentagonals(82, polygonal_numbers::pentagonal);
-    polygonal_numbers hexagonals(71, polygonal_numbers::hexagonal);
-    polygonal_numbers heptagonals(64, polygonal_numbers::heptagonal);
-    polygonal_numbers octagonals(59, polygonal_numbers::octagonal);
-
-
-    bool check_triangles_start = true;
-    bool check_triangles_end   = true;
-    bool check_squares_start = true;
-    bool check_squares_end   = true;
-    bool check_pentagonals_start = true;
-    bool check_pentagonals_end   = true;
-    bool check_hexagonals_start = true;
-    bool check_hexagonals_end   = true;
-    bool check_heptagonals_start = true;
-    bool check_heptagonals_end   = true;
-    bool check_octagonals_start = true;
-    bool check_octagonals_end   = true;
-
-    for ( size_t i = 0; i < 10000; ++i )
+    struct data
     {
-        if ( check_triangles_start &&
-             triangles.get_term(i) > 1000 )
+        size_t start;
+        size_t end;
+        size_t used;
+    } data[] = { { .start = 45, .end = 141, false },
+                 { .start = 32, .end = 100, false },
+                 { .start = 26, .end = 82,  false },
+                 { .start = 23, .end = 71,  false },
+                 { .start = 21, .end = 64,  false },
+                 { .start = 19, .end = 59,  false } };
+
+    polygonal_numbers list[] =
+    {
+        polygonal_numbers(data[0].end, polygonal_numbers::triangle),
+        polygonal_numbers(data[1].end, polygonal_numbers::square),
+        polygonal_numbers(data[2].end, polygonal_numbers::pentagonal),
+        polygonal_numbers(data[3].end, polygonal_numbers::hexagonal),
+        polygonal_numbers(data[4].end, polygonal_numbers::heptagonal),
+        polygonal_numbers(data[5].end, polygonal_numbers::octagonal),
+    };
+
+    // to get set of 6 4-digit numbers, where any number could be from any
+    // list, choose first number by arbitrarily starting at the beginning of
+    // the first range, travelling all ranges.  To get a 'next' number, traverse
+    // all numbers in remaining lists looking for a cyclic potential.  Use
+    // backtracking to attempt next numbers in the event that an avenue is
+    // closed
+
+    struct result
+    {
+        size_t num;
+        size_t list;
+    } results[] = { { 0, 10 },
+                    { 0, 10 },
+                    { 0, 10 },
+                    { 0, 10 },
+                    { 0, 10 },
+                    { 0, 10 } };
+    size_t pos = 0;
+    bool backtracking = false;
+    size_t backtrack_next = 0;
+
+    while ( pos < 6 )
+    {
+        size_t previous = pos == 0 ? 0 : results[pos-1].num;
+        size_t low_bound = pos == 0 ? 1000 : ( previous % 100 ) * 100;
+        size_t high_bound = pos == 0 ? 10000 : low_bound + 100;
+        bool found_cand = false;
+        for ( size_t l = backtracking ? results[pos].list : 0;
+              // if we've backtracked, we'll start from last known point
+              l < 6 /*lists*/;
+              ++l )
         {
-            check_triangles_start = false;
-            std::cout << "4 digit triangles start at [" << i << "] = "
-                      << triangles.get_term(i) << std::endl;
+            bool list_used = false;
+            for ( size_t i = 0; i <= pos; ++i )
+            {
+                if ( results[i].list == l )
+                {
+                    list_used = true;
+                    break;
+                }
+            }
+            if ( backtracking || ! list_used )
+            {
+                for ( size_t i = data[l].start; i < data[l].end; ++i )
+                {
+                    size_t cand = list[l].get_term(i);
+                    if ( cand < low_bound )
+                    {
+                        // not there yet
+                        continue;
+                    }
+                    if ( backtracking )
+                    {
+                        if ( cand <= backtrack_next )
+                        {
+                            continue;
+                        }
+                    }
+                    if ( cand >= high_bound )
+                    {
+                        // too far
+                        break;
+                    }
+
+                    if ( pos == 5 )
+                    {
+                        // last contender, needs to be cyclic with first
+                        if ( cand % 100 != ( results[0].num / 100 ) )
+                        {
+                            continue;
+                        }
+                    }
+
+                    // get here, we have a contender
+                    // pop it in, increment to next number
+                    results[pos].num = cand;
+                    results[pos].list = l;
+
+                    ++pos;
+                    found_cand = true;
+                    break; // need to do more breakage here?
+                }
+            }
+
+            backtracking = false;
+
+            if ( found_cand )
+            {
+                break;
+            }
         }
-        if ( check_triangles_end &&
-             triangles.get_term(i) > 9999 )
+
+        if ( ! found_cand )
         {
-            check_triangles_end = false;
-            std::cout << "4 digit triangles end at [" << i << "] = "
-                      << triangles.get_term(i) << std::endl;
-        }
-        if ( check_squares_start &&
-             squares.get_term(i) > 1000 )
-        {
-            check_squares_start = false;
-            std::cout << "4 digit squares start at [" << i << "] = "
-                      << squares.get_term(i) << std::endl;
-        }
-        if ( check_squares_end &&
-             squares.get_term(i) > 9999 )
-        {
-            check_squares_end = false;
-            std::cout << "4 digit squares end at [" << i << "] = "
-                      << squares.get_term(i) << std::endl;
-        }
-        if ( check_pentagonals_start &&
-             pentagonals.get_term(i) > 1000 )
-        {
-            check_pentagonals_start = false;
-            std::cout << "4 digit pentagonals start at [" << i << "] = "
-                      << pentagonals.get_term(i) << std::endl;
-        }
-        if ( check_pentagonals_end &&
-             pentagonals.get_term(i) > 9999 )
-        {
-            check_pentagonals_end = false;
-            std::cout << "4 digit pentagonals end at [" << i << "] = "
-                      << pentagonals.get_term(i) << std::endl;
-        }
-        if ( check_hexagonals_start &&
-             hexagonals.get_term(i) > 1000 )
-        {
-            check_hexagonals_start = false;
-            std::cout << "4 digit hexagonals start at [" << i << "] = "
-                      << hexagonals.get_term(i) << std::endl;
-        }
-        if ( check_hexagonals_end &&
-             hexagonals.get_term(i) > 9999 )
-        {
-            check_hexagonals_end = false;
-            std::cout << "4 digit hexagonals end at [" << i << "] = "
-                      << hexagonals.get_term(i) << std::endl;
-        }
-        if ( check_heptagonals_start &&
-             heptagonals.get_term(i) > 1000 )
-        {
-            check_heptagonals_start = false;
-            std::cout << "4 digit heptagonals start at [" << i << "] = "
-                      << heptagonals.get_term(i) << std::endl;
-        }
-        if ( check_heptagonals_end &&
-             heptagonals.get_term(i) > 9999 )
-        {
-            check_heptagonals_end = false;
-            std::cout << "4 digit heptagonals end at [" << i << "] = "
-                      << heptagonals.get_term(i) << std::endl;
-        }
-        if ( check_octagonals_start &&
-             octagonals.get_term(i) > 1000 )
-        {
-            check_octagonals_start = false;
-            std::cout << "4 digit octagonals start at [" << i << "] = "
-                      << octagonals.get_term(i) << std::endl;
-        }
-        if ( check_octagonals_end &&
-             octagonals.get_term(i) > 9999 )
-        {
-            check_octagonals_end = false;
-            std::cout << "4 digit octagonals end at [" << i << "] = "
-                      << octagonals.get_term(i) << std::endl;
+            // backtrack?
+            --pos;
+            backtracking = true;
+            backtrack_next = results[pos].num;
         }
     }
+
+    size_t sum = results[0].num +
+                 results[1].num +
+                 results[2].num +
+                 results[3].num +
+                 results[4].num +
+                 results[5].num;
+    std::cout << "got: " << sum << " from:\n"
+              << results[0].num << "(" << results[0].list << ") "
+              << results[1].num << "(" << results[1].list << ") "
+              << results[2].num << "(" << results[2].list << ") "
+              << results[3].num << "(" << results[3].list << ") "
+              << results[4].num << "(" << results[4].list << ") "
+              << results[5].num << "(" << results[5].list << ") "
+              << std::endl;
 }
