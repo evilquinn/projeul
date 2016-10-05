@@ -33,9 +33,10 @@ void pe60::run()
      *
      */
 
-    size_t limit = 30000;
+    size_t limit = 9000;
     size_t running_total = 0;
     size_t smallest_sum = static_cast<size_t>(-1);
+    bool break_all = false;
 
     for ( size_t a = primes_.next_prime(2);
           a < limit;
@@ -46,8 +47,8 @@ void pe60::run()
               b < limit && running_total < smallest_sum;
               b = primes_.next_prime(b) )
         {
-            if ( ! is_prime(primes_, concat(a, b)) ||
-                 ! is_prime(primes_, concat(b, a)) )
+            if ( ! primes_.is_prime(concat(a, b)) ||
+                 ! primes_.is_prime(concat(b, a)) )
             {
                 continue;
             }
@@ -56,11 +57,12 @@ void pe60::run()
                   c < limit && running_total < smallest_sum;
                   c = primes_.next_prime(c) )
             {
-                if ( ! is_prime(primes_, concat(a, c)) ||
-                     ! is_prime(primes_, concat(c, a)) ||
-                     ! is_prime(primes_, concat(b, c)) ||
-                     ! is_prime(primes_, concat(c, b)) )
+                if ( ! primes_.is_prime(concat(a, c)) ||
+                     ! primes_.is_prime(concat(c, a)) ||
+                     ! primes_.is_prime(concat(b, c)) ||
+                     ! primes_.is_prime(concat(c, b)) )
                 {
+
                     continue;
                 }
                 running_total += c;
@@ -68,12 +70,12 @@ void pe60::run()
                       d < limit && running_total < smallest_sum;
                       d = primes_.next_prime(d) )
                 {
-                    if ( ! is_prime(primes_, concat(a, d)) ||
-                         ! is_prime(primes_, concat(d, a)) ||
-                         ! is_prime(primes_, concat(b, d)) ||
-                         ! is_prime(primes_, concat(d, b)) ||
-                         ! is_prime(primes_, concat(c, d)) ||
-                         ! is_prime(primes_, concat(d, c)) )
+                    if ( ! primes_.is_prime(concat(a, d)) ||
+                         ! primes_.is_prime(concat(d, a)) ||
+                         ! primes_.is_prime(concat(b, d)) ||
+                         ! primes_.is_prime(concat(d, b)) ||
+                         ! primes_.is_prime(concat(c, d)) ||
+                         ! primes_.is_prime(concat(d, c)) )
                     {
                         continue;
                     }
@@ -82,14 +84,14 @@ void pe60::run()
                           e < limit && running_total < smallest_sum;
                           e = primes_.next_prime(e) )
                     {
-                        if ( ! is_prime(primes_, concat(a, e)) ||
-                             ! is_prime(primes_, concat(e, a)) ||
-                             ! is_prime(primes_, concat(b, e)) ||
-                             ! is_prime(primes_, concat(e, b)) ||
-                             ! is_prime(primes_, concat(c, e)) ||
-                             ! is_prime(primes_, concat(e, c)) ||
-                             ! is_prime(primes_, concat(d, e)) ||
-                             ! is_prime(primes_, concat(e, d)) )
+                        if ( ! primes_.is_prime(concat(a, e)) ||
+                             ! primes_.is_prime(concat(e, a)) ||
+                             ! primes_.is_prime(concat(b, e)) ||
+                             ! primes_.is_prime(concat(e, b)) ||
+                             ! primes_.is_prime(concat(c, e)) ||
+                             ! primes_.is_prime(concat(e, c)) ||
+                             ! primes_.is_prime(concat(d, e)) ||
+                             ! primes_.is_prime(concat(e, d)) )
                         {
                             continue;
                         }
@@ -103,14 +105,39 @@ void pe60::run()
                                       << d << " " << e
                                       << std::endl;
                             smallest_sum = running_total;
+                            if ( smallest_sum < limit )
+                            {
+                                break_all = true;
+                                break;
+                            }
+                        }
+                        if ( break_all )
+                        {
+                            break;
                         }
                         running_total -= e;
                     }
+                    if ( break_all )
+                    {
+                        break;
+                    }
                     running_total -= d;
+                }
+                if ( break_all )
+                {
+                    break;
                 }
                 running_total -= c;
             }
+            if ( break_all )
+            {
+                break;
+            }
             running_total -= b;
+        }
+        if ( break_all )
+        {
+            break;
         }
         running_total -= a;
     }

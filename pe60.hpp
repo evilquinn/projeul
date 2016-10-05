@@ -11,7 +11,7 @@
 #include "pe.hpp"
 #include <prime_sieve.hpp>
 
-#define PE60_MAX_PRIME 100000
+#define PE60_MAX_PRIME 100000000
 
 class pe60 : public pe
 {
