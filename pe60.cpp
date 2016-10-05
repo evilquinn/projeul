@@ -13,8 +13,6 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 
-size_t pe60_sum_array(const size_t* nums, size_t nums_size);
-
 std::string& pe60::name()
 {
     return name_;
@@ -35,53 +33,85 @@ void pe60::run()
      *
      */
 
-    size_t result = 0;
+    size_t limit = 30000;
+    size_t running_total = 0;
+    size_t smallest_sum = static_cast<size_t>(-1);
 
-    size_t goal_size = 4;
-
-    size_t base_set[goal_size] = { 0 };
-
-    size_t limit = 1000;
-
-    for ( size_t i = primes_.next_prime(11);
-          i < limit;
-          i = primes_.next_prime(i) )
+    for ( size_t a = primes_.next_prime(2);
+          a < limit;
+          a = primes_.next_prime(a) )
     {
-        bool next_i = false;
-        size_t base_size = sizeof(base_set) / sizeof(size_t);
-        for ( size_t j = 0; j < base_size; ++j )
+        running_total += a;
+        for ( size_t b = primes_.next_prime(a);
+              b < limit && running_total < smallest_sum;
+              b = primes_.next_prime(b) )
         {
-            //std::cout << "checking " << base_set[j] << i << " and " << i << base_set[j] << std::endl;
-            if ( ! is_prime(primes_, concat(base_set[j], i)) ||
-                 ! is_prime(primes_, concat(i, base_set[j])) )
+            if ( ! is_prime(primes_, concat(a, b)) ||
+                 ! is_prime(primes_, concat(b, a)) )
             {
-                next_i = true;
-                break;
+                continue;
             }
-            if ( j == base_size - 1 )
+            running_total += b;
+            for ( size_t c = primes_.next_prime(b);
+                  c < limit && running_total < smallest_sum;
+                  c = primes_.next_prime(c) )
             {
-                // win!
-                result = i;
-                break;
+                if ( ! is_prime(primes_, concat(a, c)) ||
+                     ! is_prime(primes_, concat(c, a)) ||
+                     ! is_prime(primes_, concat(b, c)) ||
+                     ! is_prime(primes_, concat(c, b)) )
+                {
+                    continue;
+                }
+                running_total += c;
+                for ( size_t d = primes_.next_prime(c);
+                      d < limit && running_total < smallest_sum;
+                      d = primes_.next_prime(d) )
+                {
+                    if ( ! is_prime(primes_, concat(a, d)) ||
+                         ! is_prime(primes_, concat(d, a)) ||
+                         ! is_prime(primes_, concat(b, d)) ||
+                         ! is_prime(primes_, concat(d, b)) ||
+                         ! is_prime(primes_, concat(c, d)) ||
+                         ! is_prime(primes_, concat(d, c)) )
+                    {
+                        continue;
+                    }
+                    running_total += d;
+                    for ( size_t e = primes_.next_prime(d);
+                          e < limit && running_total < smallest_sum;
+                          e = primes_.next_prime(e) )
+                    {
+                        if ( ! is_prime(primes_, concat(a, e)) ||
+                             ! is_prime(primes_, concat(e, a)) ||
+                             ! is_prime(primes_, concat(b, e)) ||
+                             ! is_prime(primes_, concat(e, b)) ||
+                             ! is_prime(primes_, concat(c, e)) ||
+                             ! is_prime(primes_, concat(e, c)) ||
+                             ! is_prime(primes_, concat(d, e)) ||
+                             ! is_prime(primes_, concat(e, d)) )
+                        {
+                            continue;
+                        }
+                        running_total += e;
+                        if ( running_total < smallest_sum )
+                        {
+                            std::cout << "found new smallest: "
+                                      << running_total << " < " << smallest_sum
+                                      << "\nfrom: "
+                                      << a << " " << b << " " << c << " "
+                                      << d << " " << e
+                                      << std::endl;
+                            smallest_sum = running_total;
+                        }
+                        running_total -= e;
+                    }
+                    running_total -= d;
+                }
+                running_total -= c;
             }
+            running_total -= b;
         }
-        if ( next_i )
-        {
-            continue;
-        }
-        break;
+        running_total -= a;
     }
-
-    std::cout << "result: " << result << std::endl;
-}
-
-
-size_t pe60_sum_array(const size_t* nums, size_t nums_size)
-{
-    size_t result = 0;
-    for ( size_t i = 0; i < nums_size; ++i )
-    {
-        result += nums[i];
-    }
-    return result;
 }
