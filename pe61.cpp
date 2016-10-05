@@ -85,7 +85,7 @@ void pe61::run()
                       << triangles.get_term(i) << std::endl;
         }
         if ( check_squares_start &&
-             triangles.get_term(i) > 1000 )
+             squares.get_term(i) > 1000 )
         {
             check_squares_start = false;
             std::cout << "4 digit squares start at [" << i << "] = "
