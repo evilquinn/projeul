@@ -27,6 +27,7 @@ public:
     gint& subtract(const gint& rhs);
     gint& multiply_by(const gint& rhs);
     gint& divide_by(const gint& rhs);
+    gint& pow(size_t rhs);
     gint abs() const;
 
     // operators

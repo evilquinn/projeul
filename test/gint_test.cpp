@@ -242,6 +242,14 @@ TEST_F(GintTest, testGintToSizeTWorks)
     }
 }
 
+TEST_F(GintTest, testGintPowWorks)
+{
+    EXPECT_EQ(gint(2).pow(2), 4);
+    EXPECT_EQ(gint(3).pow(2), 9);
+    EXPECT_EQ(gint(2).pow(10), 1024);
+    EXPECT_EQ(gint(3).pow(5), 243);
+}
+
 TEST_F(GintTest, testGintDivide)
 {
     EXPECT_ANY_THROW(gint(100) / 0);

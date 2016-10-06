@@ -411,6 +411,16 @@ gint& gint::multiply_by(const gint& mult_by)
     return *this;
 }
 
+gint& gint::pow(size_t rhs)
+{
+    gint orig(*this);
+    for ( size_t i = 0; i < rhs-1; ++i )
+    {
+        multiply_by(orig);
+    }
+    return *this;
+}
+
 gint& gint::multiply_by_digit(uint8_t digit)
 {
     size_t start = n_.size() - 1;
@@ -464,7 +474,7 @@ size_t gint::to_size_t()
     size_t pow_ten = n_.size() - 1;
     for ( size_t i = 0; i < n_.size(); ++i )
     {
-        result += n_[i] * pow(10, pow_ten);
+        result += n_[i] * ::pow(10, pow_ten);
         --pow_ten;
     }
     return result;
