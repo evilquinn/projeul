@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <utils.hpp>
+#include <gint.hpp>
 #include <polygonal_numbers.hpp>
 
 std::string& pe63::name()
@@ -28,13 +29,14 @@ void pe63::run()
 
     size_t result = 0;
 
-    for ( size_t i = 1; i <= 20; ++i ) // increment powers
+    for ( size_t i = 1; i <= 21; ++i ) // increment powers
     {
         for ( size_t j = 1; true; ++j ) // increment number
         {
-            size_t powed = pow(j, i);
+            gint powed(j);
+            powed.pow(i);
             if ( powed == 0 ) break;
-            size_t length = num_digits(powed);
+            size_t length = powed.num_digits();
             std::cout << "testing: " << j << "^" << i << " = " << powed
                       << " (" << length << ")" << std::endl;
             if ( length < i )
