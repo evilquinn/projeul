@@ -22,37 +22,57 @@ void pe64::run()
      *
      */
 
-    size_t result = 0;
-
-    for ( size_t i = 2; i <= 14; ++i )
+    size_t odd_period_count = 0;
+    for ( size_t i = 2; i <= 10000; ++i )
     {
         size_t m = sqrt(i);
         size_t digit = m;
         size_t denom_part = 1;
         size_t numer_part = 0;
+        size_t first_denom_part = 0;
+        size_t first_numer_part = 0;
         size_t msq = m * m;
         if ( i == msq )
         {
-            std::cout << "iter 0"
-                      << " : V" << i
-                      << " = " << m
-                      << "\n" << std::endl;
+        //    std::cout << "iter 0"
+        //              << " : V" << i
+        //              << " = " << m
+        //              << "\n" << std::endl;
             continue;
         }
-        for ( size_t iter = 0; iter < 20; ++iter )
+        size_t period = 0;
+
+        while ( true )
         {
-            std::cout << "iter " << iter
-                      << " : V" << i << " + " << numer_part
-                      << " / " << denom_part
-                      << " = " << digit << std::endl;
+        //    std::cout << "iter " << period
+        //              << " : V" << i << " + " << numer_part
+        //              << " / " << denom_part
+        //              << " = " << digit << std::endl;
             numer_part = ( denom_part * digit ) - numer_part;
             denom_part = ( i - ( numer_part * numer_part ) ) / denom_part;
+            if ( first_denom_part == 0 )
+            {
+                first_denom_part = denom_part;
+                first_numer_part = numer_part;
+            }
+            else if ( denom_part == first_denom_part &&
+                      numer_part == first_numer_part )
+            {
+                // back at the start!
+                break;
+            }
             digit = ( m + numer_part ) / denom_part;
+            ++period;
         }
 
-        std::cout << std::endl;
+        if ( period & 1 )
+        {
+            ++odd_period_count;
+        }
+
+        // std::cout << std::endl;
     }
 
-    std::cout << "result: " << result << std::endl;
+    std::cout << "result: " << odd_period_count << std::endl;
 
 }
