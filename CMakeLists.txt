@@ -14,6 +14,7 @@ add_subdirectory(number_lists)
 add_subdirectory(poker)
 add_subdirectory(utils)
 add_executable(projeul main.cpp
+                       pe66.cpp
                        pe65.cpp
                        pe64.cpp
                        pe63.cpp
