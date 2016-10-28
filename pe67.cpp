@@ -57,17 +57,22 @@ void pe67::run()
         tri.push_back(newline);
     }
 
-
-    BOOST_FOREACH (const std::vector<size_t>& line, tri)
+    for ( size_t iter = tri.size() - 1; iter > 0; --iter )
     {
-        BOOST_FOREACH (size_t num, line)
+        for ( size_t niter = 0; niter < tri[iter].size() - 1; ++niter )
         {
-            std::cout << num << " ";
+            if ( tri[iter][niter] > tri[iter][niter+1] )
+            {
+                tri[iter-1][niter] += tri[iter][niter];
+            }
+            else
+            {
+                tri[iter-1][niter] += tri[iter][niter+1];
+            }
         }
-        std::cout << std::endl;
     }
 
-    size_t result = 0;
+    size_t result = tri[0][0];
 
     std::cout << "result : " << result << std::endl;
 }
