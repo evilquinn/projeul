@@ -9,7 +9,8 @@ add_executable(test_projeul prime_sieve_test.cpp
                             hexagonal_numbers_test.cpp
                             known_primes.cpp
                             utils_test.cpp
-                            gint_test.cpp)
+                            gint_test.cpp
+                            bint_test.cpp)
 
 add_subdirectory($ENV{GMOCK_ROOT}
                  ${CMAKE_BINARY_DIR}/gmock)

@@ -1,3 +1,4 @@
 
 add_library(utils STATIC utils.cpp
-                         gint.cpp)
+                         gint.cpp
+                         bint.cpp)
