@@ -51,7 +51,7 @@ private:
     uint8_t hex_to_bin(char hex);
 
 
-    unsigned char* mem_;
+    uint8_t* mem_;
     size_t length_;
     size_t capacity_;
 };

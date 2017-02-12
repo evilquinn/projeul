@@ -36,23 +36,23 @@ uint8_t bint::hex_to_bin(char hex)
 {
     switch(toupper(hex))
     {
-    case '0' : return 0x0;  break;
-    case '1' : return 0x1;  break;
-    case '2' : return 0x2;  break;
-    case '3' : return 0x3;  break;
-    case '4' : return 0x4;  break;
-    case '5' : return 0x5;  break;
-    case '6' : return 0x6;  break;
-    case '7' : return 0x7;  break;
-    case '8' : return 0x8;  break;
-    case '9' : return 0x9;  break;
-    case 'A' : return 0x10; break;
-    case 'B' : return 0x11; break;
-    case 'C' : return 0x12; break;
-    case 'D' : return 0x13; break;
-    case 'E' : return 0x14; break;
-    case 'F' : return 0x15; break;
-    default  : return 0x0;  break;
+    case '0' : return 0x0; break;
+    case '1' : return 0x1; break;
+    case '2' : return 0x2; break;
+    case '3' : return 0x3; break;
+    case '4' : return 0x4; break;
+    case '5' : return 0x5; break;
+    case '6' : return 0x6; break;
+    case '7' : return 0x7; break;
+    case '8' : return 0x8; break;
+    case '9' : return 0x9; break;
+    case 'A' : return 0xA; break;
+    case 'B' : return 0xB; break;
+    case 'C' : return 0xC; break;
+    case 'D' : return 0xD; break;
+    case 'E' : return 0xE; break;
+    case 'F' : return 0xF; break;
+    default  : return 0x0; break;
     }
 }
 
@@ -64,15 +64,18 @@ void bint::from_hex(const char* hex)
     {
         resize(new_length);
     }
-    for ( size_t i = 0; i < hex_length; ++i )
+    for ( size_t i = hex_length - 1; i < hex_length; --i )
     {
-        if ( i & 0x1 )
+        if ( i == 0 )
         {
-            mem_[i/2] ^= hex_to_bin(hex[i]);
+            // last char
+            mem_[i/2] = hex_to_bin(hex[i]);
         }
         else
         {
-            mem_[i/2] = hex_to_bin(hex[i]) << 4;
+            // take two chars at a time == 1 byte binary
+            mem_[i/2] = (hex_to_bin(hex[i-1]) << 4) ^ hex_to_bin(hex[i]);
+            --i;
         }
     }
     length_ = new_length;
@@ -80,11 +83,8 @@ void bint::from_hex(const char* hex)
 
 void bint::resize(size_t new_capacity)
 {
-    if ( mem_ )
-    {
-        delete[] mem_;
-    }
-    mem_ = new unsigned char[new_capacity];
+    delete[] mem_;
+    mem_ = new uint8_t[new_capacity];
     capacity_ = new_capacity;
     length_ = 0;
 }
@@ -103,7 +103,7 @@ std::ostream& bint::stream_out(std::ostream& os) const
     os << std::hex;
     for ( size_t i = 0; i < length_; ++i )
     {
-        os << mem_[i];
+        os << static_cast<int>(mem_[i]);
     }
     os << std::dec;
     return os;
