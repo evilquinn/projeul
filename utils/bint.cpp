@@ -7,13 +7,24 @@
 
 #include <cstring>
 #include <cctype>
+#include <iomanip>
+#include <boost/format.hpp>
 #include "bint.hpp"
 
 bint::bint(const unsigned char* bin, size_t length) :
-    mem_(NULL),
-    length_(0),
-    capacity_(0)
+    mem_(new uint8_t[length]),
+    length_(length),
+    capacity_(length)
 {
+    memcpy(mem_, bin, length);
+}
+
+bint::bint(size_t n) :
+    mem_(new uint8_t[sizeof(n)]),
+    length_(sizeof(n)),
+    capacity_(length_)
+{
+    from_size_t(n);
 }
 
 bint::bint(const char* hex) :
@@ -81,6 +92,22 @@ void bint::from_hex(const char* hex)
     length_ = new_length;
 }
 
+void bint::from_size_t(size_t n)
+{
+    size_t new_length = sizeof(n);
+    if ( new_length > capacity_ )
+    {
+        resize(new_length);
+    }
+    const uint8_t* bin_array = reinterpret_cast<const uint8_t*>(&n);
+    for ( size_t i = new_length - 1; i < new_length; --i )
+    {
+        size_t mem_idx = new_length - 1;
+        mem_[mem_idx - i] = bin_array[i];
+    }
+    length_ = new_length;
+}
+
 void bint::resize(size_t new_capacity)
 {
     delete[] mem_;
@@ -93,17 +120,16 @@ void bint::print() const
 {
     for ( size_t i = 0; i < length_; ++i )
     {
-        printf("%x", mem_[i]);
+        printf("%02x", mem_[i]);
     }
     printf("\n");
 }
 
 std::ostream& bint::stream_out(std::ostream& os) const
 {
-    os << std::hex;
     for ( size_t i = 0; i < length_; ++i )
     {
-        os << static_cast<int>(mem_[i]);
+        os << boost::format("%02x") % static_cast<int>(mem_[i]);
     }
     os << std::dec;
     return os;

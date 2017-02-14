@@ -15,8 +15,9 @@
 class bint
 {
 public:
-    bint(const unsigned char* binary, size_t length);
+    bint(const void* binary, size_t length);
     bint(const char* hex);
+    bint(size_t n);
 
     virtual ~bint();
 
@@ -47,6 +48,8 @@ private:
     void resize(size_t new_capacity);
     // copy from hex string
     void from_hex(const char* hex);
+    // copy from size_t
+    void from_size_t(size_t n);
     // convert ascii hex char to binary
     uint8_t hex_to_bin(char hex);
 
