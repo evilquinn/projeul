@@ -19,6 +19,15 @@ public:
     bint(const char* hex);
     bint(size_t n);
     bint(const bint& b);
+    bint& operator = (bint rhs);
+
+    friend void swap(bint& lhs, bint& rhs)
+    {
+        using std::swap;
+        swap(lhs.length_, rhs.length_);
+        swap(lhs.capacity_, rhs.capacity_);
+        swap(lhs.mem_, rhs.mem_);
+    }
 
     virtual ~bint();
 

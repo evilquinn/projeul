@@ -43,6 +43,12 @@ bint::bint(const bint& b) :
     memcpy(mem_, b.mem_, b.capacity_);
 }
 
+bint& bint::operator=(bint rhs)
+{
+    swap(*this, rhs);
+    return *this;
+}
+
 bint::~bint()
 {
     if ( mem_ )
@@ -169,3 +175,4 @@ std::ostream& bint::stream_out(std::ostream& os) const
     os << std::dec;
     return os;
 }
+
