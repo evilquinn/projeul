@@ -24,7 +24,7 @@ bint::bint(size_t n) :
     length_(sizeof(n)),
     capacity_(length_)
 {
-    from_size_t(n);
+    memcpy(mem_, &n, length_);
 }
 
 bint::bint(const char* hex) :
@@ -33,6 +33,14 @@ bint::bint(const char* hex) :
     capacity_(0)
 {
     from_hex(hex);
+}
+
+bint::bint(const bint& b) :
+    mem_(new uint8_t[b.capacity_]),
+    length_(b.length_),
+    capacity_(b.capacity_)
+{
+    memcpy(mem_, b.mem_, b.capacity_);
 }
 
 bint::~bint()
@@ -75,35 +83,21 @@ void bint::from_hex(const char* hex)
     {
         resize(new_length);
     }
+    size_t mem_idx = new_length - 1;
     for ( size_t i = hex_length - 1; i < hex_length; --i )
     {
         if ( i == 0 )
         {
             // last char
-            mem_[i/2] = hex_to_bin(hex[i]);
+            mem_[mem_idx - (i/2)] = hex_to_bin(hex[i]);
         }
         else
         {
             // take two chars at a time == 1 byte binary
-            mem_[i/2] = (hex_to_bin(hex[i-1]) << 4) ^ hex_to_bin(hex[i]);
+            mem_[mem_idx - (i/2)] =
+                (hex_to_bin(hex[i-1]) << 4) ^ hex_to_bin(hex[i]);
             --i;
         }
-    }
-    length_ = new_length;
-}
-
-void bint::from_size_t(size_t n)
-{
-    size_t new_length = sizeof(n);
-    if ( new_length > capacity_ )
-    {
-        resize(new_length);
-    }
-    const uint8_t* bin_array = reinterpret_cast<const uint8_t*>(&n);
-    for ( size_t i = new_length - 1; i < new_length; --i )
-    {
-        size_t mem_idx = new_length - 1;
-        mem_[mem_idx - i] = bin_array[i];
     }
     length_ = new_length;
 }
@@ -116,9 +110,50 @@ void bint::resize(size_t new_capacity)
     length_ = 0;
 }
 
+bool bint::equals(const bint& rhs) const
+{
+    if ( length_ != rhs.length_ )
+    {
+        return false;
+    }
+    for ( size_t i = 0; i < length_; ++i )
+    {
+        if ( mem_[i] != rhs.mem_[i] )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool bint::less_than(const bint& rhs) const
+{
+    if ( length_ > rhs.length_ )
+    {
+        return false;
+    }
+    if ( length_ < rhs.length_ )
+    {
+        return true;
+    }
+    for ( size_t i = length_ - 1; i < length_; --i )
+    {
+        if ( mem_[i] > rhs.mem_[i] )
+        {
+            return false;
+        }
+        if ( mem_[i] < rhs.mem_[i] )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void bint::print() const
 {
-    for ( size_t i = 0; i < length_; ++i )
+    for ( size_t i = length_ - 1; i < length_; --i )
     {
         printf("%02x", mem_[i]);
     }
@@ -127,7 +162,7 @@ void bint::print() const
 
 std::ostream& bint::stream_out(std::ostream& os) const
 {
-    for ( size_t i = 0; i < length_; ++i )
+    for ( size_t i = length_ - 1; i < length_; --i )
     {
         os << boost::format("%02x") % static_cast<int>(mem_[i]);
     }

@@ -15,11 +15,16 @@
 class bint
 {
 public:
-    bint(const void* binary, size_t length);
+    bint(const unsigned char* binary, size_t length);
     bint(const char* hex);
     bint(size_t n);
+    bint(const bint& b);
 
     virtual ~bint();
+
+    // equality testing
+    bool equals(const bint& rhs) const;
+    bool less_than(const bint& rhs) const;
 
 /*    bint& add(const bint& rhs);
     bint& subtract(const bint& rhs);
@@ -48,8 +53,6 @@ private:
     void resize(size_t new_capacity);
     // copy from hex string
     void from_hex(const char* hex);
-    // copy from size_t
-    void from_size_t(size_t n);
     // convert ascii hex char to binary
     uint8_t hex_to_bin(char hex);
 
@@ -60,10 +63,9 @@ private:
 };
 
 // more operators
-/*
 inline bool operator==(const bint& lhs, const bint& rhs)
 {
-    return lhs.less_than_xor_equal(rhs, true);
+    return lhs.equals(rhs);
 }
 inline bool operator!=(const bint& lhs, const bint& rhs)
 {
@@ -71,7 +73,7 @@ inline bool operator!=(const bint& lhs, const bint& rhs)
 }
 inline bool operator< (const bint& lhs, const bint& rhs)
 {
-    return lhs.less_than_xor_equal(rhs, false);
+    return lhs.less_than(rhs);
 }
 inline bool operator> (const bint& lhs, const bint& rhs)
 {
@@ -85,6 +87,7 @@ inline bool operator>=(const bint& lhs, const bint& rhs)
 {
     return !operator< (lhs,rhs);
 }
+/*
 inline bint operator+ (bint lhs, const bint& rhs)
 {
     lhs += rhs;
