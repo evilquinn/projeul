@@ -35,8 +35,8 @@ public:
     bool equals(const bint& rhs) const;
     bool less_than(const bint& rhs) const;
 
-/*    bint& add(const bint& rhs);
-    bint& subtract(const bint& rhs);
+    bint& add(const bint& rhs);
+/*    bint& subtract(const bint& rhs);
     bint& multiply_by(const bint& rhs);
     bint& divide_by(const bint& rhs);
     bint& pow(size_t rhs);

@@ -157,6 +157,12 @@ bool bint::less_than(const bint& rhs) const
     return false;
 }
 
+bint& bint::add(const bint& rhs)
+{
+
+    return *this;
+}
+
 void bint::print() const
 {
     for ( size_t i = length_ - 1; i < length_; --i )
