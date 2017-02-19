@@ -152,4 +152,14 @@ TEST_F(BintTest, testAdd)
     EXPECT_THAT(lhs.add(lhs), Eq(rhs));
 }
 
+TEST_F(BintTest, testBitwise)
+{
+    bint lhs(1234);
+    bint rhs(2468);
+
+    EXPECT_THAT(lhs ^ rhs, Eq(1234 ^ 2468));
+    EXPECT_THAT(lhs & rhs, Eq(1234 & 2468));
+    EXPECT_THAT(lhs | rhs, Eq(1234 | 2468));
+}
+
 

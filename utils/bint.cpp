@@ -155,6 +155,11 @@ bint& bint::add(const bint& rhs)
     return *this;
 }
 
+bint& bint::operator += (const bint& rhs)
+{
+    return add(rhs);
+}
+
 void bint::add(uint8_t num, size_t offset)
 {
     if ( offset > mem_.size() )
@@ -169,6 +174,36 @@ void bint::add(uint8_t num, size_t offset)
     {
         add(overflow, offset + 1);
     }
+}
+
+bint& bint::transform(const bint& rhs, std::function<uint8_t(uint8_t, uint8_t)> op)
+{
+    if ( rhs.mem_.size() > mem_.size() )
+    {
+        mem_.resize(rhs.mem_.size());
+    }
+
+    for ( size_t i = 0; i < mem_.size(); ++i )
+    {
+        mem_[i] = op(mem_[i], rhs.mem_[i]);
+    }
+    return *this;
+}
+
+
+bint& bint::operator ^= (const bint& rhs)
+{
+    return transform(rhs, std::bit_xor<uint8_t>());
+}
+
+bint& bint::operator &= (const bint& rhs)
+{
+    return transform(rhs, std::bit_and<uint8_t>());
+}
+
+bint& bint::operator |= (const bint& rhs)
+{
+    return transform(rhs, std::bit_or<uint8_t>());
 }
 
 
