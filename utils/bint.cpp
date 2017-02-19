@@ -162,7 +162,7 @@ bint& bint::operator += (const bint& rhs)
 
 void bint::add(uint8_t num, size_t offset)
 {
-    if ( offset > mem_.size() )
+    if ( offset >= mem_.size() )
     {
         mem_.push_back(num);
         return;
@@ -174,6 +174,19 @@ void bint::add(uint8_t num, size_t offset)
     {
         add(overflow, offset + 1);
     }
+}
+
+bint& bint::subtract(const bint& rhs)
+{
+    size_t orig = mem_.size();
+    *this += ~rhs + 1;
+    mem_.resize(orig);
+    return *this;
+}
+
+bint& bint::operator-=(const bint& rhs)
+{
+    return subtract(rhs);
 }
 
 bint& bint::transform(const bint& rhs, std::function<uint8_t(uint8_t, uint8_t)> op)
@@ -206,6 +219,14 @@ bint& bint::operator |= (const bint& rhs)
     return transform(rhs, std::bit_or<uint8_t>());
 }
 
+bint& bint::negate()
+{
+    for ( size_t i = 0; i < mem_.size(); ++i )
+    {
+        mem_[i] = ~mem_[i];
+    }
+    return *this;
+}
 
 void bint::print() const
 {

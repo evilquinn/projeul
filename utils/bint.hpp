@@ -11,8 +11,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <iostream>
-//#include <functional>
-//#include <algorithm>
 #include <vector>
 
 class bint
@@ -37,22 +35,25 @@ public:
     bool equals(const bint& rhs) const;
     bool less_than(const bint& rhs) const;
 
-    bint& transform(const bint& rhs, std::function<uint8_t(uint8_t, uint8_t)> op);
+    bint& transform(const bint& rhs,
+                    std::function<uint8_t(uint8_t, uint8_t)> op);
 
     bint& add(const bint& rhs);
     bint& operator += (const bint& rhs);
+    bint& subtract(const bint& rhs);
+    bint& operator -= (const bint& rhs);
+
+    bint& negate();
 
     bint& operator ^= (const bint& rhs);
     bint& operator &= (const bint& rhs);
     bint& operator |= (const bint& rhs);
-/*    bint& subtract(const bint& rhs);
-    bint& multiply_by(const bint& rhs);
+/*    bint& multiply_by(const bint& rhs);
     bint& divide_by(const bint& rhs);
     bint& pow(size_t rhs);
     bint abs() const;
 
     // operators
-    bint& operator -= (const bint& rhs);
     bint& operator *= (const bint& rhs);
     bint& operator /= (const bint& rhs);
     bint& operator++();
@@ -122,12 +123,16 @@ inline bint operator| (bint lhs, const bint& rhs)
     lhs |= rhs;
     return lhs;
 }
-/*
 inline bint operator- (bint lhs, const bint& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
+inline bint operator~ (bint lhs)
+{
+    return lhs.negate();
+}
+/*
 inline bint operator* (bint lhs, const bint& rhs)
 {
     lhs *= rhs;
