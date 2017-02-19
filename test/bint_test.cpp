@@ -144,4 +144,12 @@ TEST_F(BintTest, testSwapWorks)
     EXPECT_THAT(second, Eq(first_copy));
 }
 
+TEST_F(BintTest, testAdd)
+{
+    bint lhs(1234);
+    bint rhs(2468);
+
+    EXPECT_THAT(lhs.add(lhs), Eq(rhs));
+}
+
 

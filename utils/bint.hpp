@@ -11,10 +11,12 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <iostream>
+#include <vector>
 
 class bint
 {
 public:
+    bint();
     bint(const unsigned char* binary, size_t length);
     bint(const char* hex);
     bint(size_t n);
@@ -24,8 +26,6 @@ public:
     friend void swap(bint& lhs, bint& rhs)
     {
         using std::swap;
-        swap(lhs.length_, rhs.length_);
-        swap(lhs.capacity_, rhs.capacity_);
         swap(lhs.mem_, rhs.mem_);
     }
 
@@ -58,17 +58,15 @@ public:
     void print() const;
 
 private:
-    // for when we need more memory
-    void resize(size_t new_capacity);
     // copy from hex string
     void from_hex(const char* hex);
     // convert ascii hex char to binary
     uint8_t hex_to_bin(char hex);
+    // add single uint8_t to mem
+    void add(uint8_t num, size_t offset = 0);
 
 
-    uint8_t* mem_;
-    size_t length_;
-    size_t capacity_;
+    std::vector<uint8_t> mem_;
 };
 
 // more operators
