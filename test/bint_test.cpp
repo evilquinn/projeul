@@ -67,7 +67,7 @@ TEST_F(BintTest, testBintConstructFromSizeTWorks2)
     bint stock(n);
     std::stringstream os;
     os << stock;
-    EXPECT_THAT(os.str(), StrCaseEq("00000000000003e9"));
+    EXPECT_THAT(os.str(), StrCaseEq("03e9"));
     stock.print();
     std::cout << stock << std::endl;
     std::cout << boost::format("%016x") % n << std::endl;
@@ -170,6 +170,46 @@ TEST_F(BintTest, testSubtract)
 
     EXPECT_THAT(lhs-rhs, Eq(1234-2468));
     EXPECT_THAT(rhs-lhs, Eq(2468-1234));
+}
+
+TEST_F(BintTest, testMultiply)
+{
+    bint lhs(1234);
+    bint rhs(2468);
+
+    EXPECT_THAT(lhs*rhs, Eq(1234*2468));
+    EXPECT_THAT(rhs*lhs, Eq(2468*1234));
+}
+
+TEST_F(BintTest, testBitShift)
+{
+    bint lhs(1000);
+    bint rhs(1234567);
+    bint test1(1234567);
+    bint test2(1234567);
+    bint test3(192837);
+
+    EXPECT_THAT(lhs.bitshift_left(11), Eq(1000 << 11));
+    EXPECT_THAT(rhs.bitshift_left(15), Eq(1234567ul << 15));
+    EXPECT_THAT(test1.bitshift_left(5), Eq(1234567ul << 5));
+    EXPECT_THAT(test2.bitshift_left(8), Eq(1234567ul << 8));
+    for ( size_t i = 0; i < 30; ++i )
+    {
+        EXPECT_THAT(test3 << i, Eq(192837ul << i));
+    }
+
+    bint rshift1(1234567);
+    bint rshift2(1234567);
+    bint rshift3(1234567123456712345ul);
+
+    std::cout << rshift1 << std::endl;
+
+    EXPECT_THAT(rshift1.bitshift_right(3), Eq(1234567ul >> 3));
+    EXPECT_THAT(rshift2.bitshift_right(5), Eq(1234567ul >> 5));
+    for ( size_t i = 0; i < 30; ++i )
+    {
+        EXPECT_THAT(test3 >> i, Eq(1234567123456712345ul >> i));
+    }
 }
 
 
