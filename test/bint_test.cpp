@@ -202,13 +202,11 @@ TEST_F(BintTest, testBitShift)
     bint rshift2(1234567);
     bint rshift3(1234567123456712345ul);
 
-    std::cout << rshift1 << std::endl;
-
     EXPECT_THAT(rshift1.bitshift_right(3), Eq(1234567ul >> 3));
     EXPECT_THAT(rshift2.bitshift_right(5), Eq(1234567ul >> 5));
     for ( size_t i = 0; i < 30; ++i )
     {
-        EXPECT_THAT(test3 >> i, Eq(1234567123456712345ul >> i));
+        EXPECT_THAT(rshift3 >> i, Eq(1234567123456712345ul >> i));
     }
 }
 

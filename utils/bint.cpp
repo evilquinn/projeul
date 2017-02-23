@@ -301,19 +301,17 @@ bint& bint::bitshift_right(size_t n)
     uint8_t right_shift = bits;
     uint8_t left_shift = 8 - ( bits ? bits : 8 );
     uint8_t low_mask = ( static_cast<uint8_t>(pow(2, bits)) - 1 );
-    if ( !low_mask )
-    {
-        // looks like we're moving full bytes
-        low_mask = ~low_mask;
-    }
     uint8_t high_mask = ~low_mask;
 
+    size_t orig_size = mem_.size();
     size_t new_size = real_size() - bytes;
 
     for ( size_t i = 0; i < new_size; ++i )
     {
         uint8_t right_part = ( mem_[i + bytes] & high_mask ) >> right_shift;
-        uint8_t left_part = ( mem_[i + bytes + 1] & low_mask ) << left_shift;
+        uint8_t left_part =
+            ( ( i + bytes + 1 >=  orig_size ? 0 : mem_[i + bytes + 1] ) &
+              low_mask ) << left_shift;
         mem_[i] = left_part | right_part;
     }
     mem_.resize(new_size);
