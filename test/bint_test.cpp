@@ -63,14 +63,10 @@ TEST_F(BintTest, testBintConstructFromSizeTWorks)
 
 TEST_F(BintTest, testBintConstructFromSizeTWorks2)
 {
-    size_t n = 1001;
-    bint stock(n);
-    std::stringstream os;
-    os << stock;
-    EXPECT_THAT(os.str(), StrCaseEq("03e9"));
-    stock.print();
-    std::cout << stock << std::endl;
-    std::cout << boost::format("%016x") % n << std::endl;
+    bint stock;
+    EXPECT_THAT(stock, Eq(0));
+    EXPECT_THAT(stock, Lt(1));
+    EXPECT_THAT(stock, Ne(1));
 }
 
 TEST_F(BintTest, testBintCopyConstructor)
@@ -82,6 +78,30 @@ TEST_F(BintTest, testBintCopyConstructor)
     std::stringstream to_os;
     to_os << to_bint;
     EXPECT_THAT(to_os.str(), StrCaseEq(from_os.str()));
+}
+
+TEST_F(BintTest, testAssignmentOperator)
+{
+    bint stock;
+    stock = 1234;
+    EXPECT_THAT(stock, Eq(1234));
+
+    bint next = 2345;
+    EXPECT_THAT(next, Eq(2345));
+    next = stock;
+    EXPECT_THAT(next, Eq(stock));
+}
+
+TEST_F(BintTest, testIncrementDecrementOperators)
+{
+    bint stock;
+    EXPECT_THAT(++stock, Eq(1));
+    EXPECT_THAT(stock++, Eq(1));
+    EXPECT_THAT(stock, Eq(2));
+
+    EXPECT_THAT(--stock, Eq(1));
+    EXPECT_THAT(stock--, Eq(1));
+    EXPECT_THAT(stock, Eq(0));
 }
 
 TEST_F(BintTest, testBintEquality)
@@ -170,6 +190,13 @@ TEST_F(BintTest, testSubtract)
 
     EXPECT_THAT(lhs-rhs, Eq(1234-2468));
     EXPECT_THAT(rhs-lhs, Eq(2468-1234));
+
+    uint8_t base = 0xaa;
+    bint bshort(reinterpret_cast<unsigned char*>(&base), sizeof(base));
+
+    EXPECT_THAT(bshort, Eq(base));
+    EXPECT_THAT(bshort - lhs, Eq(base - 1234ul));
+    EXPECT_THAT(lhs - bshort, Eq(1234 - base));
 }
 
 TEST_F(BintTest, testMultiply)
@@ -208,6 +235,26 @@ TEST_F(BintTest, testBitShift)
     {
         EXPECT_THAT(rshift3 >> i, Eq(1234567123456712345ul >> i));
     }
+}
+
+TEST_F(BintTest, testDivision)
+{
+    size_t base = 1234567890;
+    bint stock(base);
+
+    EXPECT_THAT(stock / 7, Eq(base / 7));
+    EXPECT_THAT(stock / 12, Eq(base / 12));
+    EXPECT_THAT(stock / -34, Eq(base / -34));
+    EXPECT_THAT(stock / 65478, Eq(base / 65478));
+    EXPECT_THAT(stock / 999001122, Eq(base / 999001122));
+    EXPECT_THAT(stock / 1234567890, Eq(base / 1234567890));
+
+    EXPECT_THAT(stock % 7, Eq(base % 7));
+    EXPECT_THAT(stock % 12, Eq(base % 12));
+    EXPECT_THAT(stock % -34, Eq(base % -34));
+    EXPECT_THAT(stock % 65478, Eq(base % 65478));
+    EXPECT_THAT(stock % 999001122, Eq(base % 999001122));
+    EXPECT_THAT(stock % 1234567890, Eq(base % 1234567890));
 }
 
 

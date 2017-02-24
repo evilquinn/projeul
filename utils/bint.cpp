@@ -226,14 +226,64 @@ bint& bint::operator*=(const bint& rhs)
     return multiply_by(rhs);
 }
 
-bint& bint::divide_by(const bint& rhs)
+bint& bint::divide_by_long_division(const bint& rhs, bint* rem)
 {
+    bint quotient = 0ul;
+    bint remainder = 0ul;
+
+    for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )
+    {
+        remainder <<= 8;
+        quotient  <<= 8;
+        remainder += mem_[i];
+        uint8_t quotient_byte = 0;
+
+        while ( remainder >= rhs)
+        {
+            remainder -= rhs;
+            ++quotient_byte;
+        }
+        quotient += quotient_byte;
+    }
+
+    if ( rem )
+    {
+        *rem = remainder;
+    }
+
+    *this = quotient;
     return *this;
+}
+
+bint& bint::divide_by(const bint& rhs, bint* remainder)
+{
+    if ( rhs == 0ul )
+    {
+        throw std::invalid_argument("can't divide by zero");
+    }
+    if ( this == &rhs )
+    {
+        *this = 1;
+        if ( remainder )
+        {
+            *remainder = 0ul;
+        }
+        return *this;
+    }
+    return divide_by_long_division(rhs, remainder);
 }
 
 bint& bint::operator/=(const bint& rhs)
 {
     return divide_by(rhs);
+}
+
+bint& bint::operator%=(const bint& rhs)
+{
+    bint remainder;
+    divide_by(rhs, &remainder);
+    *this = remainder;
+    return *this;
 }
 
 bint& bint::bitshift_left(size_t i)
@@ -246,16 +296,17 @@ bint& bint::bitshift_left(size_t i)
     size_t bytes = i/8;
     uint8_t bits = i%8;
 
+    if ( !bits )
+    {
+        // ??
+        bits = 8;
+        --bytes;
+    }
+
     uint8_t left_shift = bits;
-    uint8_t right_shift = 8 - ( bits ? bits : 8 );
+    uint8_t right_shift = 8 - bits;
     uint8_t high_mask = ( static_cast<uint8_t>(pow(2, bits)) - 1 )
                         << right_shift;
-    if ( !high_mask )
-    {
-        // looks like we're moving full bytes
-        // TODO forgo this if bits is zero???? check it out
-        high_mask = ~high_mask;
-    }
     uint8_t low_mask = ~high_mask;
 
     size_t r_size = real_size();
@@ -277,6 +328,7 @@ bint& bint::bitshift_left(size_t i)
     }
     for ( size_t j = 0; j < growth - 1; ++j )
     {
+        // zero out the right-most bytes
         mem_[j] = 0;
     }
 
@@ -339,12 +391,44 @@ void bint::add(uint8_t num, size_t offset)
     }
 }
 
-bint& bint::subtract(const bint& rhs)
+bint& bint::subtract(bint rhs)
 {
+    if ( mem_.size() < rhs.mem_.size() )
+    {
+        mem_.resize(rhs.mem_.size());
+    }
+    else if ( mem_.size() > rhs.mem_.size() )
+    {
+        rhs.mem_.resize(mem_.size());
+    }
     size_t orig = mem_.size();
     *this += ~rhs + 1;
     mem_.resize(orig);
     return *this;
+}
+
+bint& bint::operator++()
+{
+    return *this += 1;
+}
+
+bint bint::operator++(int)
+{
+    bint tmp(*this);
+    *this += 1;
+    return tmp;
+}
+
+bint& bint::operator--()
+{
+    return *this -= 1;
+}
+
+bint bint::operator--(int)
+{
+    bint tmp(*this);
+    *this -= 1;
+    return tmp;
 }
 
 bint& bint::operator-=(const bint& rhs)

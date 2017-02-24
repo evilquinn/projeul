@@ -39,13 +39,15 @@ public:
                     std::function<uint8_t(uint8_t, uint8_t)> op);
 
     bint& add(const bint& rhs);
-    bint& subtract(const bint& rhs);
+    bint& subtract(bint rhs);
     bint& multiply_by(const bint& rhs);
-    bint& divide_by(const bint& rhs);
+    bint& divide_by(const bint& rhs, bint* remainder = NULL);
+    bint& divide_by_long_division(const bint& rhs, bint* remainder = NULL);
     bint& operator += (const bint& rhs);
     bint& operator -= (const bint& rhs);
     bint& operator *= (const bint& rhs);
     bint& operator /= (const bint& rhs);
+    bint& operator %= (const bint& rhs);
 
     bint& bitshift_left(size_t i);
     bint& operator <<= (size_t rhs);
@@ -58,13 +60,12 @@ public:
     bint& operator &= (const bint& rhs);
     bint& operator |= (const bint& rhs);
 /*    bint& pow(size_t rhs);
-    bint abs() const;
+    bint abs() const; */
 
-    // operators
     bint& operator++();
     bint operator++(int);
     bint& operator--();
-    bint operator--(int); */
+    bint operator--(int);
 
     // utility
     std::ostream& stream_out(std::ostream& os) const;
@@ -149,6 +150,11 @@ inline bint operator* (bint lhs, const bint& rhs)
 inline bint operator/ (bint lhs, const bint& rhs)
 {
     lhs /= rhs;
+    return lhs;
+}
+inline bint operator% (bint lhs, const bint& rhs)
+{
+    lhs %= rhs;
     return lhs;
 }
 inline std::ostream& operator<<(std::ostream& os, const bint& obj)
