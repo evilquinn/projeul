@@ -39,7 +39,7 @@ public:
                     std::function<uint8_t(uint8_t, uint8_t)> op);
 
     bint& add(const bint& rhs);
-    bint& subtract(bint rhs);
+    bint& subtract(const bint& rhs);
     bint& multiply_by(const bint& rhs);
     bint& divide_by(const bint& rhs, bint* remainder = NULL);
     bint& divide_by_long_division(const bint& rhs, bint* remainder = NULL);

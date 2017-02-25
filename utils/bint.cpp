@@ -391,18 +391,22 @@ void bint::add(uint8_t num, size_t offset)
     }
 }
 
-bint& bint::subtract(bint rhs)
+bint& bint::subtract(const bint& rhs)
 {
+    const bint* sub = &rhs;
+    bint temp;
     if ( mem_.size() < rhs.mem_.size() )
     {
         mem_.resize(rhs.mem_.size());
     }
     else if ( mem_.size() > rhs.mem_.size() )
     {
-        rhs.mem_.resize(mem_.size());
+        temp = rhs;
+        temp.mem_.resize(mem_.size());
+        sub = &temp;
     }
     size_t orig = mem_.size();
-    *this += ~rhs + 1;
+    *this += ~(*sub) + 1;
     mem_.resize(orig);
     return *this;
 }
