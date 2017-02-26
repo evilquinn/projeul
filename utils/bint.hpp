@@ -12,13 +12,14 @@
 #include <stdint.h>
 #include <iostream>
 #include <vector>
+#include <string>
 
 class bint
 {
 public:
     bint();
     bint(const unsigned char* binary, size_t length);
-    bint(const char* hex);
+    bint(const std::string& hex);
     bint(size_t n);
     bint(const bint& b);
     bint& operator = (bint rhs);
@@ -59,8 +60,8 @@ public:
     bint& operator ^= (const bint& rhs);
     bint& operator &= (const bint& rhs);
     bint& operator |= (const bint& rhs);
-/*    bint& pow(size_t rhs);
-    bint abs() const; */
+    bint& pow(const bint& rhs);
+//    bint abs() const;
 
     bint& operator++();
     bint operator++(int);
@@ -74,7 +75,7 @@ public:
 
 private:
     // copy from hex string
-    void from_hex(const char* hex);
+    void from_hex(const std::string& hex);
     // convert ascii hex char to binary
     uint8_t hex_to_bin(char hex);
     // add single uint8_t to mem

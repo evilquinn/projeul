@@ -32,8 +32,8 @@ bint::bint(size_t n) :
     }
 }
 
-bint::bint(const char* hex) :
-    mem_((strlen(hex) + 1) / 2)
+bint::bint(const std::string& hex) :
+    mem_((hex.size() + 1) / 2)
 {
     from_hex(hex);
 }
@@ -77,9 +77,9 @@ uint8_t bint::hex_to_bin(char hex)
     }
 }
 
-void bint::from_hex(const char* hex)
+void bint::from_hex(const std::string& hex)
 {
-    size_t hex_length = strlen(hex);
+    size_t hex_length = hex.size();
     size_t new_length = ( hex_length + 1 ) / 2;
     mem_.resize(new_length);
     size_t mem_idx = new_length - 1;
@@ -305,7 +305,7 @@ bint& bint::bitshift_left(size_t i)
 
     uint8_t left_shift = bits;
     uint8_t right_shift = 8 - bits;
-    uint8_t high_mask = ( static_cast<uint8_t>(pow(2, bits)) - 1 )
+    uint8_t high_mask = ( static_cast<uint8_t>(::pow(2, bits)) - 1 )
                         << right_shift;
     uint8_t low_mask = ~high_mask;
 
@@ -352,7 +352,7 @@ bint& bint::bitshift_right(size_t n)
 
     uint8_t right_shift = bits;
     uint8_t left_shift = 8 - ( bits ? bits : 8 );
-    uint8_t low_mask = ( static_cast<uint8_t>(pow(2, bits)) - 1 );
+    uint8_t low_mask = ( static_cast<uint8_t>(::pow(2, bits)) - 1 );
     uint8_t high_mask = ~low_mask;
 
     size_t orig_size = mem_.size();
@@ -438,6 +438,21 @@ bint bint::operator--(int)
 bint& bint::operator-=(const bint& rhs)
 {
     return subtract(rhs);
+}
+
+bint& bint::pow(const bint& rhs)
+{
+    if ( rhs == 0 )
+    {
+        *this = 1;
+        return *this;
+    }
+    for ( bint i = 0; i < rhs - 1; ++i )
+    {
+        bint mult(*this);
+        multiply_by(mult);
+    }
+    return *this;
 }
 
 bint& bint::transform(const bint& rhs, std::function<uint8_t(uint8_t, uint8_t)> op)
