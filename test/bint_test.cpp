@@ -259,13 +259,15 @@ TEST_F(BintTest, testDivision)
 
 TEST_F(BintTest, testPow)
 {
-    size_t base = 123039875;
+    size_t base = 123039;
     bint stock(base);
 
     EXPECT_THAT(stock.pow(0), Eq(1));
     stock = base;
     EXPECT_THAT(stock.pow(1), Eq(base));
     EXPECT_THAT(stock.pow(2), Eq(static_cast<size_t>(pow(base, 2))));
+    stock = 5;
+    EXPECT_THAT(stock.pow(4), Eq(static_cast<size_t>(pow(5, 4))));
 }
 
 

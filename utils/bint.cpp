@@ -447,9 +447,9 @@ bint& bint::pow(const bint& rhs)
         *this = 1;
         return *this;
     }
+    bint mult(*this);
     for ( bint i = 0; i < rhs - 1; ++i )
     {
-        bint mult(*this);
         multiply_by(mult);
     }
     return *this;
