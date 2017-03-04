@@ -494,6 +494,16 @@ bint& bint::negate()
     return *this;
 }
 
+bint::operator size_t() const
+{
+    return *(reinterpret_cast<const size_t*>(&mem_[0]));
+}
+
+bint::operator unsigned char*()
+{
+    return reinterpret_cast<unsigned char*>(&mem_[0]);
+}
+
 void bint::print() const
 {
     for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )

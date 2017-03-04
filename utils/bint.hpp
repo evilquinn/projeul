@@ -73,6 +73,9 @@ public:
 
     void print() const;
 
+    explicit operator size_t() const;
+    explicit operator unsigned char*();
+
 private:
     // copy from hex string
     void from_hex(const std::string& hex);

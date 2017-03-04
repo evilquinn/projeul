@@ -11,7 +11,9 @@ using ::testing::Le;
 using ::testing::Gt;
 using ::testing::Ge;
 using ::testing::Ne;
+using ::testing::StrEq;
 using ::testing::StrCaseEq;
+using ::testing::ElementsAreArray;
 
 class BintTest : public ::testing::Test
 {
@@ -268,6 +270,32 @@ TEST_F(BintTest, testPow)
     EXPECT_THAT(stock.pow(2), Eq(static_cast<size_t>(pow(base, 2))));
     stock = 5;
     EXPECT_THAT(stock.pow(4), Eq(static_cast<size_t>(pow(5, 4))));
+}
+
+TEST_F(BintTest, testToSizeT)
+{
+    size_t base = 12345;
+    bint stock(base);
+
+    EXPECT_THAT(size_t(stock), Eq(base));
+    stock *= 3;
+    EXPECT_THAT((size_t)stock, Eq(base * 3));
+    EXPECT_THAT(static_cast<size_t>(stock), Eq(base * 3));
+}
+
+TEST_F(BintTest, testCharStar)
+{
+    size_t base = 12345;
+    bint stock(base);
+
+    unsigned char* base_string = reinterpret_cast<unsigned char*>(&base);
+    unsigned char* stock_array = (unsigned char*)stock;
+
+    for ( size_t i = 0; i < sizeof(base); ++i )
+    {
+        EXPECT_THAT(stock_array[i], Eq(base_string[i]));
+    }
+
 }
 
 
