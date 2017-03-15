@@ -47,6 +47,7 @@ void pe51::run()
      *
      */
 
+    primes_ = prime_sieve(PE51_MAX_PRIMES);
     size_t current = primes_.next_prime(PE51_BEGIN);
     bool done = false;
 

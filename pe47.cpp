@@ -44,6 +44,7 @@ void pe47::run()
      *
      */
 
+    primes_ = prime_sieve(PE47_NUM_PRIMES);
     const size_t n = 4;
 
     size_t found_n_consecutives = 0;

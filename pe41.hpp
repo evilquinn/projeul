@@ -16,7 +16,7 @@ class pe41 : public pe
 {
 public:
     pe41() :
-        primes_(8000000),
+        primes_(),
         name_("pe41")
     {};
     virtual ~pe41()
@@ -24,6 +24,7 @@ public:
     };
     virtual std::string& name();
     virtual void run();
+    virtual int number() { return 41; }
 private:
     prime_sieve primes_;
     std::string name_;

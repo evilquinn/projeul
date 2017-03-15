@@ -18,6 +18,10 @@
 class prime_sieve
 {
 public:
+    prime_sieve() :
+        limit_(0),
+        sieve_(0)
+    {};
     prime_sieve(size_t max);
     virtual ~prime_sieve();
 

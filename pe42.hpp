@@ -16,16 +16,15 @@ class pe42 : public pe
 {
 public:
     pe42() :
-        tris_(1000),
         name_("pe42")
     {};
     virtual ~pe42()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 42; }
     virtual void run();
 private:
-    triangle_numbers tris_;
     std::string name_;
 };
 

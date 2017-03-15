@@ -14,6 +14,7 @@ add_subdirectory(number_lists)
 add_subdirectory(poker)
 add_subdirectory(utils)
 add_executable(projeul main.cpp
+                       pe_register.cpp
                        pe67.cpp
                        pe66.cpp
                        pe65.cpp
@@ -58,7 +59,8 @@ add_executable(projeul main.cpp
 
 target_link_libraries(projeul utils
                               number_lists
-                              poker)
+                              poker
+                              boost_program_options)
 
 add_subdirectory(test)
 add_subdirectory(profile)

@@ -37,6 +37,7 @@ void pe37::run()
      *
      */
 
+    primes_ = prime_sieve(1000000);
     int total = 0;
 
     for(int i = 11; i<1000000; ++i)

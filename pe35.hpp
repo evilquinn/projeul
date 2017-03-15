@@ -16,13 +16,14 @@ class pe35 : public pe
 {
 public:
     pe35() :
-        primes_(1000000),
+        primes_(),
         name_("pe35")
     {};
     virtual ~pe35()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 35; }
     virtual void run();
 private:
     prime_sieve primes_;

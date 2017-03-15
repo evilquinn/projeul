@@ -44,6 +44,7 @@ void pe50::run()
      * consecutive primes?
      *
      */
+    primes_ = prime_sieve(PE50_MAX_PRIMES);
     size_t hard_limit = 1000000;
     size_t working_limit = 4000;
     size_t upper = primes_.prev_prime(working_limit);

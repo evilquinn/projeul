@@ -42,6 +42,7 @@ void pe58::run()
      *
      */
 
+    primes_ = prime_sieve(PE58_MAX_PRIME);
     size_t i = 1;
     size_t step_to_corner = 2;
     double corners = 1;

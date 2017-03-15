@@ -20,6 +20,7 @@ public:
     {
     };
     virtual std::string& name();
+    virtual int number() { return 54; }
     virtual void run();
 private:
     std::string name_;

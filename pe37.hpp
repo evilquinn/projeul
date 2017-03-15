@@ -16,13 +16,14 @@ class pe37 : public pe
 {
 public:
     pe37() :
-        primes_(1000000),
+        primes_(),
         name_("pe37")
     {};
     virtual ~pe37()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 37; }
     virtual void run();
 private:
     bool is_trunc_prime_rtl(int n);

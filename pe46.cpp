@@ -44,6 +44,8 @@ void pe46::run()
      *
      */
 
+    primes_ = prime_sieve(PE46_NUM_PRIMES);
+    squares_ = std::vector<size_t>(PE46_NUM_PRIMES);
     size_t result = 0;
 
     for(size_t i = 1; i <= PE46_NUM_PRIMES; ++i)

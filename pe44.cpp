@@ -38,6 +38,7 @@ void pe44::run()
      *
      */
 
+    pentagonal_numbers pents(PE44_NUM_PENTS);
     size_t result = (size_t)-1;
 
     for(size_t j = 1; j < 3000; ++j)
@@ -45,12 +46,12 @@ void pe44::run()
         for(size_t k = j + 1; k < 3000; ++k)
         {
             size_t pents_diff = ((3 * (pow(k,2) - pow(j,2))) - k + j)/2;
-            if ( ! pents_.is_pentagonal(pents_diff) )
+            if ( ! pents.is_pentagonal(pents_diff) )
             {
                 continue;
             }
             size_t pents_sum = ((3 * (pow(j,2) + pow(k,2))) - j - k)/2;
-            if ( ! pents_.is_pentagonal(pents_sum) )
+            if ( ! pents.is_pentagonal(pents_sum) )
             {
                 continue;
             }

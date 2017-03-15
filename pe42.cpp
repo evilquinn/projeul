@@ -40,7 +40,7 @@ void pe42::run()
      * two-thousand common English words, how many are triangle words?
      *
      */
-
+    triangle_numbers tris_(1000);
     const char* words[] = {
         // pe42_words.txt is already formatted like an initialiser list,
         // just get the preprocessor to include the file

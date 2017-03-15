@@ -17,13 +17,14 @@ class pe50 : public pe
 {
 public:
     pe50() :
-        primes_(PE50_MAX_PRIMES),
+        primes_(),
         name_("pe50")
     {};
     virtual ~pe50()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 50; }
     virtual void run();
 private:
     prime_sieve primes_;

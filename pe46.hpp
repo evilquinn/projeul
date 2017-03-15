@@ -17,14 +17,15 @@ class pe46 : public pe
 {
 public:
     pe46() :
-        primes_(PE46_NUM_PRIMES),
-        squares_(PE46_NUM_PRIMES),
+        primes_(),
+        squares_(),
         name_("pe46")
     {};
     virtual ~pe46()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 46; }
     virtual void run();
     bool fulfills_goldbachs_conjecture(size_t i);
 private:

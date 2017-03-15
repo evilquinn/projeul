@@ -17,6 +17,7 @@ public:
     // abstract, returns name of exercise
     virtual std::string& name() = 0;
     virtual void run() = 0;
+    virtual int number() = 0;
 };
 
 

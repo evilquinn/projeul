@@ -31,6 +31,7 @@ void pe41::run()
      *
      */
 
+    primes_ = prime_sieve(8000000);
     int result = 1;
 
     for(size_t i = 8000000; i>1; --i)

@@ -37,6 +37,9 @@ void pe45::run()
      *
      */
 
+    pentagonal_numbers pents_(PE45_NUM_PENTS);
+    triangle_numbers tris_(PE45_NUM_TRIS);
+    hexagonal_numbers hexs_(PE45_NUM_HEXS);
     size_t result = 0;
 
     for(size_t tris_pos = 286; tris_pos <= PE45_NUM_TRIS; ++tris_pos)

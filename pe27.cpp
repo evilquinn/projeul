@@ -25,6 +25,10 @@ void pe27::run()
      * e.g. |11| = 11 and |−4| = 4
      *
      */
+    if ( !primes_ )
+    {
+        primes_ = new prime_sieve(1000000);
+    }
     int most_number_primes = 0;
     int super_a = 0;
     int super_b = 0;

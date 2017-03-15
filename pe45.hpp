@@ -21,20 +21,15 @@ class pe45 : public pe
 {
 public:
     pe45() :
-        pents_(PE45_NUM_PENTS),
-        tris_(PE45_NUM_TRIS),
-        hexs_(PE45_NUM_HEXS),
         name_("pe45")
     {};
     virtual ~pe45()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 45; }
     virtual void run();
 private:
-    pentagonal_numbers pents_;
-    triangle_numbers   tris_;
-    hexagonal_numbers  hexs_;
     std::string name_;
 };
 

@@ -18,12 +18,13 @@ class pe58 : public pe
 public:
     pe58() :
         name_("pe58"),
-        primes_(PE58_MAX_PRIME)
+        primes_()
     {};
     virtual ~pe58()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 58; }
     virtual void run();
 private:
     std::string name_;

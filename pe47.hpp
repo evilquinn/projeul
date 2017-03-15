@@ -17,13 +17,14 @@ class pe47 : public pe
 {
 public:
     pe47() :
-        primes_(PE47_NUM_PRIMES),
+        primes_(),
         name_("pe47")
     {};
     virtual ~pe47()
     {
     };
     virtual std::string& name();
+    virtual int number() { return 47; }
     virtual void run();
     bool num_has_n_distinct_prime_factors(size_t num, size_t n);
 private:

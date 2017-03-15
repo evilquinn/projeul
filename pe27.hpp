@@ -16,7 +16,7 @@ class pe27 : public pe
 {
 public:
     pe27() :
-        primes_(new prime_sieve(1000000)),
+        primes_(NULL),
         name_("pe27")
     {};
     virtual ~pe27()
@@ -24,6 +24,7 @@ public:
         delete primes_;
     };
     virtual std::string& name();
+    virtual int number() { return 27; }
     virtual void run();
 private:
     prime_sieve* primes_;

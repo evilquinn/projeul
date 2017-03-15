@@ -21,6 +21,7 @@ public:
     {
     };
     virtual std::string& name();
+    virtual int number() { return 63; }
     virtual void run();
 private:
     std::string name_;

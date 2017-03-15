@@ -33,7 +33,7 @@ void pe35::run()
      * How many circular primes are there below one million?
      *
      */
-
+    primes_ = prime_sieve(1000000);
     int total = 0;
     for ( int i = 2; i < 1000000; ++i )
     {
