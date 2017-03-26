@@ -285,7 +285,7 @@ TEST_F(BintTest, testToSizeT)
 
 TEST_F(BintTest, testCharStar)
 {
-    size_t base = 12345;
+    size_t base = 0x3039;
     bint stock(base);
 
     unsigned char* base_string = reinterpret_cast<unsigned char*>(&base);
@@ -293,8 +293,20 @@ TEST_F(BintTest, testCharStar)
 
     for ( size_t i = 0; i < sizeof(base); ++i )
     {
-        EXPECT_THAT(stock_array[i], Eq(base_string[i]));
+        size_t j = sizeof(base) - 1 - i;
+        EXPECT_THAT(stock_array[i], Eq(base_string[j]));
     }
+
+    const char* base2 = "afebdfdb";
+    unsigned char ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
+    bint s2(base2);
+    unsigned char* sa2 = (unsigned char*)s2;
+
+    for ( size_t i = 0; i < sizeof(ba2); ++i )
+    {
+        EXPECT_THAT(sa2[i], Eq(ba2[i]));
+    }
+
 
 }
 

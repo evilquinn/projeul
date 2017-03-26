@@ -90,6 +90,7 @@ private:
 
 
     std::vector<uint8_t> mem_;
+    std::vector<uint8_t> rev_mem_;
 };
 
 // more operators

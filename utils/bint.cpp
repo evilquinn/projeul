@@ -18,12 +18,14 @@ bint::bint() :
 }
 
 bint::bint(const unsigned char* bin, size_t length) :
-    mem_(&bin[0], &bin[0] + length)
+    mem_(&bin[0], &bin[0] + length),
+    rev_mem_()
 {
 }
 
 bint::bint(size_t n) :
-    mem_(sizeof(n))
+    mem_(sizeof(n)),
+    rev_mem_()
 {
     const unsigned char* bin = reinterpret_cast<const unsigned char*>(&n);
     for ( size_t i = 0; i < mem_.size(); ++i )
@@ -33,13 +35,15 @@ bint::bint(size_t n) :
 }
 
 bint::bint(const std::string& hex) :
-    mem_((hex.size() + 1) / 2)
+    mem_((hex.size() + 1) / 2),
+    rev_mem_()
 {
     from_hex(hex);
 }
 
 bint::bint(const bint& b) :
-    mem_(b.mem_.begin(), b.mem_.end())
+    mem_(b.mem_.begin(), b.mem_.end()),
+    rev_mem_()
 {
 }
 
@@ -501,7 +505,8 @@ bint::operator size_t() const
 
 bint::operator unsigned char*()
 {
-    return reinterpret_cast<unsigned char*>(&mem_[0]);
+    rev_mem_ = std::vector<uint8_t>(mem_.rbegin(), mem_.rend());
+    return reinterpret_cast<unsigned char*>(&rev_mem_[0]);
 }
 
 void bint::print() const
