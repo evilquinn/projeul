@@ -318,7 +318,12 @@ TEST_F(BintTest, testCharStar)
         EXPECT_THAT(sa2[i], Eq(ba2[i]));
     }
 
+    stock = 0;
+    stock.resize(sizeof(ba2));
+    stock_array = static_cast<unsigned char*>(stock);
+    memcpy(stock_array, ba2, sizeof(ba2));
 
+    EXPECT_THAT(stock, Eq(s2));
 }
 
 
