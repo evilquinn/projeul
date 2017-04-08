@@ -68,6 +68,8 @@ public:
     bint& operator--();
     bint operator--(int);
 
+    void resize(size_t n);
+
     // utility
     std::ostream& stream_out(std::ostream& os) const;
 
@@ -89,8 +91,8 @@ private:
     size_t real_size() const;
 
 
-    std::vector<uint8_t> mem_;
-    std::vector<uint8_t> rev_mem_;
+    typedef std::vector<uint8_t> mem_type;
+    mem_type mem_;
 };
 
 // more operators

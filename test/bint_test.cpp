@@ -45,7 +45,7 @@ TEST_F(BintTest, testBintConstructFromBinWorks)
     bint stock(bin_ptr, sizeof(bin_data));
     std::stringstream os;
     os << stock;
-    EXPECT_THAT(os.str(), StrCaseEq("10F01F11FF11FF11"));
+    EXPECT_THAT(os.str(), StrCaseEq("11ff11ff111ff010"));
     stock.print();
     std::cout << stock << std::endl;
     std::cout << boost::format("%x") % bin_data << std::endl;
@@ -80,6 +80,17 @@ TEST_F(BintTest, testBintCopyConstructor)
     std::stringstream to_os;
     to_os << to_bint;
     EXPECT_THAT(to_os.str(), StrCaseEq(from_os.str()));
+}
+
+TEST_F(BintTest, testResize)
+{
+    size_t base = 1234;
+    bint stock(base);
+
+    uint8_t s_base = (uint8_t)base;
+    stock.resize(1);
+
+    EXPECT_THAT(stock, Eq(s_base));
 }
 
 TEST_F(BintTest, testAssignmentOperator)

@@ -18,32 +18,29 @@ bint::bint() :
 }
 
 bint::bint(const unsigned char* bin, size_t length) :
-    mem_(&bin[0], &bin[0] + length),
-    rev_mem_()
+    mem_(&bin[0], &bin[0] + length)
 {
 }
 
 bint::bint(size_t n) :
-    mem_(sizeof(n)),
-    rev_mem_()
+    mem_(sizeof(n))
 {
     const unsigned char* bin = reinterpret_cast<const unsigned char*>(&n);
+    size_t limit = mem_.size() - 1;
     for ( size_t i = 0; i < mem_.size(); ++i )
     {
-        mem_[i] = bin[i];
+        mem_[limit - i] = bin[i];
     }
 }
 
 bint::bint(const std::string& hex) :
-    mem_((hex.size() + 1) / 2),
-    rev_mem_()
+    mem_((hex.size() + 1) / 2)
 {
     from_hex(hex);
 }
 
 bint::bint(const bint& b) :
-    mem_(b.mem_.begin(), b.mem_.end()),
-    rev_mem_()
+    mem_(b.mem_.begin(), b.mem_.end())
 {
 }
 
@@ -85,20 +82,18 @@ void bint::from_hex(const std::string& hex)
 {
     size_t hex_length = hex.size();
     size_t new_length = ( hex_length + 1 ) / 2;
-    mem_.resize(new_length);
-    size_t mem_idx = new_length - 1;
+    resize(new_length);
     for ( size_t i = hex_length - 1; i < hex_length; --i )
     {
         if ( i == 0 )
         {
             // last char
-            mem_[mem_idx - (i/2)] = hex_to_bin(hex[i]);
+            mem_[i/2] = hex_to_bin(hex[i]);
         }
         else
         {
             // take two chars at a time == 1 byte binary
-            mem_[mem_idx - (i/2)] =
-                (hex_to_bin(hex[i-1]) << 4) ^ hex_to_bin(hex[i]);
+            mem_[i/2] = (hex_to_bin(hex[i-1]) << 4) ^ hex_to_bin(hex[i]);
             --i;
         }
     }
@@ -106,11 +101,11 @@ void bint::from_hex(const std::string& hex)
 
 size_t bint::real_size() const
 {
-    for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )
+    for ( size_t i = 0; i < mem_.size(); ++i )
     {
         if ( mem_[i] != 0 )
         {
-            return i + 1;
+            return mem_.size() - i;
         }
     }
     return 0;
@@ -126,7 +121,7 @@ bool bint::equals(const bint& rhs) const
     }
     for ( size_t i = 0; i < this_real_size; ++i )
     {
-        if ( mem_[i] != rhs.mem_[i] )
+        if ( *(mem_.rbegin() + i) != *(rhs.mem_.rbegin() + i) )
         {
             return false;
         }
@@ -146,13 +141,14 @@ bool bint::less_than(const bint& rhs) const
     {
         return true;
     }
-    for ( size_t i = this_real_size - 1; i < this_real_size; --i )
+    long i_diff = mem_.size() - rhs.mem_.size();
+    for ( size_t i = mem_.size() - this_real_size; i < mem_.size(); ++i )
     {
-        if ( mem_[i] > rhs.mem_[i] )
+        if ( mem_[i] > rhs.mem_[i - i_diff] )
         {
             return false;
         }
-        if ( mem_[i] < rhs.mem_[i] )
+        if ( mem_[i] < rhs.mem_[i - i_diff] )
         {
             return true;
         }
@@ -171,7 +167,7 @@ bint& bint::add(const bint& rhs)
 
     for ( size_t i = 0; i < rhs.mem_.size(); ++i )
     {
-        add(rhs.mem_[i], i);
+        add(*(rhs.mem_.rbegin() + i), i);
     }
     return *this;
 }
@@ -183,16 +179,18 @@ bint& bint::operator += (const bint& rhs)
 
 bint& bint::multiply_by(const bint& rhs)
 {
+    if ( rhs == 0 )
+    {
+        mem_.clear();
+        return *this;
+    }
+
     bint total;
     for ( size_t i = 0; i < rhs.mem_.size(); ++i )
     {
         bint inter(*this);
-        inter.multiply_by(rhs.mem_[i]);
+        inter.multiply_by(*(rhs.mem_.rbegin() + i));
         inter <<= ( i * 8 );
-        for ( size_t j = 0; j < i; ++j )
-        {
-            inter.mem_[j] = 0;
-        }
 
         total += inter;
     }
@@ -212,8 +210,9 @@ bint& bint::multiply_by(uint8_t num)
     uint8_t overflow = 0;
     for ( size_t i = 0; i < limit; ++i )
     {
-        uint16_t pre_result = static_cast<uint16_t>(mem_[i]) * num;
-        mem_[i] = static_cast<uint8_t>(pre_result);
+        uint16_t pre_result =
+            static_cast<uint16_t>(*(mem_.rbegin() + i)) * num;
+        *(mem_.rbegin() + i) = static_cast<uint8_t>(pre_result);
         add(overflow, i); // overflow from previous iteration
         overflow = pre_result >> 8;
     }
@@ -235,11 +234,12 @@ bint& bint::divide_by_long_division(const bint& rhs, bint* rem)
     bint quotient = 0ul;
     bint remainder = 0ul;
 
-    for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )
+    std::for_each(mem_.begin(), mem_.end(),
+    [&](mem_type::value_type val)
     {
         remainder <<= 8;
         quotient  <<= 8;
-        remainder += mem_[i];
+        remainder += val;
         uint8_t quotient_byte = 0;
 
         while ( remainder >= rhs)
@@ -248,7 +248,7 @@ bint& bint::divide_by_long_division(const bint& rhs, bint* rem)
             ++quotient_byte;
         }
         quotient += quotient_byte;
-    }
+    });
 
     if ( rem )
     {
@@ -290,58 +290,55 @@ bint& bint::operator%=(const bint& rhs)
     return *this;
 }
 
-bint& bint::bitshift_left(size_t i)
+bint& bint::bitshift_left(size_t n)
 {
-    if ( !i )
+    if ( !n )
     {
         return *this;
     }
 
-    size_t bytes = i/8;
-    uint8_t bits = i%8;
-
-    if ( !bits )
-    {
-        // ??
-        bits = 8;
-        --bytes;
-    }
+    size_t bytes = n/8;
+    uint8_t bits = n%8;
 
     uint8_t left_shift = bits;
     uint8_t right_shift = 8 - bits;
-    uint8_t high_mask = ( static_cast<uint8_t>(::pow(2, bits)) - 1 )
-                        << right_shift;
-    uint8_t low_mask = ~high_mask;
+    uint8_t low_mask = ( static_cast<uint8_t>(::pow(2, right_shift)) - 1 );
+    uint8_t high_mask = ~low_mask;
+
+    if ( bytes )
+    {
+        mem_.insert(mem_.end(), bytes, 0);
+    }
+
+    if ( !bits )
+    {
+        return *this;
+    }
 
     size_t r_size = real_size();
-    size_t growth = bytes + ( bits ? 1 : 0 );
-    size_t new_size = r_size + growth;
-    mem_.resize(new_size);
-
-    for ( size_t i = new_size - 1;
-          i >= growth - 1 && i <= new_size - 1;
-          --i )
+    if ( r_size == mem_.size() )
     {
-        size_t high_idx = i - growth + 1;
-        size_t low_idx = high_idx - 1;
+        resize(++r_size);
+    }
+
+    size_t start_i = mem_.size() - r_size - 1;
+    for ( size_t i = start_i; i < mem_.size(); ++i )
+    {
+        size_t high_idx = i;
+        size_t low_idx = high_idx + 1;
         uint8_t left_part = ( mem_[high_idx] & low_mask ) << left_shift;
         uint8_t right_part =
-            ( ( low_idx >= new_size - 1 ? 0 : mem_[low_idx] ) & high_mask )
+            ( ( low_idx >= mem_.size() ? 0 : mem_[low_idx] ) & high_mask )
             >> right_shift;
         mem_[i] = left_part | right_part;
-    }
-    for ( size_t j = 0; j < growth - 1; ++j )
-    {
-        // zero out the right-most bytes
-        mem_[j] = 0;
     }
 
     return *this;
 }
 
-bint& bint::operator <<= (size_t i)
+bint& bint::operator <<= (size_t n)
 {
-    return bitshift_left(i);
+    return bitshift_left(n);
 }
 
 bint& bint::bitshift_right(size_t n)
@@ -354,23 +351,29 @@ bint& bint::bitshift_right(size_t n)
     size_t bytes = n/8;
     uint8_t bits = n%8;
 
+    if ( bytes )
+    {
+        mem_.erase(mem_.end() - bytes, mem_.end());
+    }
+
+    if ( !bits )
+    {
+        return *this;
+    }
+
     uint8_t right_shift = bits;
-    uint8_t left_shift = 8 - ( bits ? bits : 8 );
-    uint8_t low_mask = ( static_cast<uint8_t>(::pow(2, bits)) - 1 );
+    uint8_t left_shift = 8 - bits;
+    uint8_t low_mask = ( static_cast<uint8_t>(::pow(2, right_shift)) - 1 );
     uint8_t high_mask = ~low_mask;
 
-    size_t orig_size = mem_.size();
-    size_t new_size = real_size() - bytes;
-
-    for ( size_t i = 0; i < new_size; ++i )
+    for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )
     {
-        uint8_t right_part = ( mem_[i + bytes] & high_mask ) >> right_shift;
+        uint8_t right_part = ( mem_[i] & high_mask ) >> right_shift;
         uint8_t left_part =
-            ( ( i + bytes + 1 >=  orig_size ? 0 : mem_[i + bytes + 1] ) &
-              low_mask ) << left_shift;
+            ( ( i - 1 >=  mem_.size() ? 0 : mem_[i - 1] ) & low_mask )
+            << left_shift;
         mem_[i] = left_part | right_part;
     }
-    mem_.resize(new_size);
     return *this;
 }
 
@@ -383,15 +386,30 @@ void bint::add(uint8_t num, size_t offset)
 {
     if ( offset >= mem_.size() )
     {
-        mem_.push_back(num);
+        mem_.insert(mem_.begin(), num);
         return;
     }
-    uint16_t pre_result = static_cast<uint16_t>(mem_[offset]) + num;
-    mem_[offset] = static_cast<uint8_t>(pre_result);
+    uint16_t pre_result =
+        static_cast<uint16_t>(*(mem_.rbegin() + offset)) + num;
+    *(mem_.rbegin() + offset) = static_cast<uint8_t>(pre_result);
     uint8_t overflow = pre_result >> 8;
     if ( overflow )
     {
         add(overflow, offset + 1);
+    }
+}
+
+void bint::resize(size_t n)
+{
+    if ( n > mem_.size() )
+    {
+        size_t diff = n - mem_.size();
+        mem_.insert(mem_.begin(), diff, 0);
+    }
+    else if ( n < mem_.size() )
+    {
+        size_t diff = mem_.size() - n;
+        mem_.erase(mem_.begin(), mem_.begin() + diff);
     }
 }
 
@@ -401,17 +419,17 @@ bint& bint::subtract(const bint& rhs)
     bint temp;
     if ( mem_.size() < rhs.mem_.size() )
     {
-        mem_.resize(rhs.mem_.size());
+        resize(rhs.mem_.size());
     }
     else if ( mem_.size() > rhs.mem_.size() )
     {
         temp = rhs;
-        temp.mem_.resize(mem_.size());
+        temp.resize(mem_.size());
         sub = &temp;
     }
     size_t orig = mem_.size();
     *this += ~(*sub) + 1;
-    mem_.resize(orig);
+    resize(orig);
     return *this;
 }
 
@@ -463,10 +481,10 @@ bint& bint::transform(const bint& rhs, std::function<uint8_t(uint8_t, uint8_t)> 
 {
     if ( rhs.mem_.size() > mem_.size() )
     {
-        mem_.resize(rhs.mem_.size());
+        resize(rhs.mem_.size());
     }
 
-    for ( size_t i = 0; i < mem_.size(); ++i )
+    for ( size_t i = rhs.mem_.size() - 1; i < rhs.mem_.size(); --i )
     {
         mem_[i] = op(mem_[i], rhs.mem_[i]);
     }
@@ -491,30 +509,33 @@ bint& bint::operator |= (const bint& rhs)
 
 bint& bint::negate()
 {
-    for ( size_t i = 0; i < mem_.size(); ++i )
+    std::for_each(mem_.begin(), mem_.end(),
+    [](mem_type::reference val)
     {
-        mem_[i] = ~mem_[i];
-    }
+        val = ~val;
+    });
+
     return *this;
 }
 
 bint::operator size_t() const
 {
-    return *(reinterpret_cast<const size_t*>(&mem_[0]));
+    mem_type rev(mem_.rbegin(), mem_.rbegin() + sizeof(size_t));
+    return *(reinterpret_cast<const size_t*>(&rev[0]));
 }
 
 bint::operator unsigned char*()
 {
-    rev_mem_ = std::vector<uint8_t>(mem_.rbegin(), mem_.rend());
-    return reinterpret_cast<unsigned char*>(&rev_mem_[0]);
+    return reinterpret_cast<unsigned char*>(&mem_[0]);
 }
 
 void bint::print() const
 {
-    for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )
+    std::for_each(mem_.begin(), mem_.end(),
+    [](const uint8_t val)
     {
-        printf("%02x", mem_[i]);
-    }
+        printf("%02x", val);
+    });
     printf("\n");
 }
 
@@ -526,10 +547,11 @@ std::ostream& bint::stream_out(std::ostream& os) const
         os << boost::format("%02x") % 0;
         return os;
     }
-    for ( size_t i = limit - 1; i < limit; --i )
+    std::for_each(mem_.begin(), mem_.end(),
+    [&](int e)
     {
-        os << boost::format("%02x") % static_cast<int>(mem_[i]);
-    }
+        os << boost::format("%02x") % e;
+    });
     return os;
 }
 
