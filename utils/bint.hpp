@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <iostream>
+#include <functional>
 #include <vector>
 #include <string>
 
@@ -69,6 +70,8 @@ public:
     bint operator--(int);
 
     void resize(size_t n);
+    void resize_chararray(size_t n);
+    size_t size() const;
 
     // utility
     std::ostream& stream_out(std::ostream& os) const;
@@ -77,6 +80,7 @@ public:
 
     explicit operator size_t() const;
     explicit operator unsigned char*();
+    explicit operator const unsigned char*() const;
 
 private:
     // copy from hex string

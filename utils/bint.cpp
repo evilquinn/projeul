@@ -13,7 +13,7 @@
 #include "bint.hpp"
 
 bint::bint() :
-    mem_()
+    mem_(0)
 {
 }
 
@@ -399,6 +399,20 @@ void bint::add(uint8_t num, size_t offset)
     }
 }
 
+void bint::resize_chararray(size_t n)
+{
+    if ( n > mem_.size() )
+    {
+        size_t diff = n - mem_.size();
+        mem_.insert(mem_.end(), diff, 0);
+    }
+    else if ( n < mem_.size() )
+    {
+        size_t diff = mem_.size() - n;
+        mem_.erase(mem_.end() - diff, mem_.end());
+    }
+}
+
 void bint::resize(size_t n)
 {
     if ( n > mem_.size() )
@@ -411,6 +425,11 @@ void bint::resize(size_t n)
         size_t diff = mem_.size() - n;
         mem_.erase(mem_.begin(), mem_.begin() + diff);
     }
+}
+
+size_t bint::size() const
+{
+    return mem_.size();
 }
 
 bint& bint::subtract(const bint& rhs)
@@ -529,6 +548,11 @@ bint::operator unsigned char*()
     return reinterpret_cast<unsigned char*>(&mem_[0]);
 }
 
+bint::operator const unsigned char*() const
+{
+    return reinterpret_cast<const unsigned char*>(&mem_[0]);
+}
+
 void bint::print() const
 {
     std::for_each(mem_.begin(), mem_.end(),
@@ -541,12 +565,11 @@ void bint::print() const
 
 std::ostream& bint::stream_out(std::ostream& os) const
 {
-    size_t limit = real_size();
-    if ( !limit )
+    if ( !real_size() )
     {
-        os << boost::format("%02x") % 0;
         return os;
     }
+
     std::for_each(mem_.begin(), mem_.end(),
     [&](int e)
     {
