@@ -5,11 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
 
-include_directories($ENV{BOOST_ROOT})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(number_lists)
-include_directories(poker)
-include_directories(utils)
 add_subdirectory(number_lists)
 add_subdirectory(poker)
 add_subdirectory(utils)
