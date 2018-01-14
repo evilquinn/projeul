@@ -62,5 +62,10 @@ target_link_libraries(projeul utils
                               poker
                               boost_program_options)
 
+add_subdirectory($ENV{GMOCK_ROOT}
+                 ${CMAKE_BINARY_DIR}/gmock)
+include_directories($ENV{GMOCK_ROOT}/googlemock/include
+                    $ENV{GMOCK_ROOT}/googletest/include)
+
 add_subdirectory(test)
 add_subdirectory(profile)

@@ -13,12 +13,7 @@ add_executable(test_projeul prime_sieve_test.cpp
                             bint_test.cpp
                             crypto_test.cpp)
 
-add_subdirectory($ENV{GMOCK_ROOT}
-                 ${CMAKE_BINARY_DIR}/gmock)
-
 target_link_libraries(test_projeul poker
-                                   crypto
-                                   ssl
                                    utils
                                    number_lists
                                    gmock_main)
