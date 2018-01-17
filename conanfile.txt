@@ -1,0 +1,8 @@
+[requires]
+Boost/1.64.0@conan/stable
+gtest/1.8.0@lasote/stable
+
+[options]
+
+[generators]
+cmake
