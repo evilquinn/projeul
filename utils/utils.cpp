@@ -7,6 +7,12 @@
 #include <boost/foreach.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <cmath>
+#include <boost/stacktrace.hpp>
+
+void print_stack_trace()
+{
+    std::cout << boost::stacktrace::stacktrace();
+}
 
 
 int num_digits(long long unsigned n)

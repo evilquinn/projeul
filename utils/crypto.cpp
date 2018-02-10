@@ -1,6 +1,7 @@
 
 #include "crypto.hpp"
 #include <bint.hpp>
+#include <utils.hpp>
 
 #define BLOCK_SIZE_BYTES 8
 
@@ -42,6 +43,8 @@ bool enc_encrypt_cipher(
                                    &bytes_written_op);
     bytes_written += bytes_written_op;
     output.resize_chararray(bytes_written);
+
+    print_stack_trace();
 
     EVP_CIPHER_CTX_cleanup(&encryption_context);
 

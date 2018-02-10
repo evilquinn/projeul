@@ -9,6 +9,8 @@
 
 class prime_sieve;
 
+void print_stack_trace();
+
 /*
  * counts the number of digits in a number
  * @param n  The number to count the digits of

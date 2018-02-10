@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
 
-execute_process(COMMAND conan install ${CMAKE_SOURCE_DIR}
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+add_subdirectory($ENV{GMOCK_ROOT} gmock)
+include_directories($ENV{GMOCK_ROOT}/googlemock/include
+                    $ENV{GMOCK_ROOT}/googletest/include)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(number_lists)
