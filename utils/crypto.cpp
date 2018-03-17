@@ -44,8 +44,6 @@ bool enc_encrypt_cipher(
     bytes_written += bytes_written_op;
     output.resize_chararray(bytes_written);
 
-    print_stack_trace();
-
     EVP_CIPHER_CTX_cleanup(&encryption_context);
 
     return success;
