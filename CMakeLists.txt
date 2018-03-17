@@ -6,8 +6,8 @@ set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
 
 add_subdirectory($ENV{GMOCK_ROOT} gmock)
-include_directories($ENV{GMOCK_ROOT}/googlemock/include
-                    $ENV{GMOCK_ROOT}/googletest/include)
+include_directories(SYSTEM $ENV{GMOCK_ROOT}/googlemock/include
+                           $ENV{GMOCK_ROOT}/googletest/include)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(number_lists)
