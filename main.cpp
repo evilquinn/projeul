@@ -20,8 +20,7 @@ int main(int argc, char* argv[])
     po::options_description desc("Options");
     desc.add_options()
         ("help,h", "produce help message")
-        ("exercise,e", po::value<int>()->default_value(0), "exercise to run")
-    ;
+        ("exercise,e", po::value<int>()->default_value(0), "exercise to run");
 
     po::variables_map vm;
     try
@@ -37,7 +36,7 @@ int main(int argc, char* argv[])
     }
     po::notify(vm);
 
-    if (vm.count("help")) {
+    if (vm.count("help") > 0) {
         std::cout << desc << "\n";
         return 1;
     }
@@ -48,7 +47,7 @@ int main(int argc, char* argv[])
     {
         pe_reg.run(exercise);
     }
-    catch(std::out_of_range)
+    catch(const std::out_of_range&)
     {
         std::cout << "Exercise " << exercise
                   << " isn't registered" << std::endl;

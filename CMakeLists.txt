@@ -5,6 +5,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_subdirectory($ENV{GMOCK_ROOT} gmock)
 include_directories(SYSTEM $ENV{GMOCK_ROOT}/googlemock/include
                            $ENV{GMOCK_ROOT}/googletest/include)
