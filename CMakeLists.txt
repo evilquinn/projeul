@@ -15,6 +15,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(number_lists)
 add_subdirectory(poker)
 add_subdirectory(utils)
+add_subdirectory(signal_handler)
+add_subdirectory(asio)
 add_executable(projeul main.cpp
                        pe_register.cpp
                        pe67.cpp

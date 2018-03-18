@@ -17,5 +17,7 @@ add_executable(test_projeul main.cpp
 target_link_libraries(test_projeul poker
                                    utils
                                    number_lists
+                                   asio_context
+                                   signal_handler
                                    gmock)
 

@@ -7,34 +7,6 @@
 #include <boost/foreach.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <cmath>
-#include <boost/stacktrace.hpp>
-#include <boost/asio/signal_set.hpp>
-#include <boost/asio.hpp>
-
-void print_stack_trace()
-{
-    std::cout << boost::stacktrace::stacktrace();
-}
-
-void signal_handler(const boost::system::error_code& error, int signal_number)
-{
-    print_stack_trace();
-    std::cout << "MWhaaa ha ha " << error << std::endl;
-    exit(1);
-}
-
-    // Construct a signal set registered for process termination.
-    boost::asio::io_context io_context;
-    boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
-
-void start_signal_handler()
-{
-    // Start an asynchronous wait for one of the signals to occur.
-    signals.async_wait(signal_handler);
-    io_context.run();
-}
-
-
 
 int num_digits(long long unsigned n)
 {
