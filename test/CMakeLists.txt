@@ -1,6 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(test_projeul prime_sieve_test.cpp
+add_executable(test_projeul main.cpp
+                            prime_sieve_test.cpp
                             poker_test.cpp
                             card_test.cpp
                             polygonal_numbers_test.cpp
@@ -16,5 +17,5 @@ add_executable(test_projeul prime_sieve_test.cpp
 target_link_libraries(test_projeul poker
                                    utils
                                    number_lists
-                                   gmock_main)
+                                   gmock)
 
