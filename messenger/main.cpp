@@ -19,14 +19,14 @@ public:
         cli_handle_(io_context, ::dup(STDIN_FILENO)),
         input_buffer_(cli::max_input_size)
     {
-        on_ready();
+        on_ready_to_wait();
     }
 
 private:
-    void on_ready()
+    void on_ready_to_wait()
     {
         // Read a line of input entered by the user.
-        std::cout << "Enter command: " << std::endl;
+        std::cout << "Enter command: " << std::flush;
         boost::asio::async_read_until(cli_handle_, input_buffer_, '\n',
         boost::bind(&cli::on_input, this,
                     boost::asio::placeholders::error,
@@ -38,25 +38,37 @@ private:
     {
         if (!error)
         {
-            std::istream is(&input_buffer_);
             std::string s;
+            std::istream is(&input_buffer_);
             is >> s;
-            std::cout << "RECEIVED: " << s << std::endl;
+            // eat the remaining newline
+            input_buffer_.consume(1);
 
-            if ( s != "q" )
-            {
-                on_ready();
-            }
-            else
+            if ( s == "q" )
             {
                 std::cout << "quitting!" << std::endl;
+                return;
             }
+            if ( s == "h" )
+            {
+                print_usage();
+            }
+
+            on_ready_to_wait();
         }
         else
         {
             std::cout << "ERROR: " << error << std::endl;
-            cli_handle_.close();
         }
+    }
+
+    void print_usage()
+    {
+        std::cout << "messenger help:\n"
+                  << "\n"
+                  << "    h    Print this message\n"
+                  << "    q    Quit\n"
+                  << std::endl;
     }
 
     boost::asio::posix::stream_descriptor cli_handle_;
