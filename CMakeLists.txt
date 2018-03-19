@@ -17,6 +17,7 @@ add_subdirectory(poker)
 add_subdirectory(utils)
 add_subdirectory(signal_handler)
 add_subdirectory(asio)
+add_subdirectory(messenger)
 add_executable(projeul main.cpp
                        pe_register.cpp
                        pe67.cpp
