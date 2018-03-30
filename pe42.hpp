@@ -8,22 +8,18 @@
 #ifndef PE42_HPP_
 #define PE42_HPP_
 
-#include "pe.hpp"
 #include <triangle_numbers.hpp>
-
+#include "pe.hpp"
 
 class pe42 : public pe
 {
 public:
-    pe42() :
-        name_("pe42")
-    {};
-    virtual ~pe42()
-    {
-    };
+    pe42() : name_( "pe42" ){};
+    virtual ~pe42(){};
     virtual std::string& name();
-    virtual int number() { return 42; }
-    virtual void run();
+    virtual int          number() { return 42; }
+    virtual void         run();
+
 private:
     std::string name_;
 };

@@ -6,22 +6,18 @@
  */
 
 #include "pe38.hpp"
-#include <iostream>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
 
-int num_digits_array(size_t* ints, int ints_size);
+int num_digits_array( size_t* ints, int ints_size );
 
-std::string& pe38::name()
-{
-    return name_;
-}
-
-void pe38::run()
+std::string& pe38::name() { return name_; }
+void         pe38::run()
 {
     /*
      * Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -41,48 +37,42 @@ void pe38::run()
      * as the concatenated product of an integer with
      * (1,2, ... , n) where n > 1?
      */
-    int largest = 0;
-    int range_start = 1;
-    int range_end   = 9;
-    int range       = range_end - range_start + 1;
-    size_t i_limit = 10000;
-    for(size_t i = 9; i < i_limit; ++i)
+    int    largest     = 0;
+    int    range_start = 1;
+    int    range_end   = 9;
+    int    range       = range_end - range_start + 1;
+    size_t i_limit     = 10000;
+    for ( size_t i = 9; i < i_limit; ++i )
     {
         int n_limit = 10;
-        for( int n = 2; n < n_limit; ++n)
+        for ( int n = 2; n < n_limit; ++n )
         {
-            int ints[n];
+            int    ints[n];
             size_t lluints[n];
-            for(int to_n = 0; to_n < n; ++to_n)
+            for ( int to_n = 0; to_n < n; ++to_n )
             {
-                ints[to_n] = i*(to_n+1);
-                lluints[to_n] = i*(to_n+1);
+                ints[to_n]    = i * ( to_n + 1 );
+                lluints[to_n] = i * ( to_n + 1 );
             }
 
-            if ( num_digits_array(lluints, n) != range )
+            if ( num_digits_array( lluints, n ) != range )
             {
                 continue;
             }
 
-            if ( is_pandigital_for_range(range_start,
-                                         range_end,
-                                         lluints,
-                                         n) )
+            if ( is_pandigital_for_range( range_start, range_end, lluints, n ) )
             {
-                std::cout << "prod of " << i
-                          << " and (";
-                for(int i = 0; i<n;++i)
+                std::cout << "prod of " << i << " and (";
+                for ( int i = 0; i < n; ++i )
                 {
-                    std::cout << i+1 << ",";
+                    std::cout << i + 1 << ",";
                 }
                 std::cout << ") = ";
-                for(int i=0;i<n;++i)
+                for ( int i = 0; i < n; ++i )
                 {
                     std::cout << ints[i];
                 }
                 std::cout << " is pandigital" << std::endl;
-
-
             }
         }
     }
@@ -90,12 +80,12 @@ void pe38::run()
     std::cout << "PE38 " << largest << std::endl;
 }
 
-int num_digits_array(size_t* ints, int ints_size)
+int num_digits_array( size_t* ints, int ints_size )
 {
     int total = 0;
-    for(int i=0;i<ints_size;++i)
+    for ( int i = 0; i < ints_size; ++i )
     {
-        total += num_digits(ints[i]);
+        total += num_digits( ints[i] );
     }
     return total;
 }

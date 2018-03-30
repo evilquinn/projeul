@@ -5,22 +5,18 @@
  *      Author: evilquinn
  */
 
-#include "pe60.hpp"
-#include <iostream>
-#include <fstream>
-#include <utils.hpp>
-#include <gint.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include <fstream>
+#include <gint.hpp>
+#include <iostream>
+#include <utils.hpp>
+#include "pe60.hpp"
 
-size_t pe60_sum_array(const size_t* nums, size_t nums_size);
+size_t pe60_sum_array( const size_t* nums, size_t nums_size );
 
-std::string& pe60::name()
-{
-    return name_;
-}
-
-void pe60::run()
+std::string& pe60::name() { return name_; }
+void         pe60::run()
 {
     /*
      * The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
@@ -43,17 +39,17 @@ void pe60::run()
 
     size_t limit = 1000;
 
-    for ( size_t i = primes_.next_prime(11);
-          i < limit;
-          i = primes_.next_prime(i) )
+    for ( size_t i = primes_.next_prime( 11 ); i < limit;
+          i        = primes_.next_prime( i ) )
     {
-        bool next_i = false;
-        size_t base_size = sizeof(base_set) / sizeof(size_t);
+        bool   next_i    = false;
+        size_t base_size = sizeof( base_set ) / sizeof( size_t );
         for ( size_t j = 0; j < base_size; ++j )
         {
-            //std::cout << "checking " << base_set[j] << i << " and " << i << base_set[j] << std::endl;
-            if ( ! is_prime(primes_, concat(base_set[j], i)) ||
-                 ! is_prime(primes_, concat(i, base_set[j])) )
+            // std::cout << "checking " << base_set[j] << i << " and " << i <<
+            // base_set[j] << std::endl;
+            if ( !is_prime( primes_, concat( base_set[j], i ) ) ||
+                 !is_prime( primes_, concat( i, base_set[j] ) ) )
             {
                 next_i = true;
                 break;
@@ -75,8 +71,7 @@ void pe60::run()
     std::cout << "result: " << result << std::endl;
 }
 
-
-size_t pe60_sum_array(const size_t* nums, size_t nums_size)
+size_t pe60_sum_array( const size_t* nums, size_t nums_size )
 {
     size_t result = 0;
     for ( size_t i = 0; i < nums_size; ++i )

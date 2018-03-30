@@ -6,23 +6,19 @@
  */
 
 #include "pe36.hpp"
-#include <iostream>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
 
-char* conv_to_bin(char* dest, int max, long long unsigned n);
-bool is_palendrome(const char* in);
+char* conv_to_bin( char* dest, int max, long long unsigned n );
+bool is_palendrome( const char* in );
 
-std::string& pe36::name()
-{
-    return name_;
-}
-
-void pe36::run()
+std::string& pe36::name() { return name_; }
+void         pe36::run()
 {
     /*
      *
@@ -38,23 +34,18 @@ void pe36::run()
      */
 
     long long unsigned limit = 1000000;
-    long long unsigned sum = 0;
+    long long unsigned sum   = 0;
 
     for ( unsigned long long i = 1; i < limit; ++i )
     {
-        int lim_str_size = num_digits(limit) + 1;
+        int  lim_str_size = num_digits( limit ) + 1;
         char lim_str[lim_str_size];
-        snprintf(lim_str,
-                 lim_str_size,
-                 "%llu",
-                 i);
-        int bin_str_size = 30;
+        snprintf( lim_str, lim_str_size, "%llu", i );
+        int  bin_str_size = 30;
         char bin_str[bin_str_size];
-        memset(bin_str, 0, bin_str_size);
-        char* bin_begin = conv_to_bin(bin_str,
-                                      bin_str_size,
-                                      i);
-        if ( is_palendrome(bin_begin) && is_palendrome(lim_str) )
+        memset( bin_str, 0, bin_str_size );
+        char* bin_begin = conv_to_bin( bin_str, bin_str_size, i );
+        if ( is_palendrome( bin_begin ) && is_palendrome( lim_str ) )
         {
             sum += i;
             std::cout << lim_str << " and " << bin_begin << " win" << std::endl;
@@ -64,27 +55,27 @@ void pe36::run()
     std::cout << "PE36 " << sum << std::endl;
 }
 
-char* conv_to_bin(char* dest, int max, long long unsigned n)
+char* conv_to_bin( char* dest, int max, long long unsigned n )
 {
-    //null terminate first!
-    int w_pos = max-1;
+    // null terminate first!
+    int w_pos   = max - 1;
     dest[w_pos] = 0;
-    while(n>0)
+    while ( n > 0 )
     {
-        dest[--w_pos] = n%2 + '0';
-        n/=2;
+        dest[--w_pos] = n % 2 + '0';
+        n /= 2;
     }
 
-    return dest+w_pos;
+    return dest + w_pos;
 }
 
-bool is_palendrome(const char* in)
+bool is_palendrome( const char* in )
 {
-    int size = strlen(in);
-    int range = size/2;
-    int i = 0;
-    int j = size-1;
-    for(; i < range; )
+    int size  = strlen( in );
+    int range = size / 2;
+    int i     = 0;
+    int j     = size - 1;
+    for ( ; i < range; )
     {
         if ( in[i] != in[j] )
         {
@@ -95,4 +86,3 @@ bool is_palendrome(const char* in)
     }
     return true;
 }
-

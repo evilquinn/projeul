@@ -6,23 +6,19 @@
  */
 
 #include "pe46.hpp"
-#include <iostream>
+#include <ctype.h>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
-#include <ctype.h>
 
-size_t prev_prime(size_t i, prime_sieve& primes);
+size_t prev_prime( size_t i, prime_sieve& primes );
 
-std::string& pe46::name()
-{
-    return name_;
-}
-
-void pe46::run()
+std::string& pe46::name() { return name_; }
+void         pe46::run()
 {
     /*
      *
@@ -44,20 +40,20 @@ void pe46::run()
      *
      */
 
-    primes_ = prime_sieve(PE46_NUM_PRIMES);
-    squares_ = std::vector<size_t>(PE46_NUM_PRIMES);
+    primes_       = prime_sieve( PE46_NUM_PRIMES );
+    squares_      = std::vector<size_t>( PE46_NUM_PRIMES );
     size_t result = 0;
 
-    for(size_t i = 1; i <= PE46_NUM_PRIMES; ++i)
+    for ( size_t i = 1; i <= PE46_NUM_PRIMES; ++i )
     {
-        squares_[i] = pow(i, 2);
+        squares_[i] = pow( i, 2 );
     }
 
-    for(size_t i = 35; i < 10000; i += 2)
+    for ( size_t i = 35; i < 10000; i += 2 )
     {
-        if ( ! primes_.is_prime(i) )
+        if ( !primes_.is_prime( i ) )
         {
-            if ( ! fulfills_goldbachs_conjecture(i) )
+            if ( !fulfills_goldbachs_conjecture( i ) )
             {
                 result = i;
                 break;
@@ -68,30 +64,29 @@ void pe46::run()
     std::cout << "PE46 " << result << std::endl;
 }
 
-
-bool pe46::fulfills_goldbachs_conjecture(size_t i)
+bool pe46::fulfills_goldbachs_conjecture( size_t i )
 {
     size_t prev = i;
     do
     {
-        prev = prev_prime(prev, primes_);
+        prev = prev_prime( prev, primes_ );
         if ( prev == 2 )
         {
             continue;
         }
-        size_t diff = i - prev;
+        size_t diff        = i - prev;
         size_t poss_square = diff / 2;
-        if(std::binary_search(squares_.begin(), squares_.end(), poss_square))
+        if ( std::binary_search(
+                 squares_.begin(), squares_.end(), poss_square ) )
         {
             return true;
         }
-    }
-    while(prev > 2);
+    } while ( prev > 2 );
 
     return false;
 }
 
-size_t prev_prime(size_t i, prime_sieve& primes)
+size_t prev_prime( size_t i, prime_sieve& primes )
 {
     if ( i <= 2 )
     {
@@ -101,7 +96,6 @@ size_t prev_prime(size_t i, prime_sieve& primes)
     do
     {
         --i;
-    }
-    while(i > 2 && !primes.is_prime(i) );
+    } while ( i > 2 && !primes.is_prime( i ) );
     return i;
 }

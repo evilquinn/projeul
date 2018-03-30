@@ -6,20 +6,16 @@
  */
 
 #include "pe39.hpp"
-#include <iostream>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
 
-std::string& pe39::name()
-{
-    return name_;
-}
-
-void pe39::run()
+std::string& pe39::name() { return name_; }
+void         pe39::run()
 {
     /*
      * If p is the perimeter of a right angle triangle with integral length
@@ -32,15 +28,15 @@ void pe39::run()
      */
     int p_with_max_sols = 0;
     int p_max_sols      = 0;
-    for(int p = 0; p <= 1000; ++p)
+    for ( int p = 0; p <= 1000; ++p )
     {
         int curr_p_max_sols = 0;
-        for(int a = 0; a<p; ++a)
+        for ( int a = 0; a < p; ++a )
         {
-            for(int b = a; b < p; ++b)
+            for ( int b = a; b < p; ++b )
             {
-                int c_sqrd = pow(a, 2) + pow(b, 2);
-                double c = sqrt(c_sqrd);
+                int    c_sqrd = pow( a, 2 ) + pow( b, 2 );
+                double c      = sqrt( c_sqrd );
                 if ( a + b + c == p )
                 {
                     ++curr_p_max_sols;
@@ -50,7 +46,7 @@ void pe39::run()
 
         if ( curr_p_max_sols > p_max_sols )
         {
-            p_max_sols = curr_p_max_sols;
+            p_max_sols      = curr_p_max_sols;
             p_with_max_sols = p;
         }
     }

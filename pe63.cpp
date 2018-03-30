@@ -6,18 +6,14 @@
  */
 
 #include "pe63.hpp"
-#include <iostream>
 #include <cmath>
-#include <utils.hpp>
 #include <gint.hpp>
+#include <iostream>
 #include <polygonal_numbers.hpp>
+#include <utils.hpp>
 
-std::string& pe63::name()
-{
-    return name_;
-}
-
-void pe63::run()
+std::string& pe63::name() { return name_; }
+void         pe63::run()
 {
     /*
      * The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
@@ -29,16 +25,17 @@ void pe63::run()
 
     size_t result = 0;
 
-    for ( size_t i = 1; i <= 21; ++i ) // increment powers
+    for ( size_t i = 1; i <= 21; ++i )  // increment powers
     {
-        for ( size_t j = 1; true; ++j ) // increment number
+        for ( size_t j = 1; true; ++j )  // increment number
         {
-            gint powed(j);
-            powed.pow(i);
-            if ( powed == 0 ) break;
+            gint powed( j );
+            powed.pow( i );
+            if ( powed == 0 )
+                break;
             size_t length = powed.num_digits();
-            std::cout << "testing: " << j << "^" << i << " = " << powed
-                      << " (" << length << ")" << std::endl;
+            std::cout << "testing: " << j << "^" << i << " = " << powed << " ("
+                      << length << ")" << std::endl;
             if ( length < i )
             {
                 continue;
@@ -55,5 +52,4 @@ void pe63::run()
     }
 
     std::cout << "result: " << result << std::endl;
-
 }

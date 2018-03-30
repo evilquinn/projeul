@@ -6,17 +6,12 @@
  */
 
 #include "pe58.hpp"
+#include <gint.hpp>
 #include <iostream>
 #include <utils.hpp>
-#include <gint.hpp>
 
-
-std::string& pe58::name()
-{
-    return name_;
-}
-
-void pe58::run()
+std::string& pe58::name() { return name_; }
+void         pe58::run()
 {
     /*
      * Starting with 1 and spiralling anticlockwise in the following way, a
@@ -42,15 +37,15 @@ void pe58::run()
      *
      */
 
-    primes_ = prime_sieve(PE58_MAX_PRIME);
-    size_t i = 1;
+    primes_               = prime_sieve( PE58_MAX_PRIME );
+    size_t i              = 1;
     size_t step_to_corner = 2;
-    double corners = 1;
-    size_t prime_corners = 0;
+    double corners        = 1;
+    size_t prime_corners  = 0;
 
     while ( true )
     {
-        for ( size_t j = 0; j < 4; ++j ) // 4 to count each corner
+        for ( size_t j = 0; j < 4; ++j )  // 4 to count each corner
         {
             ++corners;
             i += step_to_corner;
@@ -71,4 +66,3 @@ void pe58::run()
 
     std::cout << "result : " << step_to_corner + 1 << std::endl;
 }
-

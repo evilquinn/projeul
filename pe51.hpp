@@ -16,16 +16,12 @@
 class pe51 : public pe
 {
 public:
-    pe51() :
-        primes_(),
-        name_("pe51")
-    {};
-    virtual ~pe51()
-    {
-    };
+    pe51() : primes_(), name_( "pe51" ){};
+    virtual ~pe51(){};
     virtual std::string& name();
-    virtual int number() { return 51; }
-    virtual void run();
+    virtual int          number() { return 51; }
+    virtual void         run();
+
 private:
     prime_sieve primes_;
     std::string name_;

@@ -8,20 +8,18 @@
 #ifndef PE29_HPP_
 #define PE29_HPP_
 
-#include "pe.hpp"
 #include <prime_sieve.hpp>
-
+#include "pe.hpp"
 
 class pe29 : public pe
 {
 public:
-    pe29() :
-        name_("pe29")
-    {};
-    virtual ~pe29() {};
+    pe29() : name_( "pe29" ){};
+    virtual ~pe29(){};
     virtual std::string& name();
-    virtual int number() { return 29; }
-    virtual void run();
+    virtual int          number() { return 29; }
+    virtual void         run();
+
 private:
     std::string name_;
 };

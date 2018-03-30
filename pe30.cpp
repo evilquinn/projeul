@@ -6,18 +6,14 @@
  */
 
 #include "pe30.hpp"
-#include <iostream>
 #include <cmath>
+#include <iostream>
 #include <set>
 
-int sum_pow_digits(int n, int power);
+int sum_pow_digits( int n, int power );
 
-std::string& pe30::name()
-{
-    return name_;
-}
-
-void pe30::run()
+std::string& pe30::name() { return name_; }
+void         pe30::run()
 {
     /*
      *
@@ -38,22 +34,29 @@ void pe30::run()
      */
 
     const int super_power = 5;
-    double total_sum = 0;
+    double    total_sum   = 0;
 
-    for(int i = 10; i< 400000; ++i)
+    for ( int i = 10; i < 400000; ++i )
     {
-        double res = sum_pow_digits(i, super_power);
-        if(i==res) { total_sum+=res; }
+        double res = sum_pow_digits( i, super_power );
+        if ( i == res )
+        {
+            total_sum += res;
+        }
     }
 
     std::cout << "PE30: " << total_sum << std::endl;
 }
 
-int sum_pow_digits(int n, int power)
+int sum_pow_digits( int n, int power )
 {
-    int left = n/10;
-    int sum = pow(n%10, power);
-    while(left > 0) { sum+=pow(left%10, power); left/=10; }
+    int left = n / 10;
+    int sum  = pow( n % 10, power );
+    while ( left > 0 )
+    {
+        sum += pow( left % 10, power );
+        left /= 10;
+    }
 
     return sum;
 }

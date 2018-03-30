@@ -8,24 +8,20 @@
 #ifndef PE58_HPP_
 #define PE58_HPP_
 
-#include "pe.hpp"
 #include <prime_sieve.hpp>
+#include "pe.hpp"
 
 #define PE58_MAX_PRIME 30000
 
 class pe58 : public pe
 {
 public:
-    pe58() :
-        name_("pe58"),
-        primes_()
-    {};
-    virtual ~pe58()
-    {
-    };
+    pe58() : name_( "pe58" ), primes_(){};
+    virtual ~pe58(){};
     virtual std::string& name();
-    virtual int number() { return 58; }
-    virtual void run();
+    virtual int          number() { return 58; }
+    virtual void         run();
+
 private:
     std::string name_;
     prime_sieve primes_;

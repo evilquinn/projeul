@@ -6,26 +6,21 @@
  */
 
 #include "pe49.hpp"
-#include <iostream>
+#include <ctype.h>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
-#include <ctype.h>
 
 #define PE49_NUM_DIGITS 10
 
+size_t next_prime_with_same_digits( size_t start, prime_sieve& primes );
 
-size_t next_prime_with_same_digits(size_t start, prime_sieve& primes);
-
-std::string& pe49::name()
-{
-    return name_;
-}
-
-void pe49::run()
+std::string& pe49::name() { return name_; }
+void         pe49::run()
 {
     /*
      *
@@ -42,15 +37,15 @@ void pe49::run()
      * this sequence?
      *
      */
-    primes_ = prime_sieve(PE49_MAX_PRIMES);
+    primes_      = prime_sieve( PE49_MAX_PRIMES );
     size_t first = 1487;
     size_t second;
     size_t third;
-    bool solved = false;
+    bool   solved = false;
 
     do
     {
-        first = next_prime(first, primes_);
+        first = next_prime( first, primes_ );
         if ( first == 0 )
         {
             break;
@@ -59,7 +54,7 @@ void pe49::run()
         second = first;
         do
         {
-            second = next_prime_with_same_digits(second, primes_);
+            second = next_prime_with_same_digits( second, primes_ );
             if ( second <= first )
             {
                 break;
@@ -67,30 +62,24 @@ void pe49::run()
 
             third = second + second - first;
 
-            if ( third < PE49_MAX_PRIMES &&
-                 primes_.is_prime(third) &&
-                 same_digits(second, third) )
+            if ( third < PE49_MAX_PRIMES && primes_.is_prime( third ) &&
+                 same_digits( second, third ) )
             {
                 solved = true;
             }
-        }
-        while(!solved && second < PE49_MAX_PRIMES);
-    }
-    while(!solved && first < PE49_MAX_PRIMES);
-
+        } while ( !solved && second < PE49_MAX_PRIMES );
+    } while ( !solved && first < PE49_MAX_PRIMES );
 
     std::cout << "PE49 " << first << second << third << std::endl;
 }
 
-size_t next_prime_with_same_digits(size_t start, prime_sieve& primes)
+size_t next_prime_with_same_digits( size_t start, prime_sieve& primes )
 {
     size_t result = start;
     do
     {
-        result = next_prime(result, primes);
-    }
-    while(result != 0 && !same_digits(start, result));
+        result = next_prime( result, primes );
+    } while ( result != 0 && !same_digits( start, result ) );
 
     return result;
 }
-

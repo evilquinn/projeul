@@ -6,19 +6,15 @@
  */
 
 #include "pe60.hpp"
-#include <iostream>
-#include <fstream>
-#include <utils.hpp>
-#include <gint.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include <fstream>
+#include <gint.hpp>
+#include <iostream>
+#include <utils.hpp>
 
-std::string& pe60::name()
-{
-    return name_;
-}
-
-void pe60::run()
+std::string& pe60::name() { return name_; }
+void         pe60::run()
 {
     /*
      * The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
@@ -33,78 +29,74 @@ void pe60::run()
      *
      */
 
-    primes_ = prime_sieve(PE60_MAX_PRIME);
-    size_t limit = 9000;
+    primes_              = prime_sieve( PE60_MAX_PRIME );
+    size_t limit         = 9000;
     size_t running_total = 0;
-    size_t smallest_sum = static_cast<size_t>(-1);
-    bool break_all = false;
+    size_t smallest_sum  = static_cast<size_t>( -1 );
+    bool   break_all     = false;
 
-    for ( size_t a = primes_.next_prime(2);
-          a < limit;
-          a = primes_.next_prime(a) )
+    for ( size_t a = primes_.next_prime( 2 ); a < limit;
+          a        = primes_.next_prime( a ) )
     {
         running_total += a;
-        for ( size_t b = primes_.next_prime(a);
+        for ( size_t b = primes_.next_prime( a );
               b < limit && running_total < smallest_sum;
-              b = primes_.next_prime(b) )
+              b = primes_.next_prime( b ) )
         {
-            if ( ! primes_.is_prime(concat(a, b)) ||
-                 ! primes_.is_prime(concat(b, a)) )
+            if ( !primes_.is_prime( concat( a, b ) ) ||
+                 !primes_.is_prime( concat( b, a ) ) )
             {
                 continue;
             }
             running_total += b;
-            for ( size_t c = primes_.next_prime(b);
+            for ( size_t c = primes_.next_prime( b );
                   c < limit && running_total < smallest_sum;
-                  c = primes_.next_prime(c) )
+                  c = primes_.next_prime( c ) )
             {
-                if ( ! primes_.is_prime(concat(a, c)) ||
-                     ! primes_.is_prime(concat(c, a)) ||
-                     ! primes_.is_prime(concat(b, c)) ||
-                     ! primes_.is_prime(concat(c, b)) )
+                if ( !primes_.is_prime( concat( a, c ) ) ||
+                     !primes_.is_prime( concat( c, a ) ) ||
+                     !primes_.is_prime( concat( b, c ) ) ||
+                     !primes_.is_prime( concat( c, b ) ) )
                 {
-
                     continue;
                 }
                 running_total += c;
-                for ( size_t d = primes_.next_prime(c);
+                for ( size_t d = primes_.next_prime( c );
                       d < limit && running_total < smallest_sum;
-                      d = primes_.next_prime(d) )
+                      d = primes_.next_prime( d ) )
                 {
-                    if ( ! primes_.is_prime(concat(a, d)) ||
-                         ! primes_.is_prime(concat(d, a)) ||
-                         ! primes_.is_prime(concat(b, d)) ||
-                         ! primes_.is_prime(concat(d, b)) ||
-                         ! primes_.is_prime(concat(c, d)) ||
-                         ! primes_.is_prime(concat(d, c)) )
+                    if ( !primes_.is_prime( concat( a, d ) ) ||
+                         !primes_.is_prime( concat( d, a ) ) ||
+                         !primes_.is_prime( concat( b, d ) ) ||
+                         !primes_.is_prime( concat( d, b ) ) ||
+                         !primes_.is_prime( concat( c, d ) ) ||
+                         !primes_.is_prime( concat( d, c ) ) )
                     {
                         continue;
                     }
                     running_total += d;
-                    for ( size_t e = primes_.next_prime(d);
+                    for ( size_t e = primes_.next_prime( d );
                           e < limit && running_total < smallest_sum;
-                          e = primes_.next_prime(e) )
+                          e = primes_.next_prime( e ) )
                     {
-                        if ( ! primes_.is_prime(concat(a, e)) ||
-                             ! primes_.is_prime(concat(e, a)) ||
-                             ! primes_.is_prime(concat(b, e)) ||
-                             ! primes_.is_prime(concat(e, b)) ||
-                             ! primes_.is_prime(concat(c, e)) ||
-                             ! primes_.is_prime(concat(e, c)) ||
-                             ! primes_.is_prime(concat(d, e)) ||
-                             ! primes_.is_prime(concat(e, d)) )
+                        if ( !primes_.is_prime( concat( a, e ) ) ||
+                             !primes_.is_prime( concat( e, a ) ) ||
+                             !primes_.is_prime( concat( b, e ) ) ||
+                             !primes_.is_prime( concat( e, b ) ) ||
+                             !primes_.is_prime( concat( c, e ) ) ||
+                             !primes_.is_prime( concat( e, c ) ) ||
+                             !primes_.is_prime( concat( d, e ) ) ||
+                             !primes_.is_prime( concat( e, d ) ) )
                         {
                             continue;
                         }
                         running_total += e;
                         if ( running_total < smallest_sum )
                         {
-                            std::cout << "found new smallest: "
-                                      << running_total << " < " << smallest_sum
-                                      << "\nfrom: "
-                                      << a << " " << b << " " << c << " "
-                                      << d << " " << e
-                                      << std::endl;
+                            std::cout << "found new smallest: " << running_total
+                                      << " < " << smallest_sum
+                                      << "\nfrom: " << a << " " << b << " " << c
+                                      << " " << d << " " << e << std::endl;
                             smallest_sum = running_total;
                             if ( smallest_sum < limit )
                             {

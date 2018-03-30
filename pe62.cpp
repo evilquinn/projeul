@@ -6,19 +6,15 @@
  */
 
 #include "pe62.hpp"
-#include <iostream>
 #include <cmath>
-#include <utils.hpp>
+#include <iostream>
 #include <polygonal_numbers.hpp>
+#include <utils.hpp>
 
-size_t cube_n(size_t n);
+size_t cube_n( size_t n );
 
-std::string& pe62::name()
-{
-    return name_;
-}
-
-void pe62::run()
+std::string& pe62::name() { return name_; }
+void         pe62::run()
 {
     /*
      * The cube, 41063625 (345^3), can be permuted to produce two other cubes:
@@ -31,22 +27,22 @@ void pe62::run()
      *
      */
 
-    polygonal_numbers cubes(10000, cube_n);
-    size_t result = 0;
+    polygonal_numbers cubes( 10000, cube_n );
+    size_t            result = 0;
 
     for ( size_t i = 0; i < 10000; ++i )
     {
-        size_t cand = cubes.get_term(i);
-        size_t cand_length = num_digits(cand);
-        size_t limit = pow(10, cand_length);
-        size_t count = 1;
+        size_t cand        = cubes.get_term( i );
+        size_t cand_length = num_digits( cand );
+        size_t limit       = pow( 10, cand_length );
+        size_t count       = 1;
         // does cand have four other cube permutations?
         size_t perm_cand;
         for ( size_t perm_cand_term = i + 1;
-              ( perm_cand = cubes.get_term(perm_cand_term) ) < limit;
+              ( perm_cand = cubes.get_term( perm_cand_term ) ) < limit;
               ++perm_cand_term )
         {
-            if ( same_digits(perm_cand, cand) )
+            if ( same_digits( perm_cand, cand ) )
             {
                 ++count;
                 if ( count == 5 )
@@ -64,10 +60,6 @@ void pe62::run()
     }
 
     std::cout << "result: " << result << std::endl;
-
 }
 
-size_t cube_n(size_t n)
-{
-    return n * n * n;
-}
+size_t cube_n( size_t n ) { return n * n * n; }

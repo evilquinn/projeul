@@ -6,21 +6,16 @@
  */
 
 #include "pe41.hpp"
-#include <iostream>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
 
-
-std::string& pe41::name()
-{
-    return name_;
-}
-
-void pe41::run()
+std::string& pe41::name() { return name_; }
+void         pe41::run()
 {
     /*
      * We shall say that an n-digit number is pandigital if it makes use of
@@ -31,13 +26,13 @@ void pe41::run()
      *
      */
 
-    primes_ = prime_sieve(8000000);
+    primes_    = prime_sieve( 8000000 );
     int result = 1;
 
-    for(size_t i = 8000000; i>1; --i)
+    for ( size_t i = 8000000; i > 1; --i )
     {
-        int d = num_digits(i);
-        if( primes_.is_prime(i) && is_pandigital_for_range(1, d, &i, 1) )
+        int d = num_digits( i );
+        if ( primes_.is_prime( i ) && is_pandigital_for_range( 1, d, &i, 1 ) )
         {
             result = i;
             break;

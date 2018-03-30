@@ -1,34 +1,34 @@
 
 
-#include <utils.hpp>
 #include <string.h>
+#include <boost/dynamic_bitset.hpp>
+#include <boost/foreach.hpp>
+#include <cmath>
 #include <iostream>
 #include <prime_sieve.hpp>
-#include <boost/foreach.hpp>
-#include <boost/dynamic_bitset.hpp>
-#include <cmath>
+#include <utils.hpp>
 
-int num_digits(long long unsigned n)
+int num_digits( long long unsigned n )
 {
     int num_digits = 0;
-    while(n>0)
+    while ( n > 0 )
     {
         ++num_digits;
-        n/=10;
+        n /= 10;
     }
     return num_digits;
 }
 
-size_t concat(size_t left, size_t right)
+size_t concat( size_t left, size_t right )
 {
-    int mult = pow(10, num_digits(right));
+    int    mult   = pow( 10, num_digits( right ) );
     size_t result = left * mult;
     result += right;
 
     return result;
 }
 
-size_t next_prime(prime_sieve& primes, size_t n)
+size_t next_prime( prime_sieve& primes, size_t n )
 {
     if ( n < 2 )
     {
@@ -45,13 +45,13 @@ size_t next_prime(prime_sieve& primes, size_t n)
         ++n;
     }
 
-    for ( ; ! primes.is_prime(n); n += 2 )
+    for ( ; !primes.is_prime( n ); n += 2 )
     {
     }
     return n;
 }
 
-bool is_prime(prime_sieve& primes, size_t n)
+bool is_prime( prime_sieve& primes, size_t n )
 {
     if ( n < 2 )
     {
@@ -64,7 +64,7 @@ bool is_prime(prime_sieve& primes, size_t n)
         return true;
     }
 
-    for(size_t i = 2; true; i = primes.next_prime(i))
+    for ( size_t i = 2; true; i = primes.next_prime( i ) )
     {
         // if any prime between 2 and sqrt(n) is a factor, then
         // n isn't prime
@@ -81,36 +81,35 @@ bool is_prime(prime_sieve& primes, size_t n)
     return true;
 }
 
-
-void set_of_digits(size_t n, digit_set_t& digits)
+void set_of_digits( size_t n, digit_set_t& digits )
 {
     digits.clear();
-    while(n>0)
+    while ( n > 0 )
     {
-        digits.insert(n%10);
-        n/=10;
+        digits.insert( n % 10 );
+        n /= 10;
     }
     return;
 }
 
-bool same_digits(size_t lhs, size_t rhs)
+bool same_digits( size_t lhs, size_t rhs )
 {
     std::multiset<uint8_t> lhs_digits;
-    unsigned expected_count = 0;
-    unsigned compare_count = 0;
-    while(lhs>0)
+    unsigned               expected_count = 0;
+    unsigned               compare_count  = 0;
+    while ( lhs > 0 )
     {
-        lhs_digits.insert(lhs%10);
+        lhs_digits.insert( lhs % 10 );
         lhs /= 10;
         ++expected_count;
     }
 
-    while(rhs>0)
+    while ( rhs > 0 )
     {
-        auto it = lhs_digits.find(rhs%10);
+        auto it = lhs_digits.find( rhs % 10 );
         if ( it != lhs_digits.end() )
         {
-            lhs_digits.erase(it);
+            lhs_digits.erase( it );
             ++compare_count;
             rhs /= 10;
         }
@@ -123,20 +122,21 @@ bool same_digits(size_t lhs, size_t rhs)
     return expected_count == compare_count;
 }
 
-
-size_t factorial(size_t n)
+size_t factorial( size_t n )
 {
-    if(n==0) return 1;
-    if(n>20) return -1; // cheat
+    if ( n == 0 )
+        return 1;
+    if ( n > 20 )
+        return -1;  // cheat
     size_t fac = 1;
-    for(size_t i=2; i<=n; ++i)
+    for ( size_t i = 2; i <= n; ++i )
     {
         fac *= i;
     }
     return fac;
 }
 
-size_t n_c_r(size_t n, size_t r)
+size_t n_c_r( size_t n, size_t r )
 {
     if ( r > n )
     {
@@ -148,47 +148,43 @@ size_t n_c_r(size_t n, size_t r)
         return 1;
     }
 
-
-    return ( n_c_r(n-1, r) + n_c_r(n-1, r-1) );
+    return ( n_c_r( n - 1, r ) + n_c_r( n - 1, r - 1 ) );
 }
 
-
-size_t n_c_r_shit(size_t n, size_t r)
+size_t n_c_r_shit( size_t n, size_t r )
 {
     if ( r > n )
     {
         return 0;
     }
-    size_t third = factorial(n-r);
-    size_t second = factorial(r);
+    size_t third  = factorial( n - r );
+    size_t second = factorial( r );
     second *= third;
-    size_t first = factorial(n);
+    size_t first = factorial( n );
     return first / second;
 }
 
-
-bool same_digits_old(size_t lhs, size_t rhs)
+bool same_digits_old( size_t lhs, size_t rhs )
 {
     digit_set_t lhs_digits;
     digit_set_t rhs_digits;
-    set_of_digits(rhs, rhs_digits);
-    set_of_digits(lhs, lhs_digits);
+    set_of_digits( rhs, rhs_digits );
+    set_of_digits( lhs, lhs_digits );
 
     return lhs_digits == rhs_digits;
 }
 
-
-size_t pattern_of_digits(size_t num,
-                         digit_count_map_t& digit_count,
-                         digit_pattern_map_t& digit_pattern)
+size_t pattern_of_digits( size_t               num,
+                          digit_count_map_t&   digit_count,
+                          digit_pattern_map_t& digit_pattern )
 {
-    size_t working = num;
+    size_t working     = num;
     size_t mult_factor = 1;
     while ( working > 0 )
     {
         short curr = working % 10;
         ++digit_count[curr];
-        digit_pattern[curr] += (1 * mult_factor);
+        digit_pattern[curr] += ( 1 * mult_factor );
 
         mult_factor *= 10;
         working /= 10;
@@ -197,8 +193,7 @@ size_t pattern_of_digits(size_t num,
     return digit_count.size();
 }
 
-
-size_t next_prime(size_t i, prime_sieve& primes)
+size_t next_prime( size_t i, prime_sieve& primes )
 {
     size_t primes_limit = primes.limit();
     if ( i >= primes_limit )
@@ -209,40 +204,39 @@ size_t next_prime(size_t i, prime_sieve& primes)
     do
     {
         ++i;
-    }
-    while( i < primes_limit && ! primes.is_prime(i) );
+    } while ( i < primes_limit && !primes.is_prime( i ) );
 
     return i;
 }
 
-void num_to_digit_array(size_t  num,
-                        int*&   digit_array,
-                        size_t& digit_array_length)
+void num_to_digit_array( size_t  num,
+                         int*&   digit_array,
+                         size_t& digit_array_length )
 {
-    digit_array_length = num_digits(num);
-    digit_array = new int[digit_array_length];
-    for(int i = digit_array_length - 1; i >= 0; --i)
+    digit_array_length = num_digits( num );
+    digit_array        = new int[digit_array_length];
+    for ( int i = digit_array_length - 1; i >= 0; --i )
     {
         digit_array[i] = num % 10;
         num /= 10;
     }
 }
 
-void add_to_digit_array(int* add_to, size_t add_to_len, size_t add)
+void add_to_digit_array( int* add_to, size_t add_to_len, size_t add )
 {
     int add_to_pos = add_to_len - 1;
 
-    while(add>0)
+    while ( add > 0 )
     {
-        if(add_to_pos >= 0)
+        if ( add_to_pos >= 0 )
         {
             add_to[add_to_pos] += add % 10;
 
             size_t carry_on_pos = add_to_pos;
-            while(add_to[carry_on_pos] >= 10)
+            while ( add_to[carry_on_pos] >= 10 )
             {
                 add_to[carry_on_pos] %= 10;
-                if(carry_on_pos > 0)
+                if ( carry_on_pos > 0 )
                 {
                     --carry_on_pos;
                     ++add_to[carry_on_pos];
@@ -263,41 +257,41 @@ void add_to_digit_array(int* add_to, size_t add_to_len, size_t add)
     }
 }
 
-void mult_digit_array_by(int* mult, size_t mult_len, size_t mult_by)
+void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by )
 {
     int add_to[mult_len];
-    memset(add_to, 0, sizeof(add_to));
+    memset( add_to, 0, sizeof( add_to ) );
 
-    for(size_t i = 0; i < mult_by; ++i)
+    for ( size_t i = 0; i < mult_by; ++i )
     {
-        add_digit_arrays(add_to, mult_len, mult, mult_len);
+        add_digit_arrays( add_to, mult_len, mult, mult_len );
     }
 
-    for(size_t i = 0; i < mult_len; ++i)
+    for ( size_t i = 0; i < mult_len; ++i )
     {
         mult[i] = add_to[i];
     }
 }
 
-
-
-void add_digit_arrays(int* add_to, size_t add_to_len, int* add, size_t add_len)
+void add_digit_arrays( int*   add_to,
+                       size_t add_to_len,
+                       int*   add,
+                       size_t add_len )
 {
-
-    int add_pos = add_len - 1;
+    int add_pos    = add_len - 1;
     int add_to_pos = add_to_len - 1;
 
-    while(add_pos >= 0)
+    while ( add_pos >= 0 )
     {
-        if(add_to_pos >= 0)
+        if ( add_to_pos >= 0 )
         {
             add_to[add_to_pos] += add[add_pos];
 
             size_t carry_on_pos = add_to_pos;
-            while(add_to[carry_on_pos] >= 10)
+            while ( add_to[carry_on_pos] >= 10 )
             {
                 add_to[carry_on_pos] %= 10;
-                if(carry_on_pos > 0)
+                if ( carry_on_pos > 0 )
                 {
                     --carry_on_pos;
                     ++add_to[carry_on_pos];
@@ -318,5 +312,3 @@ void add_digit_arrays(int* add_to, size_t add_to_len, int* add, size_t add_len)
         }
     }
 }
-
-

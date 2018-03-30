@@ -9,12 +9,8 @@
 #include <iostream>
 #include <polygonal_numbers.hpp>
 
-std::string& pe61::name()
-{
-    return name_;
-}
-
-void pe61::run()
+std::string& pe61::name() { return name_; }
+void         pe61::run()
 {
     /*
      *
@@ -51,21 +47,19 @@ void pe61::run()
         size_t start;
         size_t end;
         size_t used;
-    } data[] = { { .start = 45, .end = 141, false },
-                 { .start = 32, .end = 100, false },
-                 { .start = 26, .end = 82,  false },
-                 { .start = 23, .end = 71,  false },
-                 { .start = 21, .end = 64,  false },
-                 { .start = 19, .end = 59,  false } };
+    } data[] = {
+        {.start = 45, .end = 141, false }, {.start = 32, .end = 100, false },
+        {.start = 26, .end = 82, false },  {.start = 23, .end = 71, false },
+        {.start = 21, .end = 64, false },  {.start = 19, .end = 59, false }
+    };
 
-    polygonal_numbers list[] =
-    {
-        polygonal_numbers(data[0].end, polygonal_numbers::triangle),
-        polygonal_numbers(data[1].end, polygonal_numbers::square),
-        polygonal_numbers(data[2].end, polygonal_numbers::pentagonal),
-        polygonal_numbers(data[3].end, polygonal_numbers::hexagonal),
-        polygonal_numbers(data[4].end, polygonal_numbers::heptagonal),
-        polygonal_numbers(data[5].end, polygonal_numbers::octagonal),
+    polygonal_numbers list[] = {
+        polygonal_numbers( data[0].end, polygonal_numbers::triangle ),
+        polygonal_numbers( data[1].end, polygonal_numbers::square ),
+        polygonal_numbers( data[2].end, polygonal_numbers::pentagonal ),
+        polygonal_numbers( data[3].end, polygonal_numbers::hexagonal ),
+        polygonal_numbers( data[4].end, polygonal_numbers::heptagonal ),
+        polygonal_numbers( data[5].end, polygonal_numbers::octagonal ),
     };
 
     // to get set of 6 4-digit numbers, where any number could be from any
@@ -79,22 +73,18 @@ void pe61::run()
     {
         size_t num;
         size_t list;
-    } results[] = { { 0, 10 },
-                    { 0, 10 },
-                    { 0, 10 },
-                    { 0, 10 },
-                    { 0, 10 },
-                    { 0, 10 } };
-    size_t pos = 0;
-    bool backtracking = false;
+    } results[] = { { 0, 10 }, { 0, 10 }, { 0, 10 },
+                    { 0, 10 }, { 0, 10 }, { 0, 10 } };
+    size_t pos            = 0;
+    bool   backtracking   = false;
     size_t backtrack_next = 0;
 
     while ( pos < 6 )
     {
-        size_t previous = pos == 0 ? 0 : results[pos-1].num;
-        size_t low_bound = pos == 0 ? 1000 : ( previous % 100 ) * 100;
+        size_t previous   = pos == 0 ? 0 : results[pos - 1].num;
+        size_t low_bound  = pos == 0 ? 1000 : ( previous % 100 ) * 100;
         size_t high_bound = pos == 0 ? 10000 : low_bound + 100;
-        bool found_cand = false;
+        bool   found_cand = false;
         for ( size_t l = backtracking ? results[pos].list : 0;
               // if we've backtracked, we'll start from last known point
               l < 6 /*lists*/;
@@ -109,11 +99,11 @@ void pe61::run()
                     break;
                 }
             }
-            if ( backtracking || ! list_used )
+            if ( backtracking || !list_used )
             {
                 for ( size_t i = data[l].start; i < data[l].end; ++i )
                 {
-                    size_t cand = list[l].get_term(i);
+                    size_t cand = list[l].get_term( i );
                     if ( cand < low_bound )
                     {
                         // not there yet
@@ -143,12 +133,12 @@ void pe61::run()
 
                     // get here, we have a contender
                     // pop it in, increment to next number
-                    results[pos].num = cand;
+                    results[pos].num  = cand;
                     results[pos].list = l;
 
                     ++pos;
                     found_cand = true;
-                    break; // need to do more breakage here?
+                    break;  // need to do more breakage here?
                 }
             }
 
@@ -160,27 +150,22 @@ void pe61::run()
             }
         }
 
-        if ( ! found_cand )
+        if ( !found_cand )
         {
             // backtrack?
             --pos;
-            backtracking = true;
+            backtracking   = true;
             backtrack_next = results[pos].num;
         }
     }
 
-    size_t sum = results[0].num +
-                 results[1].num +
-                 results[2].num +
-                 results[3].num +
-                 results[4].num +
-                 results[5].num;
+    size_t sum = results[0].num + results[1].num + results[2].num +
+                 results[3].num + results[4].num + results[5].num;
     std::cout << "got: " << sum << " from:\n"
               << results[0].num << "(" << results[0].list << ") "
               << results[1].num << "(" << results[1].list << ") "
               << results[2].num << "(" << results[2].list << ") "
               << results[3].num << "(" << results[3].list << ") "
               << results[4].num << "(" << results[4].list << ") "
-              << results[5].num << "(" << results[5].list << ") "
-              << std::endl;
+              << results[5].num << "(" << results[5].list << ") " << std::endl;
 }

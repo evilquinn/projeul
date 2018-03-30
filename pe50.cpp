@@ -6,25 +6,20 @@
  */
 
 #include "pe50.hpp"
-#include <iostream>
+#include <ctype.h>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <deque>
+#include <iostream>
 #include <map>
 #include <set>
-#include <deque>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
-#include <ctype.h>
 
 #define PE50_LIMIT 1000000
 
-
-std::string& pe50::name()
-{
-    return name_;
-}
-
-void pe50::run()
+std::string& pe50::name() { return name_; }
+void         pe50::run()
 {
     /*
      *
@@ -44,45 +39,44 @@ void pe50::run()
      * consecutive primes?
      *
      */
-    primes_ = prime_sieve(PE50_MAX_PRIMES);
-    size_t hard_limit = 1000000;
+    primes_              = prime_sieve( PE50_MAX_PRIMES );
+    size_t hard_limit    = 1000000;
     size_t working_limit = 4000;
-    size_t upper = primes_.prev_prime(working_limit);
-    size_t lower = primes_.next_prime(0);
+    size_t upper         = primes_.prev_prime( working_limit );
+    size_t lower         = primes_.next_prime( 0 );
 
-    size_t best_range = 0;
+    size_t best_range    = 0;
     size_t working_range = 0;
-    size_t best_sum = 0;
-    size_t working_sum = 0;
+    size_t best_sum      = 0;
+    size_t working_sum   = 0;
 
     while ( lower < upper )
     {
-        upper = primes_.prev_prime(working_limit);
+        upper = primes_.prev_prime( working_limit );
         while ( upper > lower )
         {
-            working_sum = primes_.sum_range(lower, upper, working_range);
+            working_sum = primes_.sum_range( lower, upper, working_range );
             if ( working_sum > hard_limit )
             {
                 working_limit = upper;
-                upper = primes_.prev_prime(upper);
+                upper         = primes_.prev_prime( upper );
                 continue;
             }
             if ( working_range < best_range )
             {
                 break;
             }
-            if ( primes_.is_prime(working_sum) &&
-                 working_range > best_range )
+            if ( primes_.is_prime( working_sum ) && working_range > best_range )
             {
                 best_range = working_range;
-                best_sum = working_sum;
+                best_sum   = working_sum;
                 break;
             }
 
-            upper = primes_.prev_prime(upper);
+            upper = primes_.prev_prime( upper );
         }
 
-        lower = primes_.next_prime(lower);
+        lower = primes_.next_prime( lower );
     }
 
     std::cout << "best     : " << best_sum << std::endl;

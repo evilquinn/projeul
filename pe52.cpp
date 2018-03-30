@@ -9,16 +9,10 @@
 #include <iostream>
 #include "utils.hpp"
 
+size_t pe52_next_number( size_t num );
 
-size_t pe52_next_number(size_t num);
-
-
-std::string& pe52::name()
-{
-    return name_;
-}
-
-void pe52::run()
+std::string& pe52::name() { return name_; }
+void         pe52::run()
 {
     /*
      * It can be seen that the number, 125874, and its double, 251748, contain
@@ -31,17 +25,17 @@ void pe52::run()
 
     // it'll almost certainly begin with a 1.
 
-    const size_t begin = 123456;
-    const size_t end = begin * 2;
-    const size_t iters = 6;
-    bool done = false;
-    size_t current = begin;
-    size_t result = 0;
+    const size_t begin   = 123456;
+    const size_t end     = begin * 2;
+    const size_t iters   = 6;
+    bool         done    = false;
+    size_t       current = begin;
+    size_t       result  = 0;
     while ( !done )
     {
-        for(unsigned i = 2; i <= iters; ++i)
+        for ( unsigned i = 2; i <= iters; ++i )
         {
-            if ( !same_digits(current, current * i) )
+            if ( !same_digits( current, current * i ) )
             {
                 break;
             }
@@ -50,13 +44,12 @@ void pe52::run()
                 if ( i == iters )
                 {
                     result = current;
-                    done = true;
+                    done   = true;
                 }
             }
-
         }
 
-        current = pe52_next_number(current);
+        current = pe52_next_number( current );
         if ( current > end )
         {
             done = true;
@@ -66,7 +59,4 @@ void pe52::run()
     std::cout << "result : " << result << std::endl;
 }
 
-size_t pe52_next_number(size_t num)
-{
-    return num + 1;
-}
+size_t pe52_next_number( size_t num ) { return num + 1; }

@@ -13,15 +13,12 @@
 class pe54 : public pe
 {
 public:
-    pe54() :
-        name_("pe54")
-    {};
-    virtual ~pe54()
-    {
-    };
+    pe54() : name_( "pe54" ){};
+    virtual ~pe54(){};
     virtual std::string& name();
-    virtual int number() { return 54; }
-    virtual void run();
+    virtual int          number() { return 54; }
+    virtual void         run();
+
 private:
     std::string name_;
 };

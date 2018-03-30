@@ -5,15 +5,15 @@
 
 class bint;
 
-bool enc_encrypt_cipher(bint& key,
-                        bint& iv,
-                        bint& input,
-                        bint& output,
-                        const EVP_CIPHER* cipher);
+bool enc_encrypt_cipher( bint&             key,
+                         bint&             iv,
+                         bint&             input,
+                         bint&             output,
+                         const EVP_CIPHER* cipher );
 
-bool enc_decrypt_cipher(bint& key,
-                        bint& iv,
-                        bint& input,
-                        bint& output,
-                        const EVP_CIPHER* cipher);
-#endif // CRYPTO_H
+bool enc_decrypt_cipher( bint&             key,
+                         bint&             iv,
+                         bint&             input,
+                         bint&             output,
+                         const EVP_CIPHER* cipher );
+#endif  // CRYPTO_H

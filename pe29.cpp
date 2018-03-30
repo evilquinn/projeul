@@ -6,16 +6,12 @@
  */
 
 #include "pe29.hpp"
-#include <iostream>
 #include <cmath>
+#include <iostream>
 #include <set>
 
-std::string& pe29::name()
-{
-    return name_;
-}
-
-void pe29::run()
+std::string& pe29::name() { return name_; }
+void         pe29::run()
 {
     /*
      *
@@ -36,12 +32,12 @@ void pe29::run()
      */
 
     std::set<double> all_results;
-    for(int a = 2; a <= 100; ++a)
+    for ( int a = 2; a <= 100; ++a )
     {
-        for(int b = 2; b <= 100; ++b)
+        for ( int b = 2; b <= 100; ++b )
         {
-            double current_result = pow(a, b);
-            all_results.insert(current_result);
+            double current_result = pow( a, b );
+            all_results.insert( current_result );
         }
     }
 

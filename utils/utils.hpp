@@ -3,9 +3,9 @@
 #define UTILS_HPP_
 
 #include <stddef.h>
-#include <vector>
 #include <map>
 #include <set>
+#include <vector>
 
 class prime_sieve;
 
@@ -14,15 +14,15 @@ class prime_sieve;
  * @param n  The number to count the digits of
  * @return   The number of digits in supplied n
  */
-int num_digits(long long unsigned n);
+int num_digits( long long unsigned n );
 
 /*
  * concatenates two numbers
  */
-size_t concat(size_t left, size_t right);
+size_t concat( size_t left, size_t right );
 
-size_t next_prime(prime_sieve& primes, size_t n);
-bool is_prime(prime_sieve& primes, size_t n);
+size_t next_prime( prime_sieve& primes, size_t n );
+bool is_prime( prime_sieve& primes, size_t n );
 
 /*
  * returns a set containing each digit in the number supplied
@@ -30,25 +30,24 @@ bool is_prime(prime_sieve& primes, size_t n);
  * @param digits The set will contain the digits
  */
 typedef std::set<short> digit_set_t;
-void set_of_digits(size_t n, digit_set_t& digits);
+void set_of_digits( size_t n, digit_set_t& digits );
 
 /*
  * returns true is two nums have same digits, false otherwise
  */
-bool same_digits(size_t lhs, size_t rhs);
-bool same_digits_old(size_t lhs, size_t rhs);
+bool same_digits( size_t lhs, size_t rhs );
+bool same_digits_old( size_t lhs, size_t rhs );
 
 /*
  * returns the factorial of the supplied number
  */
-size_t factorial(size_t n);
+size_t factorial( size_t n );
 
 /*
  * calculate the n_conbinations_r value for supplied n and r
  */
-size_t n_c_r(size_t n, size_t r);
-size_t n_c_r_shit(size_t n, size_t r);
-
+size_t n_c_r( size_t n, size_t r );
+size_t n_c_r_shit( size_t n, size_t r );
 
 /*
  * performs digit pattern analysing.  Returns a map containing a count for each
@@ -63,10 +62,10 @@ size_t n_c_r_shit(size_t n, size_t r);
  * @return distinct number of digits
  */
 typedef std::map<short, size_t> digit_pattern_map_t;
-typedef std::map<short, short> digit_count_map_t;
-size_t pattern_of_digits(size_t num,
-                         digit_count_map_t& digit_count,
-                         digit_pattern_map_t& digit_pattern);
+typedef std::map<short, short>  digit_count_map_t;
+size_t pattern_of_digits( size_t               num,
+                          digit_count_map_t&   digit_count,
+                          digit_pattern_map_t& digit_pattern );
 
 /*
  * counts the number of digits in an array of numbers
@@ -76,7 +75,7 @@ size_t pattern_of_digits(size_t num,
  * @param ints_size The number of numbers in the array
  * @return   The number of digits in supplied array
  */
-int num_digits_array(long long unsigned* ints, int ints_size);
+int num_digits_array( long long unsigned* ints, int ints_size );
 
 /*
  * determines if the concatenation of the ints in the supplied array is
@@ -94,10 +93,10 @@ int num_digits_array(long long unsigned* ints, int ints_size);
  * @return      TRUE if the concatenation of the ints in the array is
  *              pandigital for the supplied range, FALSE otherwise.
  */
-bool is_pandigital_for_range(size_t start,
-                             size_t end,
-                             size_t* ints,
-                             size_t ints_size);
+bool is_pandigital_for_range( size_t  start,
+                              size_t  end,
+                              size_t* ints,
+                              size_t  ints_size );
 
 /*
  * determines largest prime number which is less that supplied number
@@ -107,7 +106,7 @@ bool is_pandigital_for_range(size_t start,
  *
  * @return largest prime number which is less than i, or 0 if i <=2
  */
-size_t prev_prime(size_t i, prime_sieve& primes);
+size_t prev_prime( size_t i, prime_sieve& primes );
 
 /*
  * determines smallest prime number which is greater than supplied number
@@ -117,7 +116,7 @@ size_t prev_prime(size_t i, prime_sieve& primes);
  *
  * @return smallest prime number greater than i or 0 if i >= primes.max
  */
-size_t next_prime(size_t i, prime_sieve& primes);
+size_t next_prime( size_t i, prime_sieve& primes );
 
 /*
  * calculates the prime factors for a number and prints result to std::cout
@@ -126,9 +125,9 @@ size_t next_prime(size_t i, prime_sieve& primes);
  * @param primes a prime sieve
  *
  */
-size_t calc_prime_factors(size_t num,
-                          std::vector<size_t>& prime_factors,
-                          prime_sieve& primes);
+size_t calc_prime_factors( size_t               num,
+                           std::vector<size_t>& prime_factors,
+                           prime_sieve&         primes );
 
 /*
  * return a digit array representing the supplied number
@@ -137,14 +136,14 @@ size_t calc_prime_factors(size_t num,
  * @param digit_array upon return will point to array of digits for num
  * @param digit_array_length upon return will be set to length of digit array
  */
-void num_to_digit_array(size_t  num,
-                        int*&   digit_array,
-                        size_t& digit_array_length);
+void num_to_digit_array( size_t  num,
+                         int*&   digit_array,
+                         size_t& digit_array_length );
 
 /*
  * Adds supplied number to the digit array
  */
-void add_to_digit_array(int* add_to, size_t add_to_len, size_t add);
+void add_to_digit_array( int* add_to, size_t add_to_len, size_t add );
 
 /*
  * Add two digit arrays (numbers, in the form of an array, where each element
@@ -156,12 +155,14 @@ void add_to_digit_array(int* add_to, size_t add_to_len, size_t add);
  * @param add        The digit array to add
  * @param add_len    The length of the digit array to add
  */
-void add_digit_arrays(int* add_to, size_t add_to_len, int* add, size_t add_len);
+void add_digit_arrays( int*   add_to,
+                       size_t add_to_len,
+                       int*   add,
+                       size_t add_len );
 
 /*
  * Multiplies the digit array by supplied number, result in digit array
  */
-void mult_digit_array_by(int* mult, size_t mult_len, size_t mult_by);
+void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by );
 
-
-#endif // UTILS_HPP_
+#endif  // UTILS_HPP_

@@ -6,19 +6,15 @@
  */
 
 #include "pe59.hpp"
-#include <iostream>
-#include <fstream>
-#include <utils.hpp>
-#include <gint.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include <fstream>
+#include <gint.hpp>
+#include <iostream>
+#include <utils.hpp>
 
-std::string& pe59::name()
-{
-    return name_;
-}
-
-void pe59::run()
+std::string& pe59::name() { return name_; }
+void         pe59::run()
 {
     /*
      *
@@ -55,27 +51,26 @@ void pe59::run()
      */
 
     std::ifstream data_file;
-    data_file.open("../data/pe59_cipher.txt");
+    data_file.open( "../data/pe59_cipher.txt" );
 
     std::string cipher_text;
     data_file >> cipher_text;
 
-    boost::char_separator<char> sep(",");
-    boost::tokenizer< boost::char_separator<char> > bytes(cipher_text,
-                                                          sep);
+    boost::char_separator<char>                   sep( "," );
+    boost::tokenizer<boost::char_separator<char>> bytes( cipher_text, sep );
 
     char start[] = { 'g', 'o', 'd' };
 
-    int password_idx = 0;
-    size_t result = 0;
+    int    password_idx = 0;
+    size_t result       = 0;
 
-    BOOST_FOREACH (const std::string& byte_string, bytes)
+    BOOST_FOREACH ( const std::string& byte_string, bytes )
     {
-        char c = stoi(byte_string);
+        char c = stoi( byte_string );
         char p = c ^ start[password_idx];
-    //    std::cout << "string: " << byte_string
-    //              << "; cipher: " << c
-    //              << "; plain: " << p << std::endl;
+        //    std::cout << "string: " << byte_string
+        //              << "; cipher: " << c
+        //              << "; plain: " << p << std::endl;
         result += p;
         password_idx = ( password_idx + 1 ) % 3;
     }
@@ -83,4 +78,3 @@ void pe59::run()
 
     std::cout << "result: " << result << std::endl;
 }
-

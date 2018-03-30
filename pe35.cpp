@@ -6,21 +6,17 @@
  */
 
 #include "pe35.hpp"
-#include <iostream>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include <utils.hpp>
 
-int cycle_ints(int n);
+int cycle_ints( int n );
 
-std::string& pe35::name()
-{
-    return name_;
-}
-
-void pe35::run()
+std::string& pe35::name() { return name_; }
+void         pe35::run()
 {
     /*
      *
@@ -33,22 +29,22 @@ void pe35::run()
      * How many circular primes are there below one million?
      *
      */
-    primes_ = prime_sieve(1000000);
+    primes_   = prime_sieve( 1000000 );
     int total = 0;
     for ( int i = 2; i < 1000000; ++i )
     {
-        bool done = false;
-        int curr = i;
+        bool done        = false;
+        int  curr        = i;
         bool is_circular = true;
-        while(!done)
+        while ( !done )
         {
-            if(!primes_.is_prime(curr))
+            if ( !primes_.is_prime( curr ) )
             {
                 is_circular = false;
                 break;
             }
-            curr = cycle_ints(curr);
-            if(curr == i)
+            curr = cycle_ints( curr );
+            if ( curr == i )
             {
                 done = true;
             }
@@ -63,10 +59,9 @@ void pe35::run()
     std::cout << "PE35 " << total << std::endl;
 }
 
-int cycle_ints(int n)
+int cycle_ints( int n )
 {
-    int last = n%10;
-    int w    = n/10;
-    return w+(last*(pow(10, num_digits(w))));
+    int last = n % 10;
+    int w    = n / 10;
+    return w + ( last * ( pow( 10, num_digits( w ) ) ) );
 }
-

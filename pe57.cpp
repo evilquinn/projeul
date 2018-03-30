@@ -6,17 +6,12 @@
  */
 
 #include "pe57.hpp"
+#include <gint.hpp>
 #include <iostream>
 #include <utils.hpp>
-#include <gint.hpp>
 
-
-std::string& pe57::name()
-{
-    return name_;
-}
-
-void pe57::run()
+std::string& pe57::name() { return name_; }
+void         pe57::run()
 {
     /*
      *
@@ -41,16 +36,16 @@ void pe57::run()
      *
      */
 
-    size_t result = 0;
-    gint numerator = 1;
-    gint denominator = 1;
-    gint next_denominator;
+    size_t result      = 0;
+    gint   numerator   = 1;
+    gint   denominator = 1;
+    gint   next_denominator;
 
     for ( size_t i = 1; i < 1000; ++i )
     {
         next_denominator = numerator + denominator;
-        numerator = next_denominator + denominator;
-        denominator = next_denominator;
+        numerator        = next_denominator + denominator;
+        denominator      = next_denominator;
         if ( numerator.num_digits() > denominator.num_digits() )
         {
             ++result;
@@ -59,4 +54,3 @@ void pe57::run()
 
     std::cout << "result : " << result << std::endl;
 }
-

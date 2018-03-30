@@ -6,23 +6,19 @@
  */
 
 #include "pe42.hpp"
-#include <iostream>
+#include <ctype.h>
+#include <stdio.h>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 #include "utils.hpp"
-#include <stdio.h>
-#include <ctype.h>
 
-size_t word_value_alpha_pos(const char* word);
+size_t word_value_alpha_pos( const char* word );
 
-std::string& pe42::name()
-{
-    return name_;
-}
-
-void pe42::run()
+std::string& pe42::name() { return name_; }
+void         pe42::run()
 {
     /*
      * The nth term of the sequence of triangle numbers is given by,
@@ -40,18 +36,18 @@ void pe42::run()
      * two-thousand common English words, how many are triangle words?
      *
      */
-    triangle_numbers tris_(1000);
-    const char* words[] = {
-        // pe42_words.txt is already formatted like an initialiser list,
-        // just get the preprocessor to include the file
-        #include "data/pe42_words.txt"
+    triangle_numbers tris_( 1000 );
+    const char*      words[] = {
+// pe42_words.txt is already formatted like an initialiser list,
+// just get the preprocessor to include the file
+#include "data/pe42_words.txt"
     };
-    const size_t num_words = 1786; // I counted the words in the file
+    const size_t num_words = 1786;  // I counted the words in the file
 
     size_t result = 0;
-    for(size_t i = 0; i < num_words; ++i)
+    for ( size_t i = 0; i < num_words; ++i )
     {
-        if( tris_.is_triangle(word_value_alpha_pos(words[i])) )
+        if ( tris_.is_triangle( word_value_alpha_pos( words[i] ) ) )
         {
             ++result;
         }
@@ -60,15 +56,15 @@ void pe42::run()
     std::cout << "PE42 " << result << std::endl;
 }
 
-size_t word_value_alpha_pos(const char* word)
+size_t word_value_alpha_pos( const char* word )
 {
-    size_t result = 0;
-    size_t word_length = strlen(word);
+    size_t result      = 0;
+    size_t word_length = strlen( word );
 
-    for(size_t i = 0; i < word_length; ++i)
+    for ( size_t i = 0; i < word_length; ++i )
     {
         // subtract '@ from uppercase letter to get aplhabet position
-        result += toupper(word[i]) - '@';
+        result += toupper( word[i] ) - '@';
     }
 
     return result;

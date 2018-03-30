@@ -6,18 +6,14 @@
  */
 
 #include "pe33.hpp"
-#include <iostream>
+#include <boost/foreach.hpp>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <set>
-#include <boost/foreach.hpp>
 
-std::string& pe33::name()
-{
-    return name_;
-}
-
-void pe33::run()
+std::string& pe33::name() { return name_; }
+void         pe33::run()
 {
     /*
      * The fraction 49/98 is a curious fraction, as an inexperienced
@@ -36,40 +32,34 @@ void pe33::run()
 
     int denr_prod = 1;
     int numr_prod = 1;
-    for(int numr=11; numr<100; ++numr)
+    for ( int numr = 11; numr < 100; ++numr )
     {
-        int n_fir_dig = numr/10;
-        int n_sec_dig = numr%10;
-        if(n_sec_dig == 0)
+        int n_fir_dig = numr / 10;
+        int n_sec_dig = numr % 10;
+        if ( n_sec_dig == 0 )
         {
             ++n_sec_dig;
             ++numr;
         }
 
-        int denr_lim = (n_sec_dig+1)*10;
-        for(int denr=(n_sec_dig*10)+1; denr<denr_lim; ++denr)
+        int denr_lim = ( n_sec_dig + 1 ) * 10;
+        for ( int denr = ( n_sec_dig * 10 ) + 1; denr < denr_lim; ++denr )
         {
-            int d_sec_dig = denr%10;
-            if(n_fir_dig/d_sec_dig == 1) { continue; }
-            if( (double)numr/denr == (double)n_fir_dig/d_sec_dig )
+            int d_sec_dig = denr % 10;
+            if ( n_fir_dig / d_sec_dig == 1 )
+            {
+                continue;
+            }
+            if ( (double)numr / denr == (double)n_fir_dig / d_sec_dig )
             {
                 numr_prod *= n_fir_dig;
                 denr_prod *= d_sec_dig;
-                std::cout << numr
-                          << "/"
-                          << denr
-                          << " = "
-                          << n_fir_dig
-                          << "/"
-                          << d_sec_dig
-                          << std::endl;
+                std::cout << numr << "/" << denr << " = " << n_fir_dig << "/"
+                          << d_sec_dig << std::endl;
             }
-
         }
     }
     int total = 0;
     std::cout << "PE33 " << numr_prod << "/" << denr_prod << std::endl;
     std::cout << "PE33 " << total << std::endl;
 }
-
-

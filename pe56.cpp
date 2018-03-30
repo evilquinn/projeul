@@ -6,17 +6,12 @@
  */
 
 #include "pe56.hpp"
+#include <gint.hpp>
 #include <iostream>
 #include <utils.hpp>
-#include <gint.hpp>
 
-
-std::string& pe56::name()
-{
-    return name_;
-}
-
-void pe56::run()
+std::string& pe56::name() { return name_; }
+void         pe56::run()
 {
     /*
      * A googol (10^100) is a massive number: one followed by one-hundred zeros;
@@ -32,10 +27,10 @@ void pe56::run()
 
     for ( size_t a = 99; a > 0; --a )
     {
-        gint ga(a);
+        gint ga( a );
         for ( size_t b = 0; b < 100; ++b )
         {
-            ga.multiply_by(a);
+            ga.multiply_by( a );
             size_t digit_sum = ga.sum_digits();
             if ( digit_sum > result )
             {
@@ -46,4 +41,3 @@ void pe56::run()
 
     std::cout << "result : " << result << std::endl;
 }
-

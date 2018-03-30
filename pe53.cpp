@@ -9,13 +9,8 @@
 #include <iostream>
 #include "utils.hpp"
 
-
-std::string& pe53::name()
-{
-    return name_;
-}
-
-void pe53::run()
+std::string& pe53::name() { return name_; }
+void         pe53::run()
 {
     /*
      *
@@ -40,20 +35,18 @@ void pe53::run()
 
     size_t result = 0;
 
-    for(size_t n = 23; n <= 100; ++n)
+    for ( size_t n = 23; n <= 100; ++n )
     {
-        for(size_t r = 1; r <= n; ++r)
+        for ( size_t r = 1; r <= n; ++r )
         {
-            size_t ncr = n_c_r(n, r);
-            //printf("%zu\t%zu\t%zu\n", ncr, n, r);
+            size_t ncr = n_c_r( n, r );
+            // printf("%zu\t%zu\t%zu\n", ncr, n, r);
             if ( ncr > 1000000 )
             {
                 result += ( ( ( n - r ) - r ) + 1 );
                 break;
             }
-
         }
     }
     std::cout << "result : " << result << std::endl;
 }
-

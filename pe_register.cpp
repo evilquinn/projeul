@@ -1,6 +1,6 @@
 
-#include <iostream>
 #include "pe_register.hpp"
+#include <iostream>
 
 #include "pe27.hpp"
 #include "pe29.hpp"
@@ -43,62 +43,61 @@
 #include "pe66.hpp"
 #include "pe67.hpp"
 
-pe_register::pe_register() :
-    reg_()
+pe_register::pe_register() : reg_()
 {
-    reg(std::unique_ptr<pe>(new pe27()));
-    reg(std::unique_ptr<pe>(new pe29()));
-    reg(std::unique_ptr<pe>(new pe30()));
-    reg(std::unique_ptr<pe>(new pe31()));
-    reg(std::unique_ptr<pe>(new pe32()));
-    reg(std::unique_ptr<pe>(new pe33()));
-    reg(std::unique_ptr<pe>(new pe34()));
-    reg(std::unique_ptr<pe>(new pe35()));
-    reg(std::unique_ptr<pe>(new pe36()));
-    reg(std::unique_ptr<pe>(new pe37()));
-    reg(std::unique_ptr<pe>(new pe38()));
-    reg(std::unique_ptr<pe>(new pe39()));
-    reg(std::unique_ptr<pe>(new pe40()));
-    reg(std::unique_ptr<pe>(new pe41()));
-    reg(std::unique_ptr<pe>(new pe42()));
-    reg(std::unique_ptr<pe>(new pe43()));
-    reg(std::unique_ptr<pe>(new pe44()));
-    reg(std::unique_ptr<pe>(new pe45()));
-    reg(std::unique_ptr<pe>(new pe46()));
-    reg(std::unique_ptr<pe>(new pe47()));
-    reg(std::unique_ptr<pe>(new pe48()));
-    reg(std::unique_ptr<pe>(new pe49()));
-    reg(std::unique_ptr<pe>(new pe50()));
-    reg(std::unique_ptr<pe>(new pe51()));
-    reg(std::unique_ptr<pe>(new pe52()));
-    reg(std::unique_ptr<pe>(new pe53()));
-    reg(std::unique_ptr<pe>(new pe54()));
-    reg(std::unique_ptr<pe>(new pe55()));
-    reg(std::unique_ptr<pe>(new pe56()));
-    reg(std::unique_ptr<pe>(new pe57()));
-    reg(std::unique_ptr<pe>(new pe58()));
-    reg(std::unique_ptr<pe>(new pe59()));
-    reg(std::unique_ptr<pe>(new pe60()));
-    reg(std::unique_ptr<pe>(new pe61()));
-    reg(std::unique_ptr<pe>(new pe62()));
-    reg(std::unique_ptr<pe>(new pe63()));
-    reg(std::unique_ptr<pe>(new pe64()));
-    reg(std::unique_ptr<pe>(new pe65()));
-    reg(std::unique_ptr<pe>(new pe66()));
-    reg(std::unique_ptr<pe>(new pe67()));
+    reg( std::unique_ptr<pe>( new pe27() ) );
+    reg( std::unique_ptr<pe>( new pe29() ) );
+    reg( std::unique_ptr<pe>( new pe30() ) );
+    reg( std::unique_ptr<pe>( new pe31() ) );
+    reg( std::unique_ptr<pe>( new pe32() ) );
+    reg( std::unique_ptr<pe>( new pe33() ) );
+    reg( std::unique_ptr<pe>( new pe34() ) );
+    reg( std::unique_ptr<pe>( new pe35() ) );
+    reg( std::unique_ptr<pe>( new pe36() ) );
+    reg( std::unique_ptr<pe>( new pe37() ) );
+    reg( std::unique_ptr<pe>( new pe38() ) );
+    reg( std::unique_ptr<pe>( new pe39() ) );
+    reg( std::unique_ptr<pe>( new pe40() ) );
+    reg( std::unique_ptr<pe>( new pe41() ) );
+    reg( std::unique_ptr<pe>( new pe42() ) );
+    reg( std::unique_ptr<pe>( new pe43() ) );
+    reg( std::unique_ptr<pe>( new pe44() ) );
+    reg( std::unique_ptr<pe>( new pe45() ) );
+    reg( std::unique_ptr<pe>( new pe46() ) );
+    reg( std::unique_ptr<pe>( new pe47() ) );
+    reg( std::unique_ptr<pe>( new pe48() ) );
+    reg( std::unique_ptr<pe>( new pe49() ) );
+    reg( std::unique_ptr<pe>( new pe50() ) );
+    reg( std::unique_ptr<pe>( new pe51() ) );
+    reg( std::unique_ptr<pe>( new pe52() ) );
+    reg( std::unique_ptr<pe>( new pe53() ) );
+    reg( std::unique_ptr<pe>( new pe54() ) );
+    reg( std::unique_ptr<pe>( new pe55() ) );
+    reg( std::unique_ptr<pe>( new pe56() ) );
+    reg( std::unique_ptr<pe>( new pe57() ) );
+    reg( std::unique_ptr<pe>( new pe58() ) );
+    reg( std::unique_ptr<pe>( new pe59() ) );
+    reg( std::unique_ptr<pe>( new pe60() ) );
+    reg( std::unique_ptr<pe>( new pe61() ) );
+    reg( std::unique_ptr<pe>( new pe62() ) );
+    reg( std::unique_ptr<pe>( new pe63() ) );
+    reg( std::unique_ptr<pe>( new pe64() ) );
+    reg( std::unique_ptr<pe>( new pe65() ) );
+    reg( std::unique_ptr<pe>( new pe66() ) );
+    reg( std::unique_ptr<pe>( new pe67() ) );
 };
 
-void pe_register::reg(std::unique_ptr<pe> ex)
+void pe_register::reg( std::unique_ptr<pe> ex )
 {
-    reg_.insert(std::make_pair(ex->number(), std::move(ex)));
+    reg_.insert( std::make_pair( ex->number(), std::move( ex ) ) );
 }
 
-void pe_register::run(int ex)
+void pe_register::run( int ex )
 {
     if ( ex == 0 )
     {
         ex = reg_.rbegin()->first;
     }
     std::cout << "Exercise " << ex << std::endl;
-    reg_.at(ex)->run();
+    reg_.at( ex )->run();
 }

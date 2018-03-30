@@ -10,19 +10,15 @@
 
 #include "pe.hpp"
 
-
 class pe63 : public pe
 {
 public:
-    pe63() :
-        name_("pe63")
-    {};
-    virtual ~pe63()
-    {
-    };
+    pe63() : name_( "pe63" ){};
+    virtual ~pe63(){};
     virtual std::string& name();
-    virtual int number() { return 63; }
-    virtual void run();
+    virtual int          number() { return 63; }
+    virtual void         run();
+
 private:
     std::string name_;
 };
