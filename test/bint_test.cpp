@@ -20,8 +20,6 @@ class BintTest : public ::testing::Test
 public:
     BintTest() {}
     ~BintTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
 };
 

@@ -12,8 +12,6 @@ class UtilsTest : public ::testing::Test
 public:
     UtilsTest() {}
     ~UtilsTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
 };
 

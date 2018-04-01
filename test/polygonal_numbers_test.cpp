@@ -11,8 +11,6 @@ class PolygonalNumbersTest : public ::testing::Test
 protected:
     PolygonalNumbersTest() {}
     ~PolygonalNumbersTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 };
 
 TEST_F( PolygonalNumbersTest, checkFirstTenTriangleNumbers )

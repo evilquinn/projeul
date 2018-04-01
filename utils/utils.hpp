@@ -39,15 +39,9 @@ bool same_digits( size_t lhs, size_t rhs );
 bool same_digits_old( size_t lhs, size_t rhs );
 
 /*
- * returns the factorial of the supplied number
- */
-size_t factorial( size_t n );
-
-/*
  * calculate the n_conbinations_r value for supplied n and r
  */
 size_t n_c_r( size_t n, size_t r );
-size_t n_c_r_shit( size_t n, size_t r );
 
 /*
  * performs digit pattern analysing.  Returns a map containing a count for
@@ -129,22 +123,6 @@ size_t next_prime( size_t i, prime_sieve& primes );
 size_t calc_prime_factors( size_t               num,
                            std::vector<size_t>& prime_factors,
                            prime_sieve&         primes );
-
-/*
- * return a digit array representing the supplied number
- *
- * @param num The number
- * @param digit_array upon return will point to array of digits for num
- * @param digit_array_length upon return will be set to length of digit array
- */
-void num_to_digit_array( size_t  num,
-                         int*&   digit_array,
-                         size_t& digit_array_length );
-
-/*
- * Adds supplied number to the digit array
- */
-void add_to_digit_array( int* add_to, size_t add_to_len, size_t add );
 
 /*
  * Add two digit arrays (numbers, in the form of an array, where each element

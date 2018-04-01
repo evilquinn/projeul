@@ -17,8 +17,6 @@ class PokerTest : public ::testing::Test
 public:
     PokerTest() {}
     ~PokerTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
 };
 

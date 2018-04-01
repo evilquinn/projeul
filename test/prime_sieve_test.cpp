@@ -14,8 +14,6 @@ class PrimeSieveTest : public ::testing::Test
 public:
     PrimeSieveTest() : primes_( PRIME_SIEVE_TEST_LIMIT ) {}
     ~PrimeSieveTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
     prime_sieve primes_;
 };

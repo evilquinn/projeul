@@ -8,7 +8,6 @@
 #include "pe66.hpp"
 #include <iostream>
 
-std::string& pe66::name() { return name_; }
 void         pe66::run()
 {
     /*

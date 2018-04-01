@@ -10,8 +10,6 @@ class HexagonalNumbersTest : public ::testing::Test
 protected:
     HexagonalNumbersTest() {}
     ~HexagonalNumbersTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 };
 
 TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )

@@ -16,8 +16,6 @@ protected:
     {
     }
     ~TriangleNumbersProfile() { delete triangles_; }
-    virtual void      SetUp() {}
-    virtual void      TearDown() {}
     triangle_numbers* triangles_;
 };
 

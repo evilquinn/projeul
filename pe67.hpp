@@ -15,7 +15,7 @@ class pe67 : public pe
 public:
     pe67() : name_( "pe67" ){};
     virtual ~pe67(){};
-    virtual std::string& name();
+    virtual std::string& name() { return name_; };
     virtual void         run();
     virtual int          number() { return 67; };
 private:

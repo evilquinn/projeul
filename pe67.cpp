@@ -12,7 +12,6 @@
 #include <iostream>
 #include <vector>
 
-std::string& pe67::name() { return name_; }
 void         pe67::run()
 {
     /*

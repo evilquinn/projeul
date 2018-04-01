@@ -11,8 +11,6 @@ class PentagonalNumbersTest : public ::testing::Test
 protected:
     PentagonalNumbersTest() {}
     ~PentagonalNumbersTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 };
 
 TEST_F( PentagonalNumbersTest, checkFirstTenPentagonalNumbers )

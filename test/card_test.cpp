@@ -65,8 +65,6 @@ public:
     {
     }
     ~CardTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
     card two_hearts;
     card three_hearts;

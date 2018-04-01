@@ -11,8 +11,6 @@ class TriangleNumbersTest : public ::testing::Test
 protected:
     TriangleNumbersTest() {}
     ~TriangleNumbersTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 };
 
 TEST_F( TriangleNumbersTest, checkFirstTenTriangleNumbers )

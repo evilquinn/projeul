@@ -10,8 +10,6 @@ class GintTest : public ::testing::Test
 public:
     GintTest() {}
     ~GintTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
 };
 

@@ -16,8 +16,6 @@ protected:
     {
     }
     ~CalcPrimeFactorsProfile() { delete primes_; }
-    virtual void SetUp() {}
-    virtual void TearDown() {}
     prime_sieve* primes_;
 };
 

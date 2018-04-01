@@ -122,20 +122,6 @@ bool same_digits( size_t lhs, size_t rhs )
     return expected_count == compare_count;
 }
 
-size_t factorial( size_t n )
-{
-    if ( n == 0 )
-        return 1;
-    if ( n > 20 )
-        return -1;  // cheat
-    size_t fac = 1;
-    for ( size_t i = 2; i <= n; ++i )
-    {
-        fac *= i;
-    }
-    return fac;
-}
-
 size_t n_c_r( size_t n, size_t r )
 {
     if ( r > n )
@@ -149,19 +135,6 @@ size_t n_c_r( size_t n, size_t r )
     }
 
     return ( n_c_r( n - 1, r ) + n_c_r( n - 1, r - 1 ) );
-}
-
-size_t n_c_r_shit( size_t n, size_t r )
-{
-    if ( r > n )
-    {
-        return 0;
-    }
-    size_t third  = factorial( n - r );
-    size_t second = factorial( r );
-    second *= third;
-    size_t first = factorial( n );
-    return first / second;
 }
 
 bool same_digits_old( size_t lhs, size_t rhs )
@@ -207,54 +180,6 @@ size_t next_prime( size_t i, prime_sieve& primes )
     } while ( i < primes_limit && !primes.is_prime( i ) );
 
     return i;
-}
-
-void num_to_digit_array( size_t  num,
-                         int*&   digit_array,
-                         size_t& digit_array_length )
-{
-    digit_array_length = num_digits( num );
-    digit_array        = new int[digit_array_length];
-    for ( int i = digit_array_length - 1; i >= 0; --i )
-    {
-        digit_array[i] = num % 10;
-        num /= 10;
-    }
-}
-
-void add_to_digit_array( int* add_to, size_t add_to_len, size_t add )
-{
-    int add_to_pos = add_to_len - 1;
-
-    while ( add > 0 )
-    {
-        if ( add_to_pos >= 0 )
-        {
-            add_to[add_to_pos] += add % 10;
-
-            size_t carry_on_pos = add_to_pos;
-            while ( add_to[carry_on_pos] >= 10 )
-            {
-                add_to[carry_on_pos] %= 10;
-                if ( carry_on_pos > 0 )
-                {
-                    --carry_on_pos;
-                    ++add_to[carry_on_pos];
-                }
-                else
-                {
-                    // no more array to carry on with
-                    break;
-                }
-            }
-            --add_to_pos;
-            add /= 10;
-        }
-        else
-        {
-            break;
-        }
-    }
 }
 
 void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by )

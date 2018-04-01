@@ -12,8 +12,6 @@ class CryptoTest : public ::testing::Test
 public:
     CryptoTest() {}
     ~CryptoTest() {}
-    virtual void SetUp() {}
-    virtual void TearDown() {}
 protected:
 };
 
