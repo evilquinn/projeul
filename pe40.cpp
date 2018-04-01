@@ -48,8 +48,8 @@ void         pe40::run()
         }
         if ( !done100 && d >= 100 )
         {
-            result *=
-                select_digit( n, d == 100 ? 0 : num_digits( n ) - ( d - 100 ) );
+            result *= select_digit(
+                n, d == 100 ? 0 : num_digits( n ) - ( d - 100 ) );
             done100 = true;
         }
         if ( !done1000 && d >= 1000 )

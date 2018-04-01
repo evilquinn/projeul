@@ -11,20 +11,16 @@
 #include <string.h>
 #include <iostream>
 
-prime_sieve::prime_sieve(size_t limit) :
-    limit_(limit),
-    sieve_(limit)
+prime_sieve::prime_sieve( size_t limit ) : limit_( limit ), sieve_( limit )
 {
     // set all valid, we'll mark off the ones not prime
     sieve_.set();
 
     // 0 and 1 aren't prime
-    sieve_.reset(0);
-    sieve_.reset(1);
+    sieve_.reset( 0 );
+    sieve_.reset( 1 );
 
-    std::cout << "Calc'ing all primes from 2 to "
-              << limit_
-              << " ... "
+    std::cout << "Calc'ing all primes from 2 to " << limit_ << " ... "
               << std::endl;
 
     calc_primes();
@@ -32,16 +28,9 @@ prime_sieve::prime_sieve(size_t limit) :
     std::cout << "Done." << std::endl;
 }
 
-prime_sieve::~prime_sieve()
-{
-}
-
-size_t prime_sieve::limit()
-{
-    return limit_;
-}
-
-void prime_sieve::calc_primes()
+prime_sieve::~prime_sieve() {}
+size_t prime_sieve::limit() { return limit_; }
+void   prime_sieve::calc_primes()
 {
     size_t n = 2;
     while ( n < limit_ )
@@ -50,17 +39,17 @@ void prime_sieve::calc_primes()
         {
             for ( size_t i = n + n; i < limit_; i += n )
             {
-                sieve_.reset(i);
+                sieve_.reset( i );
             }
         }
 
-        n = sieve_.find_next(n);
+        n = sieve_.find_next( n );
     }
 }
 
 void prime_sieve::print()
 {
-    for ( size_t i = 1; i < limit_; ++i)
+    for ( size_t i = 1; i < limit_; ++i )
     {
         if ( sieve_[i] )
         {
@@ -69,27 +58,26 @@ void prime_sieve::print()
     }
 }
 
-bool prime_sieve::is_prime(size_t n)
+bool prime_sieve::is_prime( size_t n )
 {
     if ( n > limit_ )
     {
-        return ::is_prime(*this, n);
+        return ::is_prime( *this, n );
     }
     return sieve_[n];
 }
 
-
-size_t prime_sieve::next_prime(size_t from)
+size_t prime_sieve::next_prime( size_t from )
 {
-    size_t result = sieve_.find_next(from);
+    size_t result = sieve_.find_next( from );
     if ( result == sieve_.npos )
     {
-        return ::next_prime(*this, from);
+        return ::next_prime( *this, from );
     }
     return result;
 }
 
-size_t prime_sieve::prev_prime(size_t from)
+size_t prime_sieve::prev_prime( size_t from )
 {
     if ( --from >= limit_ )
     {
@@ -97,19 +85,17 @@ size_t prime_sieve::prev_prime(size_t from)
     }
 
     size_t result;
-    for ( result = from;
-          !sieve_[result] && result != 0;
-          --result)
+    for ( result = from; !sieve_[result] && result != 0; --result )
     {
     }
 
     return result;
 }
 
-size_t prime_sieve::num_in_range(size_t lower, size_t upper)
+size_t prime_sieve::num_in_range( size_t lower, size_t upper )
 {
-    lower = is_prime(lower) ? lower : next_prime(lower);
-    upper = is_prime(upper) ? upper : prev_prime(upper);
+    lower = is_prime( lower ) ? lower : next_prime( lower );
+    upper = is_prime( upper ) ? upper : prev_prime( upper );
 
     if ( lower > upper )
     {
@@ -123,15 +109,15 @@ size_t prime_sieve::num_in_range(size_t lower, size_t upper)
     do
     {
         ++result;
-        lower = next_prime(lower);
-    }
-    while ( lower <= upper );
+        lower = next_prime( lower );
+    } while ( lower <= upper );
 
     return result;
 }
 
-
-size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
+size_t prime_sieve::sum_range( size_t  lower,
+                               size_t  upper,
+                               size_t& num_in_range )
 {
     if ( lower > upper )
     {
@@ -139,7 +125,7 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
     }
     if ( lower == upper )
     {
-        if ( is_prime(lower) )
+        if ( is_prime( lower ) )
         {
             num_in_range = 1;
             return lower;
@@ -151,7 +137,7 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
     size_t current;
     try
     {
-        current = is_prime(lower) ? lower : next_prime(lower);
+        current = is_prime( lower ) ? lower : next_prime( lower );
     }
     catch ( std::invalid_argument& e )
     {
@@ -159,15 +145,15 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
     }
 
     size_t result = 0;
-    num_in_range = 0;
+    num_in_range  = 0;
 
-    while ( current <= upper && current < limit_)
+    while ( current <= upper && current < limit_ )
     {
         result += current;
         ++num_in_range;
         try
         {
-            current = next_prime(current);
+            current = next_prime( current );
         }
         catch ( std::invalid_argument& e )
         {
@@ -178,8 +164,9 @@ size_t prime_sieve::sum_range(size_t lower, size_t upper, size_t& num_in_range)
     return result;
 }
 
-
-size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t>& sumees)
+size_t prime_sieve::shit_sum_range( size_t              lower,
+                                    size_t              upper,
+                                    std::deque<size_t>& sumees )
 {
     sumees.clear();
 
@@ -189,9 +176,9 @@ size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t
     }
     if ( lower == upper )
     {
-        if ( is_prime(lower) )
+        if ( is_prime( lower ) )
         {
-            sumees.push_back(lower);
+            sumees.push_back( lower );
             return lower;
         }
 
@@ -201,7 +188,7 @@ size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t
     size_t current;
     try
     {
-        current = is_prime(lower) ? lower : next_prime(lower);
+        current = is_prime( lower ) ? lower : next_prime( lower );
     }
     catch ( std::invalid_argument& e )
     {
@@ -210,13 +197,13 @@ size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t
 
     size_t result = 0;
 
-    while ( current <= upper && current < limit_)
+    while ( current <= upper && current < limit_ )
     {
         result += current;
-        sumees.push_back(current);
+        sumees.push_back( current );
         try
         {
-            current = next_prime(current);
+            current = next_prime( current );
         }
         catch ( std::invalid_argument& e )
         {
@@ -226,4 +213,3 @@ size_t prime_sieve::shit_sum_range(size_t lower, size_t upper, std::deque<size_t
 
     return result;
 }
-

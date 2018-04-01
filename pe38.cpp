@@ -60,7 +60,8 @@ void         pe38::run()
                 continue;
             }
 
-            if ( is_pandigital_for_range( range_start, range_end, lluints, n ) )
+            if ( is_pandigital_for_range(
+                     range_start, range_end, lluints, n ) )
             {
                 std::cout << "prod of " << i << " and (";
                 for ( int i = 0; i < n; ++i )

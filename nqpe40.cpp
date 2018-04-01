@@ -65,7 +65,8 @@ int main( int argc, char* argv[] )
         }
         if ( !done10000 && d >= 10000 )
         {
-            result *= select_digit( n, d == 10000 ? 0 : numd - ( d - 10000 ) );
+            result *=
+                select_digit( n, d == 10000 ? 0 : numd - ( d - 10000 ) );
             done10000 = true;
         }
         if ( !done100000 && d >= 100000 )

@@ -57,8 +57,8 @@ int count_possibilities( int* coins, int num_coins, int target )
     int curr_try = 0;
     while ( curr_try <= target )
     {
-        total +=
-            count_possibilities( &coins[1], num_coins - 1, target - curr_try );
+        total += count_possibilities(
+            &coins[1], num_coins - 1, target - curr_try );
         curr_try += coins[0];
     }
 

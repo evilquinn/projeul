@@ -14,20 +14,20 @@
 class pentagonal_numbers
 {
 public:
-    explicit pentagonal_numbers(size_t num);
+    explicit pentagonal_numbers( size_t num );
     virtual ~pentagonal_numbers();
 
     void print();
-    bool is_pentagonal(size_t n);
-    size_t get_term(size_t n);
-    static size_t calc_pentagonal_number_for_term(size_t n);
+    bool is_pentagonal( size_t n );
+    size_t get_term( size_t n );
+    static size_t calc_pentagonal_number_for_term( size_t n );
 
 private:
     void calc_pentagonal_numbers();
 
-    size_t   num_;
+    size_t              num_;
     std::vector<size_t> pentagonals_;
-    size_t max_;
+    size_t              max_;
 };
 
 #endif /* PENTAGONAL_NUMBERS_HPP_ */

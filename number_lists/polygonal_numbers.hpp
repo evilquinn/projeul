@@ -12,28 +12,28 @@
 #include <set>
 #include <vector>
 
-typedef size_t (*function_of_n)(size_t n);
+typedef size_t ( *function_of_n )( size_t n );
 
 class polygonal_numbers
 {
 public:
-    polygonal_numbers(size_t num, function_of_n func);
+    polygonal_numbers( size_t num, function_of_n func );
     virtual ~polygonal_numbers();
 
     void print();
-    bool is_in(size_t n);
-    size_t get_term(size_t n);
-    static size_t triangle(size_t n);
-    static size_t square(size_t n);
-    static size_t pentagonal(size_t n);
-    static size_t hexagonal(size_t n);
-    static size_t heptagonal(size_t n);
-    static size_t octagonal(size_t n);
+    bool is_in( size_t n );
+    size_t get_term( size_t n );
+    static size_t triangle( size_t n );
+    static size_t square( size_t n );
+    static size_t pentagonal( size_t n );
+    static size_t hexagonal( size_t n );
+    static size_t heptagonal( size_t n );
+    static size_t octagonal( size_t n );
 
 private:
     void calc_polygonal_numbers();
 
-    size_t   num_;
+    size_t              num_;
     function_of_n       number_func_;
     std::vector<size_t> numbers_;
 };

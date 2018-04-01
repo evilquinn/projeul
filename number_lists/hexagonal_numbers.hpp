@@ -14,20 +14,20 @@
 class hexagonal_numbers
 {
 public:
-    explicit hexagonal_numbers(size_t num);
+    explicit hexagonal_numbers( size_t num );
     virtual ~hexagonal_numbers();
 
     void print();
-    bool is_hexagonal(size_t n);
-    size_t get_term(size_t n);
-    static size_t calc_hexagonal_number_for_term(size_t n);
+    bool is_hexagonal( size_t n );
+    size_t get_term( size_t n );
+    static size_t calc_hexagonal_number_for_term( size_t n );
 
 private:
     void calc_hexagonal_numbers();
 
-    size_t   num_;
+    size_t              num_;
     std::vector<size_t> hexagonals_;
-    size_t max_;
+    size_t              max_;
 };
 
 #endif /* HEXAGONAL_NUMBERS_HPP_ */

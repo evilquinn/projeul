@@ -8,13 +8,11 @@
 #include "pentagonal_numbers.hpp"
 
 #include <string.h>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
-pentagonal_numbers::pentagonal_numbers(size_t num) :
-    num_(num),
-    pentagonals_(num_ + 1),
-    max_()
+pentagonal_numbers::pentagonal_numbers( size_t num )
+    : num_( num ), pentagonals_( num_ + 1 ), max_()
 {
     std::cout << "Calc'ing the first " << num_ << " pentagonal numbers ... ";
 
@@ -24,15 +22,12 @@ pentagonal_numbers::pentagonal_numbers(size_t num) :
     std::cout << "Done." << std::endl;
 }
 
-pentagonal_numbers::~pentagonal_numbers()
-{
-}
-
+pentagonal_numbers::~pentagonal_numbers() {}
 void pentagonal_numbers::calc_pentagonal_numbers()
 {
-    for(size_t i = 1; i <= num_; ++i)
+    for ( size_t i = 1; i <= num_; ++i )
     {
-        pentagonals_[i] = calc_pentagonal_number_for_term(i);
+        pentagonals_[i] = calc_pentagonal_number_for_term( i );
     }
 }
 
@@ -40,33 +35,33 @@ void pentagonal_numbers::print()
 {
     for ( std::vector<size_t>::iterator i = pentagonals_.begin();
           i != pentagonals_.end();
-          ++i)
+          ++i )
     {
         std::cout << *i << std::endl;
     }
 }
 
-size_t pentagonal_numbers::calc_pentagonal_number_for_term(size_t n)
+size_t pentagonal_numbers::calc_pentagonal_number_for_term( size_t n )
 {
-    return n * ( (3 * n) - 1 ) / 2;
+    return n * ( ( 3 * n ) - 1 ) / 2;
 }
 
-bool pentagonal_numbers::is_pentagonal(size_t n)
+bool pentagonal_numbers::is_pentagonal( size_t n )
 {
-//    if ( n >= max_ )
-//    {
-//        std::cout << n << " largeqr than max " << max_ << std::endl;
-//        return false;
-//    }
-    return std::binary_search(pentagonals_.begin(), pentagonals_.end(), n);
+    //    if ( n >= max_ )
+    //    {
+    //        std::cout << n << " largeqr than max " << max_ << std::endl;
+    //        return false;
+    //    }
+    return std::binary_search( pentagonals_.begin(), pentagonals_.end(), n );
 }
 
-size_t pentagonal_numbers::get_term(size_t n)
+size_t pentagonal_numbers::get_term( size_t n )
 {
-//    if ( n >= num_ )
-//    {
-//        std::cout << "too high term: " << n << std::endl;
-//        return 0;
-//    }
+    //    if ( n >= num_ )
+    //    {
+    //        std::cout << "too high term: " << n << std::endl;
+    //        return 0;
+    //    }
     return pentagonals_[n];
 }

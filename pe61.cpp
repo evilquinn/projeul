@@ -30,7 +30,8 @@ void         pe61::run()
      * 1. The set is cyclic, in that the last two digits of each number is the
      * first two digits of the next number (including the last number with the
      * first).
-     * 2. Each polygonal type: triangle (P(3,127)=8128), square (P(4,91)=8281),
+     * 2. Each polygonal type: triangle (P(3,127)=8128), square
+     * (P(4,91)=8281),
      * and pentagonal (P(5,44)=2882), is represented by a different number in
      * the set.
      * 3. This is the only set of 4-digit numbers with this property.
@@ -46,11 +47,9 @@ void         pe61::run()
     {
         size_t start;
         size_t end;
-    } data[] = {
-        {.start = 45, .end = 141 }, {.start = 32, .end = 100 },
-        {.start = 26, .end = 82 },  {.start = 23, .end = 71 },
-        {.start = 21, .end = 64 },  {.start = 19, .end = 59 }
-    };
+    } data[] = { {.start = 45, .end = 141 }, {.start = 32, .end = 100 },
+                 {.start = 26, .end = 82 },  {.start = 23, .end = 71 },
+                 {.start = 21, .end = 64 },  {.start = 19, .end = 59 } };
 
     polygonal_numbers list[] = {
         polygonal_numbers( data[0].end, polygonal_numbers::triangle ),
@@ -63,7 +62,8 @@ void         pe61::run()
 
     // to get set of 6 4-digit numbers, where any number could be from any
     // list, choose first number by arbitrarily starting at the beginning of
-    // the first range, travelling all ranges.  To get a 'next' number, traverse
+    // the first range, travelling all ranges.  To get a 'next' number,
+    // traverse
     // all numbers in remaining lists looking for a cyclic potential.  Use
     // backtracking to attempt next numbers in the event that an avenue is
     // closed
@@ -166,5 +166,6 @@ void         pe61::run()
               << results[2].num << "(" << results[2].list << ") "
               << results[3].num << "(" << results[3].list << ") "
               << results[4].num << "(" << results[4].list << ") "
-              << results[5].num << "(" << results[5].list << ") " << std::endl;
+              << results[5].num << "(" << results[5].list << ") "
+              << std::endl;
 }

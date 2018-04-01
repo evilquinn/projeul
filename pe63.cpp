@@ -34,8 +34,8 @@ void         pe63::run()
             if ( powed == 0 )
                 break;
             size_t length = powed.num_digits();
-            std::cout << "testing: " << j << "^" << i << " = " << powed << " ("
-                      << length << ")" << std::endl;
+            std::cout << "testing: " << j << "^" << i << " = " << powed
+                      << " (" << length << ")" << std::endl;
             if ( length < i )
             {
                 continue;

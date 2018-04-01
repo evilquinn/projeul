@@ -19,7 +19,9 @@ int main( int argc, char* argv[] )
     // Declare the supported options.
     po::options_description desc( "Options" );
     desc.add_options()( "help,h", "produce help message" )(
-        "exercise,e", po::value<int>()->default_value( 0 ), "exercise to run" );
+        "exercise,e",
+        po::value<int>()->default_value( 0 ),
+        "exercise to run" );
 
     po::variables_map vm;
     try

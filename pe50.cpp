@@ -66,7 +66,8 @@ void         pe50::run()
             {
                 break;
             }
-            if ( primes_.is_prime( working_sum ) && working_range > best_range )
+            if ( primes_.is_prime( working_sum ) &&
+                 working_range > best_range )
             {
                 best_range = working_range;
                 best_sum   = working_sum;

@@ -17,7 +17,10 @@ bool is_pandigital_for_range( size_t  start,
                               size_t  end,
                               size_t* ints,
                               size_t  ints_size );
-bool spy_the_digits( size_t min, size_t max, size_t n, digit_map& reqd_digits );
+bool spy_the_digits( size_t     min,
+                     size_t     max,
+                     size_t     n,
+                     digit_map& reqd_digits );
 size_t len_n( size_t min );
 
 std::string& pe32::name() { return name_; }
@@ -118,7 +121,10 @@ bool is_pandigital_for_range( size_t  start,
     return true;
 }
 
-bool spy_the_digits( size_t min, size_t max, size_t n, digit_map& reqd_digits )
+bool spy_the_digits( size_t     min,
+                     size_t     max,
+                     size_t     n,
+                     digit_map& reqd_digits )
 {
     size_t left = n;
     while ( left > 0 )

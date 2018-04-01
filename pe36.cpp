@@ -48,7 +48,8 @@ void         pe36::run()
         if ( is_palendrome( bin_begin ) && is_palendrome( lim_str ) )
         {
             sum += i;
-            std::cout << lim_str << " and " << bin_begin << " win" << std::endl;
+            std::cout << lim_str << " and " << bin_begin << " win"
+                      << std::endl;
         }
     }
 

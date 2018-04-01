@@ -79,7 +79,8 @@ void         pe43::run()
                             {
                                 continue;
                             }
-                            for ( size_t seventh = 0; seventh <= 9; ++seventh )
+                            for ( size_t seventh = 0; seventh <= 9;
+                                  ++seventh )
                             {
                                 if ( seventh == first || seventh == second ||
                                      seventh == third || seventh == fourth ||
@@ -87,11 +88,15 @@ void         pe43::run()
                                 {
                                     continue;
                                 }
-                                for ( size_t eighth = 0; eighth <= 9; ++eighth )
+                                for ( size_t eighth = 0; eighth <= 9;
+                                      ++eighth )
                                 {
-                                    if ( eighth == first || eighth == second ||
-                                         eighth == third || eighth == fourth ||
-                                         eighth == sixth || eighth == seventh )
+                                    if ( eighth == first ||
+                                         eighth == second ||
+                                         eighth == third ||
+                                         eighth == fourth ||
+                                         eighth == sixth ||
+                                         eighth == seventh )
                                     {
                                         continue;
                                     }
@@ -102,7 +107,8 @@ void         pe43::run()
                                              ninth == second ||
                                              ninth == third ||
                                              ninth == fourth ||
-                                             ninth == fifth || ninth == sixth ||
+                                             ninth == fifth ||
+                                             ninth == sixth ||
                                              ninth == seventh ||
                                              ninth == eighth )
                                         {
@@ -125,11 +131,12 @@ void         pe43::run()
                                             }
 
                                             // do something with each digit
-                                            size_t nums[] = { first,   second,
-                                                              third,   fourth,
-                                                              fifth,   sixth,
-                                                              seventh, eighth,
-                                                              ninth,   tenth };
+                                            size_t nums[] = {
+                                                first,   second, third,
+                                                fourth,  fifth,  sixth,
+                                                seventh, eighth, ninth,
+                                                tenth
+                                            };
                                             if ( has_subdivisibility_property(
                                                      nums, 10 ) )
                                             {

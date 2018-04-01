@@ -310,7 +310,7 @@ bint& bint::bitshift_left( size_t n )
 
     uint8_t left_shift  = bits;
     uint8_t right_shift = 8 - bits;
-    uint8_t low_mask  = ( static_cast<uint8_t>(::pow( 2, right_shift ) ) - 1 );
+    uint8_t low_mask = ( static_cast<uint8_t>(::pow( 2, right_shift ) ) - 1 );
     uint8_t high_mask = ~low_mask;
 
     if ( bytes )
@@ -367,7 +367,7 @@ bint& bint::bitshift_right( size_t n )
 
     uint8_t right_shift = bits;
     uint8_t left_shift  = 8 - bits;
-    uint8_t low_mask  = ( static_cast<uint8_t>(::pow( 2, right_shift ) ) - 1 );
+    uint8_t low_mask = ( static_cast<uint8_t>(::pow( 2, right_shift ) ) - 1 );
     uint8_t high_mask = ~low_mask;
 
     for ( size_t i = mem_.size() - 1; i < mem_.size(); --i )

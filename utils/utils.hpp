@@ -50,7 +50,8 @@ size_t n_c_r( size_t n, size_t r );
 size_t n_c_r_shit( size_t n, size_t r );
 
 /*
- * performs digit pattern analysing.  Returns a map containing a count for each
+ * performs digit pattern analysing.  Returns a map containing a count for
+ * each
  * digit encountered, and a map containing an value representing the pattern
  * of each digit encountered, e.g.
  *   12123 =>
@@ -150,7 +151,8 @@ void add_to_digit_array( int* add_to, size_t add_to_len, size_t add );
  * represents each digit of the number) together, returning the result in the
  * add_to digit array
  *
- * @param add_to     The digit array to add to, where the result will be stored
+ * @param add_to     The digit array to add to, where the result will be
+ * stored
  * @param add_to_len The length of the digit array to add to
  * @param add        The digit array to add
  * @param add_len    The length of the digit array to add

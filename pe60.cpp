@@ -93,10 +93,11 @@ void         pe60::run()
                         running_total += e;
                         if ( running_total < smallest_sum )
                         {
-                            std::cout << "found new smallest: " << running_total
-                                      << " < " << smallest_sum
-                                      << "\nfrom: " << a << " " << b << " " << c
-                                      << " " << d << " " << e << std::endl;
+                            std::cout
+                                << "found new smallest: " << running_total
+                                << " < " << smallest_sum << "\nfrom: " << a
+                                << " " << b << " " << c << " " << d << " "
+                                << e << std::endl;
                             smallest_sum = running_total;
                             if ( smallest_sum < limit )
                             {

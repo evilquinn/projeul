@@ -38,9 +38,10 @@ void gint::construct_digits_from_positive( size_t n )
     }
 }
 
-gint::gint( const gint& rhs ) : n_( rhs.n_ ), is_negative( rhs.is_negative ) {}
-
-gint& gint::operator= ( gint rhs )
+gint::gint( const gint& rhs ) : n_( rhs.n_ ), is_negative( rhs.is_negative )
+{
+}
+gint& gint::operator=( gint rhs )
 {
     swap( *this, rhs );
     return *this;
@@ -128,9 +129,9 @@ gint& gint::subtract( const gint& rhs )
         return *this;
     }
 
-    size_t  rhs_pos       = rhs.n_.size() - 1;
-    size_t  my_pos        = n_.size() - 1;
-    uint8_t borrowed      = 0;
+    size_t  rhs_pos  = rhs.n_.size() - 1;
+    size_t  my_pos   = n_.size() - 1;
+    uint8_t borrowed = 0;
     while ( rhs_pos < rhs.n_.size() || borrowed != 0 )
     {
         uint8_t part_subtract = borrowed;

@@ -3,10 +3,10 @@
 
 #include <signal.h>
 
-namespace evilquinn {
-
+namespace evilquinn
+{
 void register_signal_handler();
 
-} // end namespace evilquinn
+}  // end namespace evilquinn
 
-#endif // SIGNAL_HANDLER_HPP_
+#endif  // SIGNAL_HANDLER_HPP_

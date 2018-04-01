@@ -15,18 +15,18 @@
 class triangle_numbers
 {
 public:
-    explicit triangle_numbers(size_t num);
+    explicit triangle_numbers( size_t num );
     virtual ~triangle_numbers();
 
     void print();
-    bool is_triangle(size_t n);
-    size_t get_term(size_t n);
-    static size_t calc_triangle_number_for_term(size_t n);
+    bool is_triangle( size_t n );
+    size_t get_term( size_t n );
+    static size_t calc_triangle_number_for_term( size_t n );
 
 private:
     void calc_triangle_numbers();
 
-    size_t   num_;
+    size_t              num_;
     std::vector<size_t> triangles_;
 };
 
