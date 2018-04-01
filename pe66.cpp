@@ -8,7 +8,7 @@
 #include "pe66.hpp"
 #include <iostream>
 
-void         pe66::run()
+void pe66::run()
 {
     /*
      * Consider quadratic Diophantine equations of the form:

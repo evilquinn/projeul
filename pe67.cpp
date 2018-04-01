@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 
-void         pe67::run()
+void pe67::run()
 {
     /*
      * By starting at the top of the triangle below and moving to adjacent
