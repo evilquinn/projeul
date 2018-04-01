@@ -14,7 +14,7 @@
 class pentagonal_numbers
 {
 public:
-    pentagonal_numbers(size_t num);
+    explicit pentagonal_numbers(size_t num);
     virtual ~pentagonal_numbers();
 
     void print();

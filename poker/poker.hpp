@@ -39,7 +39,7 @@ public:
         ROYAL_FLUSH = 10
     };
     typedef std::map<int, hand> card_count_map_t;
-    scored_hand(const hand& hand);
+    explicit scored_hand(const hand& hand);
     virtual ~scored_hand(){};
 
     int play(const scored_hand& enemy);

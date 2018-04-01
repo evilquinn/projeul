@@ -80,20 +80,19 @@ bool is_pandigital_for_range( size_t  start,
 {
     digit_map reqd_digits;
     // do we add or subtract from start to reach end?
-    bool forwards = end - start >= 0 ? true : false;
+    bool forwards = end >= start ? true : false;
     for ( size_t i = start; forwards ? i <= end : i >= end;
           forwards ? ++i : --i )
     {
         reqd_digits[i] = false;
     }
 
-    bool keep_going = true;
     for ( size_t i = 0; i < ints_size; ++i )
     {
-        keep_going = spy_the_digits( forwards ? start : end,
-                                     forwards ? end : start,
-                                     ints[i],
-                                     reqd_digits );
+        bool keep_going = spy_the_digits( forwards ? start : end,
+                                          forwards ? end : start,
+                                          ints[i],
+                                          reqd_digits );
         if ( !keep_going )
         {
             return false;

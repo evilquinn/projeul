@@ -11,18 +11,6 @@
 #include <iostream>
 
 
-card::card() :
-    suit_(SUIT_UNINIT),
-    value_(VALUE_UNINIT),
-    ival_(0)
-{}
-
-card::card(const card& copy) :
-    suit_(copy.suit_),
-    value_(copy.value_),
-    ival_(copy.ival_)
-{}
-
 card::card(const std::string& string_value) :
     suit_(SUIT_UNINIT),
     value_(VALUE_UNINIT),
@@ -34,11 +22,6 @@ card::card(const std::string& string_value) :
     suit_ = char_to_suit(string_value[1]);
 
 }
-
-card::~card()
-{
-}
-
 
 card::suit_k card::char_to_suit(const char s) const
 {

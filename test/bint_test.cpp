@@ -257,14 +257,14 @@ TEST_F(BintTest, testDivision)
 
     EXPECT_THAT(stock / 7, Eq(base / 7));
     EXPECT_THAT(stock / 12, Eq(base / 12));
-    EXPECT_THAT(stock / -34, Eq(base / -34));
+    EXPECT_THAT(stock / (-34), Eq(base / size_t(-34)));
     EXPECT_THAT(stock / 65478, Eq(base / 65478));
     EXPECT_THAT(stock / 999001122, Eq(base / 999001122));
     EXPECT_THAT(stock / 1234567890, Eq(base / 1234567890));
 
     EXPECT_THAT(stock % 7, Eq(base % 7));
     EXPECT_THAT(stock % 12, Eq(base % 12));
-    EXPECT_THAT(stock % -34, Eq(base % -34));
+    EXPECT_THAT(stock % (-34), Eq(base % size_t(-34)));
     EXPECT_THAT(stock % 65478, Eq(base % 65478));
     EXPECT_THAT(stock % 999001122, Eq(base % 999001122));
     EXPECT_THAT(stock % 1234567890, Eq(base % 1234567890));

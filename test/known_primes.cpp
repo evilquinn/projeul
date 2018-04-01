@@ -1,8 +1,7 @@
-
 #include "known_primes.hpp"
 
 known_primes::known_primes() :
-    known_primes_(new std::set<size_t>())
+    known_primes_(std::make_unique< std::set<size_t> >())
 {
         known_primes_->insert(      2);
         known_primes_->insert(      3);
@@ -10004,9 +10003,4 @@ known_primes::known_primes() :
         known_primes_->insert( 104717);
         known_primes_->insert( 104723);
         known_primes_->insert( 104729);
-}
-
-known_primes::~known_primes()
-{
-    delete known_primes_;
 }

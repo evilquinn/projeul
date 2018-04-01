@@ -15,7 +15,7 @@
 class triangle_numbers
 {
 public:
-    triangle_numbers(size_t num);
+    explicit triangle_numbers(size_t num);
     virtual ~triangle_numbers();
 
     void print();

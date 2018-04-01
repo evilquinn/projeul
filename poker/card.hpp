@@ -40,10 +40,7 @@ public:
         ACE   = 14
     };
 
-    card();
-    card(const std::string& string_value);
-    card(const card& copy);
-    virtual ~card();
+    explicit card(const std::string& string_value);
 
     suit_k  suit_;
     value_k value_;

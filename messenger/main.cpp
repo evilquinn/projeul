@@ -15,7 +15,7 @@ class cli
 {
 public:
     static const size_t max_input_size = 256;
-    cli(boost::asio::io_context& io_context) :
+    explicit cli(boost::asio::io_context& io_context) :
         cli_handle_(io_context, ::dup(STDIN_FILENO)),
         input_buffer_(cli::max_input_size)
     {

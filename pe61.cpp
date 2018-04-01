@@ -46,11 +46,10 @@ void         pe61::run()
     {
         size_t start;
         size_t end;
-        size_t used;
     } data[] = {
-        {.start = 45, .end = 141, false }, {.start = 32, .end = 100, false },
-        {.start = 26, .end = 82, false },  {.start = 23, .end = 71, false },
-        {.start = 21, .end = 64, false },  {.start = 19, .end = 59, false }
+        {.start = 45, .end = 141 }, {.start = 32, .end = 100 },
+        {.start = 26, .end = 82 },  {.start = 23, .end = 71 },
+        {.start = 21, .end = 64 },  {.start = 19, .end = 59 }
     };
 
     polygonal_numbers list[] = {

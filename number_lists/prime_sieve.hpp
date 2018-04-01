@@ -22,7 +22,7 @@ public:
         limit_(0),
         sieve_(0)
     {};
-    prime_sieve(size_t max);
+    explicit prime_sieve(size_t max);
     virtual ~prime_sieve();
 
     void print();

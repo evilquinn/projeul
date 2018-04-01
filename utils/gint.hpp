@@ -21,7 +21,15 @@ public:
     gint( long int n );
     gint( int n );
     gint( const gint& rhs );
+    gint& operator=( gint rhs );
     virtual ~gint();
+
+    friend void swap( gint& lhs, gint& rhs )
+    {
+        using std::swap;
+        swap( lhs.n_, rhs.n_ );
+        swap( lhs.is_negative, rhs.is_negative );
+    }
 
     gint& add( const gint& rhs );
     gint& subtract( const gint& rhs );

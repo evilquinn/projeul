@@ -128,7 +128,6 @@ TEST_F(CardTest, testCardLessThanOperator)
     EXPECT_TRUE(king_spades < ace_spades);
     EXPECT_TRUE(king_spades < ace_hearts);
     EXPECT_TRUE(king_spades < ace_diamonds);
-    EXPECT_FALSE(king_spades < king_spades);
     EXPECT_FALSE(king_spades < king_hearts);
     EXPECT_TRUE(king_hearts < king_spades);
     EXPECT_TRUE(king_spades < king_clubs);
@@ -136,6 +135,8 @@ TEST_F(CardTest, testCardLessThanOperator)
     EXPECT_FALSE(king_spades < queen_hearts);
     EXPECT_FALSE(king_spades < queen_diamonds);
     EXPECT_FALSE(king_spades < queen_clubs);
+    card king_dup(king_spades);
+    EXPECT_FALSE(king_spades < king_dup);
 }
 
 TEST_F(CardTest, testCardConstruction)

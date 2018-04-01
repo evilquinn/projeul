@@ -14,7 +14,7 @@
 class hexagonal_numbers
 {
 public:
-    hexagonal_numbers(size_t num);
+    explicit hexagonal_numbers(size_t num);
     virtual ~hexagonal_numbers();
 
     void print();
