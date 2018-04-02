@@ -23,4 +23,4 @@ script:
 
 after_success:
     - coveralls --help
-    - coveralls --dryrun --root .. --build-root . -e /usr/ -e ../test/ -e ../messenger/ -e ../profile/ -e third_party/
+    - coveralls --root .. --build-root . -e /usr/ -e ../test/ -e ../messenger/ -e ../profile/ -e third_party/
