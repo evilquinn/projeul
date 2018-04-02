@@ -1,6 +1,6 @@
 # projeul
 
-[![Build Status](https://travis-ci.org/evilquinn/projeul.svg?branch=travis_poc)](https://travis-ci.org/evilquinn/travis_poc)
+[![Build Status](https://travis-ci.org/evilquinn/projeul.svg?branch=master)](https://travis-ci.org/evilquinn/projeul)
 
 Learning how to integrate with Travis and pwn build statuses
 
