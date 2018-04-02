@@ -3,7 +3,7 @@ include( ExternalProject )
 set( URL
   "https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2" )
 set( SHA256 "5721818253e6a0989583192f96782c4a98eb6204965316df9f5ad75819225ca9" )
-set( INSTALL_DIR ${CMAKE_BINARY_DIR}/boost )
+set( INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/boost )
 set( INCLUDE_DIR ${INSTALL_DIR}/include )
 set( LIB_DIR ${INSTALL_DIR}/lib )
 
