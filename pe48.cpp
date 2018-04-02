@@ -50,9 +50,9 @@ void         pe48::run()
 
     std::cout << name() << " " << std::endl;
 
-    for ( size_t i = 0; i < PE48_NUM_DIGITS; ++i )
+    for ( int i : digit_array )
     {
-        std::cout << digit_array[i];
+        std::cout << i;
     }
 
     std::cout << std::endl;

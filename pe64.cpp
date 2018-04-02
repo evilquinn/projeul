@@ -61,7 +61,7 @@ void         pe64::run()
             ++period;
         }
 
-        if ( period & 1 )
+        if ( ( period & 1 ) != 0u )
         {
             ++odd_period_count;
         }

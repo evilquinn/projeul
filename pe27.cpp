@@ -21,7 +21,7 @@ void         pe27::run()
      * e.g. |11| = 11 and |−4| = 4
      *
      */
-    if ( !primes_ )
+    if ( primes_ == nullptr )
     {
         primes_ = new prime_sieve( 1000000 );
     }

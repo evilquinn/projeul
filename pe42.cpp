@@ -42,12 +42,10 @@ void         pe42::run()
 // just get the preprocessor to include the file
 #include "data/pe42_words.txt"
     };
-    const size_t num_words = 1786;  // I counted the words in the file
-
     size_t result = 0;
-    for ( size_t i = 0; i < num_words; ++i )
+    for ( auto& word : words )
     {
-        if ( tris_.is_triangle( word_value_alpha_pos( words[i] ) ) )
+        if ( tris_.is_triangle( word_value_alpha_pos( word ) ) )
         {
             ++result;
         }

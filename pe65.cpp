@@ -24,10 +24,10 @@ void         pe65::run()
 
     size_t three_cycle = 0;
     size_t cycle_n     = 1;
-    for ( size_t i = 0; i < 101; ++i )
+    for ( unsigned long& i : e_combo )
     {
         size_t digit = ( three_cycle == 1 ? 2 * cycle_n++ : 1 );
-        e_combo[i]   = digit;
+        i            = digit;
         three_cycle  = ( three_cycle == 2 ? 0 : three_cycle + 1 );
     }
 

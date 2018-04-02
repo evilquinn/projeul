@@ -53,7 +53,9 @@ void         pe34::run()
 int fac( int n )
 {
     if ( n == 0 )
+    {
         return 1;
+    }
     int fac = 1;
     for ( int i = 2; i <= n; ++i )
     {

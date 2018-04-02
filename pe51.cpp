@@ -62,7 +62,7 @@ void         pe51::run()
         {
             if ( p.second >= 2 )
             {
-                checked_map_t::iterator it = already_checked.find( current );
+                auto it = already_checked.find( current );
                 if ( it != already_checked.end() &&
                      it->second.count( p.first ) > 0 )
                 {

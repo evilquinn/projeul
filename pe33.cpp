@@ -50,7 +50,8 @@ void         pe33::run()
             {
                 continue;
             }
-            if ( (double)numr / denr == (double)n_fir_dig / d_sec_dig )
+            if ( static_cast<double>( numr ) / denr ==
+                 static_cast<double>( n_fir_dig ) / d_sec_dig )
             {
                 numr_prod *= n_fir_dig;
                 denr_prod *= d_sec_dig;

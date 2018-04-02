@@ -32,7 +32,9 @@ void         pe63::run()
             gint powed( j );
             powed.pow( i );
             if ( powed == 0 )
+            {
                 break;
+            }
             size_t length = powed.num_digits();
             std::cout << "testing: " << j << "^" << i << " = " << powed
                       << " (" << length << ")" << std::endl;

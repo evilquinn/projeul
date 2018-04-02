@@ -69,12 +69,7 @@ bool pe47::num_has_n_distinct_prime_factors( size_t num, size_t n )
     std::set<size_t> distinct_prime_factors( prime_factors.begin(),
                                              prime_factors.end() );
 
-    if ( n == distinct_prime_factors.size() )
-    {
-        return true;
-    }
-
-    return false;
+    return n == distinct_prime_factors.size();
 }
 
 size_t calc_prime_factors( size_t               num,

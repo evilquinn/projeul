@@ -34,7 +34,7 @@ void         pe44::run()
      */
 
     pentagonal_numbers pents( PE44_NUM_PENTS );
-    size_t             result = (size_t)-1;
+    size_t             result = static_cast<size_t>( -1 );
 
     for ( size_t j = 1; j < 3000; ++j )
     {

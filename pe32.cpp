@@ -21,7 +21,7 @@ bool spy_the_digits( size_t     min,
                      size_t     max,
                      size_t     n,
                      digit_map& reqd_digits );
-size_t len_n( size_t min );
+size_t len_n( size_t n );
 
 std::string& pe32::name() { return name_; }
 void         pe32::run()
@@ -83,7 +83,7 @@ bool is_pandigital_for_range( size_t  start,
 {
     digit_map reqd_digits;
     // do we add or subtract from start to reach end?
-    bool forwards = end >= start ? true : false;
+    bool forwards = end >= start;
     for ( size_t i = start; forwards ? i <= end : i >= end;
           forwards ? ++i : --i )
     {
