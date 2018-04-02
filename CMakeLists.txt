@@ -7,9 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory($ENV{GMOCK_ROOT} gmock)
-include_directories(SYSTEM $ENV{GMOCK_ROOT}/googlemock/include
-                           $ENV{GMOCK_ROOT}/googletest/include)
+include(googlemock.cmake)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(number_lists)
