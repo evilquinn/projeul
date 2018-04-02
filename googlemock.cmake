@@ -5,15 +5,16 @@ set(INSTALL_DIR ${CMAKE_BINARY_DIR}/googletest)
 ExternalProject_Add(googletest_dl
     GIT_REPOSITORY https://github.com/google/googletest
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
-    BUILD_BYPRODUCTS "${INSTALL_DIR}/lib/libgmock.a"
 )
+
+set(INCLUDE_DIR ${INSTALL_DIR}/include)
+file(MAKE_DIRECTORY ${INCLUDE_DIR})
 
 add_library(googletest INTERFACE IMPORTED GLOBAL)
 add_dependencies(googletest googletest_dl)
 set_target_properties(googletest PROPERTIES
-                      INTERFACE_INCLUDE_DIRECTORIES ${INSTALL_DIR}/include
-                      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
-                          ${INSTALL_DIR}/include)
+                      INTERFACE_INCLUDE_DIRECTORIES ${INCLUDE_DIR}
+                      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES ${INCLUDE_DIR})
 
 add_library(gtest STATIC IMPORTED GLOBAL)
 add_dependencies(gtest googletest_dl)
