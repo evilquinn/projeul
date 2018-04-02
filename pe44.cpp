@@ -64,5 +64,5 @@ void         pe44::run()
         }
     }
 
-    std::cout << "PE44 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }

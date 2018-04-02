@@ -70,7 +70,7 @@ void         pe49::run()
         } while ( !solved && second < PE49_MAX_PRIMES );
     } while ( !solved && first < PE49_MAX_PRIMES );
 
-    std::cout << "PE49 " << first << second << third << std::endl;
+    std::cout << name() << " " << first << second << third << std::endl;
 }
 
 size_t next_prime_with_same_digits( size_t start, prime_sieve& primes )

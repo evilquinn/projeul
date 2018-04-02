@@ -35,6 +35,7 @@ void         pe60::run()
     size_t smallest_sum  = static_cast<size_t>( -1 );
     bool   break_all     = false;
 
+    std::cout << name() << std::endl;
     for ( size_t a = primes_.next_prime( 2 ); a < limit;
           a        = primes_.next_prime( a ) )
     {

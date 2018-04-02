@@ -61,5 +61,5 @@ void         pe33::run()
     }
     int total = 0;
     std::cout << "PE33 " << numr_prod << "/" << denr_prod << std::endl;
-    std::cout << "PE33 " << total << std::endl;
+    std::cout << name() << " " << total << std::endl;
 }

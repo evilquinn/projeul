@@ -33,7 +33,7 @@ void         pe31::run()
     // int coins[] = { 1, 2, 5, 10, 20, 50, 100, 200 };
     int       coins[]   = { 200, 100, 50, 20, 10, 5, 2, 1 };
     const int num_coins = sizeof( coins ) / sizeof( int );
-    std::cout << "PE31: " << count_possibilities( coins, num_coins, 200 )
+    std::cout << name() << ": " << count_possibilities( coins, num_coins, 200 )
               << std::endl;
 }
 

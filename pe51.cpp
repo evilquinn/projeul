@@ -112,6 +112,7 @@ void         pe51::run()
         }
     }
 
+    std::cout << name() << std::endl;
     std::cout << "best count    : " << best_count << std::endl;
     std::cout << "best smallest : " << best_smallest << std::endl;
 }

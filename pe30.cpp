@@ -45,7 +45,7 @@ void         pe30::run()
         }
     }
 
-    std::cout << "PE30: " << total_sum << std::endl;
+    std::cout << name() << ": " << total_sum << std::endl;
 }
 
 int sum_pow_digits( int n, int power )

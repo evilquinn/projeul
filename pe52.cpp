@@ -57,7 +57,7 @@ void         pe52::run()
         }
     }
 
-    std::cout << "result : " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }
 
 size_t pe52_next_number( size_t num ) { return num + 1; }

@@ -73,7 +73,7 @@ void         pe32::run()
         total += prod;
     }
 
-    std::cout << "PE32 " << total << std::endl;
+    std::cout << name() << ": " << total << std::endl;
 }
 
 bool is_pandigital_for_range( size_t  start,

@@ -38,5 +38,5 @@ void         pe41::run()
             break;
         }
     }
-    std::cout << "PE41 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }

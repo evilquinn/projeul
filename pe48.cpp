@@ -48,7 +48,7 @@ void         pe48::run()
             digit_array, PE48_NUM_DIGITS, mult_digit_array, PE48_NUM_DIGITS );
     }
 
-    std::cout << "PE48 " << std::endl;
+    std::cout << name() << " " << std::endl;
 
     for ( size_t i = 0; i < PE48_NUM_DIGITS; ++i )
     {

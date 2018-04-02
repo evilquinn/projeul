@@ -68,7 +68,7 @@ void         pe60::run()
         break;
     }
 
-    std::cout << "result: " << result << std::endl;
+    std::cout << name() << "result: " << result << std::endl;
 }
 
 size_t pe60_sum_array( const size_t* nums, size_t nums_size )

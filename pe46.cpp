@@ -61,7 +61,7 @@ void         pe46::run()
         }
     }
 
-    std::cout << "PE46 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }
 
 bool pe46::fulfills_goldbachs_conjecture( size_t i )

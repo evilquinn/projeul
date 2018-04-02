@@ -56,7 +56,7 @@ void         pe35::run()
         }
     }
 
-    std::cout << "PE35 " << total << std::endl;
+    std::cout << name() << " " << total << std::endl;
 }
 
 int cycle_ints( int n )

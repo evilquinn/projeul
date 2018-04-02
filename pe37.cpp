@@ -43,7 +43,7 @@ void         pe37::run()
         }
     }
 
-    std::cout << "PE37 " << total << std::endl;
+    std::cout << name() << " " << total << std::endl;
 }
 
 bool pe37::is_trunc_prime_rtl( int n )

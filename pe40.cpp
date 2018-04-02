@@ -81,7 +81,7 @@ void         pe40::run()
         ++n;
     }
 
-    std::cout << "PE40 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }
 
 int select_digit( int n, int index )

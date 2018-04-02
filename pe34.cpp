@@ -47,7 +47,7 @@ void         pe34::run()
         }
     }
 
-    std::cout << "PE34 " << sum_all_facs << std::endl;
+    std::cout << name() << " " << sum_all_facs << std::endl;
 }
 
 int fac( int n )

@@ -42,5 +42,5 @@ void         pe29::run()
     }
 
     int result = all_results.size();
-    std::cout << "PE29: " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }

@@ -46,5 +46,5 @@ void         pe45::run()
         }
     }
 
-    std::cout << "PE45 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }

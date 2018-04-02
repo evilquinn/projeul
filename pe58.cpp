@@ -64,5 +64,5 @@ void         pe58::run()
         step_to_corner += 2;
     }
 
-    std::cout << "result : " << step_to_corner + 1 << std::endl;
+    std::cout << name() << ": " << step_to_corner + 1 << std::endl;
 }

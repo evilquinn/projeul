@@ -96,5 +96,5 @@ void         pe54::run()
         p2_offset = p1_offset + player_length + 1;
     }
 
-    std::cout << "result : " << p1_count << std::endl;
+    std::cout << name() << ": " << p1_count << std::endl;
 }

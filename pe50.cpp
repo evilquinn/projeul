@@ -80,6 +80,7 @@ void         pe50::run()
         lower = primes_.next_prime( lower );
     }
 
+    std::cout << name() << std::endl;
     std::cout << "best     : " << best_sum << std::endl;
     std::cout << "best size: " << best_range << std::endl;
 }

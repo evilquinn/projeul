@@ -69,5 +69,5 @@ void         pe64::run()
         // std::cout << std::endl;
     }
 
-    std::cout << "result: " << odd_period_count << std::endl;
+    std::cout << name() << ": " << odd_period_count << std::endl;
 }

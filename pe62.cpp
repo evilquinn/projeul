@@ -60,7 +60,7 @@ void         pe62::run()
         }
     }
 
-    std::cout << "result: " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }
 
 size_t cube_n( size_t n ) { return n * n * n; }

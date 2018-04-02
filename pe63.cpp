@@ -51,5 +51,5 @@ void         pe63::run()
         }
     }
 
-    std::cout << "result: " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }

@@ -76,5 +76,5 @@ void         pe59::run()
     }
     std::cout << std::endl;
 
-    std::cout << "result: " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }

@@ -51,5 +51,5 @@ void         pe39::run()
         }
     }
 
-    std::cout << "PE39 " << p_with_max_sols << std::endl;
+    std::cout << name() << " " << p_with_max_sols << std::endl;
 }

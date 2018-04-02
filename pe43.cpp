@@ -165,7 +165,7 @@ void         pe43::run()
         }
     }
 
-    std::cout << "PE43 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }
 
 bool has_subdivisibility_property( size_t* nums, size_t num_nums )

@@ -160,6 +160,7 @@ void         pe61::run()
 
     size_t sum = results[0].num + results[1].num + results[2].num +
                  results[3].num + results[4].num + results[5].num;
+    std::cout << name() << std::endl;
     std::cout << "got: " << sum << " from:\n"
               << results[0].num << "(" << results[0].list << ") "
               << results[1].num << "(" << results[1].list << ") "

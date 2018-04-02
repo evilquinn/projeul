@@ -51,5 +51,5 @@ void         pe65::run()
         denom           = next_denom;
     }
 
-    std::cout << "result : " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }

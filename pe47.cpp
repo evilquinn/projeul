@@ -58,7 +58,7 @@ void         pe47::run()
         ++num;
     }
 
-    std::cout << "PE47 " << num - n << std::endl;
+    std::cout << name() << " " << num - n << std::endl;
 }
 
 bool pe47::num_has_n_distinct_prime_factors( size_t num, size_t n )

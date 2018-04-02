@@ -53,7 +53,7 @@ void         pe42::run()
         }
     }
 
-    std::cout << "PE42 " << result << std::endl;
+    std::cout << name() << " " << result << std::endl;
 }
 
 size_t word_value_alpha_pos( const char* word )

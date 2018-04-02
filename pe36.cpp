@@ -53,7 +53,7 @@ void         pe36::run()
         }
     }
 
-    std::cout << "PE36 " << sum << std::endl;
+    std::cout << name() << " " << sum << std::endl;
 }
 
 char* conv_to_bin( char* dest, int max, long long unsigned n )

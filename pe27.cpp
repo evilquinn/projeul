@@ -59,5 +59,5 @@ void         pe27::run()
     }
 
     int result = super_a * super_b;
-    std::cout << "PE27: " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }

@@ -59,7 +59,7 @@ void         pe55::run()
         }
     }
 
-    std::cout << "result : " << result << std::endl;
+    std::cout << name() << ": " << result << std::endl;
 }
 
 bool is_lychrel( size_t i )

@@ -78,7 +78,7 @@ void         pe38::run()
         }
     }
 
-    std::cout << "PE38 " << largest << std::endl;
+    std::cout << name() << " " << largest << std::endl;
 }
 
 int num_digits_array( size_t* ints, int ints_size )
