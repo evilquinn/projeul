@@ -16,6 +16,7 @@ ExternalProject_Add( external_boost
             --with-libraries=filesystem
             --with-libraries=system
             --with-libraries=date_time
+            --with-libraries=program_options
             --prefix=<INSTALL_DIR>
         BUILD_COMMAND
         ./b2 install link=static variant=release threading=multi runtime-link=static
@@ -46,3 +47,8 @@ add_library( boost_file_system STATIC IMPORTED GLOBAL)
 set_target_properties( boost_file_system PROPERTIES
     IMPORTED_LOCATION ${LIB_DIR}/libboost_file_system${LIB_SUFFIX} )
 target_link_libraries( boost_file_system INTERFACE boost )
+
+add_library( boost_program_options STATIC IMPORTED GLOBAL)
+set_target_properties( boost_program_options PROPERTIES
+    IMPORTED_LOCATION ${LIB_DIR}/libboost_program_options${LIB_SUFFIX} )
+target_link_libraries( boost_program_options INTERFACE boost )
