@@ -22,5 +22,5 @@ script:
     - make test
 
 after_success:
-    - coveralls --root .. -E ".*gtest.*" -E ".*CMakeFiles.*" -E "*/third_party/*" -E "/usr/include/*"
+    - coveralls --root .. -E ".*gtest.*" -E ".*CMakeFiles.*" -E "*/third_party/*" -E "/usr/include/*" -E "*/test/*" -E "*/profile/*" -E "*/exercises/*" -E "*/messenger/*"
 
