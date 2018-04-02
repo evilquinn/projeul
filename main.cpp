@@ -3,6 +3,7 @@
 
 #include <pe_register.hpp>
 #include <utils.hpp>
+#include <signal_handler.hpp>
 
 namespace po = boost::program_options;
 
@@ -16,6 +17,8 @@ namespace po = boost::program_options;
 
 int main( int argc, char* argv[] )
 {
+    evilquinn::register_signal_handler();
+
     // Declare the supported options.
     po::options_description desc( "Options" );
     desc.add_options()( "help,h", "produce help message" )(

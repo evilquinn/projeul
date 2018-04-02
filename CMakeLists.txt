@@ -65,6 +65,7 @@ add_executable(projeul main.cpp
 target_link_libraries(projeul utils
                               number_lists
                               poker
+                              signal_handler
                               boost_program_options)
 
 add_subdirectory(test)
