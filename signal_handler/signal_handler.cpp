@@ -18,7 +18,7 @@ void signal_handler( int sig_num, siginfo_t* sig_info, void* /*data*/ )
         ::psiginfo( sig_info, "psiginfo " );
     }
 
-    exit( sig_num );
+    _exit( sig_num );
 }
 
 void register_signal_handler()

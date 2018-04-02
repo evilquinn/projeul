@@ -28,3 +28,17 @@ endif()
 add_test(NAME test_projeul
          COMMAND test_projeul)
 
+add_executable(test_signal_handler signal_handler_test.cpp)
+target_link_libraries(test_signal_handler signal_handler
+                                          gmock
+                                          pthread)
+
+if( ${ENABLE_COVERAGE} )
+    target_link_libraries(test_signal_handler gcov)
+endif()
+
+add_test(NAME test_signal_handler
+         COMMAND test_signal_handler)
+
+
+
