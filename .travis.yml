@@ -6,7 +6,9 @@ compiler:
 
 addons:
     apt:
-        packages: libboost-all-dev cmake
+        sources:
+             - ubuntu-toolchain-r-test
+        packages: libboost-all-dev cmake g++-5
 
 script:
     - mkdir build
