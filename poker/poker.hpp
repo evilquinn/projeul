@@ -39,7 +39,7 @@ public:
     };
     typedef std::map<int, hand> card_count_map_t;
     explicit scored_hand( const hand& hand );
-    virtual ~scored_hand(){};
+    virtual ~scored_hand() = default;
 
     int play( const scored_hand& enemy );
 

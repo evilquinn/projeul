@@ -20,7 +20,7 @@ class bint
 public:
     bint();
     bint( const unsigned char* bin, size_t length );
-    bint( const std::string& hex );
+    explicit bint( const std::string& hex );
     bint( size_t n );
     bint( const bint& b );
     bint& operator=( bint rhs );
@@ -43,8 +43,8 @@ public:
     bint& add( const bint& rhs );
     bint& subtract( const bint& rhs );
     bint& multiply_by( const bint& rhs );
-    bint& divide_by( const bint& rhs, bint* remainder = NULL );
-    bint& divide_by_long_division( const bint& rhs, bint* rem = NULL );
+    bint& divide_by( const bint& rhs, bint* remainder = nullptr );
+    bint& divide_by_long_division( const bint& rhs, bint* rem = nullptr );
     bint& operator+=( const bint& rhs );
     bint& operator-=( const bint& rhs );
     bint& operator*=( const bint& rhs );

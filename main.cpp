@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include <pe_register.hpp>
-#include <utils.hpp>
 #include <signal_handler.hpp>
+#include <utils.hpp>
 
 namespace po = boost::program_options;
 

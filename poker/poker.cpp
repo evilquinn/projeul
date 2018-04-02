@@ -142,12 +142,8 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
 
         return 0;
     }
-    else
-    {
-        return -1;
-    }
 
-    return 0;  // draw
+    return -1;
 }
 
 bool poker::scored_hand::upgrade_rank( poker::scored_hand::rank_k new_rank )
