@@ -42,6 +42,7 @@ add_library(exercises STATIC pe_register.cpp
                              pe60.cpp)
 
 target_link_libraries ( exercises PUBLIC utils
+                                         boost
                                          number_lists
                                          poker )
 
