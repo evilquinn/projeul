@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 add_subdirectory(third_party)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
