@@ -12,7 +12,8 @@
 #include <iostream>
 #include <vector>
 
-void pe67::run()
+std::string& pe67::name() { return name_; }
+void         pe67::run()
 {
     /*
      * By starting at the top of the triangle below and moving to adjacent

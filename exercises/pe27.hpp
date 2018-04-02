@@ -14,11 +14,11 @@
 class pe27 : public pe
 {
 public:
-    pe27() : primes_( NULL ), name_( "pe27" ){};
-    virtual ~pe27() { delete primes_; };
-    virtual std::string& name();
-    virtual int          number() { return 27; }
-    virtual void         run();
+    pe27() : primes_( nullptr ), name_( "pe27" ){};
+    ~pe27() override { delete primes_; };
+    std::string& name() override;
+    int          number() override { return 27; }
+    void         run() override;
 
 private:
     prime_sieve* primes_;

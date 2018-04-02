@@ -32,7 +32,7 @@ void         pe56::run()
         gint ga( a );
         for ( size_t b = 0; b < 100; ++b )
         {
-            ga.multiply_by( a );
+            ga.multiply_by( gint( a ) );
             size_t digit_sum = ga.sum_digits();
             if ( digit_sum > result )
             {

@@ -17,10 +17,10 @@ class pe46 : public pe
 {
 public:
     pe46() : primes_(), squares_(), name_( "pe46" ){};
-    virtual ~pe46(){};
-    virtual std::string& name();
-    virtual int          number() { return 46; }
-    virtual void         run();
+    ~pe46() override = default;
+    std::string& name() override;
+    int          number() override { return 46; }
+    void         run() override;
     bool fulfills_goldbachs_conjecture( size_t i );
 
 private:

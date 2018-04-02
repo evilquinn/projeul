@@ -31,7 +31,7 @@ void         pe63::run()
         {
             gint powed( j );
             powed.pow( i );
-            if ( powed == 0 )
+            if ( powed == gint( 0 ) )
             {
                 break;
             }

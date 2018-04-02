@@ -37,9 +37,9 @@ void         pe57::run()
      *
      */
 
-    size_t result      = 0;
-    gint   numerator   = 1;
-    gint   denominator = 1;
+    size_t result = 0;
+    gint   numerator( 1 );
+    gint   denominator( 1 );
     gint   next_denominator;
 
     for ( size_t i = 1; i < 1000; ++i )

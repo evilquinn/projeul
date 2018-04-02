@@ -13,7 +13,7 @@
 class pe
 {
 public:
-    virtual ~pe(){};
+    virtual ~pe() = default;
     // abstract, returns name of exercise
     virtual std::string& name()   = 0;
     virtual void         run()    = 0;

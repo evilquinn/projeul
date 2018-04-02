@@ -15,10 +15,10 @@ class pe35 : public pe
 {
 public:
     pe35() : primes_(), name_( "pe35" ){};
-    virtual ~pe35(){};
-    virtual std::string& name();
-    virtual int          number() { return 35; }
-    virtual void         run();
+    ~pe35() override = default;
+    std::string& name() override;
+    int          number() override { return 35; }
+    void         run() override;
 
 private:
     prime_sieve primes_;

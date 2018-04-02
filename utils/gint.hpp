@@ -17,9 +17,9 @@ class gint
 {
 public:
     gint();
-    gint( size_t n );
-    gint( long int n );
-    gint( int n );
+    explicit gint( size_t n );
+    explicit gint( long int n );
+    explicit gint( int n );
     gint( const gint& rhs );
     gint& operator=( gint rhs );
     virtual ~gint();

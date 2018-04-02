@@ -20,21 +20,21 @@ void         pe65::run()
      */
 
     size_t result       = 0;
-    size_t e_combo[101] = { 0 };
+    gint   e_combo[101] = { gint( 0 ) };
 
     size_t three_cycle = 0;
     size_t cycle_n     = 1;
-    for ( unsigned long& i : e_combo )
+    for ( auto& i : e_combo )
     {
-        size_t digit = ( three_cycle == 1 ? 2 * cycle_n++ : 1 );
-        i            = digit;
-        three_cycle  = ( three_cycle == 2 ? 0 : three_cycle + 1 );
+        gint digit( three_cycle == 1 ? 2 * cycle_n++ : 1 );
+        i           = gint( digit );
+        three_cycle = ( three_cycle == 2 ? 0 : three_cycle + 1 );
     }
 
-    gint old_denom = 1;
-    gint denom     = e_combo[0];
-    gint old_numer = 1;
-    gint numer     = 2;
+    gint old_denom( 1 );
+    gint denom( e_combo[0] );
+    gint old_numer( 1 );
+    gint numer( 2 );
     for ( size_t i = 0; i < 100; ++i )
     {
         if ( i == 99 )

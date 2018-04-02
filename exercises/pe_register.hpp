@@ -10,7 +10,7 @@ class pe_register
 {
 public:
     pe_register();
-    virtual ~pe_register(){};
+    virtual ~pe_register() = default;
 
     void reg( std::unique_ptr<pe> ex );
     void run( int ex );

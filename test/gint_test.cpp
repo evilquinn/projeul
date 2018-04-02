@@ -1,4 +1,5 @@
 #include <gmock/gmock.h>
+#include <memory>
 
 #include <gint.hpp>
 #include <utils.hpp>
@@ -21,11 +22,10 @@ TEST_F( GintTest, testGintConstructorWorksExpected )
     EXPECT_EQ( gi, gd );
 
     size_t largest = static_cast<size_t>( -1 );
-    EXPECT_EQ( largest, gint( largest ) );
+    EXPECT_EQ( gint( largest ), gint( largest ) );
 
-    auto hegi = new gint( 1234 );
-    EXPECT_EQ( *hegi, 1234 );
-    delete hegi;
+    auto hegi = std::make_unique<gint>( 1234 );
+    EXPECT_EQ( *hegi, gint( 1234 ) );
 }
 
 TEST_F( GintTest, testGintIsPalindromeWorksExpected )
@@ -40,33 +40,33 @@ TEST_F( GintTest, testGintIsPalindromeWorksExpected )
 
 TEST_F( GintTest, testGintOperatorEquals )
 {
-    EXPECT_EQ( gint( 1 ), 1 );
-    EXPECT_EQ( gint( 1234 ), 1234 );
-    EXPECT_EQ( gint( 3957264503 ), 3957264503 );
-    EXPECT_EQ( gint( 81792879281171948 ), 81792879281171948 );
-    EXPECT_NE( gint( 1 ), 1234 );
-    EXPECT_NE( gint( 1234 ), 1 );
-    EXPECT_NE( gint( 395764503 ), 3957264503 );
-    EXPECT_NE( gint( 81692879281171948 ), 81792879281171948 );
-    EXPECT_NE( gint( 81792879281171948 ), 81792879281172948 );
-    EXPECT_NE( gint( 81792879281171948 ), 8179287928117948 );
-    EXPECT_NE( gint( 81892879281171948 ), 81792879281171948 );
+    EXPECT_EQ( gint( 1 ), gint( 1 ) );
+    EXPECT_EQ( gint( 1234 ), gint( 1234 ) );
+    EXPECT_EQ( gint( 3957264503 ), gint( 3957264503 ) );
+    EXPECT_EQ( gint( 81792879281171948 ), gint( 81792879281171948 ) );
+    EXPECT_NE( gint( 1 ), gint( 1234 ) );
+    EXPECT_NE( gint( 1234 ), gint( 1 ) );
+    EXPECT_NE( gint( 395764503 ), gint( 3957264503 ) );
+    EXPECT_NE( gint( 81692879281171948 ), gint( 81792879281171948 ) );
+    EXPECT_NE( gint( 81792879281171948 ), gint( 81792879281172948 ) );
+    EXPECT_NE( gint( 81792879281171948 ), gint( 8179287928117948 ) );
+    EXPECT_NE( gint( 81892879281171948 ), gint( 81792879281171948 ) );
 }
 
 TEST_F( GintTest, testGintOperatorLessThan )
 {
-    EXPECT_LT( gint( 1 ), 2 );
-    EXPECT_LT( gint( 1224 ), 1234 );
-    EXPECT_LT( gint( 3954503 ), 3957264503 );
-    EXPECT_LT( gint( 817929281171948 ), 81792879281171948 );
+    EXPECT_LT( gint( 1 ), gint( 2 ) );
+    EXPECT_LT( gint( 1224 ), gint( 1234 ) );
+    EXPECT_LT( gint( 3954503 ), gint( 3957264503 ) );
+    EXPECT_LT( gint( 817929281171948 ), gint( 81792879281171948 ) );
 }
 
 TEST_F( GintTest, testGintOperators )
 {
-    EXPECT_LE( gint( 1 ), 1 );
-    EXPECT_LE( gint( 1234 ), 1234 );
-    EXPECT_LE( gint( 3957264503 ), 3957264503 );
-    EXPECT_LE( gint( 81792879281171948 ), 81792879281171948 );
+    EXPECT_LE( gint( 1 ), gint( 1 ) );
+    EXPECT_LE( gint( 1234 ), gint( 1234 ) );
+    EXPECT_LE( gint( 3957264503 ), gint( 3957264503 ) );
+    EXPECT_LE( gint( 81792879281171948 ), gint( 81792879281171948 ) );
 }
 
 TEST_F( GintTest, testGintIncrementDecrementWorks )
@@ -74,7 +74,7 @@ TEST_F( GintTest, testGintIncrementDecrementWorks )
     gint gi( -5 );
     --gi;
     --gi;
-    EXPECT_EQ( --gi, -8 );
+    EXPECT_EQ( --gi, gint( -8 ) );
     ++gi;
     ++gi;
     ++gi;
@@ -82,22 +82,22 @@ TEST_F( GintTest, testGintIncrementDecrementWorks )
     ++gi;
     ++gi;
     ++gi;
-    EXPECT_EQ( ++gi, 0 );
-    EXPECT_EQ( gi++, 0 );
+    EXPECT_EQ( ++gi, gint( 0 ) );
+    EXPECT_EQ( gi++, gint( 0 ) );
     ++gi;
     ++gi;
     ++gi;
     ++gi;
     ++gi;
-    EXPECT_EQ( --gi, 5 );
-    EXPECT_EQ( gi--, 5 );
+    EXPECT_EQ( --gi, gint( 5 ) );
+    EXPECT_EQ( gi--, gint( 5 ) );
     --gi;
     --gi;
     --gi;
-    EXPECT_EQ( --gi, 0 );
-    EXPECT_EQ( gi--, 0 );
+    EXPECT_EQ( --gi, gint( 0 ) );
+    EXPECT_EQ( gi--, gint( 0 ) );
     --gi;
-    EXPECT_EQ( --gi, -3 );
+    EXPECT_EQ( --gi, gint( -3 ) );
 }
 
 TEST_F( GintTest, testGintAddSubtractWorks )
@@ -129,62 +129,64 @@ TEST_F( GintTest, testGintAddSubtractWorks )
      * -a - -b, where a > b
      */
 
-    EXPECT_EQ( gint( 100 ) + 200, 100 + 200 );
-    EXPECT_EQ( gint( 100 ) + 100, 100 + 100 );
-    EXPECT_EQ( gint( 200 ) + 100, 200 + 100 );
-    EXPECT_EQ( gint( 100 ) + ( -200 ), 100 + ( -200 ) );
-    EXPECT_EQ( gint( 100 ) + ( -100 ), 100 + ( -100 ) );
-    EXPECT_EQ( gint( 200 ) + ( -100 ), 200 + ( -100 ) );
-    EXPECT_EQ( gint( -100 ) + 200, ( -100 ) + 200 );
-    EXPECT_EQ( gint( -100 ) + 100, ( -100 ) + 100 );
-    EXPECT_EQ( gint( -200 ) + 100, ( -200 ) + 100 );
-    EXPECT_EQ( gint( -100 ) + ( -200 ), ( -100 ) + ( -200 ) );
-    EXPECT_EQ( gint( -100 ) + ( -100 ), ( -100 ) + ( -100 ) );
-    EXPECT_EQ( gint( -200 ) + ( -100 ), ( -200 ) + ( -100 ) );
-    EXPECT_EQ( gint( 100 ) - 200, 100 - 200 );
-    EXPECT_EQ( gint( 100 ) - 100, 100 - 100 );
-    EXPECT_EQ( gint( 200 ) - 100, 200 - 100 );
-    EXPECT_EQ( gint( 100 ) - ( -200 ), 100 - ( -200 ) );
-    EXPECT_EQ( gint( 100 ) - ( -100 ), 100 - ( -100 ) );
-    EXPECT_EQ( gint( 200 ) - ( -100 ), 200 - ( -100 ) );
-    EXPECT_EQ( gint( -100 ) - 200, ( -100 ) - 200 );
-    EXPECT_EQ( gint( -100 ) - 100, ( -100 ) - 100 );
-    EXPECT_EQ( gint( -200 ) - 100, ( -200 ) - 100 );
-    EXPECT_EQ( gint( -100 ) - ( -200 ), ( -100 ) - ( -200 ) );
-    EXPECT_EQ( gint( -100 ) - ( -100 ), ( -100 ) - ( -100 ) );
-    EXPECT_EQ( gint( -200 ) - ( -100 ), ( -200 ) - ( -100 ) );
+    EXPECT_EQ( gint( 100 ) + gint( 200 ), gint( 100 + 200 ) );
+    EXPECT_EQ( gint( 100 ) + gint( 100 ), gint( 100 + 100 ) );
+    EXPECT_EQ( gint( 200 ) + gint( 100 ), gint( 200 + 100 ) );
+    EXPECT_EQ( gint( 100 ) + gint( -200 ), gint( 100 + ( -200 ) ) );
+    EXPECT_EQ( gint( 100 ) + gint( -100 ), gint( 100 + ( -100 ) ) );
+    EXPECT_EQ( gint( 200 ) + gint( -100 ), gint( 200 + ( -100 ) ) );
+    EXPECT_EQ( gint( -100 ) + gint( 200 ), gint( ( -100 ) + 200 ) );
+    EXPECT_EQ( gint( -100 ) + gint( 100 ), gint( ( -100 ) + 100 ) );
+    EXPECT_EQ( gint( -200 ) + gint( 100 ), gint( ( -200 ) + 100 ) );
+    EXPECT_EQ( gint( -100 ) + gint( -200 ), gint( ( -100 ) + ( -200 ) ) );
+    EXPECT_EQ( gint( -100 ) + gint( -100 ), gint( ( -100 ) + ( -100 ) ) );
+    EXPECT_EQ( gint( -200 ) + gint( -100 ), gint( ( -200 ) + ( -100 ) ) );
+    EXPECT_EQ( gint( 100 ) - gint( 200 ), gint( 100 - 200 ) );
+    EXPECT_EQ( gint( 100 ) - gint( 100 ), gint( 100 - 100 ) );
+    EXPECT_EQ( gint( 200 ) - gint( 100 ), gint( 200 - 100 ) );
+    EXPECT_EQ( gint( 100 ) - gint( -200 ), gint( 100 - ( -200 ) ) );
+    EXPECT_EQ( gint( 100 ) - gint( -100 ), gint( 100 - ( -100 ) ) );
+    EXPECT_EQ( gint( 200 ) - gint( -100 ), gint( 200 - ( -100 ) ) );
+    EXPECT_EQ( gint( -100 ) - gint( 200 ), gint( ( -100 ) - 200 ) );
+    EXPECT_EQ( gint( -100 ) - gint( 100 ), gint( ( -100 ) - 100 ) );
+    EXPECT_EQ( gint( -200 ) - gint( 100 ), gint( ( -200 ) - 100 ) );
+    EXPECT_EQ( gint( -100 ) - gint( -200 ), gint( ( -100 ) - ( -200 ) ) );
+    EXPECT_EQ( gint( -100 ) - gint( -100 ), gint( ( -100 ) - ( -100 ) ) );
+    EXPECT_EQ( gint( -200 ) - gint( -100 ), gint( ( -200 ) - ( -100 ) ) );
 
     gint selfadd( 1234 );
-    EXPECT_EQ( selfadd.add( selfadd ), 2468 );
+    EXPECT_EQ( selfadd.add( selfadd ), gint( 2468 ) );
     gint self( 1234 );
-    EXPECT_EQ( self.subtract( self ), 0 );
-    self = 1234;
-    EXPECT_EQ( self.add_reverse_of( self ), 5555 );
-    EXPECT_EQ( self.add_reverse_of( 9999999999 ), 9999999999 + 5555 );
-    EXPECT_EQ( self.add_reverse_of( 12 ), 9999999999 + 5555 + 21 );
+    EXPECT_EQ( self.subtract( self ), gint( 0 ) );
+    self = gint( 1234 );
+    EXPECT_EQ( self.add_reverse_of( self ), gint( 5555 ) );
+    EXPECT_EQ( self.add_reverse_of( gint( 9999999999 ) ),
+               gint( 9999999999 + 5555 ) );
+    EXPECT_EQ( self.add_reverse_of( gint( 12 ) ),
+               gint( 9999999999 + 5555 + 21 ) );
 }
 
 TEST_F( GintTest, testGintMultiplyWorks )
 {
-    EXPECT_EQ( gint( 100 ) * 0, 0 );
-    EXPECT_EQ( gint( 100 ) * 200, 100 * 200 );
-    EXPECT_EQ( gint( 100 ) * 100, 100 * 100 );
-    EXPECT_EQ( gint( 200 ) * 100, 200 * 100 );
-    EXPECT_EQ( gint( 100 ) * ( -200 ), 100 * ( -200 ) );
-    EXPECT_EQ( gint( 100 ) * ( -100 ), 100 * ( -100 ) );
-    EXPECT_EQ( gint( 200 ) * ( -100 ), 200 * ( -100 ) );
-    EXPECT_EQ( gint( -100 ) * 200, ( -100 ) * 200 );
-    EXPECT_EQ( gint( -100 ) * 100, ( -100 ) * 100 );
-    EXPECT_EQ( gint( -200 ) * 100, ( -200 ) * 100 );
-    EXPECT_EQ( gint( -100 ) * ( -200 ), ( -100 ) * ( -200 ) );
-    EXPECT_EQ( gint( -100 ) * ( -100 ), ( -100 ) * ( -100 ) );
-    EXPECT_EQ( gint( -200 ) * ( -100 ), ( -200 ) * ( -100 ) );
+    EXPECT_EQ( gint( 100 ) * gint( 0 ), gint( 0 ) );
+    EXPECT_EQ( gint( 100 ) * gint( 200 ), gint( 100 * 200 ) );
+    EXPECT_EQ( gint( 100 ) * gint( 100 ), gint( 100 * 100 ) );
+    EXPECT_EQ( gint( 200 ) * gint( 100 ), gint( 200 * 100 ) );
+    EXPECT_EQ( gint( 100 ) * gint( -200 ), gint( 100 * ( -200 ) ) );
+    EXPECT_EQ( gint( 100 ) * gint( -100 ), gint( 100 * ( -100 ) ) );
+    EXPECT_EQ( gint( 200 ) * gint( -100 ), gint( 200 * ( -100 ) ) );
+    EXPECT_EQ( gint( -100 ) * gint( 200 ), gint( ( -100 ) * 200 ) );
+    EXPECT_EQ( gint( -100 ) * gint( 100 ), gint( ( -100 ) * 100 ) );
+    EXPECT_EQ( gint( -200 ) * gint( 100 ), gint( ( -200 ) * 100 ) );
+    EXPECT_EQ( gint( -100 ) * gint( -200 ), gint( ( -100 ) * ( -200 ) ) );
+    EXPECT_EQ( gint( -100 ) * gint( -100 ), gint( ( -100 ) * ( -100 ) ) );
+    EXPECT_EQ( gint( -200 ) * gint( -100 ), gint( ( -200 ) * ( -100 ) ) );
 
     gint self( 1234 );
-    EXPECT_EQ( self.multiply_by( self ), 1234 * 1234 );
-    EXPECT_EQ( gint( 999 ) * 999999, 999 * 999999 );
-    EXPECT_EQ( gint( 999 ) * 999, 999 * 999 );
-    EXPECT_EQ( gint( 999999 ) * 999, 999 * 999999 );
+    EXPECT_EQ( self.multiply_by( self ), gint( 1234 * 1234 ) );
+    EXPECT_EQ( gint( 999 ) * gint( 999999 ), gint( 999 * 999999 ) );
+    EXPECT_EQ( gint( 999 ) * gint( 999 ), gint( 999 * 999 ) );
+    EXPECT_EQ( gint( 999999 ) * gint( 999 ), gint( 999 * 999999 ) );
 }
 
 TEST_F( GintTest, testSumDigitsWorks )
@@ -195,25 +197,25 @@ TEST_F( GintTest, testSumDigitsWorks )
 TEST_F( GintTest, testGintStreamOutWorks )
 {
     gint g1( 1234 );
-    std::cout << g1 * 2 << std::endl;
-    std::cout << g1 - 2 << std::endl;
-    std::cout << g1 - 2000 << std::endl;
+    std::cout << g1 * gint( 2 ) << std::endl;
+    std::cout << g1 - gint( 2 ) << std::endl;
+    std::cout << g1 - gint( 2000 ) << std::endl;
     g1.print();
 }
 
 TEST_F( GintTest, testNumDigitsWorks )
 {
     gint gi( 1234 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 5 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 6 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 7 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 8 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 9 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 10 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 11 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 12 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 13 );
-    EXPECT_EQ( ( gi *= 10 ).num_digits(), 14 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 5 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 6 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 7 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 8 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 9 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 10 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 11 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 12 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 13 );
+    EXPECT_EQ( ( gi *= gint( 10 ) ).num_digits(), 14 );
 }
 
 TEST_F( GintTest, testGintToSizeTWorks )
@@ -227,33 +229,33 @@ TEST_F( GintTest, testGintToSizeTWorks )
 
 TEST_F( GintTest, testGintPowWorks )
 {
-    EXPECT_EQ( gint( 2 ).pow( 2 ), 4 );
-    EXPECT_EQ( gint( 3 ).pow( 2 ), 9 );
-    EXPECT_EQ( gint( 2 ).pow( 10 ), 1024 );
-    EXPECT_EQ( gint( 3 ).pow( 5 ), 243 );
+    EXPECT_EQ( gint( 2 ).pow( 2 ), gint( 4 ) );
+    EXPECT_EQ( gint( 3 ).pow( 2 ), gint( 9 ) );
+    EXPECT_EQ( gint( 2 ).pow( 10 ), gint( 1024 ) );
+    EXPECT_EQ( gint( 3 ).pow( 5 ), gint( 243 ) );
 }
 
 TEST_F( GintTest, testGintDivide )
 {
-    EXPECT_ANY_THROW( gint( 100 ) / 0 );
-    EXPECT_EQ( gint( 100 ) / 200, 100 / 200 );
-    EXPECT_EQ( gint( 100 ) / 100, 100 / 100 );
-    EXPECT_EQ( gint( 200 ) / 100, 200 / 100 );
-    EXPECT_EQ( gint( 100 ) / ( -200 ), 100 / ( -200 ) );
-    EXPECT_EQ( gint( 100 ) / ( -100 ), 100 / ( -100 ) );
-    EXPECT_EQ( gint( 200 ) / ( -100 ), 200 / ( -100 ) );
-    EXPECT_EQ( gint( -100 ) / 200, ( -100 ) / 200 );
-    EXPECT_EQ( gint( -100 ) / 100, ( -100 ) / 100 );
-    EXPECT_EQ( gint( -200 ) / 100, ( -200 ) / 100 );
-    EXPECT_EQ( gint( -100 ) / ( -200 ), ( -100 ) / ( -200 ) );
-    EXPECT_EQ( gint( -100 ) / ( -100 ), ( -100 ) / ( -100 ) );
-    EXPECT_EQ( gint( -200 ) / ( -100 ), ( -200 ) / ( -100 ) );
+    EXPECT_ANY_THROW( gint( 100 ) / gint( 0 ) );
+    EXPECT_EQ( gint( 100 ) / gint( 200 ), gint( 100 / 200 ) );
+    EXPECT_EQ( gint( 100 ) / gint( 100 ), gint( 100 / 100 ) );
+    EXPECT_EQ( gint( 200 ) / gint( 100 ), gint( 200 / 100 ) );
+    EXPECT_EQ( gint( 100 ) / gint( ( -200 ) ), gint( 100 / ( -200 ) ) );
+    EXPECT_EQ( gint( 100 ) / gint( ( -100 ) ), gint( 100 / ( -100 ) ) );
+    EXPECT_EQ( gint( 200 ) / gint( ( -100 ) ), gint( 200 / ( -100 ) ) );
+    EXPECT_EQ( gint( -100 ) / gint( 200 ), gint( ( -100 ) / 200 ) );
+    EXPECT_EQ( gint( -100 ) / gint( 100 ), gint( ( -100 ) / 100 ) );
+    EXPECT_EQ( gint( -200 ) / gint( 100 ), gint( ( -200 ) / 100 ) );
+    EXPECT_EQ( gint( -100 ) / gint( ( -200 ) ), gint( ( -100 ) / ( -200 ) ) );
+    EXPECT_EQ( gint( -100 ) / gint( ( -100 ) ), gint( ( -100 ) / ( -100 ) ) );
+    EXPECT_EQ( gint( -200 ) / gint( ( -100 ) ), gint( ( -200 ) / ( -100 ) ) );
 
     gint self( 1234 );
-    EXPECT_EQ( self.divide_by( self ), 1234 / 1234 );
-    EXPECT_EQ( gint( 999 ) / 999999, 999 / 999999 );
-    EXPECT_EQ( gint( 999 ) / 999, 999 / 999 );
-    EXPECT_EQ( gint( 999999 ) / 999, 999999 / 999 );
+    EXPECT_EQ( self.divide_by( self ), gint( 1234 / 1234 ) );
+    EXPECT_EQ( gint( 999 ) / gint( 999999 ), gint( 999 / 999999 ) );
+    EXPECT_EQ( gint( 999 ) / gint( 999 ), gint( 999 / 999 ) );
+    EXPECT_EQ( gint( 999999 ) / gint( 999 ), gint( 999999 / 999 ) );
 
     for ( int i = -50; i < 50; ++i )
     {
@@ -262,11 +264,11 @@ TEST_F( GintTest, testGintDivide )
         {
             if ( j == 0 )
             {
-                EXPECT_ANY_THROW( num / j );
+                EXPECT_ANY_THROW( num / gint( j ) );
             }
             else
             {
-                EXPECT_EQ( i / j, num / j );
+                EXPECT_EQ( gint( i / j ), num / gint( j ) );
             }
         }
     }

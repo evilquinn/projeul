@@ -17,10 +17,10 @@ class pe58 : public pe
 {
 public:
     pe58() : name_( "pe58" ), primes_(){};
-    virtual ~pe58(){};
-    virtual std::string& name();
-    virtual int          number() { return 58; }
-    virtual void         run();
+    ~pe58() override = default;
+    std::string& name() override;
+    int          number() override { return 58; }
+    void         run() override;
 
 private:
     std::string name_;

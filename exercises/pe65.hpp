@@ -14,10 +14,10 @@ class pe65 : public pe
 {
 public:
     pe65() : name_( "pe65" ){};
-    virtual ~pe65(){};
-    virtual std::string& name();
-    virtual void         run();
-    virtual int          number() { return 65; }
+    std::string& name() override;
+    int          number() override { return 65; }
+    void         run() override;
+
 private:
     std::string name_;
 };

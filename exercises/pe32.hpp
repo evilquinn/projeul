@@ -14,10 +14,10 @@ class pe32 : public pe
 {
 public:
     pe32() : name_( "pe32" ){};
-    virtual ~pe32(){};
-    virtual std::string& name();
-    virtual int          number() { return 32; }
-    virtual void         run();
+    ~pe32() override = default;
+    std::string& name() override;
+    int          number() override { return 32; }
+    void         run() override;
 
 private:
     std::string name_;

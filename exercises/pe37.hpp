@@ -15,10 +15,10 @@ class pe37 : public pe
 {
 public:
     pe37() : primes_(), name_( "pe37" ){};
-    virtual ~pe37(){};
-    virtual std::string& name();
-    virtual int          number() { return 37; }
-    virtual void         run();
+    ~pe37() override = default;
+    std::string& name() override;
+    int          number() override { return 37; }
+    void         run() override;
 
 private:
     bool is_trunc_prime_rtl( int n );

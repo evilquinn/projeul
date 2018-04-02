@@ -17,10 +17,10 @@ class pe51 : public pe
 {
 public:
     pe51() : primes_(), name_( "pe51" ){};
-    virtual ~pe51(){};
-    virtual std::string& name();
-    virtual int          number() { return 51; }
-    virtual void         run();
+    ~pe51() override = default;
+    std::string& name() override;
+    int          number() override { return 51; }
+    void         run() override;
 
 private:
     prime_sieve primes_;

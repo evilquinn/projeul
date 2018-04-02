@@ -200,7 +200,7 @@ bool gint::less_than_xor_equal( const gint& rhs, bool equal ) const
     return equal;
 }
 
-gint& gint::operator++() { return add( 1 ); }
+gint& gint::operator++() { return add( gint( 1 ) ); }
 gint  gint::operator++( int )
 {
     gint tmp( *this );
@@ -208,7 +208,7 @@ gint  gint::operator++( int )
     return tmp;
 }
 
-gint& gint::operator--() { return subtract( 1 ); }
+gint& gint::operator--() { return subtract( gint( 1 ) ); }
 gint  gint::operator--( int )
 {
     gint tmp( *this );
@@ -318,7 +318,7 @@ std::ostream& gint::stream_out( std::ostream& os ) const
 
 gint& gint::multiply_by( const gint& mult_by )
 {
-    if ( mult_by == 0 || *this == 0 )
+    if ( mult_by == gint( 0 ) || *this == gint( 0 ) )
     {
         return reset();
     }
@@ -423,7 +423,7 @@ size_t gint::to_size_t()
 
 gint& gint::divide_by( const gint& rhs )
 {
-    if ( rhs == 0 )
+    if ( rhs == gint( 0 ) )
     {
         throw std::invalid_argument( "can't divide by zero" );
     }
@@ -451,15 +451,15 @@ gint& gint::divide_by( const gint& rhs )
         return *this;
     }
 
-    gint quotient  = 0;
-    gint remainder = 0;
+    gint quotient( 0 );
+    gint remainder( 0 );
 
     for ( unsigned char i : n_ )
     {
-        remainder *= 10;
-        quotient *= 10;
-        remainder += i;
-        uint8_t quotient_digit = 0;
+        remainder *= gint( 10 );
+        quotient *= gint( 10 );
+        remainder += gint( i );
+        gint quotient_digit( 0 );
 
         while ( remainder >= rhs_abs )
         {

@@ -14,10 +14,10 @@ class pe64 : public pe
 {
 public:
     pe64() : name_( "pe64" ){};
-    virtual ~pe64(){};
-    virtual std::string& name();
-    virtual int          number() { return 64; }
-    virtual void         run();
+    ~pe64() override = default;
+    std::string& name() override;
+    int          number() override { return 64; }
+    void         run() override;
 
 private:
     std::string name_;

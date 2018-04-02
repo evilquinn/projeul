@@ -13,11 +13,11 @@
 class pe66 : public pe
 {
 public:
-    pe66() : name_( "pe66" ){};
-    virtual ~pe66(){};
-    virtual std::string& name() { return name_; };
-    virtual int          number() { return 66; }
-    virtual void         run();
+    pe66() : name_( "pe66" ) {}
+    ~pe66() override = default;
+    std::string& name() override;
+    int          number() override { return 66; }
+    void         run() override;
 
 private:
     std::string name_;
