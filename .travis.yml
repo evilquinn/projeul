@@ -1,0 +1,17 @@
+
+language: cpp
+
+compiler:
+    - gcc
+
+addons:
+    apt:
+        packages: libboost-all-dev cmake googlemock
+
+script:
+    - mkdir build
+    - cd build
+    - cmake ../.
+    - make
+    - ./test/test_projeul
+
