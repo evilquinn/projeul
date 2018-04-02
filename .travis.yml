@@ -2,7 +2,8 @@
 language: cpp
 
 compiler:
-    - gcc
+    - gcc-5
+    - g++-5
 
 addons:
     apt:
