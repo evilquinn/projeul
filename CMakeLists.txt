@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(googlemock.cmake)
+add_subdirectory(third_party)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(number_lists)
