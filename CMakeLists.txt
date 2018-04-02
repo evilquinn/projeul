@@ -18,55 +18,14 @@ add_subdirectory(utils)
 add_subdirectory(signal_handler)
 add_subdirectory(asio)
 add_subdirectory(messenger)
-add_executable(projeul main.cpp
-                       pe_register.cpp
-                       pe67.cpp
-                       pe66.cpp
-                       pe65.cpp
-                       pe64.cpp
-                       pe63.cpp
-                       pe62.cpp
-                       pe61.cpp
-                       pe27.cpp
-                       pe29.cpp
-                       pe30.cpp
-                       pe31.cpp
-                       pe32.cpp
-                       pe33.cpp
-                       pe34.cpp
-                       pe35.cpp
-                       pe36.cpp
-                       pe37.cpp
-                       pe38.cpp
-                       pe39.cpp
-                       pe40.cpp
-                       pe41.cpp
-                       pe42.cpp
-                       pe43.cpp
-                       pe44.cpp
-                       pe45.cpp
-                       pe46.cpp
-                       pe47.cpp
-                       pe48.cpp
-                       pe49.cpp
-                       pe50.cpp
-                       pe51.cpp
-                       pe52.cpp
-                       pe53.cpp
-                       pe54.cpp
-                       pe55.cpp
-                       pe56.cpp
-                       pe57.cpp
-                       pe58.cpp
-                       pe59.cpp
-                       pe60.cpp)
+add_subdirectory(exercises)
 
 
-target_link_libraries(projeul utils
-                              number_lists
-                              poker
-                              signal_handler
-                              boost_program_options)
+add_executable(projeul main.cpp)
+
+target_link_libraries(projeul signal_handler
+                              boost_program_options
+                              exercises)
 
 add_subdirectory(test)
 add_subdirectory(profile)

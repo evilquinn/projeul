@@ -7,14 +7,6 @@
 
 namespace po = boost::program_options;
 
-#define RUN_EX( ex_num ) RUN_EX_CONCAT( ex_num )
-#define RUN_EX_CONCAT( ex_num ) \
-    do                          \
-    {                           \
-        pe##ex_num ex;          \
-        ex.run();               \
-    } while ( 0 )
-
 int main( int argc, char* argv[] )
 {
     evilquinn::register_signal_handler();

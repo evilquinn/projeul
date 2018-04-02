@@ -1,0 +1,48 @@
+
+add_library(exercises STATIC pe_register.cpp
+                             pe67.cpp
+                             pe66.cpp
+                             pe65.cpp
+                             pe64.cpp
+                             pe63.cpp
+                             pe62.cpp
+                             pe61.cpp
+                             pe27.cpp
+                             pe29.cpp
+                             pe30.cpp
+                             pe31.cpp
+                             pe32.cpp
+                             pe33.cpp
+                             pe34.cpp
+                             pe35.cpp
+                             pe36.cpp
+                             pe37.cpp
+                             pe38.cpp
+                             pe39.cpp
+                             pe40.cpp
+                             pe41.cpp
+                             pe42.cpp
+                             pe43.cpp
+                             pe44.cpp
+                             pe45.cpp
+                             pe46.cpp
+                             pe47.cpp
+                             pe48.cpp
+                             pe49.cpp
+                             pe50.cpp
+                             pe51.cpp
+                             pe52.cpp
+                             pe53.cpp
+                             pe54.cpp
+                             pe55.cpp
+                             pe56.cpp
+                             pe57.cpp
+                             pe58.cpp
+                             pe59.cpp
+                             pe60.cpp)
+
+target_link_libraries ( exercises PUBLIC utils
+                                         number_lists
+                                         poker )
+
+target_include_directories( exercises PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
