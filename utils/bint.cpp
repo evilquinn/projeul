@@ -197,7 +197,7 @@ bint& bint::add( const bint& rhs )
 bint& bint::operator+=( const bint& rhs ) { return add( rhs ); }
 bint& bint::multiply_by( const bint& rhs )
 {
-    if ( rhs == 0 )
+    if ( rhs == static_cast<bint>( 0 ) )
     {
         mem_.clear();
         return *this;
@@ -245,14 +245,14 @@ bint& bint::multiply_by( uint8_t num )
 bint& bint::operator*=( const bint& rhs ) { return multiply_by( rhs ); }
 bint& bint::divide_by_long_division( const bint& rhs, bint* rem )
 {
-    bint quotient  = 0ul;
-    bint remainder = 0ul;
+    bint quotient( 0 );
+    bint remainder( 0 );
 
     std::for_each( mem_.begin(), mem_.end(), [&]( mem_type::value_type val ) {
         remainder <<= 8;
         quotient <<= 8;
-        remainder += val;
-        uint8_t quotient_byte = 0;
+        remainder += bint( val );
+        bint quotient_byte( 0 );
 
         while ( remainder >= rhs )
         {
@@ -273,16 +273,16 @@ bint& bint::divide_by_long_division( const bint& rhs, bint* rem )
 
 bint& bint::divide_by( const bint& rhs, bint* remainder )
 {
-    if ( rhs == 0ul )
+    if ( rhs == bint( 0ul ) )
     {
         throw std::invalid_argument( "can't divide by zero" );
     }
     if ( this == &rhs )
     {
-        *this = 1;
+        *this = bint( 1 );
         if ( remainder != nullptr )
         {
-            *remainder = 0ul;
+            *remainder = bint( 0ul );
         }
         return *this;
     }
@@ -443,37 +443,39 @@ bint& bint::subtract( const bint& rhs )
         sub = &temp;
     }
     size_t orig = mem_.size();
-    *this += ~( *sub ) + 1;
+    *this += ~( *sub ) + bint( 1 );
     resize( orig );
     return *this;
 }
 
-bint& bint::operator++() { return *this += 1; }
+bint& bint::operator++() { return *this += bint( 1 ); }
 bint  bint::operator++( int )
 {
     bint tmp( *this );
-    *this += 1;
+    *this += bint( 1 );
     return tmp;
 }
 
-bint& bint::operator--() { return *this -= 1; }
+bint& bint::operator--() { return *this -= bint( 1 ); }
 bint  bint::operator--( int )
 {
     bint tmp( *this );
-    *this -= 1;
+    *this -= bint( 1 );
     return tmp;
 }
 
 bint& bint::operator-=( const bint& rhs ) { return subtract( rhs ); }
 bint& bint::pow( const bint& rhs )
 {
-    if ( rhs == 0 )
+    if ( rhs == bint( 0 ) )
     {
-        *this = 1;
+        *this = bint( 1 );
         return *this;
     }
     bint mult( *this );
-    for ( bint i = 0; i < rhs - 1; ++i )
+    bint limit( rhs );
+    --limit;
+    for ( bint i( 0 ); i < limit; ++i )
     {
         multiply_by( mult );
     }

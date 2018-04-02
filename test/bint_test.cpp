@@ -62,9 +62,9 @@ TEST_F( BintTest, testBintConstructFromSizeTWorks )
 TEST_F( BintTest, testBintConstructFromSizeTWorks2 )
 {
     bint stock;
-    EXPECT_THAT( stock, Eq( 0 ) );
-    EXPECT_THAT( stock, Lt( 1 ) );
-    EXPECT_THAT( stock, Ne( 1 ) );
+    EXPECT_THAT( stock, Eq( bint( 0 ) ) );
+    EXPECT_THAT( stock, Lt( bint( 1 ) ) );
+    EXPECT_THAT( stock, Ne( bint( 1 ) ) );
 }
 
 TEST_F( BintTest, testBintCopyConstructor )
@@ -86,17 +86,17 @@ TEST_F( BintTest, testResize )
     uint8_t s_base = static_cast<uint8_t>( base );
     stock.resize( 1 );
 
-    EXPECT_THAT( stock, Eq( s_base ) );
+    EXPECT_THAT( stock, Eq( bint( s_base ) ) );
 }
 
 TEST_F( BintTest, testAssignmentOperator )
 {
     bint stock;
-    stock = 1234;
-    EXPECT_THAT( stock, Eq( 1234 ) );
+    stock = bint( 1234 );
+    EXPECT_THAT( stock, Eq( bint( 1234 ) ) );
 
-    bint next = 2345;
-    EXPECT_THAT( next, Eq( 2345 ) );
+    bint next = bint( 2345 );
+    EXPECT_THAT( next, Eq( bint( 2345 ) ) );
     next = stock;
     EXPECT_THAT( next, Eq( stock ) );
 }
@@ -104,13 +104,13 @@ TEST_F( BintTest, testAssignmentOperator )
 TEST_F( BintTest, testIncrementDecrementOperators )
 {
     bint stock;
-    EXPECT_THAT( ++stock, Eq( 1 ) );
-    EXPECT_THAT( stock++, Eq( 1 ) );
-    EXPECT_THAT( stock, Eq( 2 ) );
+    EXPECT_THAT( ++stock, Eq( bint( 1 ) ) );
+    EXPECT_THAT( stock++, Eq( bint( 1 ) ) );
+    EXPECT_THAT( stock, Eq( bint( 2 ) ) );
 
-    EXPECT_THAT( --stock, Eq( 1 ) );
-    EXPECT_THAT( stock--, Eq( 1 ) );
-    EXPECT_THAT( stock, Eq( 0 ) );
+    EXPECT_THAT( --stock, Eq( bint( 1 ) ) );
+    EXPECT_THAT( stock--, Eq( bint( 1 ) ) );
+    EXPECT_THAT( stock, Eq( bint( 0 ) ) );
 }
 
 TEST_F( BintTest, testBintEquality )
@@ -186,10 +186,10 @@ TEST_F( BintTest, testBitwise )
     bint lhs( 1234 );
     bint rhs( 2468 );
 
-    EXPECT_THAT( lhs ^ rhs, Eq( 1234 ^ 2468 ) );
-    EXPECT_THAT( lhs & rhs, Eq( 1234 & 2468 ) );
-    EXPECT_THAT( lhs | rhs, Eq( 1234 | 2468 ) );
-    EXPECT_THAT( ~lhs, Eq( ~1234 ) );
+    EXPECT_THAT( lhs ^ rhs, Eq( bint( 1234 ^ 2468 ) ) );
+    EXPECT_THAT( lhs & rhs, Eq( bint( 1234 & 2468 ) ) );
+    EXPECT_THAT( lhs | rhs, Eq( bint( 1234 | 2468 ) ) );
+    EXPECT_THAT( ~lhs, Eq( bint( ~1234 ) ) );
 }
 
 TEST_F( BintTest, testSubtract )
@@ -197,15 +197,15 @@ TEST_F( BintTest, testSubtract )
     bint lhs( 1234 );
     bint rhs( 2468 );
 
-    EXPECT_THAT( lhs - rhs, Eq( 1234 - 2468 ) );
-    EXPECT_THAT( rhs - lhs, Eq( 2468 - 1234 ) );
+    EXPECT_THAT( lhs - rhs, Eq( bint( 1234 - 2468 ) ) );
+    EXPECT_THAT( rhs - lhs, Eq( bint( 2468 - 1234 ) ) );
 
     uint8_t base = 0xaa;
     bint bshort( reinterpret_cast<unsigned char*>( &base ), sizeof( base ) );
 
-    EXPECT_THAT( bshort, Eq( base ) );
-    EXPECT_THAT( bshort - lhs, Eq( base - 1234ul ) );
-    EXPECT_THAT( lhs - bshort, Eq( 1234 - base ) );
+    EXPECT_THAT( bshort, Eq( bint( base ) ) );
+    EXPECT_THAT( bshort - lhs, Eq( bint( base - 1234ul ) ) );
+    EXPECT_THAT( lhs - bshort, Eq( bint( 1234 - base ) ) );
 }
 
 TEST_F( BintTest, testMultiply )
@@ -213,8 +213,8 @@ TEST_F( BintTest, testMultiply )
     bint lhs( 1234 );
     bint rhs( 2468 );
 
-    EXPECT_THAT( lhs * rhs, Eq( 1234 * 2468 ) );
-    EXPECT_THAT( rhs * lhs, Eq( 2468 * 1234 ) );
+    EXPECT_THAT( lhs * rhs, Eq( bint( 1234 * 2468 ) ) );
+    EXPECT_THAT( rhs * lhs, Eq( bint( 2468 * 1234 ) ) );
 }
 
 TEST_F( BintTest, testBitShift )
@@ -225,24 +225,24 @@ TEST_F( BintTest, testBitShift )
     bint test2( 1234567 );
     bint test3( 192837 );
 
-    EXPECT_THAT( lhs.bitshift_left( 11 ), Eq( 1000 << 11 ) );
-    EXPECT_THAT( rhs.bitshift_left( 15 ), Eq( 1234567ul << 15 ) );
-    EXPECT_THAT( test1.bitshift_left( 5 ), Eq( 1234567ul << 5 ) );
-    EXPECT_THAT( test2.bitshift_left( 8 ), Eq( 1234567ul << 8 ) );
+    EXPECT_THAT( lhs.bitshift_left( 11 ), Eq( bint( 1000 << 11 ) ) );
+    EXPECT_THAT( rhs.bitshift_left( 15 ), Eq( bint( 1234567ul << 15 ) ) );
+    EXPECT_THAT( test1.bitshift_left( 5 ), Eq( bint( 1234567ul << 5 ) ) );
+    EXPECT_THAT( test2.bitshift_left( 8 ), Eq( bint( 1234567ul << 8 ) ) );
     for ( size_t i = 0; i < 30; ++i )
     {
-        EXPECT_THAT( test3 << i, Eq( 192837ul << i ) );
+        EXPECT_THAT( test3 << i, Eq( bint( 192837ul << i ) ) );
     }
 
     bint rshift1( 1234567 );
     bint rshift2( 1234567 );
     bint rshift3( 1234567123456712345ul );
 
-    EXPECT_THAT( rshift1.bitshift_right( 3 ), Eq( 1234567ul >> 3 ) );
-    EXPECT_THAT( rshift2.bitshift_right( 5 ), Eq( 1234567ul >> 5 ) );
+    EXPECT_THAT( rshift1.bitshift_right( 3 ), Eq( bint( 1234567ul >> 3 ) ) );
+    EXPECT_THAT( rshift2.bitshift_right( 5 ), Eq( bint( 1234567ul >> 5 ) ) );
     for ( size_t i = 0; i < 30; ++i )
     {
-        EXPECT_THAT( rshift3 >> i, Eq( 1234567123456712345ul >> i ) );
+        EXPECT_THAT( rshift3 >> i, Eq( bint( 1234567123456712345ul >> i ) ) );
     }
 }
 
@@ -251,19 +251,23 @@ TEST_F( BintTest, testDivision )
     size_t base = 1234567890;
     bint   stock( base );
 
-    EXPECT_THAT( stock / 7, Eq( base / 7 ) );
-    EXPECT_THAT( stock / 12, Eq( base / 12 ) );
-    EXPECT_THAT( stock / ( -34 ), Eq( base / size_t( -34 ) ) );
-    EXPECT_THAT( stock / 65478, Eq( base / 65478 ) );
-    EXPECT_THAT( stock / 999001122, Eq( base / 999001122 ) );
-    EXPECT_THAT( stock / 1234567890, Eq( base / 1234567890 ) );
+    EXPECT_THAT( stock / bint( 7 ), Eq( bint( base / 7 ) ) );
+    EXPECT_THAT( stock / bint( 12 ), Eq( bint( base / 12 ) ) );
+    EXPECT_THAT( stock / bint( ( -34 ) ),
+                 Eq( bint( base / size_t( -34 ) ) ) );
+    EXPECT_THAT( stock / bint( 65478 ), Eq( bint( base / 65478 ) ) );
+    EXPECT_THAT( stock / bint( 999001122 ), Eq( bint( base / 999001122 ) ) );
+    EXPECT_THAT( stock / bint( 1234567890 ),
+                 Eq( bint( base / 1234567890 ) ) );
 
-    EXPECT_THAT( stock % 7, Eq( base % 7 ) );
-    EXPECT_THAT( stock % 12, Eq( base % 12 ) );
-    EXPECT_THAT( stock % ( -34 ), Eq( base % size_t( -34 ) ) );
-    EXPECT_THAT( stock % 65478, Eq( base % 65478 ) );
-    EXPECT_THAT( stock % 999001122, Eq( base % 999001122 ) );
-    EXPECT_THAT( stock % 1234567890, Eq( base % 1234567890 ) );
+    EXPECT_THAT( stock % bint( 7 ), Eq( bint( base % 7 ) ) );
+    EXPECT_THAT( stock % bint( 12 ), Eq( bint( base % 12 ) ) );
+    EXPECT_THAT( stock % bint( ( -34 ) ),
+                 Eq( bint( base % size_t( -34 ) ) ) );
+    EXPECT_THAT( stock % bint( 65478 ), Eq( bint( base % 65478 ) ) );
+    EXPECT_THAT( stock % bint( 999001122 ), Eq( bint( base % 999001122 ) ) );
+    EXPECT_THAT( stock % bint( 1234567890 ),
+                 Eq( bint( base % 1234567890 ) ) );
 }
 
 TEST_F( BintTest, testPow )
@@ -271,13 +275,14 @@ TEST_F( BintTest, testPow )
     size_t base = 123039;
     bint   stock( base );
 
-    EXPECT_THAT( stock.pow( 0 ), Eq( 1 ) );
-    stock = base;
-    EXPECT_THAT( stock.pow( 1 ), Eq( base ) );
-    EXPECT_THAT( stock.pow( 2 ),
-                 Eq( static_cast<size_t>( pow( base, 2 ) ) ) );
-    stock = 5;
-    EXPECT_THAT( stock.pow( 4 ), Eq( static_cast<size_t>( pow( 5, 4 ) ) ) );
+    EXPECT_THAT( stock.pow( bint( 0 ) ), Eq( bint( 1 ) ) );
+    stock = bint( base );
+    EXPECT_THAT( stock.pow( bint( 1 ) ), Eq( bint( base ) ) );
+    EXPECT_THAT( stock.pow( bint( 2 ) ),
+                 Eq( bint( static_cast<size_t>( pow( base, 2 ) ) ) ) );
+    stock = bint( 5 );
+    EXPECT_THAT( stock.pow( bint( 4 ) ),
+                 Eq( bint( static_cast<size_t>( pow( 5, 4 ) ) ) ) );
 }
 
 TEST_F( BintTest, testToSizeT )
@@ -286,7 +291,7 @@ TEST_F( BintTest, testToSizeT )
     bint   stock( base );
 
     EXPECT_THAT( size_t( stock ), Eq( base ) );
-    stock *= 3;
+    stock *= bint( 3 );
     EXPECT_THAT( (size_t)stock, Eq( base * 3 ) );
     EXPECT_THAT( static_cast<size_t>( stock ), Eq( base * 3 ) );
 }
@@ -315,7 +320,7 @@ TEST_F( BintTest, testCharStar )
         EXPECT_THAT( sa2[i], Eq( ba2[i] ) );
     }
 
-    stock = 0;
+    stock = bint( 0 );
     stock.resize( sizeof( ba2 ) );
     stock_array = static_cast<unsigned char*>( stock );
     memcpy( stock_array, ba2, sizeof( ba2 ) );

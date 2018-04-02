@@ -25,7 +25,7 @@ bool enc_encrypt_cipher( bint&             key,
     // length of binary ciphertext is AT MOST =
     // plaintext_size + block_size - 1
     int ciphertext_length = input.size() + EVP_CIPHER_block_size( cipher );
-    output                = 0;
+    output                = bint( 0 );
     output.resize( ciphertext_length );
 
     int bytes_written_op = 0;
@@ -68,7 +68,7 @@ bool enc_decrypt_cipher( bint&             key,
     // length of binary ciphertext is AT MOST =
     // plaintext_size + block_size - 1
     int ciphertext_length = input.size() + EVP_CIPHER_block_size( cipher );
-    output                = 0;
+    output                = bint( 0 );
     output.resize( ciphertext_length );
 
     int bytes_written_op = 0;

@@ -21,7 +21,7 @@ public:
     bint();
     bint( const unsigned char* bin, size_t length );
     explicit bint( const std::string& hex );
-    bint( size_t n );
+    explicit bint( size_t n );
     bint( const bint& b );
     bint& operator=( bint rhs );
 
