@@ -9,7 +9,8 @@ class GintTest : public ::testing::Test
 {
 public:
     GintTest() {}
-    ~GintTest() {}
+    ~GintTest() override = default;
+
 protected:
 };
 
@@ -22,7 +23,7 @@ TEST_F( GintTest, testGintConstructorWorksExpected )
     size_t largest = static_cast<size_t>( -1 );
     EXPECT_EQ( largest, gint( largest ) );
 
-    gint* hegi = new gint( 1234 );
+    auto hegi = new gint( 1234 );
     EXPECT_EQ( *hegi, 1234 );
     delete hegi;
 }

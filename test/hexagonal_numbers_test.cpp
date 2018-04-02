@@ -9,7 +9,7 @@ class HexagonalNumbersTest : public ::testing::Test
 {
 protected:
     HexagonalNumbersTest() {}
-    ~HexagonalNumbersTest() {}
+    ~HexagonalNumbersTest() override = default;
 };
 
 TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )
@@ -24,8 +24,8 @@ TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )
             Eq( known_hexagonals.find( i ) != known_hexagonals.end() ) );
     }
 
-    std::set<size_t>::iterator it = known_hexagonals.begin();
-    size_t                     i  = 1;
+    auto   it = known_hexagonals.begin();
+    size_t i  = 1;
     while ( it != known_hexagonals.end() )
     {
         ASSERT_EQ( *it, hexagonals.get_term( i ) );

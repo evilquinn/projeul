@@ -16,7 +16,8 @@ class PokerTest : public ::testing::Test
 {
 public:
     PokerTest() {}
-    ~PokerTest() {}
+    ~PokerTest() override = default;
+
 protected:
 };
 

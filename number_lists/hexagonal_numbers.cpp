@@ -22,7 +22,7 @@ hexagonal_numbers::hexagonal_numbers( size_t num )
     std::cout << "Done." << std::endl;
 }
 
-hexagonal_numbers::~hexagonal_numbers() {}
+hexagonal_numbers::~hexagonal_numbers() = default;
 void hexagonal_numbers::calc_hexagonal_numbers()
 {
     for ( size_t i = 1; i <= num_; ++i )
@@ -33,11 +33,9 @@ void hexagonal_numbers::calc_hexagonal_numbers()
 
 void hexagonal_numbers::print()
 {
-    for ( std::vector<size_t>::iterator i = hexagonals_.begin();
-          i != hexagonals_.end();
-          ++i )
+    for ( unsigned long& hexagonal : hexagonals_ )
     {
-        std::cout << *i << std::endl;
+        std::cout << hexagonal << std::endl;
     }
 }
 

@@ -35,7 +35,7 @@ private:
                          boost::asio::placeholders::bytes_transferred ) );
     }
 
-    void on_input( const boost::system::error_code& error, size_t length )
+    void on_input( const boost::system::error_code& error, size_t /*length*/ )
     {
         if ( !error )
         {
@@ -78,7 +78,7 @@ private:
 
 }  // end namespace evilquinn
 
-int main( int argc, char* argv[] )
+int main( int /*argc*/, char** /*argv*/ )
 {
     auto asio_context = evilquinn::asio_context::get();
     evilquinn::register_signal_handler();

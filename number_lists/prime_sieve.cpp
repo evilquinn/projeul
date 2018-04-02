@@ -28,7 +28,7 @@ prime_sieve::prime_sieve( size_t limit ) : limit_( limit ), sieve_( limit )
     std::cout << "Done." << std::endl;
 }
 
-prime_sieve::~prime_sieve() {}
+prime_sieve::~prime_sieve() = default;
 size_t prime_sieve::limit() { return limit_; }
 void   prime_sieve::calc_primes()
 {

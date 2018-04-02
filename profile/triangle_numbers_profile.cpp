@@ -15,7 +15,7 @@ protected:
               new triangle_numbers( TRIANGLE_NUMBERS_PROFILE_NUMBER ) )
     {
     }
-    ~TriangleNumbersProfile() { delete triangles_; }
+    ~TriangleNumbersProfile() override { delete triangles_; }
     triangle_numbers* triangles_;
 };
 
@@ -26,7 +26,7 @@ TEST_F( TriangleNumbersProfile, profileTriangleNumbersGetTerm )
     {
         result = triangles_->get_term( i );
     }
-    if ( result )
+    if ( result != 0u )
     {
         // no op
     }
@@ -39,7 +39,7 @@ TEST_F( TriangleNumbersProfile, profileTriangleNumbersCalcTriangleForTerm )
     {
         result = triangle_numbers::calc_triangle_number_for_term( i );
     }
-    if ( result )
+    if ( result != 0u )
     {
         // no op
     }

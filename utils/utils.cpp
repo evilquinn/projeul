@@ -35,7 +35,7 @@ size_t next_prime( prime_sieve& primes, size_t n )
         return 2;
     }
 
-    if ( n & 1 )
+    if ( ( n & 1 ) != 0u )
     {
         // odd
         n += 2;

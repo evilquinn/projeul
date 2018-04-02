@@ -4,15 +4,15 @@
 
 namespace evilquinn
 {
-void signal_handler( int sig_num, siginfo_t* sig_info, void* data )
+void signal_handler( int sig_num, siginfo_t* sig_info, void* /*data*/ )
 {
     std::cout << boost::stacktrace::stacktrace() << std::endl;
 
-    if ( sig_num )
+    if ( sig_num != 0 )
     {
         std::cout << "signal   : " << sig_num << std::endl;
     }
-    if ( sig_info )
+    if ( sig_info != nullptr )
     {
         std::cout << "si_signo : " << sig_info->si_signo << "\n"
                   << "si_errno : " << sig_info->si_errno << "\n"
@@ -43,14 +43,14 @@ void signal_handler( int sig_num, siginfo_t* sig_info, void* data )
 
 void register_signal_handler()
 {
-    struct sigaction action = { 0 };
+    struct sigaction action = { nullptr };
     action.sa_sigaction     = signal_handler;
     action.sa_flags         = SA_SIGINFO;
-    sigaction( SIGTERM, &action, NULL );
-    sigaction( SIGINT, &action, NULL );
-    sigaction( SIGSEGV, &action, NULL );
-    sigaction( SIGABRT, &action, NULL );
-    sigaction( SIGFPE, &action, NULL );
+    sigaction( SIGTERM, &action, nullptr );
+    sigaction( SIGINT, &action, nullptr );
+    sigaction( SIGSEGV, &action, nullptr );
+    sigaction( SIGABRT, &action, nullptr );
+    sigaction( SIGFPE, &action, nullptr );
 }
 
 }  // end namespace evilquinn

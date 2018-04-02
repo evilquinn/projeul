@@ -19,7 +19,8 @@ class BintTest : public ::testing::Test
 {
 public:
     BintTest() {}
-    ~BintTest() {}
+    ~BintTest() override = default;
+
 protected:
 };
 
@@ -82,7 +83,7 @@ TEST_F( BintTest, testResize )
     size_t base = 1234;
     bint   stock( base );
 
-    uint8_t s_base = (uint8_t)base;
+    uint8_t s_base = static_cast<uint8_t>( base );
     stock.resize( 1 );
 
     EXPECT_THAT( stock, Eq( s_base ) );

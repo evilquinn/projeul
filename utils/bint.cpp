@@ -40,7 +40,7 @@ bint& bint::operator=( bint rhs )
     return *this;
 }
 
-bint::~bint() {}
+bint::~bint() = default;
 uint8_t bint::hex_to_bin( char hex )
 {
     switch ( toupper( hex ) )
@@ -218,7 +218,7 @@ bint& bint::multiply_by( const bint& rhs )
 
 bint& bint::multiply_by( uint8_t num )
 {
-    if ( !num )
+    if ( num == 0u )
     {
         mem_.clear();
         return *this;
@@ -234,7 +234,7 @@ bint& bint::multiply_by( uint8_t num )
         add( overflow, i );  // overflow from previous iteration
         overflow = pre_result >> 8;
     }
-    if ( overflow )
+    if ( overflow != 0u )
     {
         add( overflow, limit );  // overflow from previous iteration
     }
@@ -262,7 +262,7 @@ bint& bint::divide_by_long_division( const bint& rhs, bint* rem )
         quotient += quotient_byte;
     } );
 
-    if ( rem )
+    if ( rem != nullptr )
     {
         *rem = remainder;
     }
@@ -280,7 +280,7 @@ bint& bint::divide_by( const bint& rhs, bint* remainder )
     if ( this == &rhs )
     {
         *this = 1;
-        if ( remainder )
+        if ( remainder != nullptr )
         {
             *remainder = 0ul;
         }
@@ -300,7 +300,7 @@ bint& bint::operator%=( const bint& rhs )
 
 bint& bint::bitshift_left( size_t n )
 {
-    if ( !n )
+    if ( n == 0u )
     {
         return *this;
     }
@@ -313,12 +313,12 @@ bint& bint::bitshift_left( size_t n )
     uint8_t low_mask = ( static_cast<uint8_t>(::pow( 2, right_shift ) ) - 1 );
     uint8_t high_mask = ~low_mask;
 
-    if ( bytes )
+    if ( bytes != 0u )
     {
         mem_.insert( mem_.end(), bytes, 0 );
     }
 
-    if ( !bits )
+    if ( bits == 0u )
     {
         return *this;
     }
@@ -347,7 +347,7 @@ bint& bint::bitshift_left( size_t n )
 bint& bint::operator<<=( size_t n ) { return bitshift_left( n ); }
 bint& bint::bitshift_right( size_t n )
 {
-    if ( !n )
+    if ( n == 0u )
     {
         return *this;
     }
@@ -355,12 +355,12 @@ bint& bint::bitshift_right( size_t n )
     size_t  bytes = n / 8;
     uint8_t bits  = n % 8;
 
-    if ( bytes )
+    if ( bytes != 0u )
     {
         mem_.erase( mem_.end() - bytes, mem_.end() );
     }
 
-    if ( !bits )
+    if ( bits == 0u )
     {
         return *this;
     }
@@ -393,7 +393,7 @@ void bint::add( uint8_t num, size_t offset )
         static_cast<uint16_t>( *( mem_.rbegin() + offset ) ) + num;
     *( mem_.rbegin() + offset ) = static_cast<uint8_t>( pre_result );
     uint8_t overflow            = pre_result >> 8;
-    if ( overflow )
+    if ( overflow != 0u )
     {
         add( overflow, offset + 1 );
     }
@@ -545,7 +545,7 @@ void bint::print() const
 
 std::ostream& bint::stream_out( std::ostream& os ) const
 {
-    if ( !real_size() )
+    if ( real_size() == 0u )
     {
         return os;
     }

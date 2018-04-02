@@ -22,7 +22,7 @@ polygonal_numbers::polygonal_numbers( size_t num, function_of_n func )
     std::cout << "Done." << std::endl;
 }
 
-polygonal_numbers::~polygonal_numbers() {}
+polygonal_numbers::~polygonal_numbers() = default;
 void polygonal_numbers::calc_polygonal_numbers()
 {
     for ( size_t i = 1; i <= num_; ++i )
@@ -33,11 +33,9 @@ void polygonal_numbers::calc_polygonal_numbers()
 
 void polygonal_numbers::print()
 {
-    for ( std::vector<size_t>::iterator i = numbers_.begin();
-          i != numbers_.end();
-          ++i )
+    for ( unsigned long& number : numbers_ )
     {
-        std::cout << *i << std::endl;
+        std::cout << number << std::endl;
     }
 }
 

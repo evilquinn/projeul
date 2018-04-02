@@ -38,16 +38,14 @@ void gint::construct_digits_from_positive( size_t n )
     }
 }
 
-gint::gint( const gint& rhs ) : n_( rhs.n_ ), is_negative( rhs.is_negative )
-{
-}
-gint& gint::operator=( gint rhs )
+gint::gint( const gint& rhs ) = default;
+gint& gint::operator          =( gint rhs )
 {
     swap( *this, rhs );
     return *this;
 }
 
-gint::~gint() {}
+gint::~gint() = default;
 gint& gint::reset()
 {
     n_.clear();
@@ -78,7 +76,7 @@ gint& gint::add( const gint& rhs )
 
     size_t add_to_pos = n_.size() - 1;
 
-    gint_digits_t::const_reverse_iterator digit_to_add = rhs.n_.crbegin();
+    auto digit_to_add = rhs.n_.crbegin();
     while ( digit_to_add != rhs.n_.crend() )
     {
         if ( add_to_pos < n_.size() )
@@ -173,10 +171,8 @@ bool gint::less_than_xor_equal( const gint& rhs, bool equal ) const
         {
             return !equal;
         }
-        else
-        {
-            return rhs.abs().less_than_xor_equal( abs(), equal );
-        }
+
+        return rhs.abs().less_than_xor_equal( abs(), equal );
     }
     size_t my_size    = n_.size();
     size_t their_size = rhs.n_.size();
@@ -276,7 +272,7 @@ gint& gint::add_reverse_of( const gint& rhs )
 
     size_t add_to_pos = n_.size() - 1;
 
-    gint_digits_t::const_iterator digit_to_add = rhs.n_.cbegin();
+    auto digit_to_add = rhs.n_.cbegin();
     while ( digit_to_add != rhs.n_.cend() )
     {
         if ( add_to_pos < n_.size() )
@@ -313,9 +309,9 @@ std::ostream& gint::stream_out( std::ostream& os ) const
     {
         os << '-';
     }
-    for ( size_t i = 0; i < n_.size(); ++i )
+    for ( unsigned char i : n_ )
     {
-        os << static_cast<short>( n_[i] );
+        os << static_cast<short>( i );
     }
     return os;
 }
@@ -417,9 +413,9 @@ size_t gint::to_size_t()
 {
     size_t result  = 0;
     size_t pow_ten = n_.size() - 1;
-    for ( size_t i = 0; i < n_.size(); ++i )
+    for ( unsigned char i : n_ )
     {
-        result += n_[i] * ::pow( 10, pow_ten );
+        result += i * ::pow( 10, pow_ten );
         --pow_ten;
     }
     return result;
@@ -458,11 +454,11 @@ gint& gint::divide_by( const gint& rhs )
     gint quotient  = 0;
     gint remainder = 0;
 
-    for ( size_t i = 0; i < n_.size(); ++i )
+    for ( unsigned char i : n_ )
     {
         remainder *= 10;
         quotient *= 10;
-        remainder += n_[i];
+        remainder += i;
         uint8_t quotient_digit = 0;
 
         while ( remainder >= rhs_abs )

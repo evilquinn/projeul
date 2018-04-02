@@ -11,7 +11,8 @@ class UtilsTest : public ::testing::Test
 {
 public:
     UtilsTest() {}
-    ~UtilsTest() {}
+    ~UtilsTest() override = default;
+
 protected:
 };
 

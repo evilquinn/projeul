@@ -13,7 +13,8 @@ class PrimeSieveTest : public ::testing::Test
 {
 public:
     PrimeSieveTest() : primes_( PRIME_SIEVE_TEST_LIMIT ) {}
-    ~PrimeSieveTest() {}
+    ~PrimeSieveTest() override = default;
+
 protected:
     prime_sieve primes_;
 };

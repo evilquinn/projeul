@@ -17,7 +17,7 @@ bool enc_encrypt_cipher( bint&             key,
     int success = 1;
     success &= EVP_EncryptInit_ex( &encryption_context,
                                    cipher,
-                                   NULL,
+                                   nullptr,
                                    (unsigned char*)key,
                                    (unsigned char*)iv );
     // EVP_CIPHER_CTX_set_padding(&encryption_context, 0);
@@ -45,7 +45,7 @@ bool enc_encrypt_cipher( bint&             key,
 
     EVP_CIPHER_CTX_cleanup( &encryption_context );
 
-    return success;
+    return success != 0;
 }
 
 bool enc_decrypt_cipher( bint&             key,
@@ -60,7 +60,7 @@ bool enc_decrypt_cipher( bint&             key,
     int success = 1;
     success &= EVP_DecryptInit_ex( &encryption_context,
                                    cipher,
-                                   NULL,
+                                   nullptr,
                                    (unsigned char*)key,
                                    (unsigned char*)iv );
     // EVP_CIPHER_CTX_set_padding(&encryption_context, 0);
@@ -88,5 +88,5 @@ bool enc_decrypt_cipher( bint&             key,
 
     EVP_CIPHER_CTX_cleanup( &encryption_context );
 
-    return success;
+    return success != 0;
 }

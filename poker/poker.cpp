@@ -84,7 +84,7 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
     {
         return 1;
     }
-    else if ( rank_ == enemy.rank_ )
+    if ( rank_ == enemy.rank_ )
     {
         if ( !rank_cards_.empty() && !enemy.rank_cards_.empty() )
         {
@@ -96,7 +96,7 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
             {
                 return -1;
             }
-            else if ( *his_highest_rank < *my_highest_rank )
+            if ( *his_highest_rank < *my_highest_rank )
             {
                 return 1;
             }
@@ -124,7 +124,7 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
             {
                 return -1;
             }
-            else if ( *his_highest_remaining < *my_highest_remaining )
+            if ( *his_highest_remaining < *my_highest_remaining )
             {
                 return 1;
             }
@@ -159,7 +159,7 @@ bool poker::scored_hand::upgrade_rank( poker::scored_hand::rank_k new_rank )
             rank_ = poker::scored_hand::FULL_HOUSE;
             return true;
         }
-        else if ( new_rank == poker::scored_hand::ONE_PAIR )
+        if ( new_rank == poker::scored_hand::ONE_PAIR )
         {
             rank_ = poker::scored_hand::TWO_PAIRS;
             return true;

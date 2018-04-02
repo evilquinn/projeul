@@ -33,7 +33,7 @@ public:
 
     gint& add( const gint& rhs );
     gint& subtract( const gint& rhs );
-    gint& multiply_by( const gint& rhs );
+    gint& multiply_by( const gint& mult_by );
     gint& divide_by( const gint& rhs );
     gint& pow( size_t rhs );
     gint abs() const;
@@ -60,7 +60,7 @@ public:
     bool less_than_xor_equal( const gint& rhs, bool equal ) const;
 
 private:
-    void construct_digits_from_positive( size_t post );
+    void construct_digits_from_positive( size_t n );
     gint& add_digit_at_pos( size_t& pos, uint8_t digit );
     gint& multiply_by_digit( uint8_t digit );
     typedef std::deque<uint8_t> gint_digits_t;

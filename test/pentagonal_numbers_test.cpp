@@ -10,7 +10,7 @@ class PentagonalNumbersTest : public ::testing::Test
 {
 protected:
     PentagonalNumbersTest() {}
-    ~PentagonalNumbersTest() {}
+    ~PentagonalNumbersTest() override = default;
 };
 
 TEST_F( PentagonalNumbersTest, checkFirstTenPentagonalNumbers )
@@ -26,8 +26,8 @@ TEST_F( PentagonalNumbersTest, checkFirstTenPentagonalNumbers )
             Eq( known_pentagonals.find( i ) != known_pentagonals.end() ) );
     }
 
-    std::set<size_t>::iterator it = known_pentagonals.begin();
-    size_t                     i  = 1;
+    auto   it = known_pentagonals.begin();
+    size_t i  = 1;
     while ( it != known_pentagonals.end() )
     {
         ASSERT_EQ( *it, pentagonals.get_term( i ) );

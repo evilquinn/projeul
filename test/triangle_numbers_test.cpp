@@ -10,7 +10,7 @@ class TriangleNumbersTest : public ::testing::Test
 {
 protected:
     TriangleNumbersTest() {}
-    ~TriangleNumbersTest() {}
+    ~TriangleNumbersTest() override = default;
 };
 
 TEST_F( TriangleNumbersTest, checkFirstTenTriangleNumbers )
@@ -27,8 +27,8 @@ TEST_F( TriangleNumbersTest, checkFirstTenTriangleNumbers )
             Eq( known_triangles.find( i ) != known_triangles.end() ) );
     }
 
-    std::set<size_t>::iterator it = known_triangles.begin();
-    size_t                     i  = 1;
+    auto   it = known_triangles.begin();
+    size_t i  = 1;
     while ( it != known_triangles.end() )
     {
         ASSERT_EQ( *it, triangles.get_term( i ) );

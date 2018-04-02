@@ -15,7 +15,7 @@ protected:
         : primes_( new prime_sieve( CALC_PRIME_FACTORS_PROFILE_NUMBER ) )
     {
     }
-    ~CalcPrimeFactorsProfile() { delete primes_; }
+    ~CalcPrimeFactorsProfile() override { delete primes_; }
     prime_sieve* primes_;
 };
 

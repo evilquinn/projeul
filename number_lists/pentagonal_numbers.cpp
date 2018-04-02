@@ -22,7 +22,7 @@ pentagonal_numbers::pentagonal_numbers( size_t num )
     std::cout << "Done." << std::endl;
 }
 
-pentagonal_numbers::~pentagonal_numbers() {}
+pentagonal_numbers::~pentagonal_numbers() = default;
 void pentagonal_numbers::calc_pentagonal_numbers()
 {
     for ( size_t i = 1; i <= num_; ++i )
@@ -33,11 +33,9 @@ void pentagonal_numbers::calc_pentagonal_numbers()
 
 void pentagonal_numbers::print()
 {
-    for ( std::vector<size_t>::iterator i = pentagonals_.begin();
-          i != pentagonals_.end();
-          ++i )
+    for ( unsigned long& pentagonal : pentagonals_ )
     {
-        std::cout << *i << std::endl;
+        std::cout << pentagonal << std::endl;
     }
 }
 

@@ -64,7 +64,8 @@ public:
           ace_spades( "AS" )
     {
     }
-    ~CardTest() {}
+    ~CardTest() override = default;
+
 protected:
     card two_hearts;
     card three_hearts;

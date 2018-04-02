@@ -21,7 +21,7 @@ triangle_numbers::triangle_numbers( size_t num )
     std::cout << "Done." << std::endl;
 }
 
-triangle_numbers::~triangle_numbers() {}
+triangle_numbers::~triangle_numbers() = default;
 void triangle_numbers::calc_triangle_numbers()
 {
     for ( size_t i = 1; i <= num_; ++i )
@@ -32,11 +32,9 @@ void triangle_numbers::calc_triangle_numbers()
 
 void triangle_numbers::print()
 {
-    for ( std::vector<size_t>::iterator i = triangles_.begin();
-          i != triangles_.end();
-          ++i )
+    for ( unsigned long& triangle : triangles_ )
     {
-        std::cout << *i << std::endl;
+        std::cout << triangle << std::endl;
     }
 }
 
