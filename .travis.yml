@@ -6,7 +6,7 @@ compiler:
 
 addons:
     apt:
-        packages: libboost-all-dev cmake googlemock
+        packages: libboost-all-dev cmake
 
 script:
     - mkdir build
