@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
-
-set(CMAKE_CXX_FLAGS_DEBUG
-    "${CMAKE_CXX_FLAGS} -O0 -g3 -pg -ftest-coverage -fprofile-arcs")
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -O0 -g3")
+
+option(ENABLE_COVERAGE "Enable code coverage metrics for debug builds" OFF)
+if ( ${ENABLE_COVERAGE} )
+    set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -ftest-coverage -fprofile-arcs -pg")
+endif()
 
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 add_subdirectory(third_party)
@@ -26,5 +29,6 @@ target_link_libraries(projeul signal_handler
                               boost_program_options
                               exercises)
 
+enable_testing()
 add_subdirectory(test)
 add_subdirectory(profile)

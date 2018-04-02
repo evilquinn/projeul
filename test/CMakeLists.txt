@@ -21,3 +21,10 @@ target_link_libraries(test_projeul poker
                                    signal_handler
                                    gmock)
 
+if( ${ENABLE_COVERAGE} )
+    target_link_libraries(test_projeul gcov)
+endif()
+
+add_test(NAME test_projeul
+         COMMAND test_projeul)
+
