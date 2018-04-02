@@ -16,7 +16,7 @@ install:
 script:
     - mkdir build
     - cd build
-    - cmake ../.
+    - cmake -DBUILD_BOOST=ON ../.
     - make
     - ./test/test_projeul
 
