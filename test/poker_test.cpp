@@ -67,6 +67,10 @@ TEST_F( PokerTest, testScoredHandConstructorWorks )
     poker::make_hand( "KH KC AD AC 5S", player1 );
     poker::scored_hand scored10( player1 );
     EXPECT_THAT( scored10.rank_, Eq( poker::scored_hand::TWO_PAIRS ) );
+
+    poker::make_hand( "KH NH KD KC KS", player1 );
+    poker::scored_hand scored11( player1 );
+    EXPECT_THAT( scored11.rank_, Eq( poker::scored_hand::FOUR_OF_KIND ) );
 }
 
 TEST_F( PokerTest, testScoredHandGameWorks )
