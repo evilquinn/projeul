@@ -275,6 +275,10 @@ TEST_F( BintTest, testBitShift )
     bint hb("1111");
     size_t hbs = 4369;
     EXPECT_THAT( hb.bitshift_left( 5 ), Eq( bint( hbs << 5 ) ) );
+
+    hb = bint("11111111");
+    hbs = 286331153;
+    EXPECT_THAT( hb.bitshift_left( 32 ), Eq( bint( hbs << 32 ) ) );
 }
 
 TEST_F( BintTest, testResizeChararrayWorks )

@@ -326,7 +326,7 @@ bint& bint::bitshift_left( size_t n )
     size_t r_size = real_size();
     if ( r_size == mem_.size() )
     {
-        resize( ++r_size );
+        resize( r_size + 1 );
     }
 
     size_t start_i = mem_.size() - r_size - 1;
