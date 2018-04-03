@@ -48,7 +48,7 @@ TEST_F( PokerTest, testScoredHandConstructorWorks )
     poker::scored_hand scored5( player1 );
     EXPECT_THAT( scored5.rank_, Eq( poker::scored_hand::FLUSH ) );
 
-    poker::make_hand( "KH KH KD KC KS", player1 );
+    poker::make_hand( "K0 KH KD KC KS", player1 );
     poker::scored_hand scored6( player1 );
     EXPECT_THAT( scored6.rank_, Eq( poker::scored_hand::RANK_UNINIT ) );
 
