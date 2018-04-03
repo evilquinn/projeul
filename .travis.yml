@@ -23,4 +23,4 @@ script:
 
 after_success:
     - coveralls --help
-    - coveralls --root .. --build-root . -e /usr/ -e ../test/ -e ../messenger/ -e ../profile/ -e third_party/
+    - coveralls --root .. -E ".*gtest.*" -E ".*CMakeFiles.*" -E ".*third_party.*" -E ".*/test/.*" -E ".*/profile/.*" -E ".*/exercises/.*" -E ".*/messenger/.*"
