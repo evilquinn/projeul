@@ -277,7 +277,7 @@ bint& bint::divide_by( const bint& rhs, bint* remainder )
     {
         throw std::invalid_argument( "can't divide by zero" );
     }
-    if ( this == &rhs )
+    if ( this == &rhs || *this == rhs )
     {
         *this = bint( 1 );
         if ( remainder != nullptr )

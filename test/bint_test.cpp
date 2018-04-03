@@ -31,6 +31,23 @@ TEST_F( BintTest, testBintConstructorWorksExpected )
     std::stringstream os;
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( hex_string ) );
+
+    std::string       odd_hex_string( "1a2b3c4d5e6f7a8b9c0" );
+    bint              odd_stock( odd_hex_string.c_str() );
+
+    os.str(std::string());
+    os << odd_stock;
+    EXPECT_THAT( os.str(), StrCaseEq( std::string("0") + odd_hex_string ) );
+}
+
+TEST_F( BintTest, testInvalidDigitsInHexConvertedToZero )
+{
+    std::string invalid_string( "abcdefghijkl" );
+    bint        stock( invalid_string.c_str() );
+    std::string valid_string( "abcdef000000" );
+    bint        stock2( valid_string.c_str() );
+
+    EXPECT_THAT( stock, Eq( stock2 ) );
 }
 
 TEST_F( BintTest, testBintConstructFromBinWorks )
@@ -215,6 +232,7 @@ TEST_F( BintTest, testMultiply )
 
     EXPECT_THAT( lhs * rhs, Eq( bint( 1234 * 2468 ) ) );
     EXPECT_THAT( rhs * lhs, Eq( bint( 2468 * 1234 ) ) );
+    EXPECT_THAT( rhs * bint(0), Eq( bint( 2468 * 0 ) ) );
 }
 
 TEST_F( BintTest, testBitShift )
@@ -240,10 +258,18 @@ TEST_F( BintTest, testBitShift )
 
     EXPECT_THAT( rshift1.bitshift_right( 3 ), Eq( bint( 1234567ul >> 3 ) ) );
     EXPECT_THAT( rshift2.bitshift_right( 5 ), Eq( bint( 1234567ul >> 5 ) ) );
+    size_t rexp2 = 1234567ul >> 5;
+    EXPECT_THAT( rshift2 >>= 5 , Eq( bint( rexp2 >> 5 ) ) );
+    EXPECT_THAT( rshift2, Eq( bint( rexp2 >> 5 ) ) );
     for ( size_t i = 0; i < 30; ++i )
     {
         EXPECT_THAT( rshift3 >> i, Eq( bint( 1234567123456712345ul >> i ) ) );
     }
+
+    // buffer full non zeros
+    bint hb("1111");
+    size_t hbs = 4369;
+    EXPECT_THAT( hb.bitshift_left( 5 ), Eq( bint( hbs << 5 ) ) );
 }
 
 TEST_F( BintTest, testDivision )
@@ -268,6 +294,20 @@ TEST_F( BintTest, testDivision )
     EXPECT_THAT( stock % bint( 999001122 ), Eq( bint( base % 999001122 ) ) );
     EXPECT_THAT( stock % bint( 1234567890 ),
                  Eq( bint( base % 1234567890 ) ) );
+
+    // divide by zero throws
+    EXPECT_THROW( stock / bint(0), std::invalid_argument );
+
+    // divide_by with/out remainder
+    bint scopy(stock);
+    EXPECT_THAT( scopy.divide_by(bint( 1234567890 )),
+                 Eq( bint( base / 1234567890 ) ) );
+    scopy = stock;
+    bint rem;
+    EXPECT_THAT( scopy.divide_by(bint( 1234567890 ), &rem ),
+                 Eq( bint( base / 1234567890 ) ) );
+    EXPECT_THAT( rem, Eq(bint(0)) );
+
 }
 
 TEST_F( BintTest, testPow )

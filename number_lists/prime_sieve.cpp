@@ -135,14 +135,7 @@ size_t prime_sieve::sum_range( size_t  lower,
     }
 
     size_t current;
-    try
-    {
-        current = is_prime( lower ) ? lower : next_prime( lower );
-    }
-    catch ( std::invalid_argument& e )
-    {
-        return 0;
-    }
+    current = is_prime( lower ) ? lower : next_prime( lower );
 
     size_t result = 0;
     num_in_range  = 0;
@@ -151,14 +144,7 @@ size_t prime_sieve::sum_range( size_t  lower,
     {
         result += current;
         ++num_in_range;
-        try
-        {
-            current = next_prime( current );
-        }
-        catch ( std::invalid_argument& e )
-        {
-            break;
-        }
+        current = next_prime( current );
     }
 
     return result;
@@ -186,14 +172,7 @@ size_t prime_sieve::shit_sum_range( size_t              lower,
     }
 
     size_t current;
-    try
-    {
-        current = is_prime( lower ) ? lower : next_prime( lower );
-    }
-    catch ( std::invalid_argument& e )
-    {
-        return 0;
-    }
+    current = is_prime( lower ) ? lower : next_prime( lower );
 
     size_t result = 0;
 
@@ -201,14 +180,7 @@ size_t prime_sieve::shit_sum_range( size_t              lower,
     {
         result += current;
         sumees.push_back( current );
-        try
-        {
-            current = next_prime( current );
-        }
-        catch ( std::invalid_argument& e )
-        {
-            break;
-        }
+        current = next_prime( current );
     }
 
     return result;
