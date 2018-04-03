@@ -16,6 +16,7 @@ TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )
 {
     std::set<size_t>  known_hexagonals = { 1, 6, 15, 28, 45 };
     hexagonal_numbers hexagonals( known_hexagonals.size() );
+    hexagonals.print();
 
     for ( size_t i = 1; i <= 45; ++i )
     {

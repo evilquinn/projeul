@@ -19,6 +19,7 @@ TEST_F( TriangleNumbersTest, checkFirstTenTriangleNumbers )
         1, 3, 6, 10, 15, 21, 28, 36, 45, 55
     };
     triangle_numbers triangles( known_triangles.size() );
+    triangles.print();
 
     for ( size_t i = 1; i <= 55; ++i )
     {

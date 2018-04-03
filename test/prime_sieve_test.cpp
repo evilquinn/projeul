@@ -34,7 +34,13 @@ TEST_F( PrimeSieveTest, testAgainstKnownPrimes )
     }
 
     prime_sieve small_sieve( 10 );
+    small_sieve.print();
     EXPECT_TRUE( small_sieve.is_prime( 113 ) );
+}
+
+TEST_F( PrimeSieveTest, testLimitReturnsCorrectLimit )
+{
+    EXPECT_THAT( primes_.limit(), Eq( PRIME_SIEVE_TEST_LIMIT ) );
 }
 
 TEST_F( PrimeSieveTest, testNextPrimeReturnsExpected )

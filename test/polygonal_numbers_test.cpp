@@ -20,6 +20,7 @@ TEST_F( PolygonalNumbersTest, checkFirstTenTriangleNumbers )
     };
     polygonal_numbers polygonals( known_polygonals.size(),
                                   polygonal_numbers::triangle );
+    polygonals.print();
 
     for ( size_t i = 1; i <= 55; ++i )
     {
