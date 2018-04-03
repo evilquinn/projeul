@@ -205,19 +205,9 @@ void add_digit_arrays( int*   add_to,
                     --carry_on_pos;
                     ++add_to[carry_on_pos];
                 }
-                else
-                {
-                    // no more array to carry on with
-                    break;
-                }
             }
             --add_to_pos;
             --add_pos;
-        }
-        else
-        {
-            // no array to add to, finished
-            break;
         }
     }
 }
