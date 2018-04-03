@@ -59,6 +59,14 @@ TEST_F( PokerTest, testScoredHandConstructorWorks )
     poker::make_hand( "AH AC KD KC KS", player1 );
     poker::scored_hand scored8( player1 );
     EXPECT_THAT( scored8.rank_, Eq( poker::scored_hand::FULL_HOUSE ) );
+
+    poker::make_hand( "KH KC AD AC AS", player1 );
+    poker::scored_hand scored9( player1 );
+    EXPECT_THAT( scored9.rank_, Eq( poker::scored_hand::FULL_HOUSE ) );
+
+    poker::make_hand( "KH KC AD AC 5S", player1 );
+    poker::scored_hand scored10( player1 );
+    EXPECT_THAT( scored10.rank_, Eq( poker::scored_hand::TWO_PAIRS ) );
 }
 
 TEST_F( PokerTest, testScoredHandGameWorks )
@@ -78,7 +86,15 @@ TEST_F( PokerTest, testScoredHandGameWorks )
     poker::make_hand( "2D 2S TH KH QH", p2 );
     EXPECT_THAT( poker::game( p1, p2 ), Eq( -1 ) );
 
+    poker::make_hand( "2D 2S TH KH QH", p1 );
+    poker::make_hand( "2H 2C 4H 5H AH", p2 );
+    EXPECT_THAT( poker::game( p1, p2 ), Eq( 1 ) );
+
     poker::make_hand( "2H 2C 4H 5H 7H", p1 );
     poker::make_hand( "JH JD 4S 5S 7S", p2 );
     EXPECT_THAT( poker::game( p1, p2 ), Eq( 1 ) );
+
+    poker::make_hand( "JH JD JS 5S 7S", p1 );
+    poker::make_hand( "2H 2C 4D 5H 7H", p2 );
+    EXPECT_THAT( poker::game( p1, p2 ), Eq( -1 ) );
 }

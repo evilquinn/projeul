@@ -159,3 +159,14 @@ TEST_F( PolygonalNumbersTest, checkFirstTenOctagonalNumbers )
         ++i;
     }
 }
+
+TEST_F( PolygonalNumbersTest, testGetTermThrowsIfNOutOfBounds )
+{
+    std::set<size_t> known_polygonals = { 1,  8,   21,  40,  65,
+                                          96, 133, 176, 225, 280 };
+    polygonal_numbers polygonals( known_polygonals.size(),
+                                  polygonal_numbers::octagonal );
+
+    EXPECT_THROW( polygonals.get_term(known_polygonals.size() + 5),
+                  std::invalid_argument );
+}

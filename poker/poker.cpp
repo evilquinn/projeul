@@ -92,24 +92,14 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
                 rank_cards_.rbegin();
             const hand::reverse_iterator his_highest_rank =
                 enemy.rank_cards_.rbegin();
-            if ( *my_highest_rank < *his_highest_rank )
+            if ( my_highest_rank->value_ < his_highest_rank->value_ )
             {
                 return -1;
             }
-            if ( *his_highest_rank < *my_highest_rank )
+            if ( his_highest_rank->value_ < my_highest_rank->value_ )
             {
                 return 1;
             }
-        }
-
-        else if ( !rank_cards_.empty() )
-        {
-            return -1;
-        }
-
-        else if ( !enemy.rank_cards_.empty() )
-        {
-            return 1;
         }
 
         // rank is same, and winning rank cards are same,
@@ -120,24 +110,14 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
                 remaining_.rbegin();
             const hand::reverse_iterator his_highest_remaining =
                 enemy.remaining_.rbegin();
-            if ( *my_highest_remaining < *his_highest_remaining )
+            if ( my_highest_remaining->value_ < his_highest_remaining->value_ )
             {
                 return -1;
             }
-            if ( *his_highest_remaining < *my_highest_remaining )
+            if ( his_highest_remaining->value_ < my_highest_remaining->value_ )
             {
                 return 1;
             }
-        }
-
-        else if ( !remaining_.empty() )
-        {
-            return -1;
-        }
-
-        else if ( !enemy.remaining_.empty() )
-        {
-            return 1;
         }
 
         return 0;
