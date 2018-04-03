@@ -207,6 +207,11 @@ TEST_F( BintTest, testBitwise )
     EXPECT_THAT( lhs & rhs, Eq( bint( 1234 & 2468 ) ) );
     EXPECT_THAT( lhs | rhs, Eq( bint( 1234 | 2468 ) ) );
     EXPECT_THAT( ~lhs, Eq( bint( ~1234 ) ) );
+
+    size_t trimmed = (1234 << 4) >> 4;
+    lhs.resize(4);
+
+    EXPECT_THAT( lhs ^ rhs, Eq( bint( trimmed ^ 2468 ) ) );
 }
 
 TEST_F( BintTest, testSubtract )
@@ -270,6 +275,13 @@ TEST_F( BintTest, testBitShift )
     bint hb("1111");
     size_t hbs = 4369;
     EXPECT_THAT( hb.bitshift_left( 5 ), Eq( bint( hbs << 5 ) ) );
+}
+
+TEST_F( BintTest, testResizeChararrayWorks )
+{
+    bint stock("abcdef");
+    stock.resize_chararray(stock.size() + 3);
+    EXPECT_THAT(stock, Eq(bint("abcdef000000")) );
 }
 
 TEST_F( BintTest, testDivision )
@@ -352,8 +364,8 @@ TEST_F( BintTest, testCharStar )
 
     const char*    base2 = "afebdfdb";
     unsigned char  ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
-    bint           s2( base2 );
-    unsigned char* sa2 = (unsigned char*)s2;
+    const bint           s2( base2 );
+    const unsigned char* sa2 = (const unsigned char*)s2;
 
     for ( size_t i = 0; i < sizeof( ba2 ); ++i )
     {
