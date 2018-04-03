@@ -21,7 +21,6 @@ int num_digits( long long unsigned n );
  */
 size_t concat( size_t left, size_t right );
 
-size_t next_prime( prime_sieve& primes, size_t n );
 bool is_prime( prime_sieve& primes, size_t n );
 
 /*
@@ -111,7 +110,7 @@ size_t prev_prime( size_t i, prime_sieve& primes );
  *
  * @return smallest prime number greater than i or 0 if i >= primes.max
  */
-size_t next_prime( size_t i, prime_sieve& primes );
+size_t next_prime( prime_sieve& primes, size_t n );
 
 /*
  * calculates the prime factors for a number and prints result to std::cout

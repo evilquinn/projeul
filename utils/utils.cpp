@@ -166,22 +166,6 @@ size_t pattern_of_digits( size_t               num,
     return digit_count.size();
 }
 
-size_t next_prime( size_t i, prime_sieve& primes )
-{
-    size_t primes_limit = primes.limit();
-    if ( i >= primes_limit )
-    {
-        return 0;
-    }
-
-    do
-    {
-        ++i;
-    } while ( i < primes_limit && !primes.is_prime( i ) );
-
-    return i;
-}
-
 void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by )
 {
     int add_to[mult_len];

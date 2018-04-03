@@ -116,3 +116,35 @@ TEST_F( UtilsTest, testIsPrime )
         EXPECT_EQ( primes.is_prime( i ), is_prime( primes, i ) ) << i;
     }
 }
+
+TEST_F( UtilsTest, testNextPrime )
+{
+    prime_sieve primes( 1000 );
+
+    size_t i = 0;
+    while ( i < 1000 )
+    {
+        size_t next_i = primes.next_prime( i );
+        EXPECT_EQ( next_i, next_prime( primes, i ) ) << i;
+        i = next_i;
+    }
+}
+
+TEST_F( UtilsTest, testMultDigitArrayByWorks )
+{
+    const size_t num_digits = 100;
+    int digit_array[num_digits] = { 0 };
+    digit_array[num_digits - 1] = 4;
+
+    mult_digit_array_by( digit_array, num_digits, 2 );
+    EXPECT_THAT( digit_array[num_digits - 1], Eq( 4 * 2 ) );
+
+    mult_digit_array_by( digit_array, num_digits, 5 );
+    EXPECT_THAT( digit_array[num_digits - 2], Eq( 4 ) );
+
+    mult_digit_array_by( digit_array, num_digits, 10 );
+    EXPECT_THAT( digit_array[num_digits - 3], Eq( 4 ) );
+
+    mult_digit_array_by( digit_array, num_digits, 500 );
+    EXPECT_THAT( digit_array[num_digits - 6], Eq( 2 ) );
+}

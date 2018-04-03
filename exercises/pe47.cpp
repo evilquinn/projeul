@@ -94,7 +94,7 @@ size_t calc_prime_factors( size_t               num,
         size_t try_prime = 2;
         while ( curr_num % try_prime != 0 )
         {
-            try_prime = next_prime( try_prime, primes );
+            try_prime = next_prime( primes, try_prime );
         }
 
         prime_factors.push_back( try_prime );

@@ -45,7 +45,7 @@ void         pe49::run()
 
     do
     {
-        first = next_prime( first, primes_ );
+        first = next_prime( primes_, first );
         if ( first == 0 )
         {
             break;
@@ -78,7 +78,7 @@ size_t next_prime_with_same_digits( size_t start, prime_sieve& primes )
     size_t result = start;
     do
     {
-        result = next_prime( result, primes );
+        result = next_prime( primes, result );
     } while ( result != 0 && !same_digits( start, result ) );
 
     return result;
