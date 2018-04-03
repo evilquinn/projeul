@@ -47,6 +47,18 @@ TEST_F( PokerTest, testScoredHandConstructorWorks )
     poker::make_hand( "KH 2H 3H 4H 5H", player1 );
     poker::scored_hand scored5( player1 );
     EXPECT_THAT( scored5.rank_, Eq( poker::scored_hand::FLUSH ) );
+
+    poker::make_hand( "KH KH KD KC KS", player1 );
+    poker::scored_hand scored6( player1 );
+    EXPECT_THAT( scored6.rank_, Eq( poker::scored_hand::RANK_UNINIT ) );
+
+    poker::make_hand( "AH KH KD KC KS", player1 );
+    poker::scored_hand scored7( player1 );
+    EXPECT_THAT( scored7.rank_, Eq( poker::scored_hand::FOUR_OF_KIND ) );
+
+    poker::make_hand( "AH AC KD KC KS", player1 );
+    poker::scored_hand scored8( player1 );
+    EXPECT_THAT( scored8.rank_, Eq( poker::scored_hand::FULL_HOUSE ) );
 }
 
 TEST_F( PokerTest, testScoredHandGameWorks )
