@@ -18,7 +18,9 @@ void signal_handler( int sig_num, siginfo_t* sig_info, void* /*data*/ )
         ::psiginfo( sig_info, "psiginfo " );
     }
 
-    _exit( sig_num );
+    // flush std::cout before exiting
+    std::cout << std::endl;
+    exit( sig_num );
 }
 
 void register_signal_handler()

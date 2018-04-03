@@ -12,7 +12,8 @@ add_executable(test_projeul main.cpp
                             utils_test.cpp
                             gint_test.cpp
                             bint_test.cpp
-                            crypto_test.cpp)
+                            crypto_test.cpp
+                            signal_handler_test.cpp)
 
 target_link_libraries(test_projeul poker
                                    utils
@@ -27,18 +28,3 @@ endif()
 
 add_test(NAME test_projeul
          COMMAND test_projeul)
-
-add_executable(test_signal_handler signal_handler_test.cpp)
-target_link_libraries(test_signal_handler signal_handler
-                                          gmock
-                                          pthread)
-
-if( ${ENABLE_COVERAGE} )
-    target_link_libraries(test_signal_handler gcov)
-endif()
-
-add_test(NAME test_signal_handler
-         COMMAND test_signal_handler)
-
-
-
