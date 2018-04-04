@@ -285,7 +285,7 @@ TEST_F( BintTest, testResizeChararrayWorks )
 {
     bint stock( "abcdef" );
     stock.resize_chararray( stock.size() + 3 );
-    EXPECT_THAT( stock, Eq( bint( "bcdef000000" ) ) );
+    EXPECT_THAT( stock, Eq( bint( "abcdef000000" ) ) );
 }
 
 TEST_F( BintTest, testDivision )
