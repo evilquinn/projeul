@@ -110,11 +110,13 @@ int poker::scored_hand::play( const poker::scored_hand& enemy )
                 remaining_.rbegin();
             const hand::reverse_iterator his_highest_remaining =
                 enemy.remaining_.rbegin();
-            if ( my_highest_remaining->value_ < his_highest_remaining->value_ )
+            if ( my_highest_remaining->value_ <
+                 his_highest_remaining->value_ )
             {
                 return -1;
             }
-            if ( his_highest_remaining->value_ < my_highest_remaining->value_ )
+            if ( his_highest_remaining->value_ <
+                 my_highest_remaining->value_ )
             {
                 return 1;
             }

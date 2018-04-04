@@ -132,9 +132,9 @@ TEST_F( UtilsTest, testNextPrime )
 
 TEST_F( UtilsTest, testMultDigitArrayByWorks )
 {
-    const size_t num_digits = 100;
-    int digit_array[num_digits] = { 0 };
-    digit_array[num_digits - 1] = 4;
+    const size_t num_digits              = 100;
+    int          digit_array[num_digits] = { 0 };
+    digit_array[num_digits - 1]          = 4;
 
     mult_digit_array_by( digit_array, num_digits, 2 );
     EXPECT_THAT( digit_array[num_digits - 1], Eq( 4 * 2 ) );

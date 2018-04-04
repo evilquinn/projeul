@@ -19,8 +19,8 @@ ExternalProject_Add( external_boost
             --with-libraries=program_options
             --prefix=<INSTALL_DIR>
         BUILD_COMMAND
-        ./b2 -d0 install link=static variant=release threading=multi runtime-link=static
-        INSTALL_COMMAND ""
+        ./b2 -d0 link=static variant=release threading=multi runtime-link=static
+        INSTALL_COMMAND ./b2 -d0 install
         INSTALL_DIR ${INSTALL_DIR} )
 
 file(MAKE_DIRECTORY ${INCLUDE_DIR})

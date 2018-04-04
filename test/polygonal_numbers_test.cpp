@@ -167,6 +167,6 @@ TEST_F( PolygonalNumbersTest, testGetTermThrowsIfNOutOfBounds )
     polygonal_numbers polygonals( known_polygonals.size(),
                                   polygonal_numbers::octagonal );
 
-    EXPECT_THROW( polygonals.get_term(known_polygonals.size() + 5),
+    EXPECT_THROW( polygonals.get_term( known_polygonals.size() + 5 ),
                   std::invalid_argument );
 }

@@ -32,12 +32,12 @@ TEST_F( BintTest, testBintConstructorWorksExpected )
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( hex_string ) );
 
-    std::string       odd_hex_string( "1a2b3c4d5e6f7a8b9c0" );
-    bint              odd_stock( odd_hex_string.c_str() );
+    std::string odd_hex_string( "1a2b3c4d5e6f7a8b9c0" );
+    bint        odd_stock( odd_hex_string.c_str() );
 
-    os.str(std::string());
+    os.str( std::string() );
     os << odd_stock;
-    EXPECT_THAT( os.str(), StrCaseEq( std::string("0") + odd_hex_string ) );
+    EXPECT_THAT( os.str(), StrCaseEq( std::string( "0" ) + odd_hex_string ) );
 }
 
 TEST_F( BintTest, testInvalidDigitsInHexConvertedToZero )
@@ -208,8 +208,8 @@ TEST_F( BintTest, testBitwise )
     EXPECT_THAT( lhs | rhs, Eq( bint( 1234 | 2468 ) ) );
     EXPECT_THAT( ~lhs, Eq( bint( ~1234 ) ) );
 
-    size_t trimmed = (1234 << 4) >> 4;
-    lhs.resize(4);
+    size_t trimmed = ( 1234 << 4 ) >> 4;
+    lhs.resize( 4 );
 
     EXPECT_THAT( lhs ^ rhs, Eq( bint( trimmed ^ 2468 ) ) );
 }
@@ -237,7 +237,7 @@ TEST_F( BintTest, testMultiply )
 
     EXPECT_THAT( lhs * rhs, Eq( bint( 1234 * 2468 ) ) );
     EXPECT_THAT( rhs * lhs, Eq( bint( 2468 * 1234 ) ) );
-    EXPECT_THAT( rhs * bint(0), Eq( bint( 2468 * 0 ) ) );
+    EXPECT_THAT( rhs * bint( 0 ), Eq( bint( 2468 * 0 ) ) );
 }
 
 TEST_F( BintTest, testBitShift )
@@ -264,7 +264,7 @@ TEST_F( BintTest, testBitShift )
     EXPECT_THAT( rshift1.bitshift_right( 3 ), Eq( bint( 1234567ul >> 3 ) ) );
     EXPECT_THAT( rshift2.bitshift_right( 5 ), Eq( bint( 1234567ul >> 5 ) ) );
     size_t rexp2 = 1234567ul >> 5;
-    EXPECT_THAT( rshift2 >>= 5 , Eq( bint( rexp2 >> 5 ) ) );
+    EXPECT_THAT( rshift2 >>= 5, Eq( bint( rexp2 >> 5 ) ) );
     EXPECT_THAT( rshift2, Eq( bint( rexp2 >> 5 ) ) );
     for ( size_t i = 0; i < 30; ++i )
     {
@@ -272,20 +272,20 @@ TEST_F( BintTest, testBitShift )
     }
 
     // buffer full non zeros
-    bint hb("1111");
+    bint   hb( "1111" );
     size_t hbs = 4369;
     EXPECT_THAT( hb.bitshift_left( 5 ), Eq( bint( hbs << 5 ) ) );
 
-    hb = bint("11111111");
+    hb  = bint( "11111111" );
     hbs = 286331153;
     EXPECT_THAT( hb.bitshift_left( 32 ), Eq( bint( hbs << 32 ) ) );
 }
 
 TEST_F( BintTest, testResizeChararrayWorks )
 {
-    bint stock("abcdef");
-    stock.resize_chararray(stock.size() + 3);
-    EXPECT_THAT(stock, Eq(bint("abcdef000000")) );
+    bint stock( "abcdef" );
+    stock.resize_chararray( stock.size() + 3 );
+    EXPECT_THAT( stock, Eq( bint( "bcdef000000" ) ) );
 }
 
 TEST_F( BintTest, testDivision )
@@ -312,18 +312,17 @@ TEST_F( BintTest, testDivision )
                  Eq( bint( base % 1234567890 ) ) );
 
     // divide by zero throws
-    EXPECT_THROW( stock / bint(0), std::invalid_argument );
+    EXPECT_THROW( stock / bint( 0 ), std::invalid_argument );
 
     // divide_by with/out remainder
-    bint scopy(stock);
-    EXPECT_THAT( scopy.divide_by(bint( 1234567890 )),
+    bint scopy( stock );
+    EXPECT_THAT( scopy.divide_by( bint( 1234567890 ) ),
                  Eq( bint( base / 1234567890 ) ) );
     scopy = stock;
     bint rem;
-    EXPECT_THAT( scopy.divide_by(bint( 1234567890 ), &rem ),
+    EXPECT_THAT( scopy.divide_by( bint( 1234567890 ), &rem ),
                  Eq( bint( base / 1234567890 ) ) );
-    EXPECT_THAT( rem, Eq(bint(0)) );
-
+    EXPECT_THAT( rem, Eq( bint( 0 ) ) );
 }
 
 TEST_F( BintTest, testPow )
@@ -366,8 +365,8 @@ TEST_F( BintTest, testCharStar )
         EXPECT_THAT( stock_array[i], Eq( base_string[j] ) );
     }
 
-    const char*    base2 = "afebdfdb";
-    unsigned char  ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
+    const char*          base2 = "afebdfdb";
+    unsigned char        ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
     const bint           s2( base2 );
     const unsigned char* sa2 = (const unsigned char*)s2;
 
