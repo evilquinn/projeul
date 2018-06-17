@@ -7,6 +7,61 @@
 
 #include "pe66.hpp"
 #include <iostream>
+#include <vector>
+
+static int gcd(int a, int b)
+{
+    return (b==0)?a:gcd(b,a%b);
+}
+
+std::vector<int> pe66::continued_fraction_of_root_of(const int n)
+{
+    std::vector<int> result;
+
+    int s = n;
+    // s = a*a + r
+    // => Vs = a + ( 1 / a + Vs )
+    //
+    int a = 1;
+    while ( a * a < s )
+    {
+        ++a;
+    }
+    --a;
+    result.push_back(a);
+
+    if ( a * a == s )
+    {
+        return result;
+    }
+
+    // I stole this algo from
+    // https://dansesacrale.wordpress.com/2010/07/04/continued-fractions-sqrt-steps/
+    // Cheers.
+    int b = a, c = 1, d, e, f, g;
+    while(true)
+    {
+        d=c;
+        c=n-b*b;
+        g=gcd(c,d);
+        c/=g;
+        d/=g;
+        b=-b;
+        f=a-c;
+        for(e=0;b<=f;e++)
+        {
+            b+=c;
+        }
+        result.push_back(e);
+        if(b==a&&c==1)
+        {
+            return result;
+        }
+    }
+
+    return result;
+}
+
 
 std::string& pe66::name() { return name_; }
 void         pe66::run()

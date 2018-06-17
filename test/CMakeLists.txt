@@ -13,14 +13,16 @@ add_executable(test_projeul main.cpp
                             gint_test.cpp
                             bint_test.cpp
                             crypto_test.cpp
-                            signal_handler_test.cpp)
+                            signal_handler_test.cpp
+                            continued_fraction_test.cpp)
 
 target_link_libraries(test_projeul poker
                                    utils
                                    number_lists
                                    asio_context
                                    signal_handler
-                                   gmock)
+                                   gmock
+                                   exercises)
 
 if( ${ENABLE_COVERAGE} )
     target_link_libraries(test_projeul gcov)

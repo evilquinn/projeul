@@ -8,7 +8,8 @@
 #ifndef PE66_HPP_
 #define PE66_HPP_
 
-#include "pe.hpp"
+#include <pe.hpp>
+#include <vector>
 
 class pe66 : public pe
 {
@@ -19,6 +20,7 @@ public:
     int          number() override { return 66; }
     void         run() override;
 
+    static std::vector<int> continued_fraction_of_root_of(int n);
 private:
     std::string name_;
 };
