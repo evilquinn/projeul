@@ -8,58 +8,22 @@
 #include "pe66.hpp"
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include <boost/multiprecision/cpp_int.hpp>
 
-static int gcd(int a, int b)
+boost::multiprecision::cpp_int d_y_squared_plus_one(int d, int y)
 {
-    return (b==0)?a:gcd(b,a%b);
+    boost::multiprecision::cpp_int result = y;
+    result *= result;
+    result *= d;
+    result += 1;
+    return result;
 }
 
-std::vector<int> pe66::continued_fraction_of_root_of(const int n)
+bool pe66::is_square(boost::multiprecision::cpp_int n)
 {
-    std::vector<int> result;
-
-    int s = n;
-    // s = a*a + r
-    // => Vs = a + ( 1 / a + Vs )
-    //
-    int a = 1;
-    while ( a * a < s )
-    {
-        ++a;
-    }
-    --a;
-    result.push_back(a);
-
-    if ( a * a == s )
-    {
-        return result;
-    }
-
-    // I stole this algo from
-    // https://dansesacrale.wordpress.com/2010/07/04/continued-fractions-sqrt-steps/
-    // Cheers.
-    int b = a, c = 1, d, e, f, g;
-    while(true)
-    {
-        d=c;
-        c=n-b*b;
-        g=gcd(c,d);
-        c/=g;
-        d/=g;
-        b=-b;
-        f=a-c;
-        for(e=0;b<=f;e++)
-        {
-            b+=c;
-        }
-        result.push_back(e);
-        if(b==a&&c==1)
-        {
-            return result;
-        }
-    }
-
-    return result;
+    boost::multiprecision::cpp_int test = boost::multiprecision::sqrt(n);
+    return (test * test) == n;
 }
 
 
@@ -94,7 +58,38 @@ void         pe66::run()
      *
      */
 
+    boost::multiprecision::cpp_int biggest_x = 0;
     size_t result = 0;
+    size_t limit = 1000;
+
+    for ( size_t D = 2; D <= limit; ++D )
+    {
+        if ( is_square(D) )
+        {
+            continue;
+        }
+        int y = 1;
+        boost::multiprecision::cpp_int dysqrdplus1 = 0;
+        while(true)
+        {
+            dysqrdplus1 = d_y_squared_plus_one(D, y);
+            if ( is_square( dysqrdplus1 ) )
+            {
+                break;
+            }
+            ++y;
+        }
+        boost::multiprecision::cpp_int x =
+            boost::multiprecision::sqrt(dysqrdplus1);
+        std::cout << "D=" << D << ", y=" << y << ", x=" << x;
+        if ( x > biggest_x )
+        {
+            result = D;
+            biggest_x = x;
+            std::cout << ", BIGGEST!";
+        }
+        std::cout << "\n";
+    }
 
     std::cout << "result : " << result << std::endl;
 }

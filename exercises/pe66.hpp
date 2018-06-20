@@ -10,6 +10,7 @@
 
 #include <pe.hpp>
 #include <vector>
+#include <boost/multiprecision/cpp_int.hpp>
 
 class pe66 : public pe
 {
@@ -20,7 +21,7 @@ public:
     int          number() override { return 66; }
     void         run() override;
 
-    static std::vector<int> continued_fraction_of_root_of(int n);
+    static bool is_square(boost::multiprecision::cpp_int n);
 private:
     std::string name_;
 };
