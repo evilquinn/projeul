@@ -8,15 +8,58 @@
 #include "pe66.hpp"
 #include <iostream>
 #include <vector>
-#include <cmath>
 #include <boost/multiprecision/cpp_int.hpp>
 
-boost::multiprecision::cpp_int d_y_squared_plus_one(int d, int y)
+static int gcd(int a, int b)
 {
-    boost::multiprecision::cpp_int result = y;
-    result *= result;
-    result *= d;
-    result += 1;
+    return (b==0)?a:gcd(b,a%b);
+}
+
+std::vector<int> pe66::continued_fraction_of_root_of(const int n)
+{
+    std::vector<int> result;
+
+    int s = n;
+    // s = a*a + r
+    // => Vs = a + ( 1 / a + Vs )
+    //
+    int a = 1;
+    while ( a * a < s )
+    {
+        ++a;
+    }
+    --a;
+    result.push_back(a);
+
+    if ( a * a == s )
+    {
+        return result;
+    }
+
+    // I stole this algo from
+    // https://dansesacrale.wordpress.com/2010/07/04/continued-fractions-sqrt-steps/
+    // Cheers.
+    int b = a, c = 1, d, e, f, g;
+    while(true)
+    {
+        d=c;
+        c=n-b*b;
+        g=gcd(c,d);
+        c/=g;
+        d/=g;
+        b=-b;
+        f=a-c;
+        for(e=0;b<=f;e++)
+        {
+            b+=c;
+        }
+        result.push_back(e);
+        if(b==a&&c==1)
+        {
+            return result;
+        }
+    }
+
     return result;
 }
 
@@ -26,6 +69,36 @@ bool pe66::is_square(boost::multiprecision::cpp_int n)
     return (test * test) == n;
 }
 
+template<typename Container>
+class continued_fraction
+{
+public:
+    continued_fraction(Container& container) :
+        container_(container)
+    {}
+    Container& container_;
+};
+
+template<typename Container>
+continued_fraction<Container> to_continued_fraction(Container& cf)
+{
+    return continued_fraction<Container>(cf);
+}
+
+template<typename Container>
+std::ostream& operator<< (std::ostream& os, continued_fraction<Container> cf)
+{
+    if ( cf.container_.size() == 0 )
+    {
+        return os;
+    }
+    os << cf.container_.at(0) << ":";
+    for ( auto it = cf.container_.begin() + 1; it != cf.container_.end(); ++it)
+    {
+        os << *it << ",";
+    }
+    return os;
+}
 
 std::string& pe66::name() { return name_; }
 void         pe66::run()
@@ -58,37 +131,18 @@ void         pe66::run()
      *
      */
 
-    boost::multiprecision::cpp_int biggest_x = 0;
     size_t result = 0;
     size_t limit = 1000;
 
     for ( size_t D = 2; D <= limit; ++D )
     {
-        if ( is_square(D) )
+        if ( ! is_square(D) )
         {
-            continue;
+            std::cout << D << ": ";
+            auto d_cont_fract = continued_fraction_of_root_of(D);
+            std::cout << to_continued_fraction(d_cont_fract) << "\n";
         }
-        int y = 1;
-        boost::multiprecision::cpp_int dysqrdplus1 = 0;
-        while(true)
-        {
-            dysqrdplus1 = d_y_squared_plus_one(D, y);
-            if ( is_square( dysqrdplus1 ) )
-            {
-                break;
-            }
-            ++y;
-        }
-        boost::multiprecision::cpp_int x =
-            boost::multiprecision::sqrt(dysqrdplus1);
-        std::cout << "D=" << D << ", y=" << y << ", x=" << x;
-        if ( x > biggest_x )
-        {
-            result = D;
-            biggest_x = x;
-            std::cout << ", BIGGEST!";
-        }
-        std::cout << "\n";
+
     }
 
     std::cout << "result : " << result << std::endl;
