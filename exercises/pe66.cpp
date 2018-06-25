@@ -100,6 +100,47 @@ std::ostream& operator<< (std::ostream& os, continued_fraction<Container> cf)
     return os;
 }
 
+boost::multiprecision::cpp_int solve_x_for_continued_fraction(const std::vector<int> cf)
+{
+    boost::multiprecision::cpp_int x, x1, x2 = 1;
+    size_t cf_size = cf.size();
+    if ( cf_size == 0 )
+    {
+        return x;
+    }
+
+    bool r_is_odd = cf_size & 0x01;
+
+    x = cf[0];
+    if ( cf_size > 1 )
+    {
+        for ( size_t i = 1; i < cf_size - 1; ++i )
+        {
+            x1 = x;
+            x = ( x1 * cf[i] ) + x2;
+            x2 = x1;
+        }
+
+        if ( ! r_is_odd )
+        {
+            x1 = x;
+            x = ( x1 * cf[cf_size - 1] ) + x2;
+            x2 = x1;
+
+            for ( size_t i = 1; i < cf_size - 1; ++i )
+            {
+                x1 = x;
+                x = ( x1 * cf[i] ) + x2;
+                x2 = x1;
+            }
+        }
+    }
+
+    return x;
+}
+
+
+
 std::string& pe66::name() { return name_; }
 void         pe66::run()
 {
@@ -133,17 +174,21 @@ void         pe66::run()
 
     size_t result = 0;
     size_t limit = 1000;
+    boost::multiprecision::cpp_int biggest_x = 0;
 
     for ( size_t D = 2; D <= limit; ++D )
     {
         if ( ! is_square(D) )
         {
-            std::cout << D << ": ";
             auto d_cont_fract = continued_fraction_of_root_of(D);
-            std::cout << to_continued_fraction(d_cont_fract) << "\n";
+            auto x = solve_x_for_continued_fraction(d_cont_fract);
+            if ( x > biggest_x )
+            {
+                biggest_x = x;
+                result = D;
+            }
         }
-
     }
 
-    std::cout << "result : " << result << std::endl;
+    std::cout << "result: D: " << result << " x: " << biggest_x << std::endl;
 }
