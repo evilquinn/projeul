@@ -5,68 +5,58 @@
  *      Author: evilquinn
  */
 
-#include "pe67.hpp"
-#include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
-#include <fstream>
+#include <pe67.hpp>
 #include <iostream>
 #include <vector>
+#include <map>
 
 std::string& pe67::name() { return name_; }
+
+typedef std::vector<int> three_line;
+typedef std::vector<three_line> magic_set;
+typedef std::multimap<size_t, magic_set> magic_solution;
+
+magic_solution solve_magic_n_gon_for(size_t n)
+{
+    magic_solution result;
+
+
+    return result;
+}
+
 void         pe67::run()
 {
     /*
-     * By starting at the top of the triangle below and moving to adjacent
-     * numbers on the row below, the maximum total from top to bottom is 23.
+     * Consider a "magic" 3-gon ring, filled with the numbers 1 to 6, and
+     * each line adding to nine.
      *
-     *      3
-     *     7 4
-     *    2 4 6
-     *   8 5 9 3
+     * Working clockwise, and starting from the group of three with the
+     * numerically lowest external node (4,3,2 in this example), each
+     * solution can be described uniquely. For example, the above
+     * solution can be described by the set: 4,3,2; 6,2,1; 5,1,3.
      *
-     * That is, 3 + 7 + 4 + 9 = 23.
+     * It is possible to complete the ring with four different totals:
+     * 9, 10, 11, and 12. There are eight solutions in total.
      *
-     * Find the maximum total from top to bottom in triangle.txt
-     * (right click and 'Save Link/Target As...'), a 15K text file containing
-     * a triangle with one-hundred rows.
+     * Total    Solution Set
+     * 9        4,2,3; 5,3,1; 6,1,2
+     * 9        4,3,2; 6,2,1; 5,1,3
+     * 10       2,3,5; 4,5,1; 6,1,3
+     * 10       2,5,3; 6,3,1; 4,1,5
+     * 11       1,4,6; 3,6,2; 5,2,4
+     * 11       1,6,4; 5,4,2; 3,2,6
+     * 12       1,5,6; 2,6,4; 3,4,5
+     * 12       1,6,5; 3,5,4; 2,4,6
+     *
+     * By concatenating each group it is possible to form 9-digit strings;
+     * the maximum string for a 3-gon ring is 432621513.
+     *
+     * Using the numbers 1 to 10, and depending on arrangements, it is
+     * possible to form 16- and 17-digit strings. What is the maximum
+     * 16-digit string for a "magic" 5-gon ring?
+     *
      */
 
-    std::ifstream data_file;
-    data_file.open( "../data/pe67_triangle.txt" );
-
-    typedef std::vector<std::vector<size_t>> triangle_type;
-    triangle_type                            tri;
-
-    boost::char_separator<char> space_sep( " " );
-    std::string                 line;
-    while ( std::getline( data_file, line ) )
-    {
-        boost::tokenizer<boost::char_separator<char>> nums( line, space_sep );
-        std::vector<size_t>                           newline;
-        BOOST_FOREACH ( const std::string& numstring, nums )
-        {
-            size_t num = stoi( numstring );
-            newline.push_back( num );
-        }
-        tri.push_back( newline );
-    }
-
-    for ( size_t iter = tri.size() - 1; iter > 0; --iter )
-    {
-        for ( size_t niter = 0; niter < tri[iter].size() - 1; ++niter )
-        {
-            if ( tri[iter][niter] > tri[iter][niter + 1] )
-            {
-                tri[iter - 1][niter] += tri[iter][niter];
-            }
-            else
-            {
-                tri[iter - 1][niter] += tri[iter][niter + 1];
-            }
-        }
-    }
-
-    size_t result = tri[0][0];
-
+    size_t result = 0;
     std::cout << "result : " << result << std::endl;
 }
