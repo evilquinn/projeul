@@ -42,6 +42,7 @@
 #include <pe65.hpp>
 #include <pe66.hpp>
 #include <pe67.hpp>
+#include <pe68.hpp>
 
 pe_register::pe_register() : reg_()
 {
@@ -85,6 +86,7 @@ pe_register::pe_register() : reg_()
     reg( std::make_unique<pe65>() );
     reg( std::make_unique<pe66>() );
     reg( std::make_unique<pe67>() );
+    reg( std::make_unique<pe68>() );
 };
 
 void pe_register::reg( std::unique_ptr<pe> ex )
