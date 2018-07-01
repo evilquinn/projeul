@@ -10,7 +10,13 @@
 
 size_t gcd(size_t a, size_t b)
 {
-    return (b==0)?a:gcd(b,a%b);
+    while ( b != 0 )
+    {
+        size_t r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
 }
 
 std::vector<size_t> calc_prime_factors(size_t       num,
