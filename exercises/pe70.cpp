@@ -42,6 +42,21 @@ void         pe70::run()
         {
             continue;
         }
+        bool prime_divisor = false;
+        for ( size_t pr = primes.next_prime(1); pr < 1000; pr = primes.next_prime(pr) )
+        {
+            if ( i % pr == 0 )
+            {
+                prime_divisor = true;
+                break;
+            }
+        }
+        if ( prime_divisor )
+        {
+            // apparently, no point checking nums which are divisible by
+            // the smaller primes!
+            continue;
+        }
         auto prifacs = calc_prime_factors(i, primes);
         std::set<size_t> dedup(prifacs.begin(), prifacs.end());
         size_t total = i;
