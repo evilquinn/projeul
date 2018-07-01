@@ -36,7 +36,7 @@ void         pe70::run()
     prime_sieve primes(limit+1);
     size_t result = 0;
     double minimum = 1000;
-    for ( size_t i = 6; i <= limit; ++i )
+    for ( size_t i = 1000000; i <= limit; ++i )
     {
         if ( primes.is_prime(i) )
         {

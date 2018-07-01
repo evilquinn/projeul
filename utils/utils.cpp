@@ -35,7 +35,7 @@ std::vector<size_t> calc_prime_factors(size_t       num,
         size_t try_prime = 2;
         while ( curr_num % try_prime != 0 )
         {
-            try_prime = next_prime( primes, try_prime );
+            try_prime = primes.next_prime( try_prime );
         }
 
         result.push_back( try_prime );
@@ -71,8 +71,7 @@ size_t next_prime( prime_sieve& primes, size_t n )
     {
         return 2;
     }
-
-    if ( ( n & 1 ) != 0u )
+    if ( ( n & 0x01 ) != 0u )
     {
         // odd
         n += 2;
@@ -131,7 +130,7 @@ std::vector<uint8_t> digit_array_from(size_t n)
 
 bool is_permutation( size_t a, size_t b )
 {
-    std::vector<size_t> ad, bd;
+    std::vector<size_t> ad;
     while ( a > 0 )
     {
         ad.push_back( a % 10 );
@@ -139,11 +138,23 @@ bool is_permutation( size_t a, size_t b )
     }
     while ( b > 0 )
     {
-        bd.push_back( b % 10 );
-        b /= 10;
+        auto it = std::find(ad.begin(), ad.end(), b % 10);
+        if ( it != ad.end() )
+        {
+            ad.erase(it);
+            b /= 10;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    if ( ad.size() > 0 )
+    {
+        return false;
     }
 
-    return std::is_permutation(ad.begin(), ad.end(), bd.begin(), bd.end());
+    return true;
 }
 
 void set_of_digits( size_t n, digit_set_t& digits )
