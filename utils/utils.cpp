@@ -8,6 +8,43 @@
 #include <prime_sieve.hpp>
 #include <utils.hpp>
 
+size_t gcd(size_t a, size_t b)
+{
+    return (b==0)?a:gcd(b,a%b);
+}
+
+std::vector<size_t> calc_prime_factors(size_t       num,
+                                       prime_sieve& primes )
+{
+    // try dividing num by 2, then 3, then 5, etc, etc
+    // each time a division works (no remainders), cache the
+    // prime factor, and move on to working out the next prime
+    // factor, starting dividing from the first prime again
+    //
+    size_t curr_num = num;
+    std::vector<size_t> result;
+
+    while ( curr_num > 1 )
+    {
+        if ( primes.is_prime( curr_num ) )
+        {
+            result.push_back( curr_num );
+            break;
+        }
+
+        size_t try_prime = 2;
+        while ( curr_num % try_prime != 0 )
+        {
+            try_prime = next_prime( primes, try_prime );
+        }
+
+        result.push_back( try_prime );
+        curr_num /= try_prime;
+    }
+
+    return result;
+}
+
 int num_digits( long long unsigned n )
 {
     int num_digits = 0;

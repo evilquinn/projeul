@@ -9,6 +9,11 @@
 
 class prime_sieve;
 
+size_t gcd(size_t a, size_t b);
+
+std::vector<size_t> calc_prime_factors(size_t       num,
+                                       prime_sieve& primes );
+
 /*
  * counts the number of digits in a number
  * @param n  The number to count the digits of

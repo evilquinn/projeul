@@ -79,6 +79,11 @@ magic_solution solve_magic_n_gon_for(size_t n)
             }
             if ( available_digits.empty() )
             {
+                while ( e >= solution.size() )
+                {
+                    // we might be past the end
+                    --e;
+                }
                 available_digits.insert(solution[e]);
                 set_solution_element(solution, e, 0);
                 do
@@ -146,12 +151,12 @@ magic_solution solve_magic_n_gon_for(size_t n)
                     {
                         --e;
                     }
-                    while ( solution[e] == 0 );
+                    while ( e < solution.size() && solution[e] == 0 );
                     continue;
                 }
             }
         }
-        while ( solution[e] != 0 )
+        while ( e < solution.size() && solution[e] != 0 )
         {
             ++e;
         }
