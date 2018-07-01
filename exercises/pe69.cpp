@@ -39,7 +39,7 @@ void         pe69::run()
 
     size_t limit = 1000000;
     prime_sieve primes(limit+1);
-    double result = 0;
+    size_t result = 0;
     double biggest_attempt = 0;
     for ( size_t i = 6; i <= limit; ++i )
     {
@@ -49,12 +49,13 @@ void         pe69::run()
         }
         auto prifacs = calc_prime_factors(i, primes);
         std::set<size_t> deup(prifacs.begin(), prifacs.end());
-        double total = i;
-        for ( double p: deup )
+        size_t total = i;
+        for ( size_t p: deup )
         {
-            total *= ( 1 - 1/p );
+            total *= p - 1;
+            total /= p;
         }
-        double attempt = i / total;
+        double attempt = i / (double)total;
         //std::cout << relper.size() << std::endl;
         if ( attempt > biggest_attempt )
         {
@@ -63,6 +64,6 @@ void         pe69::run()
         }
     }
 
-    std::cout << (size_t)result << std::endl;
+    std::cout << result << std::endl;
 
 }

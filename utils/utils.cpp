@@ -118,6 +118,34 @@ bool is_prime( prime_sieve& primes, size_t n )
     return true;
 }
 
+std::vector<uint8_t> digit_array_from(size_t n)
+{
+    std::vector<uint8_t> result;
+    while ( n > 0 )
+    {
+        result.insert( result.begin(), n % 10 );
+        n /= 10;
+    }
+    return result;
+}
+
+bool is_permutation( size_t a, size_t b )
+{
+    std::vector<size_t> ad, bd;
+    while ( a > 0 )
+    {
+        ad.push_back( a % 10 );
+        a /= 10;
+    }
+    while ( b > 0 )
+    {
+        bd.push_back( b % 10 );
+        b /= 10;
+    }
+
+    return std::is_permutation(ad.begin(), ad.end(), bd.begin(), bd.end());
+}
+
 void set_of_digits( size_t n, digit_set_t& digits )
 {
     digits.clear();

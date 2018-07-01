@@ -1,5 +1,6 @@
 
 add_library(exercises STATIC pe_register.cpp
+                             pe70.cpp
                              pe69.cpp
                              pe68.cpp
                              pe67.cpp
