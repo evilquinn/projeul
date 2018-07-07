@@ -42,45 +42,76 @@ void         pe76::run()
      *
      */
 
-    size_t limit = 5;
+    size_t limit = 100;
 
-    size_t result = 0;
+    boost::multiprecision::cpp_int result = 0;
 
-    for ( size_t first_term = 1; first_term < limit; ++first_term )
+    std::vector<size_t> terms = { limit };
+
+    size_t front = 0;
+    size_t back = front + 1;
+    while ( true )
     {
-        std::vector<size_t> terms = { first_term };
-        std::copy(fixed_terms.begin(),
-                  fixed_terms.end() - first_term,
-                  std::back_inserter(terms));
-
-        ++result;
-        print_terms(terms);
-
-        size_t toi = 1;
-        size_t fromi = terms.size() - 1;
-        while ( fromi > toi && terms[toi] + 1 <= first_term )
+        if ( terms[front] == 1 )
         {
-            terms[toi] += 1;
-            terms[fromi] -= 1;
-            if ( terms[fromi] == 0 )
+            // backtrack
+            --front;
+            --back;
+            continue;
+        }
+        else if ( terms[front] > 2 )
+        {
+            terms[front] -= 1;
+            if ( back >= terms.size() )
             {
-                terms.pop_back();
-                --fromi;
+                terms.push_back(1);
             }
+            else
+            {
+                terms[back] += 1;
+                while ( back < terms.size() && terms[back] < terms[front] )
+                {
+                    if ( back == terms.size() - 1 )
+                    {
+                        break;
+                    }
+                    terms[back] += 1;
+                    if ( terms[terms.size()-1] == 1 )
+                    {
+                        terms.pop_back();
+                    }
+                    else
+                    {
+                        terms[terms.size()-1] -= 1;
+                    }
+                    if ( terms[back] == terms[front] )
+                    {
+                        ++back;
+                        ++front;
+                    }
+                }
+            }
+            ++front;
+            ++back;
+            //print_terms(terms);
             ++result;
-            print_terms(terms);
+        }
+        else if ( terms[front] == 2 )
+        {
+            terms[front] -= 1;
+            terms.push_back(1);
+            //print_terms(terms);
+            ++result;
 
-            if ( terms[toi] == first_term )
+            if ( front == 0 )
             {
-                ++toi;
+                // we're done
+                break;
             }
-            if ( fromi <= toi )
-            {
-                toi = 1;
-                fromi = terms.size() - 1;
-            }
+            --front;
+            --back;
         }
     }
 
-
+    std::cout << result << std::endl;
 }
