@@ -9,12 +9,11 @@
 
 class prime_sieve;
 
-size_t gcd(size_t a, size_t b);
+size_t gcd( size_t a, size_t b );
 
-std::vector<size_t> calc_prime_factors(size_t       num,
-                                       prime_sieve& primes );
+std::vector<size_t> calc_prime_factors( size_t num, prime_sieve& primes );
 
-std::vector<uint8_t> digit_array_from(size_t n);
+std::vector<uint8_t> digit_array_from( size_t n );
 
 bool is_permutation( size_t a, size_t b );
 

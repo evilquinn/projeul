@@ -5,20 +5,20 @@
  *      Author: evilquinn
  */
 
-#include <pe74.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 #include <iostream>
 #include <map>
+#include <pe74.hpp>
 #include <utils.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
 
-std::string& pe74::name() { return name_; }
-
-boost::multiprecision::cpp_int sum_factorial_of_digits_of(boost::multiprecision::cpp_int n)
+std::string&                   pe74::name() { return name_; }
+boost::multiprecision::cpp_int sum_factorial_of_digits_of(
+    boost::multiprecision::cpp_int n )
 {
     boost::multiprecision::cpp_int result = 0;
     while ( n > 0 )
     {
-        boost::multiprecision::cpp_int d = n % 10;
+        boost::multiprecision::cpp_int d    = n % 10;
         boost::multiprecision::cpp_int dfac = 1;
         for ( ; d > 1; --d )
         {
@@ -31,7 +31,7 @@ boost::multiprecision::cpp_int sum_factorial_of_digits_of(boost::multiprecision:
     return result;
 }
 
-void         pe74::run()
+void pe74::run()
 {
     /*
      * The number 145 is well known for the property that the sum of the
@@ -66,18 +66,18 @@ void         pe74::run()
     size_t result = 0;
 
     size_t limit3 = 1000000;
-    size_t i = 1000;
+    size_t i      = 1000;
     while ( i < limit3 )
     {
-        auto attempt = sum_factorial_of_digits_of(i);
+        auto attempt = sum_factorial_of_digits_of( i );
         if ( attempt == 367945 || attempt == 367954 )
         {
-            // any number which results in either of those two sums of factorial
+            // any number which results in either of those two sums of
+            // factorial
             // of digits will result in a 60-length chain, nice!
             ++result;
         }
         ++i;
     }
     std::cout << result << std::endl;
-
 }

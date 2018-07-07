@@ -5,15 +5,14 @@
  *      Author: evilquinn
  */
 
-#include <pe72.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 #include <iostream>
+#include <pe72.hpp>
+#include <prime_sieve.hpp>
 #include <set>
 #include <utils.hpp>
-#include <prime_sieve.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
 
 std::string& pe72::name() { return name_; }
-
 void         pe72::run()
 {
     /*
@@ -30,15 +29,15 @@ void         pe72::run()
      * fractions for d ≤ 1,000,000?
      */
 
-    size_t limit = 1000000;
-    prime_sieve primes(limit+1);
+    size_t                         limit = 1000000;
+    prime_sieve                    primes( limit + 1 );
     boost::multiprecision::cpp_int result = 0;
     for ( size_t d = 2; d <= limit; ++d )
     {
-        auto prifacs = calc_prime_factors(d, primes);
-        std::set<size_t> dedup(prifacs.begin(), prifacs.end());
-        size_t total = d;
-        for ( size_t p: dedup )
+        auto             prifacs = calc_prime_factors( d, primes );
+        std::set<size_t> dedup( prifacs.begin(), prifacs.end() );
+        size_t           total = d;
+        for ( size_t p : dedup )
         {
             total *= p - 1;
             total /= p;
@@ -47,5 +46,4 @@ void         pe72::run()
     }
 
     std::cout << result << std::endl;
-
 }

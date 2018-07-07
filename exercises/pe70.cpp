@@ -5,14 +5,13 @@
  *      Author: evilquinn
  */
 
-#include <pe70.hpp>
 #include <iostream>
+#include <pe70.hpp>
+#include <prime_sieve.hpp>
 #include <set>
 #include <utils.hpp>
-#include <prime_sieve.hpp>
 
 std::string& pe70::name() { return name_; }
-
 void         pe70::run()
 {
     /*
@@ -32,18 +31,19 @@ void         pe70::run()
      * n and the ratio n/φ(n) produces a minimum.
      */
 
-    size_t limit = 10000000;
-    prime_sieve primes(limit+1);
-    size_t result = 0;
-    double minimum = 1000;
+    size_t      limit = 10000000;
+    prime_sieve primes( limit + 1 );
+    size_t      result  = 0;
+    double      minimum = 1000;
     for ( size_t i = 1000000; i <= limit; ++i )
     {
-        if ( primes.is_prime(i) )
+        if ( primes.is_prime( i ) )
         {
             continue;
         }
         bool prime_divisor = false;
-        for ( size_t pr = primes.next_prime(1); pr < 1000; pr = primes.next_prime(pr) )
+        for ( size_t pr = primes.next_prime( 1 ); pr < 1000;
+              pr        = primes.next_prime( pr ) )
         {
             if ( i % pr == 0 )
             {
@@ -57,27 +57,26 @@ void         pe70::run()
             // the smaller primes!
             continue;
         }
-        auto prifacs = calc_prime_factors(i, primes);
-        std::set<size_t> dedup(prifacs.begin(), prifacs.end());
-        size_t total = i;
-        for ( size_t p: dedup )
+        auto             prifacs = calc_prime_factors( i, primes );
+        std::set<size_t> dedup( prifacs.begin(), prifacs.end() );
+        size_t           total = i;
+        for ( size_t p : dedup )
         {
             total *= p - 1;
             total /= p;
         }
 
-        if ( is_permutation(total, i) )
+        if ( is_permutation( total, i ) )
         {
             double attempt = i / (double)total;
-            //std::cout << relper.size() << std::endl;
+            // std::cout << relper.size() << std::endl;
             if ( attempt < minimum )
             {
                 minimum = attempt;
-                result = i;
+                result  = i;
             }
         }
     }
 
     std::cout << result << ", " << minimum << std::endl;
-
 }

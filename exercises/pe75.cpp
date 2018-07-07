@@ -5,15 +5,14 @@
  *      Author: evilquinn
  */
 
-#include <pe75.hpp>
-#include <iostream>
-#include <map>
-#include <utils.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <cmath>
+#include <iostream>
+#include <map>
+#include <pe75.hpp>
+#include <utils.hpp>
 
 std::string& pe75::name() { return name_; }
-
 struct triplet
 {
     size_t a;
@@ -22,12 +21,13 @@ struct triplet
     size_t l;
 };
 
-bool operator< (const struct triplet& lhs, const struct triplet& rhs)
+bool operator<( const struct triplet& lhs, const struct triplet& rhs )
 {
-    return lhs.a == rhs.a ? lhs.b == rhs.b ? lhs.c < rhs.c : lhs.b < rhs.b : lhs.a < rhs.a;
+    return lhs.a == rhs.a ? lhs.b == rhs.b ? lhs.c < rhs.c : lhs.b < rhs.b
+                          : lhs.a < rhs.a;
 }
 
-void         pe75::run()
+void pe75::run()
 {
     /*
      *
@@ -72,9 +72,9 @@ void         pe75::run()
             }
 
             size_t a = 2 * p * q;
-            size_t b = p*p - q*q;
-            size_t c = p*p + q*q;
-            size_t l = a+b+c;
+            size_t b = p * p - q * q;
+            size_t c = p * p + q * q;
+            size_t l = a + b + c;
             if ( l > llimit )
             {
                 break;
@@ -82,14 +82,13 @@ void         pe75::run()
 
             if ( a > b )
             {
-                std::swap(a, b);
+                std::swap( a, b );
             }
 
-            for ( size_t i = 1; l*i <= llimit; ++i )
+            for ( size_t i = 1; l * i <= llimit; ++i )
             {
-                resultt.insert({ a*i, b*i, c*i, l*i });
+                resultt.insert( { a * i, b * i, c * i, l * i } );
             }
-
         }
     }
 
@@ -107,5 +106,4 @@ void         pe75::run()
     }
 
     std::cout << result << std::endl;
-
 }

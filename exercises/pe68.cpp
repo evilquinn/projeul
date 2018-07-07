@@ -5,69 +5,67 @@
  *      Author: evilquinn
  */
 
-#include <pe68.hpp>
-#include <iostream>
-#include <vector>
-#include <map>
-#include <set>
-#include <iterator>
 #include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <pe68.hpp>
+#include <set>
+#include <vector>
 
 std::string& pe68::name() { return name_; }
-
 typedef std::multimap<size_t, std::vector<int> > magic_solution;
 
-size_t element_pair(size_t n, size_t e)
+size_t element_pair( size_t n, size_t e )
 {
     int interim = e % 3;
-    int diff = (interim == 0 ? 0 : interim == 1 ? -2 : 2);
-    int result = (int)e + diff;
+    int diff    = ( interim == 0 ? 0 : interim == 1 ? -2 : 2 );
+    int result  = (int)e + diff;
     return ( result < 0 ? n - 1 : (size_t)result >= n ? 1 : result );
 }
 
-void set_solution_element(std::vector<int>& solution, size_t e, size_t v)
+void set_solution_element( std::vector<int>& solution, size_t e, size_t v )
 {
     solution[e] = v;
-    solution[element_pair(solution.size(), e)] = v;
+    solution[element_pair( solution.size(), e )] = v;
 }
 
-bool sort_solution(std::vector<int>& solution)
+bool sort_solution( std::vector<int>& solution )
 {
-    bool result = false;
-    int lowest = solution[0];
-    int lowest_i = 0;
-    for(size_t i = 3; i < solution.size(); i += 3)
+    bool result   = false;
+    int  lowest   = solution[0];
+    int  lowest_i = 0;
+    for ( size_t i = 3; i < solution.size(); i += 3 )
     {
         if ( solution[i] < lowest )
         {
-            lowest = solution[i];
+            lowest   = solution[i];
             lowest_i = i;
         }
     }
     if ( lowest_i > 0 )
     {
         result = true;
-        std::rotate(solution.begin(),
-                    solution.begin()+lowest_i,
-                    solution.end());
+        std::rotate(
+            solution.begin(), solution.begin() + lowest_i, solution.end() );
     }
     return result;
 }
 
-magic_solution solve_magic_n_gon_for(size_t n)
+magic_solution solve_magic_n_gon_for( size_t n )
 {
     magic_solution result;
 
-    size_t solution_length = n * 3;
-    size_t num_digits = n * 2;
-    std::vector<int> solution(solution_length);
-    std::set<int> available_digits;
+    size_t           solution_length = n * 3;
+    size_t           num_digits      = n * 2;
+    std::vector<int> solution( solution_length );
+    std::set<int>    available_digits;
     for ( size_t i = 1; i <= num_digits; ++i )
     {
-        available_digits.insert(i);
+        available_digits.insert( i );
     }
-    size_t e = 0;
-    bool backtrack = false;
+    size_t e         = 0;
+    bool   backtrack = false;
     while ( true )
     {
         if ( backtrack )
@@ -84,51 +82,52 @@ magic_solution solve_magic_n_gon_for(size_t n)
                     // we might be past the end
                     --e;
                 }
-                available_digits.insert(solution[e]);
-                set_solution_element(solution, e, 0);
+                available_digits.insert( solution[e] );
+                set_solution_element( solution, e, 0 );
                 do
                 {
                     --e;
-                }
-                while ( solution[e] == 0 );
+                } while ( solution[e] == 0 );
                 continue;
             }
             else
             {
-                auto it = available_digits.upper_bound(solution[e]);
+                auto it = available_digits.upper_bound( solution[e] );
                 if ( it != available_digits.end() )
                 {
                     int save = solution[e];
-                    set_solution_element(solution, e, *it);
+                    set_solution_element( solution, e, *it );
                     if ( save > 0 )
                     {
-                        available_digits.insert(save);
+                        available_digits.insert( save );
                     }
-                    available_digits.erase(it);
+                    available_digits.erase( it );
                     backtrack = false;
                     // intermediate test: is the digit we just added good?
                     size_t intermediate_total = 0;
-                    size_t intermediate_last = 0;
-                    bool encountered_zero = false;
+                    size_t intermediate_last  = 0;
+                    bool   encountered_zero   = false;
                     for ( size_t i = 0; i < solution.size(); ++i )
                     {
-                        encountered_zero = encountered_zero == true ? true :
-                                                                      solution[i] == 0;
+                        encountered_zero = encountered_zero == true
+                                               ? true
+                                               : solution[i] == 0;
                         intermediate_total += solution[i];
-                        if ( (i + 1) % 3 == 0 )
+                        if ( ( i + 1 ) % 3 == 0 )
                         {
                             if ( encountered_zero )
                             {
-                                encountered_zero = false;
+                                encountered_zero   = false;
                                 intermediate_total = 0;
                                 continue;
                             }
                             if ( intermediate_last == 0 )
                             {
-                                intermediate_last = intermediate_total;
+                                intermediate_last  = intermediate_total;
                                 intermediate_total = 0;
                             }
-                            else if ( intermediate_total == intermediate_last )
+                            else if ( intermediate_total ==
+                                      intermediate_last )
                             {
                                 // all good
                                 intermediate_total = 0;
@@ -145,13 +144,12 @@ magic_solution solve_magic_n_gon_for(size_t n)
                 }
                 else
                 {
-                    available_digits.insert(solution[e]);
-                    set_solution_element(solution, e, 0);
+                    available_digits.insert( solution[e] );
+                    set_solution_element( solution, e, 0 );
                     do
                     {
                         --e;
-                    }
-                    while ( e < solution.size() && solution[e] == 0 );
+                    } while ( e < solution.size() && solution[e] == 0 );
                     continue;
                 }
             }
@@ -165,15 +163,15 @@ magic_solution solve_magic_n_gon_for(size_t n)
         {
             // full attempt, test
             size_t intermediate_total = 0;
-            size_t intermediate_last = 0;
+            size_t intermediate_last  = 0;
             for ( size_t i = 0; i < num_digits; ++i )
             {
                 intermediate_total += solution[i];
-                if ( (i + 1) % 3 == 0 )
+                if ( ( i + 1 ) % 3 == 0 )
                 {
                     if ( intermediate_last == 0 )
                     {
-                        intermediate_last = intermediate_total;
+                        intermediate_last  = intermediate_total;
                         intermediate_total = 0;
                     }
                     else if ( intermediate_total == intermediate_last )
@@ -191,17 +189,17 @@ magic_solution solve_magic_n_gon_for(size_t n)
             }
             if ( backtrack )
             {
-                continue; // skip out again to backtrack
+                continue;  // skip out again to backtrack
             }
             else
             {
                 // winning solution???
                 auto copy = solution;
-                sort_solution(copy);
+                sort_solution( copy );
                 int seen = 0;
-                for( auto walker = result.lower_bound(intermediate_last);
-                     intermediate_last == walker->first;
-                     ++walker )
+                for ( auto walker = result.lower_bound( intermediate_last );
+                      intermediate_last == walker->first;
+                      ++walker )
                 {
                     if ( copy == walker->second )
                     {
@@ -210,12 +208,13 @@ magic_solution solve_magic_n_gon_for(size_t n)
                 }
                 if ( seen == 0 )
                 {
-                    result.insert(std::make_pair(intermediate_last, copy));
+                    result.insert(
+                        std::make_pair( intermediate_last, copy ) );
                 }
                 else
                 {
                     // done now?
-                    //break;
+                    // break;
                 }
                 // keep going for more solutions!
                 backtrack = true;
@@ -225,36 +224,36 @@ magic_solution solve_magic_n_gon_for(size_t n)
 
         // select next
         int save = solution[e];
-        set_solution_element(solution, e, *available_digits.begin());
+        set_solution_element( solution, e, *available_digits.begin() );
         if ( save > 0 )
         {
-            available_digits.insert(save);
+            available_digits.insert( save );
         }
         else
         {
-            available_digits.erase(available_digits.begin());
+            available_digits.erase( available_digits.begin() );
         }
 
         // intermediate test: is the digit we just added good?
         size_t intermediate_total = 0;
-        size_t intermediate_last = 0;
-        bool encountered_zero = false;
+        size_t intermediate_last  = 0;
+        bool   encountered_zero   = false;
         for ( size_t i = 0; i < solution.size(); ++i )
         {
-            encountered_zero = encountered_zero == true ? true :
-                                                          solution[i] == 0;
+            encountered_zero =
+                encountered_zero == true ? true : solution[i] == 0;
             intermediate_total += solution[i];
-            if ( (i + 1) % 3 == 0 )
+            if ( ( i + 1 ) % 3 == 0 )
             {
                 if ( encountered_zero )
                 {
-                    encountered_zero = false;
+                    encountered_zero   = false;
                     intermediate_total = 0;
                     continue;
                 }
                 if ( intermediate_last == 0 )
                 {
-                    intermediate_last = intermediate_total;
+                    intermediate_last  = intermediate_total;
                     intermediate_total = 0;
                 }
                 else if ( intermediate_total == intermediate_last )
@@ -275,7 +274,7 @@ magic_solution solve_magic_n_gon_for(size_t n)
     return result;
 }
 
-void         pe68::run()
+void pe68::run()
 {
     /*
      * Consider a "magic" 3-gon ring, filled with the numbers 1 to 6, and
@@ -308,12 +307,14 @@ void         pe68::run()
      *
      */
 
-    auto temp = solve_magic_n_gon_for(5);
+    auto temp = solve_magic_n_gon_for( 5 );
 
-    for(const auto& sol: temp)
+    for ( const auto& sol : temp )
     {
         std::cout << sol.first << " : ";
-        std::copy(sol.second.begin(), sol.second.end(), std::ostream_iterator<int>(std::cout));
+        std::copy( sol.second.begin(),
+                   sol.second.end(),
+                   std::ostream_iterator<int>( std::cout ) );
         std::cout << "\n";
     }
 }

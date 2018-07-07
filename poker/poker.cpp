@@ -164,7 +164,7 @@ void poker::scored_hand::analyse_for_straight_flush()
     bool        flush    = true;
     bool        straight = true;
     bool        starting = true;
-    const card* last = NULL;
+    const card* last     = NULL;
     BOOST_FOREACH ( const card& c, hand_ )
     {
         if ( starting )

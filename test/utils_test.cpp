@@ -149,8 +149,8 @@ TEST_F( UtilsTest, testMultDigitArrayByWorks )
     EXPECT_THAT( digit_array[num_digits - 6], Eq( 2 ) );
 }
 
-TEST_F ( UtilsTest, testDigitArrayFrom )
+TEST_F( UtilsTest, testDigitArrayFrom )
 {
-    auto arr = digit_array_from(12345);
-    EXPECT_THAT ( arr, Eq(std::vector<uint8_t>{ 1, 2, 3, 4, 5 } ) );
+    auto arr = digit_array_from( 12345 );
+    EXPECT_THAT( arr, Eq( std::vector<uint8_t>{ 1, 2, 3, 4, 5 } ) );
 }

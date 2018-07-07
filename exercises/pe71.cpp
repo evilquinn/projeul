@@ -5,13 +5,12 @@
  *      Author: evilquinn
  */
 
-#include <pe71.hpp>
 #include <iostream>
 #include <map>
+#include <pe71.hpp>
 #include <utils.hpp>
 
 std::string& pe71::name() { return name_; }
-
 void         pe71::run()
 {
     /*
@@ -27,7 +26,8 @@ void         pe71::run()
      * It can be seen that 2/5 is the fraction immediately to the left of 3/7.
      *
      * By listing the set of reduced proper fractions for d ≤ 1,000,000 in
-     * ascending order of size, find the numerator of the fraction immediatelyi
+     * ascending order of size, find the numerator of the fraction
+     * immediatelyi
      * to the left of 3/7.
      *
      */
@@ -35,22 +35,23 @@ void         pe71::run()
     size_t limit = 1000000;
     std::map<double, std::pair<size_t, size_t> > resultm;
 
-    double ubound = (double)3/7;
-    double lbound = (double)2/5;
+    double ubound = (double)3 / 7;
+    double lbound = (double)2 / 5;
 
-    bool finished = false;
-    size_t seen = 0;
-    for(size_t d = limit; d > 0; --d )
+    bool   finished = false;
+    size_t seen     = 0;
+    for ( size_t d = limit; d > 0; --d )
     {
-        for(size_t n = (d * 3)/7; n < d; ++n)
+        for ( size_t n = ( d * 3 ) / 7; n < d; ++n )
         {
-            double key = (double)n/d;
+            double key = (double)n / d;
             if ( key < ubound && key > lbound )
             {
-                if ( gcd(n, d) == 1 )
+                if ( gcd( n, d ) == 1 )
                 {
                     lbound = key;
-                    resultm.insert(std::make_pair(key, std::make_pair(n, d)));
+                    resultm.insert(
+                        std::make_pair( key, std::make_pair( n, d ) ) );
                     ++seen;
                     if ( seen == 2 )
                     {
@@ -66,10 +67,9 @@ void         pe71::run()
         }
     }
 
-    for(auto e: resultm)
+    for ( auto e : resultm )
     {
         std::cout << e.second.first << "/" << e.second.second << ", ";
     }
     std::cout << std::endl;
-
 }

@@ -5,16 +5,15 @@
  *      Author: evilquinn
  */
 
-#include <pe76.hpp>
-#include <iostream>
-#include <map>
-#include <utils.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <cmath>
+#include <iostream>
+#include <map>
+#include <pe76.hpp>
+#include <utils.hpp>
 
 std::string& pe76::name() { return name_; }
-
-void print_terms(std::vector<size_t> terms)
+void print_terms( std::vector<size_t> terms )
 {
     for ( const auto& term : terms )
     {
@@ -23,8 +22,7 @@ void print_terms(std::vector<size_t> terms)
     std::cout << "\n";
 }
 
-
-void         pe76::run()
+void pe76::run()
 {
     /*
      * It is possible to write five as a sum in exactly six different ways:
@@ -49,7 +47,7 @@ void         pe76::run()
     std::vector<size_t> terms = { limit };
 
     size_t front = 0;
-    size_t back = front + 1;
+    size_t back  = front + 1;
     while ( true )
     {
         if ( terms[front] == 1 )
@@ -64,7 +62,7 @@ void         pe76::run()
             terms[front] -= 1;
             if ( back >= terms.size() )
             {
-                terms.push_back(1);
+                terms.push_back( 1 );
             }
             else
             {
@@ -84,26 +82,26 @@ void         pe76::run()
                     }
 
                     terms[back] += 1;
-                    if ( terms[terms.size()-1] == 1 )
+                    if ( terms[terms.size() - 1] == 1 )
                     {
                         terms.pop_back();
                     }
                     else
                     {
-                        terms[terms.size()-1] -= 1;
+                        terms[terms.size() - 1] -= 1;
                     }
                 }
             }
             ++front;
             ++back;
-            //print_terms(terms);
+            // print_terms(terms);
             ++result;
         }
         else if ( terms[front] == 2 )
         {
             terms[front] -= 1;
-            terms.push_back(1);
-            //print_terms(terms);
+            terms.push_back( 1 );
+            // print_terms(terms);
             ++result;
 
             if ( front == 0 )

@@ -8,26 +8,25 @@
 #include <prime_sieve.hpp>
 #include <utils.hpp>
 
-size_t gcd(size_t a, size_t b)
+size_t gcd( size_t a, size_t b )
 {
     while ( b != 0 )
     {
         size_t r = a % b;
-        a = b;
-        b = r;
+        a        = b;
+        b        = r;
     }
     return a;
 }
 
-std::vector<size_t> calc_prime_factors(size_t       num,
-                                       prime_sieve& primes )
+std::vector<size_t> calc_prime_factors( size_t num, prime_sieve& primes )
 {
     // try dividing num by 2, then 3, then 5, etc, etc
     // each time a division works (no remainders), cache the
     // prime factor, and move on to working out the next prime
     // factor, starting dividing from the first prime again
     //
-    size_t curr_num = num;
+    size_t              curr_num = num;
     std::vector<size_t> result;
 
     while ( curr_num > 1 )
@@ -123,7 +122,7 @@ bool is_prime( prime_sieve& primes, size_t n )
     return true;
 }
 
-std::vector<uint8_t> digit_array_from(size_t n)
+std::vector<uint8_t> digit_array_from( size_t n )
 {
     std::vector<uint8_t> result;
     while ( n > 0 )
@@ -144,10 +143,10 @@ bool is_permutation( size_t a, size_t b )
     }
     while ( b > 0 )
     {
-        auto it = std::find(ad.begin(), ad.end(), b % 10);
+        auto it = std::find( ad.begin(), ad.end(), b % 10 );
         if ( it != ad.end() )
         {
-            ad.erase(it);
+            ad.erase( it );
             b /= 10;
         }
         else

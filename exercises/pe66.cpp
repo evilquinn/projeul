@@ -6,16 +6,12 @@
  */
 
 #include "pe66.hpp"
+#include <boost/multiprecision/cpp_int.hpp>
 #include <iostream>
 #include <vector>
-#include <boost/multiprecision/cpp_int.hpp>
 
-static int gcd(int a, int b)
-{
-    return (b==0)?a:gcd(b,a%b);
-}
-
-std::vector<int> pe66::continued_fraction_of_root_of(const int n)
+static int gcd( int a, int b ) { return ( b == 0 ) ? a : gcd( b, a % b ); }
+std::vector<int> pe66::continued_fraction_of_root_of( const int n )
 {
     std::vector<int> result;
 
@@ -29,7 +25,7 @@ std::vector<int> pe66::continued_fraction_of_root_of(const int n)
         ++a;
     }
     --a;
-    result.push_back(a);
+    result.push_back( a );
 
     if ( a * a == s )
     {
@@ -40,21 +36,21 @@ std::vector<int> pe66::continued_fraction_of_root_of(const int n)
     // https://dansesacrale.wordpress.com/2010/07/04/continued-fractions-sqrt-steps/
     // Cheers.
     int b = a, c = 1, d, e, f, g;
-    while(true)
+    while ( true )
     {
-        d=c;
-        c=n-b*b;
-        g=gcd(c,d);
-        c/=g;
-        d/=g;
-        b=-b;
-        f=a-c;
-        for(e=0;b<=f;e++)
+        d = c;
+        c = n - b * b;
+        g = gcd( c, d );
+        c /= g;
+        d /= g;
+        b = -b;
+        f = a - c;
+        for ( e = 0; b <= f; e++ )
         {
-            b+=c;
+            b += c;
         }
-        result.push_back(e);
-        if(b==a&&c==1)
+        result.push_back( e );
+        if ( b == a && c == 1 )
         {
             return result;
         }
@@ -63,47 +59,47 @@ std::vector<int> pe66::continued_fraction_of_root_of(const int n)
     return result;
 }
 
-bool pe66::is_square(boost::multiprecision::cpp_int n)
+bool pe66::is_square( boost::multiprecision::cpp_int n )
 {
-    boost::multiprecision::cpp_int test = boost::multiprecision::sqrt(n);
-    return (test * test) == n;
+    boost::multiprecision::cpp_int test = boost::multiprecision::sqrt( n );
+    return ( test * test ) == n;
 }
 
-template<typename Container>
+template <typename Container>
 class continued_fraction
 {
 public:
-    continued_fraction(Container& container) :
-        container_(container)
-    {}
-    Container& container_;
+    continued_fraction( Container& container ) : container_( container ) {}
+    Container&                     container_;
 };
 
-template<typename Container>
-continued_fraction<Container> to_continued_fraction(Container& cf)
+template <typename Container>
+continued_fraction<Container> to_continued_fraction( Container& cf )
 {
-    return continued_fraction<Container>(cf);
+    return continued_fraction<Container>( cf );
 }
 
-template<typename Container>
-std::ostream& operator<< (std::ostream& os, continued_fraction<Container> cf)
+template <typename Container>
+std::ostream& operator<<( std::ostream& os, continued_fraction<Container> cf )
 {
     if ( cf.container_.size() == 0 )
     {
         return os;
     }
-    os << cf.container_.at(0) << ":";
-    for ( auto it = cf.container_.begin() + 1; it != cf.container_.end(); ++it)
+    os << cf.container_.at( 0 ) << ":";
+    for ( auto it = cf.container_.begin() + 1; it != cf.container_.end();
+          ++it )
     {
         os << *it << ",";
     }
     return os;
 }
 
-boost::multiprecision::cpp_int solve_x_for_continued_fraction(const std::vector<int> cf)
+boost::multiprecision::cpp_int solve_x_for_continued_fraction(
+    const std::vector<int> cf )
 {
     boost::multiprecision::cpp_int x, x1, x2 = 1;
-    size_t cf_size = cf.size();
+    size_t                         cf_size = cf.size();
     if ( cf_size == 0 )
     {
         return x;
@@ -117,20 +113,20 @@ boost::multiprecision::cpp_int solve_x_for_continued_fraction(const std::vector<
         for ( size_t i = 1; i < cf_size - 1; ++i )
         {
             x1 = x;
-            x = ( x1 * cf[i] ) + x2;
+            x  = ( x1 * cf[i] ) + x2;
             x2 = x1;
         }
 
-        if ( ! r_is_odd )
+        if ( !r_is_odd )
         {
             x1 = x;
-            x = ( x1 * cf[cf_size - 1] ) + x2;
+            x  = ( x1 * cf[cf_size - 1] ) + x2;
             x2 = x1;
 
             for ( size_t i = 1; i < cf_size - 1; ++i )
             {
                 x1 = x;
-                x = ( x1 * cf[i] ) + x2;
+                x  = ( x1 * cf[i] ) + x2;
                 x2 = x1;
             }
         }
@@ -138,8 +134,6 @@ boost::multiprecision::cpp_int solve_x_for_continued_fraction(const std::vector<
 
     return x;
 }
-
-
 
 std::string& pe66::name() { return name_; }
 void         pe66::run()
@@ -172,20 +166,20 @@ void         pe66::run()
      *
      */
 
-    size_t result = 0;
-    size_t limit = 1000;
+    size_t                         result    = 0;
+    size_t                         limit     = 1000;
     boost::multiprecision::cpp_int biggest_x = 0;
 
     for ( size_t D = 2; D <= limit; ++D )
     {
-        if ( ! is_square(D) )
+        if ( !is_square( D ) )
         {
-            auto d_cont_fract = continued_fraction_of_root_of(D);
-            auto x = solve_x_for_continued_fraction(d_cont_fract);
+            auto d_cont_fract = continued_fraction_of_root_of( D );
+            auto x = solve_x_for_continued_fraction( d_cont_fract );
             if ( x > biggest_x )
             {
                 biggest_x = x;
-                result = D;
+                result    = D;
             }
         }
     }

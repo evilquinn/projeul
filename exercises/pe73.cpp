@@ -5,13 +5,12 @@
  *      Author: evilquinn
  */
 
-#include <pe73.hpp>
 #include <iostream>
 #include <map>
+#include <pe73.hpp>
 #include <utils.hpp>
 
 std::string& pe73::name() { return name_; }
-
 void         pe73::run()
 {
     /*
@@ -32,20 +31,20 @@ void         pe73::run()
      *
      */
 
-    size_t limit = 12000;
+    size_t limit  = 12000;
     size_t result = 0;
 
-    double ubound = (double)1/2;
-    double lbound = (double)1/3;
+    double ubound = (double)1 / 2;
+    double lbound = (double)1 / 3;
 
-    for(size_t d = 2; d <= limit; ++d )
+    for ( size_t d = 2; d <= limit; ++d )
     {
-        for(size_t n = d/3; n < ( d + 1 ) / 2; ++n)
+        for ( size_t n = d / 3; n < ( d + 1 ) / 2; ++n )
         {
-            double key = (double)n/d;
+            double key = (double)n / d;
             if ( key < ubound && key > lbound )
             {
-                if ( gcd(n, d) == 1 )
+                if ( gcd( n, d ) == 1 )
                 {
                     ++result;
                 }
@@ -54,5 +53,4 @@ void         pe73::run()
     }
 
     std::cout << result << std::endl;
-
 }

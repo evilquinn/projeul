@@ -5,9 +5,9 @@
  *      Author: evilquinn
  */
 
-#include <pe48.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <iostream>
+#include <pe48.hpp>
 
 std::string& pe48::name() { return name_; }
 void         pe48::run()
@@ -30,10 +30,9 @@ void         pe48::run()
         //
         // work out i * i
         boost::multiprecision::cpp_int mult = i;
-        mult = boost::multiprecision::pow(mult, i);
+        mult = boost::multiprecision::pow( mult, i );
         result += mult;
     }
 
     std::cout << name() << " " << result << std::endl;
-
 }
