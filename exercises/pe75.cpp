@@ -10,6 +10,7 @@
 #include <map>
 #include <utils.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include <cmath>
 
 std::string& pe75::name() { return name_; }
 
@@ -56,61 +57,53 @@ void         pe75::run()
      */
 
     size_t result = 0;
-    size_t limit = 1500000;
+    size_t plimit = 1000;
+    size_t llimit = 1500000;
 
-    std::map<struct triplet, size_t> resultm;
-
-    for( struct triplet t = { 3 }; t.a <= limit; ++t.a )
+    std::map<size_t, size_t> resultm;
+    std::set<struct triplet> resultt;
+    for ( size_t p = 2; p < plimit; ++p )
     {
-        if ( t.a & 0x01 )
+        for ( size_t q = 1; q < p; ++q )
         {
-            t.b = (t.a*t.a - 1)/2;
-            t.c = t.b + 1;
-        }
-        else
-        {
-            t.b = ( t.a*t.a / 4 ) - 1;
-
-            if ( t.a > t.b )
+            if ( p & 0x1 && q & 0x1 )
             {
                 continue;
             }
 
-            t.c = t.b + 2;
-        }
-
-        t.l = t.a + t.b + t.c;
-
-        for ( size_t i = 1; i < limit; ++i )
-        {
-            if ( t.l*i <= limit )
-            {
-                struct triplet td = { t.a*i, t.b*i, t.c*i, t.l*i };
-                resultm[td] += 1;
-                //std::cout << td.l << ": " << td.a << ", " << td.b << ", " << td.c << "\n";
-            }
-            else
+            size_t a = 2 * p * q;
+            size_t b = p*p - q*q;
+            size_t c = p*p + q*q;
+            size_t l = a+b+c;
+            if ( l > llimit )
             {
                 break;
             }
+
+            if ( a > b )
+            {
+                std::swap(a, b);
+            }
+
+            for ( size_t i = 1; l*i <= llimit; ++i )
+            {
+                resultt.insert({ a*i, b*i, c*i, l*i });
+            }
+
         }
-
     }
 
-    std::map<size_t, size_t> rr;
-    for ( auto e: resultm )
+    for ( const auto& e : resultt )
     {
-        rr[e.first.l] += 1;
-
+        resultm[e.l] += 1;
     }
 
-    for ( auto e: rr )
+    for ( const auto& e : resultm )
     {
         if ( e.second == 1 )
         {
             ++result;
         }
-        //std::cout << e.first << ": " << e.second << "\n";
     }
 
     std::cout << result << std::endl;
