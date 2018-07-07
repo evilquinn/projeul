@@ -69,12 +69,20 @@ void         pe76::run()
             else
             {
                 terms[back] += 1;
-                while ( back < terms.size() && terms[back] < terms[front] )
+                while ( back < terms.size() && terms[back] <= terms[front] )
                 {
                     if ( back == terms.size() - 1 )
                     {
                         break;
                     }
+
+                    if ( terms[back] == terms[front] )
+                    {
+                        ++back;
+                        ++front;
+                        continue;
+                    }
+
                     terms[back] += 1;
                     if ( terms[terms.size()-1] == 1 )
                     {
@@ -83,11 +91,6 @@ void         pe76::run()
                     else
                     {
                         terms[terms.size()-1] -= 1;
-                    }
-                    if ( terms[back] == terms[front] )
-                    {
-                        ++back;
-                        ++front;
                     }
                 }
             }
