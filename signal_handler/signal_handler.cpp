@@ -25,7 +25,8 @@ void signal_handler( int sig_num, siginfo_t* sig_info, void* /*data*/ )
 
 void register_signal_handler()
 {
-    struct sigaction action = { { nullptr } };
+    struct sigaction action;
+    memset(&action, 0, sizeof(action));
     action.sa_sigaction     = signal_handler;
     action.sa_flags         = SA_SIGINFO;
     sigaction( SIGTERM, &action, nullptr );

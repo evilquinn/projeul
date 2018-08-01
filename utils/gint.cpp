@@ -38,7 +38,7 @@ void gint::construct_digits_from_positive( size_t n )
     }
 }
 
-gint::gint( const gint& rhs ) = default;
+gint::gint( const gint& ) = default;
 gint& gint::operator          =( gint rhs )
 {
     swap( *this, rhs );
