@@ -36,7 +36,6 @@ void pe77::run()
     size_t limit = 10;
     prime_sieve primes(limit*2);
 
-
     size_t result = 0;
 
     std::vector<size_t> terms = { limit };

@@ -22,6 +22,43 @@ void print_terms( std::vector<size_t> terms )
     std::cout << "\n";
 }
 
+long p_of(long n)
+{
+    static std::map<long, long> cache { { 0, 1 } };
+    long result = 0;
+    if ( n < 0 )
+    {
+        return result;
+    }
+    if ( cache[n] > 0 )
+    {
+        return cache[n];
+    }
+
+    for ( long k = 1; k <= n; ++k )
+    {
+         // A little bit of recursion
+        long left_n = n - (k * (((3 * k) - 1))) / 2;
+        long right_n = n - (k * (((3 * k) + 1))) / 2;
+
+        long left_p = p_of(left_n);
+        long right_p = p_of(right_n);
+
+        long sum = left_p + right_p;
+        if ( k % 2 == 1 )
+        {
+            result += sum;
+        }
+        else
+        {
+            result -= sum;
+        }
+    }
+
+    cache[n] = result;
+    return result;
+}
+
 void pe76::run()
 {
     /*
@@ -40,79 +77,7 @@ void pe76::run()
      *
      */
 
-    size_t limit = 100;
-
-    boost::multiprecision::cpp_int result = 0;
-
-    std::vector<size_t> terms = { limit };
-
-    size_t front = 0;
-    size_t back  = front + 1;
-    while ( true )
-    {
-        if ( terms[front] == 1 )
-        {
-            // backtrack
-            --front;
-            --back;
-            continue;
-        }
-        else if ( terms[front] > 2 )
-        {
-            terms[front] -= 1;
-            if ( back >= terms.size() )
-            {
-                terms.push_back( 1 );
-            }
-            else
-            {
-                terms[back] += 1;
-                while ( back < terms.size() && terms[back] <= terms[front] )
-                {
-                    if ( back == terms.size() - 1 )
-                    {
-                        break;
-                    }
-
-                    if ( terms[back] == terms[front] )
-                    {
-                        ++back;
-                        ++front;
-                        continue;
-                    }
-
-                    terms[back] += 1;
-                    if ( terms[terms.size() - 1] == 1 )
-                    {
-                        terms.pop_back();
-                    }
-                    else
-                    {
-                        terms[terms.size() - 1] -= 1;
-                    }
-                }
-            }
-            ++front;
-            ++back;
-            // print_terms(terms);
-            ++result;
-        }
-        else if ( terms[front] == 2 )
-        {
-            terms[front] -= 1;
-            terms.push_back( 1 );
-            // print_terms(terms);
-            ++result;
-
-            if ( front == 0 )
-            {
-                // we're done
-                break;
-            }
-            --front;
-            --back;
-        }
-    }
-
-    std::cout << result << std::endl;
+    long n = 100;
+    long result = p_of(n);
+    std::cout << --result << std::endl;
 }
