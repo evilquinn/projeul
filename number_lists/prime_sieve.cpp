@@ -11,7 +11,7 @@
 #include <string.h>
 #include <iostream>
 
-prime_sieve::prime_sieve( size_t limit ) : limit_( limit ), sieve_( limit )
+prime_sieve::prime_sieve( size_t limit ) : limit_( limit < 2 ? 2 : limit ), sieve_( limit_ )
 {
     // set all valid, we'll mark off the ones not prime
     sieve_.set();
