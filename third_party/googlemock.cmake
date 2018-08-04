@@ -5,7 +5,9 @@ set(INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/googletest)
 ExternalProject_Add(googletest_dl
     GIT_REPOSITORY https://github.com/google/googletest
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
-    PREFIX ${INSTALL_DIR}
+    BUILD_BYPRODUCTS ${INSTALL_DIR}/lib/libgmock.a
+                     ${INSTALL_DIR}/lib/libgmock_main.a
+                     ${INSTALL_DIR}/lib/libgtest.a
 )
 
 set(INCLUDE_DIR ${INSTALL_DIR}/include)
