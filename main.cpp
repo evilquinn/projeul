@@ -40,16 +40,7 @@ int main( int argc, char* argv[] )
 
     int         exercise = vm["exercise"].as<int>();
     pe_register pe_reg;
-    try
-    {
-        pe_reg.run( exercise );
-    }
-    catch ( const std::out_of_range& )
-    {
-        std::cout << "Exercise " << exercise << " isn't registered"
-                  << std::endl;
-        return 1;
-    }
+    pe_reg.run( exercise );
 
     return 0;
 }

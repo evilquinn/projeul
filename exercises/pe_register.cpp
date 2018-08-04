@@ -52,6 +52,7 @@
 #include <pe75.hpp>
 #include <pe76.hpp>
 #include <pe77.hpp>
+#include <pe78.hpp>
 
 pe_register::pe_register() : reg_()
 {
@@ -105,6 +106,7 @@ pe_register::pe_register() : reg_()
     reg( std::make_unique<pe75>() );
     reg( std::make_unique<pe76>() );
     reg( std::make_unique<pe77>() );
+    reg( std::make_unique<pe78>() );
 };
 
 void pe_register::reg( std::unique_ptr<pe> ex )
@@ -114,9 +116,12 @@ void pe_register::reg( std::unique_ptr<pe> ex )
 
 void pe_register::run( int ex )
 {
-    if ( ex == 0 )
+    size_t num_registered = reg_.rbegin()->first;
+
+    if ( ex <= 0 || (size_t)ex > num_registered )
     {
-        ex = reg_.rbegin()->first;
+        std::cout << "Exercise " << ex << "out of range, running " << num_registered << std::endl;
+        ex = num_registered;
     }
     std::cout << "Exercise " << ex << std::endl;
     reg_.at( ex )->run();
