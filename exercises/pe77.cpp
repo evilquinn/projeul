@@ -5,8 +5,6 @@
  *      Author: evilquinn
  */
 
-#include <boost/multiprecision/cpp_int.hpp>
-#include <cmath>
 #include <iostream>
 #include <map>
 #include <pe77.hpp>
@@ -14,7 +12,62 @@
 #include <prime_sieve.hpp>
 
 std::string& pe77::name() { return name_; }
-void print_terms( std::vector<size_t> terms );
+
+namespace {
+
+size_t prime_limit = 1000;
+static prime_sieve primes(prime_limit);
+
+long a(long n)
+{
+    return primes.is_prime(n) ? 1 : 0;
+}
+
+long sopf(long n)
+{
+    static std::map<long, long> cache;
+    if ( cache[n] > 0 )
+    {
+        return cache[n];
+    }
+
+    long result = 0;
+    for ( long d = 1; d <= n; ++d )
+    {
+        if ( n % d == 0 )
+        {
+            result += d * a(d);
+        }
+    }
+
+    cache[n] = result;
+    return result;
+}
+
+long b(long n)
+{
+    static std::map<long, long> cache = { { 0, 1 },
+                                          { 1, sopf(1) } };
+    if ( cache[n] > 0 || n < 2 )
+    {
+        return cache[n];
+    }
+
+    long result = 0;
+    for ( long k = 1; k <= n; ++k )
+    {
+        long sopfk = sopf(k);
+        long right_b = b(n-k);
+        long term = sopfk * right_b;
+        result += term;
+    }
+    result /= n;
+
+    cache[n] = result;
+    return result;
+}
+
+} // end namespace anonymous
 
 void pe77::run()
 {
@@ -33,80 +86,14 @@ void pe77::run()
      *
      */
 
-    size_t limit = 10;
-    prime_sieve primes(limit*2);
-
-    size_t result = 0;
-
-    std::vector<size_t> terms = { limit };
-
-    size_t front = 0;
-    size_t back  = front + 1;
-    while ( true )
+    long limit = 5000;
+    for ( long n = 0; n < limit; ++n )
     {
-        if ( terms[front] == 2 )
+        long result = b(n);
+        if ( result > limit )
         {
-            // backtrack
-            --front;
-            --back;
-            continue;
-        }
-        else if ( terms[front] > 3 )
-        {
-            terms[front] -= 1;
-            if ( back >= terms.size() )
-            {
-                terms.push_back( 1 );
-            }
-            else
-            {
-                terms[back] += 1;
-                while ( back < terms.size() && terms[back] <= terms[front] )
-                {
-                    if ( back == terms.size() - 1 )
-                    {
-                        break;
-                    }
-
-                    if ( terms[back] == terms[front] )
-                    {
-                        ++back;
-                        ++front;
-                        continue;
-                    }
-
-                    terms[back] += 1;
-                    if ( terms[terms.size() - 1] == 1 )
-                    {
-                        terms.pop_back();
-                    }
-                    else
-                    {
-                        terms[terms.size() - 1] -= 1;
-                    }
-                }
-            }
-            ++front;
-            ++back;
-            // print_terms(terms);
-            ++result;
-        }
-        else if ( terms[front] == 3 )
-        {
-            terms[front] -= 1;
-            terms.push_back( 1 );
-            // print_terms(terms);
-            ++result;
-
-            if ( front == 0 )
-            {
-                // we're done
-                break;
-            }
-            --front;
-            --back;
+            std::cout << n << ", " << result << std::endl;
+            break;
         }
     }
-
-    std::cout << result << std::endl;
 }
