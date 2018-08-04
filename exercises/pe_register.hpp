@@ -13,7 +13,7 @@ public:
     virtual ~pe_register() = default;
 
     void reg( std::unique_ptr<pe> ex );
-    void run( int ex );
+    void run( size_t ex );
 
 private:
     std::map<int, std::unique_ptr<pe>> reg_;

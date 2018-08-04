@@ -114,13 +114,20 @@ void pe_register::reg( std::unique_ptr<pe> ex )
     reg_.insert( std::make_pair( ex->number(), std::move( ex ) ) );
 }
 
-void pe_register::run( int ex )
+void pe_register::run( size_t ex )
 {
     size_t num_registered = reg_.rbegin()->first;
 
-    if ( ex <= 0 || (size_t)ex > num_registered )
+    if ( ex <= 0 )
     {
-        std::cout << "Exercise " << ex << "out of range, running " << num_registered << std::endl;
+        ex = num_registered;
+    }
+
+    if ( ex > num_registered )
+    {
+        std::cout << "Exercise " << ex
+                  << " out of range, running " << num_registered
+                  << std::endl;
         ex = num_registered;
     }
     std::cout << "Exercise " << ex << std::endl;

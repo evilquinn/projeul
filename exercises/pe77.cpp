@@ -16,10 +16,10 @@ std::string& pe77::name() { return name_; }
 namespace {
 
 size_t prime_limit = 1000;
-static prime_sieve primes(prime_limit);
 
 long a(long n)
 {
+    static prime_sieve primes(prime_limit);
     return primes.is_prime(n) ? 1 : 0;
 }
 
