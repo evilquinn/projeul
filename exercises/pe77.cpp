@@ -54,13 +54,14 @@ long b(long n)
     }
 
     long result = 0;
-    for ( long k = 1; k <= n; ++k )
+    for ( long k = 1; k < n; ++k )
     {
         long sopfk = sopf(k);
         long right_b = b(n-k);
         long term = sopfk * right_b;
         result += term;
     }
+    result += sopf(n);
     result /= n;
 
     cache[n] = result;
