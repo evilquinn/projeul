@@ -12,6 +12,18 @@
 #include <iostream>
 #include <utils.hpp>
 
+namespace { // anonymous
+
+template<typename Value>
+struct digit_guy
+{
+    Value val;
+    std::set<Value> lefts;
+    std::set<Value> rights;
+};
+
+} // end namespace anonymous
+
 std::string& pe79::name() { return name_; }
 void         pe79::run()
 {
@@ -31,19 +43,40 @@ void         pe79::run()
      */
 
     std::ifstream data_file;
-    data_file.open( "../data/pe79_keylog.txt" );
+    data_file.open( "/home/evilquinn/git/projeul/data/pe79_keylog.txt" );
 
-    std::vector<int> attempt;
+    std::map<int, struct digit_guy<int> > attempts;
     std::string line;
     while ( std::getline(data_file, line ) )
     {
         for ( size_t i = 0; i < line.size(); ++i )
         {
-            if ( std::find(line.begin(), line.end(), '3') != line.end() )
+            int digit = line[i] - '0';
+            auto curr = attempts[digit];
+            curr.val = digit;
+            for ( size_t l = 0; l < i; ++l )
             {
-                std::cout << "line has 3! " << line << std::endl;
+                curr.lefts.insert(line[l]-'0');
             }
+            for ( size_t r = i+1; r < line.size(); ++r )
+            {
+                curr.rights.insert(line[r]-'0');
+            }
+            attempts[digit] = curr;
         }
     }
-    std::cout << std::endl;
+
+    for ( auto e : attempts )
+    {
+        for ( auto l : e.second.lefts )
+        {
+            std::cout << l << ", ";
+        }
+        std::cout << "| " << e.second.val << " |, ";
+        for ( auto r : e.second.rights )
+        {
+            std::cout << r << ", ";
+        }
+        std::cout << std::endl;
+    }
 }
