@@ -56,8 +56,15 @@
 #include <pe79.hpp>
 #include <pe81.hpp>
 
+std::shared_ptr<pe_register> pe_register::get()
+{
+    static std::shared_ptr<pe_register> handle(new pe_register());
+    return handle;
+}
+
 pe_register::pe_register() : reg_()
 {
+    reg( std::make_unique<pe81>() );
     reg( std::make_unique<pe27>() );
     reg( std::make_unique<pe29>() );
     reg( std::make_unique<pe30>() );
@@ -110,7 +117,6 @@ pe_register::pe_register() : reg_()
     reg( std::make_unique<pe77>() );
     reg( std::make_unique<pe78>() );
     reg( std::make_unique<pe79>() );
-    reg( std::make_unique<pe81>() );
 };
 
 void pe_register::reg( std::unique_ptr<pe> ex )

@@ -39,8 +39,8 @@ int main( int argc, char* argv[] )
     }
 
     int         exercise = vm["exercise"].as<int>();
-    pe_register pe_reg;
-    pe_reg.run( exercise );
+    auto pe_reg = pe_register::get();
+    pe_reg->run( exercise );
 
     return 0;
 }

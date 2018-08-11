@@ -16,6 +16,7 @@
 
 namespace { // anonymous
 
+static pe81 ex;
 
 } // end namespace anonymous
 
