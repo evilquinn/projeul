@@ -60,64 +60,70 @@ void         pe83::run()
         ++row;
     }
 
-    size_t i = matrix.size() - 1;
-    while ( i < matrix.size() )
+    /*
+     * rough plan:
+     * expand the lowest paths across the diagonal starting from
+     * the bottom right, i.e. assuming a 5 x 5 matrix
+     *
+     *   Diagonal  Coords
+     *   0         4,4
+     *
+     *   1         4,3
+     *   1         3,4
+     *
+     *   2         4,2
+     *   2         3,3
+     *   2         2,4
+     *
+     *   3         4,1
+     *   3         3,2
+     *   3         2,3
+     *   3         1,4
+     *
+     *   4         4,0
+     *   4         3,1
+     *   4         2,2
+     *   4         1,3
+     *   4         0,4
+     *
+     *   5         3,0
+     *   5         2,1
+     *   5         1,2
+     *   5         0,3
+     *
+     *   6         2,0
+     *   6         1,1
+     *   6         0,2
+     *
+     *   7         1,0
+     *   7         0,1
+     *
+     *   8         0,0
+     *
+     * cache smallest path for each diagonal in separate matrix,
+     * then save back after each layer before calcing the next.
+     */
+
+    size_t slimit = matrix.size()-1;
+    int continuer = 1;
+    for ( size_t i = 0; i <= slimit; i += continuer )
     {
-        // converge from below or right walking the down the column
-        auto irow = i;
-        while ( irow < matrix.size() )
+        size_t row = continuer > 0 ? slimit : i;
+        size_t col = continuer > 0 ? slimit - i : 0;
+
+        size_t iilimit = i + 1;
+        for ( size_t ii = 0; ii < iilimit; ++ii )
         {
-            auto min = 0;
-            if ( irow == matrix.size() - 1 &&
-                 i == matrix[irow].size() - 1 )
-            {
-                min = 0;
-            }
-            else if ( i == matrix[irow].size() - 1 )
-            {
-                min = matrix[irow+1][i];
-            }
-            else if ( irow == matrix.size() - 1 )
-            {
-                min = matrix[irow][i+1];
-            }
-            else
-            {
-                min = matrix[irow+1][i] < matrix[irow][i+1] ?
-                          matrix[irow+1][i] :
-                          matrix[irow][i+1];
-            }
-            matrix[irow][i] += min;
-            --irow;
+            std::cout << i << ", " << row << "," << col << "\n";
+            --row;
+            ++col;
         }
-        // converge from below or right walking down the row
-        auto icol = i - 1; // -1 so we don't double count this one
-        while ( icol < matrix[i].size() )
+        std::cout << std::endl;
+
+        if ( i == slimit )
         {
-            auto min = 0;
-            if ( i == matrix.size() - 1 &&
-                 icol == matrix[i].size() - 1 )
-            {
-                min = 0;
-            }
-            else if ( i == matrix.size() - 1 )
-            {
-                min = matrix[i][icol+1];
-            }
-            else if ( icol == matrix[i].size() - 1 )
-            {
-                min = matrix[i+1][icol];
-            }
-            else
-            {
-                min = matrix[i+1][icol] < matrix[i][icol+1] ?
-                          matrix[i+1][icol] :
-                          matrix[i][icol+1];
-            }
-            matrix[i][icol] += min;
-            --icol;
+            continuer = -1;
         }
-        --i;
     }
 
     std::cout << matrix[0][0] << std::endl;
