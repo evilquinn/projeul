@@ -108,21 +108,64 @@ void         pe83::run()
     int continuer = 1;
     for ( size_t i = 0; i <= slimit; i += continuer )
     {
-        size_t row = continuer > 0 ? slimit : i;
-        size_t col = continuer > 0 ? slimit - i : 0;
+        std::vector<size_t> mins;
+        enum act { copy, calc, save };
+        std::vector<enum act> acts = { copy, calc, save };
 
-        size_t iilimit = i + 1;
-        for ( size_t ii = 0; ii < iilimit; ++ii )
+        for ( auto e : acts )
         {
-            std::cout << i << ", " << row << "," << col << "\n";
-            --row;
-            ++col;
-        }
-        std::cout << std::endl;
+            size_t row = continuer > 0 ? slimit : i;
+            size_t col = continuer > 0 ? slimit - i : 0;
 
-        if ( i == slimit )
-        {
-            continuer = -1;
+            size_t iilimit = i + 1;
+            for ( size_t ii = 0; ii < iilimit; ++ii )
+            {
+                int switcher = row == col ? 0 :
+                               row < col  ? 1 :
+                                            -1;
+
+                switch ( e )
+                {
+                case copy :
+                {
+                    mins.push_back(matrix[row][col]);
+                    break;
+                }
+                case calc :
+                {
+                    size_t min_to_here = (size_t)-1;
+                    // figure out smallest path to here, and write
+                    // total to mins[ii]
+                    std::cout << "testing " << row << "," << col << ", ";
+                    size_t total_to_here = 0;
+                    for ( size_t iii = 0; iii < i; ++iii )
+                    {
+                        ++total_to_here;
+                        // test all paths to here, recording the
+                        // lowest to min_to_here
+                    }
+                    std::cout << total_to_here << " times\n";
+                    break;
+                }
+                case save :
+                {
+                    matrix[row][col] = mins[ii];
+                    break;
+                }
+                default :
+                {
+                    std::cout << "WHA!?" << std::endl;
+                    break;
+                } // end default
+                } // end switch
+                --row;
+                ++col;
+            }
+
+            if ( i == slimit )
+            {
+                continuer = -1;
+            }
         }
     }
 
