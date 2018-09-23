@@ -11,6 +11,11 @@ if ( ${ENABLE_COVERAGE} )
 endif()
 
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
+
+message("CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
+message("BUILD_BOOST=${BUILD_BOOST}")
+message("ENABLE_COVERAGE=${ENABLE_COVERAGE}")
+
 add_subdirectory(third_party)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
