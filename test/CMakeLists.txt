@@ -14,7 +14,8 @@ add_executable(test_projeul main.cpp
                             bint_test.cpp
                             crypto_test.cpp
                             signal_handler_test.cpp
-                            continued_fraction_test.cpp)
+                            continued_fraction_test.cpp
+                            unique_cptr_test.cpp)
 
 target_link_libraries(test_projeul poker
                                    utils
