@@ -51,7 +51,7 @@ void         pe83::run()
     {
         std::istringstream is(line);
         std::string word;
-        matrix.emplace_back();
+        matrix.emplace_back(0);
         while ( std::getline(is, word, ',') )
         {
             matrix[row].emplace_back(
