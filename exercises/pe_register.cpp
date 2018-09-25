@@ -57,6 +57,7 @@
 #include <pe81.hpp>
 #include <pe82.hpp>
 #include <pe83.hpp>
+#include <pe84.hpp>
 
 std::shared_ptr<pe_register> pe_register::get()
 {
@@ -66,6 +67,7 @@ std::shared_ptr<pe_register> pe_register::get()
 
 pe_register::pe_register() : reg_()
 {
+    reg( std::make_unique<pe84>() );
     reg( std::make_unique<pe83>() );
     reg( std::make_unique<pe82>() );
     reg( std::make_unique<pe81>() );
