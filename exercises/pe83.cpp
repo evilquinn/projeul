@@ -103,8 +103,7 @@ void         pe83::run()
      */
 
     size_t slimit = matrix.size()-1;
-    int continuer = 1;
-    for ( size_t i = 0; i <= slimit; i += continuer )
+    for ( size_t i = 0; i <= slimit; ++i )
     {
         std::vector<size_t> mins;
         enum act { copy, calc, save };
@@ -113,16 +112,14 @@ void         pe83::run()
 
         for ( auto e : acts )
         {
-            size_t row = continuer > 0 ? slimit : i;
-            size_t col = continuer > 0 ? slimit - i : 0;
+            size_t row = slimit - i;
+            size_t col = slimit - i;
 
-            size_t iilimit = i + 1;
-            for ( size_t ii = 0; ii < iilimit; ++ii )
+            std::cout << std::endl;
+            size_t iilimit = slimit - i;
+            int continuer = 1;
+            for ( size_t ii = 0; ii <= iilimit; ii += continuer )
             {
-                int switcher = row == col ? 0 :
-                               row < col  ? 1 :
-                                            -1;
-
                 switch ( e )
                 {
                 case copy :
@@ -138,11 +135,18 @@ void         pe83::run()
                     // total to mins[ii]
                     std::cout << "testing " << row << "," << col << ", ";
                     size_t total_to_here = 0;
-                    for ( size_t iii = 0; iii < i; ++iii )
+                    size_t iiilimit = row == slimit ? 0 : row + 1;
+                    int contuer = 1;
+                    for ( size_t iii = 0; iii <= iiilimit; iii += contuer )
                     {
                         ++total_to_here;
                         // test all paths to here, recording the
                         // lowest to min_to_here
+
+                        if ( iii == iiilimit )
+                        {
+                            contuer = -1;
+                        }
                     }
                     std::cout << total_to_here << " times\n";
                     break;
@@ -159,13 +163,15 @@ void         pe83::run()
                     break;
                 } // end default
                 } // end switch
-                --row;
-                ++col;
-            }
 
-            if ( i == slimit )
-            {
-                continuer = -1;
+                continuer < 0 ? --row : --col;
+
+                if ( ii == iilimit )
+                {
+                    col = row;
+                    --row;
+                    continuer = -1;
+                }
             }
 
             if ( e == calc )
