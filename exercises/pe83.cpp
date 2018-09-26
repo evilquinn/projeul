@@ -16,8 +16,6 @@
 
 namespace { // anonymous
 
-static pe83 ex;
-
 } // end namespace anonymous
 
 std::string& pe83::name() { return name_; }
@@ -111,6 +109,7 @@ void         pe83::run()
         std::vector<size_t> mins;
         enum act { copy, calc, save };
         std::vector<enum act> acts = { copy, calc, save };
+        std::set<std::pair<size_t, size_t> > open_set;
 
         for ( auto e : acts )
         {
@@ -129,6 +128,7 @@ void         pe83::run()
                 case copy :
                 {
                     mins.push_back(matrix[row][col]);
+                    open_set.insert({row, col});
                     break;
                 }
                 case calc :
@@ -150,6 +150,7 @@ void         pe83::run()
                 case save :
                 {
                     matrix[row][col] = mins[ii];
+                    open_set.clear();
                     break;
                 }
                 default :
@@ -165,6 +166,16 @@ void         pe83::run()
             if ( i == slimit )
             {
                 continuer = -1;
+            }
+
+            if ( e == calc )
+            {
+                std::cout << "open_set: ";
+                for ( auto coord : open_set )
+                {
+                    std::cout << coord.first << "," << coord.second << ", ";
+                }
+                std::cout << "\n";
             }
         }
     }
