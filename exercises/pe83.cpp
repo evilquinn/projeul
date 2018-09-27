@@ -74,7 +74,25 @@ std::set<coord> make_open_set(const coord& node,
 template<typename Container>
 size_t& value_at(Container& container, const coord& c)
 {
-    return container[c.first][c.second];
+    return container[c];
+}
+
+typedef std::map<coord, size_t> matrix_t;
+coord next_shortest_not_closed(const matrix_t& distances,
+                               const std::set<coord>& closed)
+{
+    coord result;
+    size_t smallest_not_in_closed = -1;
+    for ( auto& d : distances )
+    {
+        if ( closed.count(d.first) == 0 &&
+             d.second < smallest_not_in_closed )
+        {
+            result = d.first;
+            smallest_not_in_closed = d.second;
+        }
+    }
+    return result;
 }
 
 } // end namespace anonymous
@@ -101,7 +119,6 @@ void         pe83::run()
     std::ifstream data_file;
     data_file.open( "/home/evilquinn/git/projeul/data/pe83_matrix.txt" );
 
-    typedef std::vector<std::vector<size_t> > matrix_t;
     matrix_t matrix;
 
     std::string line;
@@ -110,11 +127,11 @@ void         pe83::run()
     {
         std::istringstream is(line);
         std::string word;
-        matrix.emplace_back(0);
+        size_t col = 0;
         while ( std::getline(is, word, ',') )
         {
-            matrix[row].emplace_back(
-                boost::lexical_cast<size_t>(word));
+            matrix[coord{row, col}] = boost::lexical_cast<size_t>(word);
+            ++col;
         }
         ++row;
     }
@@ -128,42 +145,66 @@ void         pe83::run()
      * end node calc'd. Hopefully.
      */
 
-    coord bound = { 4, 4 };
-    coord node = { 4, 4 };
-    size_t result = value_at(matrix, node);
-    std::set<coord> closed = { node };
-    do
+    coord bound = { matrix.rbegin()->first.first, matrix.rbegin()->first.second };
+
+    // init solution matrix contains distance from start to each node
+    auto distances = matrix;
+    for ( auto& d : distances )
     {
-        // gen open set of adjacents
-        std::set<coord> opens = make_open_set(node, bound, closed);
+        d.second = -1;
+    }
+    distances[bound] = matrix[bound];
 
-        std::cout << to_string(node) << " " << "\n";
-        std::cout << "openset: ";
-        for ( auto c: opens )
+    std::set<coord> closed;
+    coord cnode;
+    while ( true )
+    {
+        // pop next shortest distance
+        cnode = next_shortest_not_closed(distances, closed);
+        if ( cnode == coord{0, 0} )
         {
-            std::cout << to_string(c) << ", ";
+            std::cout << "algo! " << distances[cnode] << std::endl;
+            break;
         }
-        std::cout << std::endl;
-
-        // figure out next node
-        coord potential_node;
-        size_t potential_total = -1;
-        for ( auto c: opens )
+        closed.insert(cnode);
+        // update adjacents
+        coord adj;
+        size_t cand;
+        if ( cnode.first > 0 )
         {
-            value_at(matrix, c) += value_at(matrix, node);
-            size_t attempt = value_at(matrix, c);
-            if ( attempt < potential_total )
+            adj = coord{cnode.first-1, cnode.second};
+            cand = distances[cnode] + matrix[adj];
+            if ( cand < distances[adj] )
             {
-                potential_total = attempt;
-                potential_node = c;
+                distances[adj] = cand;
             }
         }
-        node = potential_node;
-        result += value_at(matrix, node);
-        std::copy(opens.begin(), opens.end(),
-                  std::insert_iterator<std::set<coord> >(closed, closed.end()));
+        if ( cnode.first < bound.first )
+        {
+            adj = coord{cnode.first+1, cnode.second};
+            cand = distances[cnode] + matrix[adj];
+            if ( cand < distances[adj] )
+            {
+                distances[adj] = cand;
+            }
+        }
+        if ( cnode.second > 0 )
+        {
+            adj = coord{cnode.first, cnode.second-1};
+            cand = distances[cnode] + matrix[adj];
+            if ( cand < distances[adj] )
+            {
+                distances[adj] = cand;
+            }
+        }
+        if ( cnode.second < bound.second )
+        {
+            adj = coord{cnode.first, cnode.second+1};
+            cand = distances[cnode] + matrix[adj];
+            if ( cand < distances[adj] )
+            {
+                distances[adj] = cand;
+            }
+        }
     }
-    while ( node != coord{ 0, 0 } );
-
-    std::cout << value_at(matrix, {0, 0}) << std::endl;
 }
