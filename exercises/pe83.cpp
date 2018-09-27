@@ -13,8 +13,69 @@
 #include <iostream>
 #include <utils.hpp>
 #include <sstream>
+#include <algorithm>
 
 namespace { // anonymous
+
+typedef std::pair<size_t, size_t> coord;
+std::string to_string(const coord& c)
+{
+    std::stringstream str;
+    str << c.first << "," << c.second;
+    return str.str();
+}
+
+std::set<coord> make_open_set(const coord& node,
+                              const coord& bound,
+                              const std::set<coord>& closed)
+{
+    std::set<coord> result;
+    coord cand;
+    // above
+    if ( node.first > 0 )
+    {
+        cand = { node.first-1, node.second };
+        if ( closed.count(cand) == 0 )
+        {
+            result.insert(cand);
+        }
+    }
+    // left
+    if ( node.second > 0 )
+    {
+        cand = {node.first, node.second-1};
+        if ( closed.count(cand) == 0 )
+        {
+            result.insert(cand);
+        }
+    }
+    // right
+    if ( node.second < bound.second )
+    {
+        cand = {node.first, node.second+1};
+        if ( closed.count(cand) == 0 )
+        {
+            result.insert(cand);
+        }
+    }
+    // below
+    if ( node.first < bound.first )
+    {
+        cand = {node.first+1, node.second};
+        if ( closed.count(cand) == 0 )
+        {
+            result.insert(cand);
+        }
+    }
+
+    return result;
+}
+
+template<typename Container>
+size_t& value_at(Container& container, const coord& c)
+{
+    return container[c.first][c.second];
+}
 
 } // end namespace anonymous
 
@@ -38,7 +99,7 @@ void         pe83::run()
      */
 
     std::ifstream data_file;
-    data_file.open( "/home/evilquinn/git/projeul/data/pe83_matrix_small.txt" );
+    data_file.open( "/home/evilquinn/git/projeul/data/pe83_matrix.txt" );
 
     typedef std::vector<std::vector<size_t> > matrix_t;
     matrix_t matrix;
@@ -60,131 +121,49 @@ void         pe83::run()
 
     /*
      * rough plan:
-     * expand the lowest paths across the diagonal starting from
-     * the bottom right, i.e. assuming a 5 x 5 matrix
-     *
-     *   Diagonal  Coords
-     *   0         4,4
-     *
-     *   1         4,3
-     *   1         3,4
-     *
-     *   2         4,2
-     *   2         3,3
-     *   2         2,4
-     *
-     *   3         4,1
-     *   3         3,2
-     *   3         2,3
-     *   3         1,4
-     *
-     *   4         4,0
-     *   4         3,1
-     *   4         2,2
-     *   4         1,3
-     *   4         0,4
-     *
-     *   5         3,0
-     *   5         2,1
-     *   5         1,2
-     *   5         0,3
-     *
-     *   6         2,0
-     *   6         1,1
-     *   6         0,2
-     *
-     *   7         1,0
-     *   7         0,1
-     *
-     *   8         0,0
-     *
-     * cache smallest path for each diagonal in separate matrix,
-     * then save back after each layer before calcing the next.
+     * djikstra's algo, start with node and open set (start node and its
+     * adjacents in open set), determine node in open set with smallest path
+     * to node. call node closed, then make smallest open set node the node,
+     * and open set becomes node's non-closed adjacent nodes. Finished when
+     * end node calc'd. Hopefully.
      */
 
-    size_t slimit = matrix.size()-1;
-    for ( size_t i = 0; i <= slimit; ++i )
+    coord bound = { 4, 4 };
+    coord node = { 4, 4 };
+    size_t result = value_at(matrix, node);
+    std::set<coord> closed = { node };
+    do
     {
-        std::vector<size_t> mins;
-        enum act { copy, calc, save };
-        std::vector<enum act> acts = { copy, calc, save };
-        std::set<std::pair<size_t, size_t> > open_set;
+        // gen open set of adjacents
+        std::set<coord> opens = make_open_set(node, bound, closed);
 
-        for ( auto e : acts )
+        std::cout << to_string(node) << " " << "\n";
+        std::cout << "openset: ";
+        for ( auto c: opens )
         {
-            size_t row = slimit - i;
-            size_t col = slimit - i;
+            std::cout << to_string(c) << ", ";
+        }
+        std::cout << std::endl;
 
-            std::cout << std::endl;
-            size_t iilimit = slimit - i;
-            int continuer = 1;
-            for ( size_t ii = 0; ii <= iilimit; ii += continuer )
+        // figure out next node
+        coord potential_node;
+        size_t potential_total = -1;
+        for ( auto c: opens )
+        {
+            value_at(matrix, c) += value_at(matrix, node);
+            size_t attempt = value_at(matrix, c);
+            if ( attempt < potential_total )
             {
-                switch ( e )
-                {
-                case copy :
-                {
-                    mins.push_back(matrix[row][col]);
-                    open_set.insert({row, col});
-                    break;
-                }
-                case calc :
-                {
-                    size_t min_to_here = (size_t)-1;
-                    // figure out smallest path to here, and write
-                    // total to mins[ii]
-                    std::cout << "testing " << row << "," << col << ", ";
-                    size_t total_to_here = 0;
-                    size_t iiilimit = row == slimit ? 0 : row + 1;
-                    int contuer = 1;
-                    for ( size_t iii = 0; iii <= iiilimit; iii += contuer )
-                    {
-                        ++total_to_here;
-                        // test all paths to here, recording the
-                        // lowest to min_to_here
-
-                        if ( iii == iiilimit )
-                        {
-                            contuer = -1;
-                        }
-                    }
-                    std::cout << total_to_here << " times\n";
-                    break;
-                }
-                case save :
-                {
-                    matrix[row][col] = mins[ii];
-                    open_set.clear();
-                    break;
-                }
-                default :
-                {
-                    std::cout << "WHA!?" << std::endl;
-                    break;
-                } // end default
-                } // end switch
-
-                continuer < 0 ? --row : --col;
-
-                if ( ii == iilimit )
-                {
-                    col = row;
-                    --row;
-                    continuer = -1;
-                }
-            }
-
-            if ( e == calc )
-            {
-                std::cout << "open_set: ";
-                for ( auto coord : open_set )
-                {
-                    std::cout << coord.first << "," << coord.second << ", ";
-                }
-                std::cout << "\n";
+                potential_total = attempt;
+                potential_node = c;
             }
         }
+        node = potential_node;
+        result += value_at(matrix, node);
+        std::copy(opens.begin(), opens.end(),
+                  std::insert_iterator<std::set<coord> >(closed, closed.end()));
     }
+    while ( node != coord{ 0, 0 } );
 
-    std::cout << matrix[0][0] << std::endl;
+    std::cout << value_at(matrix, {0, 0}) << std::endl;
 }
