@@ -18,6 +18,7 @@
 namespace { // anonymous
 
 typedef std::pair<size_t, size_t> coord;
+typedef std::map<coord, size_t> matrix_t;
 std::string to_string(const coord& c)
 {
     std::stringstream str;
@@ -25,9 +26,9 @@ std::string to_string(const coord& c)
     return str.str();
 }
 
-std::set<coord> make_open_set(const coord& node,
-                              const coord& bound,
-                              const std::set<coord>& closed)
+std::set<coord> set_of_adj(const coord& node,
+                           const coord& bound,
+                           const std::set<coord>& closed)
 {
     std::set<coord> result;
     coord cand;
@@ -71,29 +72,6 @@ std::set<coord> make_open_set(const coord& node,
     return result;
 }
 
-template<typename Container>
-size_t& value_at(Container& container, const coord& c)
-{
-    return container[c];
-}
-
-typedef std::map<coord, size_t> matrix_t;
-coord next_shortest_not_closed(const matrix_t& distances,
-                               const std::set<coord>& closed)
-{
-    coord result;
-    size_t smallest_not_in_closed = -1;
-    for ( auto& d : distances )
-    {
-        if ( closed.count(d.first) == 0 &&
-             d.second < smallest_not_in_closed )
-        {
-            result = d.first;
-            smallest_not_in_closed = d.second;
-        }
-    }
-    return result;
-}
 
 } // end namespace anonymous
 
@@ -147,63 +125,37 @@ void         pe83::run()
 
     coord bound = { matrix.rbegin()->first.first, matrix.rbegin()->first.second };
 
-    // init solution matrix contains distance from start to each node
-    auto distances = matrix;
-    for ( auto& d : distances )
-    {
-        d.second = -1;
-    }
-    distances[bound] = matrix[bound];
+    coord node = { 0, 0 };
+    matrix_t dist = { { node, matrix[node] } };
 
     std::set<coord> closed;
-    coord cnode;
     while ( true )
     {
-        // pop next shortest distance
-        cnode = next_shortest_not_closed(distances, closed);
-        if ( cnode == coord{0, 0} )
+        if ( node == bound )
         {
-            std::cout << "algo! " << distances[cnode] << std::endl;
+            std::cout << "algo! " << dist[node] << std::endl;
             break;
         }
-        closed.insert(cnode);
+        auto opens = set_of_adj(node, bound, closed);
+        closed.insert(node);
         // update adjacents
-        coord adj;
-        size_t cand;
-        if ( cnode.first > 0 )
+        for ( auto c : opens )
         {
-            adj = coord{cnode.first-1, cnode.second};
-            cand = distances[cnode] + matrix[adj];
-            if ( cand < distances[adj] )
+            size_t cand = dist[node] + matrix[c];
+            if ( cand < dist[c] || dist[c] == 0 )
             {
-                distances[adj] = cand;
+                dist[c] = cand;
             }
         }
-        if ( cnode.first < bound.first )
+        // who's next?
+        size_t lowest = -1;
+        for ( auto d : dist )
         {
-            adj = coord{cnode.first+1, cnode.second};
-            cand = distances[cnode] + matrix[adj];
-            if ( cand < distances[adj] )
+            if ( closed.count(d.first) == 0 &&
+                 d.second < lowest )
             {
-                distances[adj] = cand;
-            }
-        }
-        if ( cnode.second > 0 )
-        {
-            adj = coord{cnode.first, cnode.second-1};
-            cand = distances[cnode] + matrix[adj];
-            if ( cand < distances[adj] )
-            {
-                distances[adj] = cand;
-            }
-        }
-        if ( cnode.second < bound.second )
-        {
-            adj = coord{cnode.first, cnode.second+1};
-            cand = distances[cnode] + matrix[adj];
-            if ( cand < distances[adj] )
-            {
-                distances[adj] = cand;
+                node = d.first;
+                lowest = d.second;
             }
         }
     }
