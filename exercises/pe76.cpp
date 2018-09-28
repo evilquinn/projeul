@@ -22,9 +22,9 @@ void print_terms( std::vector<size_t> terms )
     std::cout << "\n";
 }
 
-long p_of(long n)
+long p_of( long n )
 {
-    static std::map<long, long> cache { { 0, 1 } };
+    static std::map<long, long> cache{ { 0, 1 } };
     long result = 0;
     if ( n < 0 )
     {
@@ -37,12 +37,12 @@ long p_of(long n)
 
     for ( long k = 1; k <= n; ++k )
     {
-         // A little bit of recursion
-        long left_n = n - (k * (((3 * k) - 1))) / 2;
-        long right_n = n - (k * (((3 * k) + 1))) / 2;
+        // A little bit of recursion
+        long left_n  = n - ( k * ( ( ( 3 * k ) - 1 ) ) ) / 2;
+        long right_n = n - ( k * ( ( ( 3 * k ) + 1 ) ) ) / 2;
 
-        long left_p = p_of(left_n);
-        long right_p = p_of(right_n);
+        long left_p  = p_of( left_n );
+        long right_p = p_of( right_n );
 
         long sum = left_p + right_p;
         if ( k % 2 == 1 )
@@ -77,7 +77,7 @@ void pe76::run()
      *
      */
 
-    long n = 100;
-    long result = p_of(n);
+    long n      = 100;
+    long result = p_of( n );
     std::cout << --result << std::endl;
 }

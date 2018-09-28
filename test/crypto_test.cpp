@@ -25,7 +25,7 @@ TEST_F( CryptoTest, testEnc )
     bint iv( 0 );
 
     const char* input_text = "AAAAAAAAAAAAAAAA";
-    bint        input( reinterpret_cast<const unsigned char*>( input_text ),
+    bint input( reinterpret_cast<const unsigned char*>( input_text ),
                 strlen( input_text ) );
 
     bint output;

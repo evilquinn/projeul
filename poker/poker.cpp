@@ -14,7 +14,7 @@
 void poker::make_hand( const std::string& hand_string, poker::hand& hand )
 {
     hand.clear();
-    boost::char_separator<char>                    sep( " " );
+    boost::char_separator<char> sep( " " );
     boost::tokenizer<boost::char_separator<char> > card_strings( hand_string,
                                                                  sep );
     BOOST_FOREACH ( const std::string& card_string, card_strings )
@@ -161,10 +161,10 @@ bool poker::scored_hand::upgrade_rank( poker::scored_hand::rank_k new_rank )
 void poker::scored_hand::analyse_for_straight_flush()
 {
     // check for a straight and / or flush, cache a royal if we see it
-    bool        flush    = true;
-    bool        straight = true;
-    bool        starting = true;
-    const card* last     = NULL;
+    bool flush       = true;
+    bool straight    = true;
+    bool starting    = true;
+    const card* last = NULL;
     BOOST_FOREACH ( const card& c, hand_ )
     {
         if ( starting )

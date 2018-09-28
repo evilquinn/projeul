@@ -42,9 +42,9 @@ public:
 
     explicit card( const std::string& string_value );
 
-    suit_k  suit_;
+    suit_k suit_;
     value_k value_;
-    int     ival_;
+    int ival_;
     bool operator<( const card& rhs ) const;
 
 private:

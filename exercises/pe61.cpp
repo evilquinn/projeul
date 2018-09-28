@@ -10,7 +10,7 @@
 #include <polygonal_numbers.hpp>
 
 std::string& pe61::name() { return name_; }
-void         pe61::run()
+void pe61::run()
 {
     /*
      *
@@ -47,9 +47,9 @@ void         pe61::run()
     {
         size_t start;
         size_t end;
-    } data[] = { {.start = 45, .end = 141 }, {.start = 32, .end = 100 },
-                 {.start = 26, .end = 82 },  {.start = 23, .end = 71 },
-                 {.start = 21, .end = 64 },  {.start = 19, .end = 59 } };
+    } data[] = { { .start = 45, .end = 141 }, { .start = 32, .end = 100 },
+                 { .start = 26, .end = 82 },  { .start = 23, .end = 71 },
+                 { .start = 21, .end = 64 },  { .start = 19, .end = 59 } };
 
     polygonal_numbers list[] = {
         polygonal_numbers( data[0].end, polygonal_numbers::triangle ),
@@ -72,10 +72,10 @@ void         pe61::run()
     {
         size_t num;
         size_t list;
-    } results[] = { { 0, 10 }, { 0, 10 }, { 0, 10 },
+    } results[]           = { { 0, 10 }, { 0, 10 }, { 0, 10 },
                     { 0, 10 }, { 0, 10 }, { 0, 10 } };
     size_t pos            = 0;
-    bool   backtracking   = false;
+    bool backtracking     = false;
     size_t backtrack_next = 0;
 
     while ( pos < 6 )
@@ -83,7 +83,7 @@ void         pe61::run()
         size_t previous   = pos == 0 ? 0 : results[pos - 1].num;
         size_t low_bound  = pos == 0 ? 1000 : ( previous % 100 ) * 100;
         size_t high_bound = pos == 0 ? 10000 : low_bound + 100;
-        bool   found_cand = false;
+        bool found_cand   = false;
         for ( size_t l = backtracking ? results[pos].list : 0;
               // if we've backtracked, we'll start from last known point
               l < 6 /*lists*/;

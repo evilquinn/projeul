@@ -13,18 +13,18 @@
 #include <set>
 
 typedef std::map<size_t, bool> digit_map;
-bool is_pandigital_for_range( size_t  start,
-                              size_t  end,
+bool is_pandigital_for_range( size_t start,
+                              size_t end,
                               size_t* ints,
-                              size_t  ints_size );
-bool spy_the_digits( size_t     min,
-                     size_t     max,
-                     size_t     n,
+                              size_t ints_size );
+bool spy_the_digits( size_t min,
+                     size_t max,
+                     size_t n,
                      digit_map& reqd_digits );
 size_t len_n( size_t n );
 
 std::string& pe32::name() { return name_; }
-void         pe32::run()
+void pe32::run()
 {
     /*
      *
@@ -45,7 +45,7 @@ void         pe32::run()
      *
      *
      */
-    size_t           total = 0;
+    size_t total = 0;
     std::set<size_t> ok_prods;
     for ( size_t mand = 1; mand < 10000; ++mand )
     {
@@ -76,10 +76,10 @@ void         pe32::run()
     std::cout << name() << ": " << total << std::endl;
 }
 
-bool is_pandigital_for_range( size_t  start,
-                              size_t  end,
+bool is_pandigital_for_range( size_t start,
+                              size_t end,
                               size_t* ints,
-                              size_t  ints_size )
+                              size_t ints_size )
 {
     digit_map reqd_digits;
     // do we add or subtract from start to reach end?
@@ -121,9 +121,9 @@ bool is_pandigital_for_range( size_t  start,
     return true;
 }
 
-bool spy_the_digits( size_t     min,
-                     size_t     max,
-                     size_t     n,
+bool spy_the_digits( size_t min,
+                     size_t max,
+                     size_t n,
                      digit_map& reqd_digits )
 {
     size_t left = n;

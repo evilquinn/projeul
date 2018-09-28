@@ -12,7 +12,7 @@
 #include <utils.hpp>
 
 std::string& pe70::name() { return name_; }
-void         pe70::run()
+void pe70::run()
 {
     /*
      *
@@ -31,10 +31,10 @@ void         pe70::run()
      * n and the ratio n/φ(n) produces a minimum.
      */
 
-    size_t      limit = 10000000;
+    size_t limit = 10000000;
     prime_sieve primes( limit + 1 );
-    size_t      result  = 0;
-    double      minimum = 1000;
+    size_t result  = 0;
+    double minimum = 1000;
     for ( size_t i = 1000000; i <= limit; ++i )
     {
         if ( primes.is_prime( i ) )
@@ -57,9 +57,9 @@ void         pe70::run()
             // the smaller primes!
             continue;
         }
-        auto             prifacs = calc_prime_factors( i, primes );
+        auto prifacs = calc_prime_factors( i, primes );
         std::set<size_t> dedup( prifacs.begin(), prifacs.end() );
-        size_t           total = i;
+        size_t total = i;
         for ( size_t p : dedup )
         {
             total *= p - 1;

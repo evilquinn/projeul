@@ -15,7 +15,7 @@
 int fac( int n );
 
 std::string& pe34::name() { return name_; }
-void         pe34::run()
+void pe34::run()
 {
     /*
      * 145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.

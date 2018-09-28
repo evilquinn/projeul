@@ -10,7 +10,7 @@
 #include <iostream>
 
 std::string& pe64::name() { return name_; }
-void         pe64::run()
+void pe64::run()
 {
     /*
      * ffs

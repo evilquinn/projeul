@@ -8,22 +8,22 @@
 #include <iostream>
 #include <map>
 #include <pe77.hpp>
-#include <utils.hpp>
 #include <prime_sieve.hpp>
+#include <utils.hpp>
 
 std::string& pe77::name() { return name_; }
 
-namespace {
-
+namespace
+{
 size_t prime_limit = 1000;
 
-long a(long n)
+long a( long n )
 {
-    static prime_sieve primes(prime_limit);
-    return primes.is_prime(n) ? 1 : 0;
+    static prime_sieve primes( prime_limit );
+    return primes.is_prime( n ) ? 1 : 0;
 }
 
-long sopf(long n)
+long sopf( long n )
 {
     static std::map<long, long> cache;
     if ( cache[n] > 0 )
@@ -36,7 +36,7 @@ long sopf(long n)
     {
         if ( n % d == 0 )
         {
-            result += d * a(d);
+            result += d * a( d );
         }
     }
 
@@ -44,10 +44,9 @@ long sopf(long n)
     return result;
 }
 
-long b(long n)
+long b( long n )
 {
-    static std::map<long, long> cache = { { 0, 1 },
-                                          { 1, sopf(1) } };
+    static std::map<long, long> cache = { { 0, 1 }, { 1, sopf( 1 ) } };
     if ( cache[n] > 0 || n < 2 )
     {
         return cache[n];
@@ -56,19 +55,19 @@ long b(long n)
     long result = 0;
     for ( long k = 1; k < n; ++k )
     {
-        long sopfk = sopf(k);
-        long right_b = b(n-k);
-        long term = sopfk * right_b;
+        long sopfk   = sopf( k );
+        long right_b = b( n - k );
+        long term    = sopfk * right_b;
         result += term;
     }
-    result += sopf(n);
+    result += sopf( n );
     result /= n;
 
     cache[n] = result;
     return result;
 }
 
-} // end namespace anonymous
+}  // namespace
 
 void pe77::run()
 {
@@ -90,7 +89,7 @@ void pe77::run()
     long limit = 5000;
     for ( long n = 0; n < limit; ++n )
     {
-        long result = b(n);
+        long result = b( n );
         if ( result > limit )
         {
             std::cout << n << ", " << result << std::endl;

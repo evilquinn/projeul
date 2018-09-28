@@ -14,7 +14,7 @@
 #include <utils.hpp>
 
 std::string& pe59::name() { return name_; }
-void         pe59::run()
+void pe59::run()
 {
     /*
      *
@@ -56,13 +56,13 @@ void         pe59::run()
     std::string cipher_text;
     data_file >> cipher_text;
 
-    boost::char_separator<char>                   sep( "," );
+    boost::char_separator<char> sep( "," );
     boost::tokenizer<boost::char_separator<char>> bytes( cipher_text, sep );
 
     char start[] = { 'g', 'o', 'd' };
 
-    int    password_idx = 0;
-    size_t result       = 0;
+    int password_idx = 0;
+    size_t result    = 0;
 
     BOOST_FOREACH ( const std::string& byte_string, bytes )
     {

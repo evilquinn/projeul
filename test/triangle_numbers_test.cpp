@@ -28,8 +28,8 @@ TEST_F( TriangleNumbersTest, checkFirstTenTriangleNumbers )
             Eq( known_triangles.find( i ) != known_triangles.end() ) );
     }
 
-    auto   it = known_triangles.begin();
-    size_t i  = 1;
+    auto it  = known_triangles.begin();
+    size_t i = 1;
     while ( it != known_triangles.end() )
     {
         ASSERT_EQ( *it, triangles.get_term( i ) );

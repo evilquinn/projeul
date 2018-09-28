@@ -18,7 +18,7 @@
 size_t word_value_alpha_pos( const char* word );
 
 std::string& pe42::name() { return name_; }
-void         pe42::run()
+void pe42::run()
 {
     /*
      * The nth term of the sequence of triangle numbers is given by,
@@ -37,7 +37,7 @@ void         pe42::run()
      *
      */
     triangle_numbers tris_( 1000 );
-    const char*      words[] = {
+    const char* words[] = {
 // pe42_words.txt is already formatted like an initialiser list,
 // just get the preprocessor to include the file
 #include "data/pe42_words.txt"

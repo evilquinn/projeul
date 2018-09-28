@@ -14,11 +14,11 @@
 class pe84 : public pe
 {
 public:
-    pe84() : name_( "pe84" ) {};
+    pe84() : name_( "pe84" ){};
     ~pe84() override = default;
     std::string& name() override;
-    int          number() override { return 84; }
-    void         run() override;
+    int number() override { return 84; }
+    void run() override;
 
 private:
     std::string name_;

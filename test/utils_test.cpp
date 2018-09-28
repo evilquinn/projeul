@@ -18,8 +18,8 @@ protected:
 
 TEST_F( UtilsTest, testDigitPatternWorksExpected )
 {
-    size_t              num = 12123;
-    digit_count_map_t   digit_count;
+    size_t num = 12123;
+    digit_count_map_t digit_count;
     digit_pattern_map_t digit_pattern;
 
     size_t digits = pattern_of_digits( num, digit_count, digit_pattern );
@@ -37,8 +37,8 @@ TEST_F( UtilsTest, testDigitPatternWorksExpected )
 
 TEST_F( UtilsTest, testDigitPatternWorksExpectedExtended )
 {
-    size_t              num = 9330467415;
-    digit_count_map_t   digit_count;
+    size_t num = 9330467415;
+    digit_count_map_t digit_count;
     digit_pattern_map_t digit_pattern;
 
     size_t digits = pattern_of_digits( num, digit_count, digit_pattern );
@@ -132,9 +132,9 @@ TEST_F( UtilsTest, testNextPrime )
 
 TEST_F( UtilsTest, testMultDigitArrayByWorks )
 {
-    const size_t num_digits              = 100;
-    int          digit_array[num_digits] = { 0 };
-    digit_array[num_digits - 1]          = 4;
+    const size_t num_digits     = 100;
+    int digit_array[num_digits] = { 0 };
+    digit_array[num_digits - 1] = 4;
 
     mult_digit_array_by( digit_array, num_digits, 2 );
     EXPECT_THAT( digit_array[num_digits - 1], Eq( 4 * 2 ) );

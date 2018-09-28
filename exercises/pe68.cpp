@@ -26,15 +26,15 @@ size_t element_pair( size_t n, size_t e )
 
 void set_solution_element( std::vector<int>& solution, size_t e, size_t v )
 {
-    solution[e] = v;
+    solution[e]                                  = v;
     solution[element_pair( solution.size(), e )] = v;
 }
 
 bool sort_solution( std::vector<int>& solution )
 {
-    bool result   = false;
-    int  lowest   = solution[0];
-    int  lowest_i = 0;
+    bool result  = false;
+    int lowest   = solution[0];
+    int lowest_i = 0;
     for ( size_t i = 3; i < solution.size(); i += 3 )
     {
         if ( solution[i] < lowest )
@@ -56,16 +56,16 @@ magic_solution solve_magic_n_gon_for( size_t n )
 {
     magic_solution result;
 
-    size_t           solution_length = n * 3;
-    size_t           num_digits      = n * 2;
+    size_t solution_length = n * 3;
+    size_t num_digits      = n * 2;
     std::vector<int> solution( solution_length );
-    std::set<int>    available_digits;
+    std::set<int> available_digits;
     for ( size_t i = 1; i <= num_digits; ++i )
     {
         available_digits.insert( i );
     }
-    size_t e         = 0;
-    bool   backtrack = false;
+    size_t e       = 0;
+    bool backtrack = false;
     while ( true )
     {
         if ( backtrack )
@@ -106,7 +106,7 @@ magic_solution solve_magic_n_gon_for( size_t n )
                     // intermediate test: is the digit we just added good?
                     size_t intermediate_total = 0;
                     size_t intermediate_last  = 0;
-                    bool   encountered_zero   = false;
+                    bool encountered_zero     = false;
                     for ( size_t i = 0; i < solution.size(); ++i )
                     {
                         encountered_zero = encountered_zero == true
@@ -237,7 +237,7 @@ magic_solution solve_magic_n_gon_for( size_t n )
         // intermediate test: is the digit we just added good?
         size_t intermediate_total = 0;
         size_t intermediate_last  = 0;
-        bool   encountered_zero   = false;
+        bool encountered_zero     = false;
         for ( size_t i = 0; i < solution.size(); ++i )
         {
             encountered_zero =

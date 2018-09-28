@@ -11,7 +11,7 @@
 #include <pe74.hpp>
 #include <utils.hpp>
 
-std::string&                   pe74::name() { return name_; }
+std::string& pe74::name() { return name_; }
 boost::multiprecision::cpp_int sum_factorial_of_digits_of(
     boost::multiprecision::cpp_int n )
 {

@@ -26,7 +26,7 @@ public:
 private:
     void calc_triangle_numbers();
 
-    size_t              num_;
+    size_t num_;
     std::vector<size_t> triangles_;
 };
 

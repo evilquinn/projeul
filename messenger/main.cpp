@@ -39,7 +39,7 @@ private:
     {
         if ( !error )
         {
-            std::string  s;
+            std::string s;
             std::istream is( &input_buffer_ );
             is >> s;
             // eat the remaining newline
@@ -73,7 +73,7 @@ private:
     }
 
     boost::asio::posix::stream_descriptor cli_handle_;
-    boost::asio::streambuf                input_buffer_;
+    boost::asio::streambuf input_buffer_;
 };
 
 }  // end namespace evilquinn

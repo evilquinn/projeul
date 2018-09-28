@@ -6,11 +6,11 @@
 #include <string>
 
 using ::testing::_;
-using ::testing::Eq;
-using ::testing::ElementsAre;
-using ::testing::UnorderedElementsAre;
 using ::testing::AllOf;
+using ::testing::ElementsAre;
+using ::testing::Eq;
 using ::testing::Field;
+using ::testing::UnorderedElementsAre;
 
 class PokerTest : public ::testing::Test
 {

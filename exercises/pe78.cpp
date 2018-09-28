@@ -10,18 +10,19 @@
 #include <cmath>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <pe78.hpp>
 #include <utils.hpp>
-#include <memory>
 
 std::string& pe78::name() { return name_; }
 
 namespace bmp = boost::multiprecision;
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
-template<unsigned int Base>
-long divisor_f(long n)
+template <unsigned int Base>
+long divisor_f( long n )
 {
     std::map<long, long> cache;
     if ( cache[n] > 0 )
@@ -34,7 +35,7 @@ long divisor_f(long n)
     {
         if ( n % d == 0 )
         {
-            result += pow(d, Base);
+            result += pow( d, Base );
         }
     }
 
@@ -42,12 +43,9 @@ long divisor_f(long n)
     return result;
 }
 
-long a(long)
-{
-    return 1;
-}
+long a( long ) { return 1; }
 
-long c(long n)
+long c( long n )
 {
     std::map<long, long> cache;
     if ( cache[n] > 0 )
@@ -60,7 +58,7 @@ long c(long n)
     {
         if ( n % d == 0 )
         {
-            result += d * a(d);
+            result += d * a( d );
         }
     }
 
@@ -68,12 +66,9 @@ long c(long n)
     return result;
 }
 
-long pentagonal_of(long n)
-{
-    return n * ( ( 3 * n ) - 1 ) / 2;
-}
+long pentagonal_of( long n ) { return n * ( ( 3 * n ) - 1 ) / 2; }
 
-} // end namespace anonymous
+}  // namespace
 
 void pe78::run()
 {
@@ -99,15 +94,15 @@ void pe78::run()
      *
      */
 
-    long limit = 1000000;
-    long goal = 1000000;
-    long n = 1;
+    long limit              = 1000000;
+    long goal               = 1000000;
+    long n                  = 1;
     std::vector<long> terms = { 1 };
     for ( ; n <= limit; ++n )
     {
         long subee = 1;
-        long k = 0;
-        terms.push_back(0);
+        long k     = 0;
+        terms.push_back( 0 );
         while ( subee <= n )
         {
             long sign = ( k % 4 > 1 ) ? -1 : 1;
@@ -115,7 +110,7 @@ void pe78::run()
             terms[n] %= goal;
             ++k;
             long next = ( k % 2 == 0 ) ? k / 2 + 1 : -1 * ( k / 2 + 1 );
-            subee = next * (3 * next - 1) / 2;
+            subee     = next * ( 3 * next - 1 ) / 2;
         }
         if ( terms[n] == 0 || n == limit )
         {

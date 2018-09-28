@@ -17,7 +17,7 @@
 int num_digits_array( size_t* ints, int ints_size );
 
 std::string& pe38::name() { return name_; }
-void         pe38::run()
+void pe38::run()
 {
     /*
      * Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -37,17 +37,17 @@ void         pe38::run()
      * as the concatenated product of an integer with
      * (1,2, ... , n) where n > 1?
      */
-    int    largest     = 0;
-    int    range_start = 1;
-    int    range_end   = 9;
-    int    range       = range_end - range_start + 1;
-    size_t i_limit     = 10000;
+    int largest     = 0;
+    int range_start = 1;
+    int range_end   = 9;
+    int range       = range_end - range_start + 1;
+    size_t i_limit  = 10000;
     for ( size_t i = 9; i < i_limit; ++i )
     {
         int n_limit = 10;
         for ( int n = 2; n < n_limit; ++n )
         {
-            int    ints[n];
+            int ints[n];
             size_t lluints[n];
             for ( int to_n = 0; to_n < n; ++to_n )
             {

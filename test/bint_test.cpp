@@ -5,15 +5,15 @@
 #include <boost/format.hpp>
 #include <utils.hpp>
 
-using ::testing::Eq;
-using ::testing::Lt;
-using ::testing::Le;
-using ::testing::Gt;
-using ::testing::Ge;
-using ::testing::Ne;
-using ::testing::StrEq;
-using ::testing::StrCaseEq;
 using ::testing::ElementsAreArray;
+using ::testing::Eq;
+using ::testing::Ge;
+using ::testing::Gt;
+using ::testing::Le;
+using ::testing::Lt;
+using ::testing::Ne;
+using ::testing::StrCaseEq;
+using ::testing::StrEq;
 
 class BintTest : public ::testing::Test
 {
@@ -26,14 +26,14 @@ protected:
 
 TEST_F( BintTest, testBintConstructorWorksExpected )
 {
-    std::string       hex_string( "1a2b3c4d5e6f7a8b9c0d" );
-    bint              stock( hex_string.c_str() );
+    std::string hex_string( "1a2b3c4d5e6f7a8b9c0d" );
+    bint stock( hex_string.c_str() );
     std::stringstream os;
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( hex_string ) );
 
     std::string odd_hex_string( "1a2b3c4d5e6f7a8b9c0" );
-    bint        odd_stock( odd_hex_string.c_str() );
+    bint odd_stock( odd_hex_string.c_str() );
 
     os.str( std::string() );
     os << odd_stock;
@@ -43,19 +43,19 @@ TEST_F( BintTest, testBintConstructorWorksExpected )
 TEST_F( BintTest, testInvalidDigitsInHexConvertedToZero )
 {
     std::string invalid_string( "abcdefghijkl" );
-    bint        stock( invalid_string.c_str() );
+    bint stock( invalid_string.c_str() );
     std::string valid_string( "abcdef000000" );
-    bint        stock2( valid_string.c_str() );
+    bint stock2( valid_string.c_str() );
 
     EXPECT_THAT( stock, Eq( stock2 ) );
 }
 
 TEST_F( BintTest, testBintConstructFromBinWorks )
 {
-    size_t               bin_data = 0x10F01F11FF11FF11;
+    size_t bin_data = 0x10F01F11FF11FF11;
     const unsigned char* bin_ptr =
         reinterpret_cast<const unsigned char*>( &bin_data );
-    bint              stock( bin_ptr, sizeof( bin_data ) );
+    bint stock( bin_ptr, sizeof( bin_data ) );
     std::stringstream os;
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( "11ff11ff111ff010" ) );
@@ -66,8 +66,8 @@ TEST_F( BintTest, testBintConstructFromBinWorks )
 
 TEST_F( BintTest, testBintConstructFromSizeTWorks )
 {
-    size_t            n = 0x10F01F11FF11FF11;
-    bint              stock( n );
+    size_t n = 0x10F01F11FF11FF11;
+    bint stock( n );
     std::stringstream os;
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( "10F01F11FF11FF11" ) );
@@ -86,8 +86,8 @@ TEST_F( BintTest, testBintConstructFromSizeTWorks2 )
 
 TEST_F( BintTest, testBintCopyConstructor )
 {
-    bint              from_bint( "a1b2c3d4e5f6a7b8c9daebfc" );
-    bint              to_bint( from_bint );
+    bint from_bint( "a1b2c3d4e5f6a7b8c9daebfc" );
+    bint to_bint( from_bint );
     std::stringstream from_os;
     from_os << from_bint;
     std::stringstream to_os;
@@ -98,7 +98,7 @@ TEST_F( BintTest, testBintCopyConstructor )
 TEST_F( BintTest, testResize )
 {
     size_t base = 1234;
-    bint   stock( base );
+    bint stock( base );
 
     uint8_t s_base = static_cast<uint8_t>( base );
     stock.resize( 1 );
@@ -133,8 +133,8 @@ TEST_F( BintTest, testIncrementDecrementOperators )
 TEST_F( BintTest, testBintEquality )
 {
     const char* hex = "abcdef123456";
-    bint        lhs( hex );
-    bint        rhs( hex );
+    bint lhs( hex );
+    bint rhs( hex );
 
     EXPECT_THAT( lhs, Eq( rhs ) );
     EXPECT_TRUE( lhs.equals( rhs ) );
@@ -145,9 +145,9 @@ TEST_F( BintTest, testBintComparativeOps )
     const char* hex                       = "102030405060708090a0b0c0d0e0f0";
     const char* less_than_same_length_hex = "102020405060708090a0b0c0d0e0f0";
     const char* less_than_hex             = "102020405060708090a0b0c0d0e0";
-    bint        gt( hex );
-    bint        ltsl( less_than_same_length_hex );
-    bint        lt( less_than_hex );
+    bint gt( hex );
+    bint ltsl( less_than_same_length_hex );
+    bint lt( less_than_hex );
 
     EXPECT_TRUE( ltsl.less_than( gt ) );
     EXPECT_TRUE( lt.less_than( gt ) );
@@ -272,7 +272,7 @@ TEST_F( BintTest, testBitShift )
     }
 
     // buffer full non zeros
-    bint   hb( "1111" );
+    bint hb( "1111" );
     size_t hbs = 4369;
     EXPECT_THAT( hb.bitshift_left( 5 ), Eq( bint( hbs << 5 ) ) );
 
@@ -291,7 +291,7 @@ TEST_F( BintTest, testResizeChararrayWorks )
 TEST_F( BintTest, testDivision )
 {
     size_t base = 1234567890;
-    bint   stock( base );
+    bint stock( base );
 
     EXPECT_THAT( stock / bint( 7 ), Eq( bint( base / 7 ) ) );
     EXPECT_THAT( stock / bint( 12 ), Eq( bint( base / 12 ) ) );
@@ -328,7 +328,7 @@ TEST_F( BintTest, testDivision )
 TEST_F( BintTest, testPow )
 {
     size_t base = 123039;
-    bint   stock( base );
+    bint stock( base );
 
     EXPECT_THAT( stock.pow( bint( 0 ) ), Eq( bint( 1 ) ) );
     stock = bint( base );
@@ -343,7 +343,7 @@ TEST_F( BintTest, testPow )
 TEST_F( BintTest, testToSizeT )
 {
     size_t base = 12345;
-    bint   stock( base );
+    bint stock( base );
 
     EXPECT_THAT( size_t( stock ), Eq( base ) );
     stock *= bint( 3 );
@@ -354,7 +354,7 @@ TEST_F( BintTest, testToSizeT )
 TEST_F( BintTest, testCharStar )
 {
     size_t base = 0x3039;
-    bint   stock( base );
+    bint stock( base );
 
     unsigned char* base_string = reinterpret_cast<unsigned char*>( &base );
     unsigned char* stock_array = (unsigned char*)stock;
@@ -365,9 +365,9 @@ TEST_F( BintTest, testCharStar )
         EXPECT_THAT( stock_array[i], Eq( base_string[j] ) );
     }
 
-    const char*          base2 = "afebdfdb";
-    unsigned char        ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
-    const bint           s2( base2 );
+    const char* base2   = "afebdfdb";
+    unsigned char ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
+    const bint s2( base2 );
     const unsigned char* sa2 = (const unsigned char*)s2;
 
     for ( size_t i = 0; i < sizeof( ba2 ); ++i )

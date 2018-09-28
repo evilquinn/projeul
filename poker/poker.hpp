@@ -46,9 +46,9 @@ public:
     // private:
     void analyse_for_straight_flush();
     bool upgrade_rank( rank_k new_rank );
-    rank_k      rank_;
-    hand        rank_cards_;
-    hand        remaining_;
+    rank_k rank_;
+    hand rank_cards_;
+    hand remaining_;
     const hand& hand_;
 
 };  // class scored_hand

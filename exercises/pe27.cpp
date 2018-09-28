@@ -10,7 +10,7 @@
 #include <iostream>
 
 std::string& pe27::name() { return name_; }
-void         pe27::run()
+void pe27::run()
 {
     /*
      * Considering quadratics of the form:
@@ -32,9 +32,9 @@ void         pe27::run()
     {
         for ( int b = -999; b < 1000; ++b )
         {
-            int  i                    = 0;
-            int  current_count_primes = 0;
-            bool done                 = false;
+            int i                    = 0;
+            int current_count_primes = 0;
+            bool done                = false;
             while ( !done )
             {
                 double current_result = ( pow( i, 2 ) ) + ( a * i ) + b;

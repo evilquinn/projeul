@@ -14,7 +14,7 @@
 #include <utils.hpp>
 
 std::string& pe60::name() { return name_; }
-void         pe60::run()
+void pe60::run()
 {
     /*
      * The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
@@ -33,7 +33,7 @@ void         pe60::run()
     size_t limit         = 9000;
     size_t running_total = 0;
     size_t smallest_sum  = static_cast<size_t>( -1 );
-    bool   break_all     = false;
+    bool break_all       = false;
 
     std::cout << name() << std::endl;
     for ( size_t a = primes_.next_prime( 2 ); a < limit;

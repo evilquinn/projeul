@@ -11,7 +11,7 @@
 #include <utils.hpp>
 
 std::string& pe71::name() { return name_; }
-void         pe71::run()
+void pe71::run()
 {
     /*
      * Consider the fraction, n/d, where n and d are positive integers.
@@ -38,8 +38,8 @@ void         pe71::run()
     double ubound = (double)3 / 7;
     double lbound = (double)2 / 5;
 
-    bool   finished = false;
-    size_t seen     = 0;
+    bool finished = false;
+    size_t seen   = 0;
     for ( size_t d = limit; d > 0; --d )
     {
         for ( size_t n = ( d * 3 ) / 7; n < d; ++n )

@@ -11,7 +11,7 @@
 #include <utils.hpp>
 
 std::string& pe73::name() { return name_; }
-void         pe73::run()
+void pe73::run()
 {
     /*
      * Consider the fraction, n/d, where n and d are positive integers.

@@ -20,8 +20,8 @@ bint::bint( const unsigned char* bin, size_t length )
 
 bint::bint( size_t n ) : mem_( sizeof( n ) )
 {
-    const unsigned char* bin   = reinterpret_cast<const unsigned char*>( &n );
-    size_t               limit = mem_.size() - 1;
+    const unsigned char* bin = reinterpret_cast<const unsigned char*>( &n );
+    size_t limit             = mem_.size() - 1;
     for ( size_t i = 0; i < mem_.size(); ++i )
     {
         mem_[limit - i] = bin[i];
@@ -224,7 +224,7 @@ bint& bint::multiply_by( uint8_t num )
         return *this;
     }
 
-    size_t  limit    = real_size();
+    size_t limit     = real_size();
     uint8_t overflow = 0;
     for ( size_t i = 0; i < limit; ++i )
     {
@@ -305,8 +305,8 @@ bint& bint::bitshift_left( size_t n )
         return *this;
     }
 
-    size_t  bytes = n / 8;
-    uint8_t bits  = n % 8;
+    size_t bytes = n / 8;
+    uint8_t bits = n % 8;
 
     uint8_t left_shift  = bits;
     uint8_t right_shift = 8 - bits;
@@ -332,8 +332,8 @@ bint& bint::bitshift_left( size_t n )
     size_t start_i = mem_.size() - r_size - 1;
     for ( size_t i = start_i; i < mem_.size(); ++i )
     {
-        size_t  high_idx  = i;
-        size_t  low_idx   = high_idx + 1;
+        size_t high_idx   = i;
+        size_t low_idx    = high_idx + 1;
         uint8_t left_part = ( mem_[high_idx] & low_mask ) << left_shift;
         uint8_t right_part =
             ( ( low_idx >= mem_.size() ? 0 : mem_[low_idx] ) & high_mask ) >>
@@ -352,8 +352,8 @@ bint& bint::bitshift_right( size_t n )
         return *this;
     }
 
-    size_t  bytes = n / 8;
-    uint8_t bits  = n % 8;
+    size_t bytes = n / 8;
+    uint8_t bits = n % 8;
 
     if ( bytes != 0u )
     {
@@ -431,7 +431,7 @@ size_t bint::size() const { return mem_.size(); }
 bint& bint::subtract( const bint& rhs )
 {
     const bint* sub = &rhs;
-    bint        temp;
+    bint temp;
     if ( mem_.size() < rhs.mem_.size() )
     {
         resize( rhs.mem_.size() );
@@ -449,7 +449,7 @@ bint& bint::subtract( const bint& rhs )
 }
 
 bint& bint::operator++() { return *this += bint( 1 ); }
-bint  bint::operator++( int )
+bint bint::operator++( int )
 {
     bint tmp( *this );
     *this += bint( 1 );
@@ -457,7 +457,7 @@ bint  bint::operator++( int )
 }
 
 bint& bint::operator--() { return *this -= bint( 1 ); }
-bint  bint::operator--( int )
+bint bint::operator--( int )
 {
     bint tmp( *this );
     *this -= bint( 1 );

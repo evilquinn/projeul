@@ -13,7 +13,7 @@
 #include <utils.hpp>
 
 std::string& pe63::name() { return name_; }
-void         pe63::run()
+void pe63::run()
 {
     /*
      * The 5-digit number, 16807=7^5, is also a fifth power. Similarly,

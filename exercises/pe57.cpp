@@ -11,7 +11,7 @@
 #include <utils.hpp>
 
 std::string& pe57::name() { return name_; }
-void         pe57::run()
+void pe57::run()
 {
     /*
      *
@@ -38,9 +38,9 @@ void         pe57::run()
      */
 
     size_t result = 0;
-    gint   numerator( 1 );
-    gint   denominator( 1 );
-    gint   next_denominator;
+    gint numerator( 1 );
+    gint denominator( 1 );
+    gint next_denominator;
 
     for ( size_t i = 1; i < 1000; ++i )
     {

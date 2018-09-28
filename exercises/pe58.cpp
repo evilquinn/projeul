@@ -11,7 +11,7 @@
 #include <utils.hpp>
 
 std::string& pe58::name() { return name_; }
-void         pe58::run()
+void pe58::run()
 {
     /*
      * Starting with 1 and spiralling anticlockwise in the following way, a

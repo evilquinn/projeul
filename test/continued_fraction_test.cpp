@@ -4,8 +4,8 @@
 #include <iostream>
 #include <pe66.hpp>
 
-using ::testing::Eq;
 using ::testing::ElementsAreArray;
+using ::testing::Eq;
 
 class ContFractTest : public ::testing::Test
 {

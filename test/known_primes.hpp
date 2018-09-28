@@ -13,6 +13,7 @@ public:
     known_primes();
 
     std::set<size_t>& set() { return *known_primes_; }
+
 private:
     std::unique_ptr<std::set<size_t> > known_primes_;
 };

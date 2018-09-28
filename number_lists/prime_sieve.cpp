@@ -11,7 +11,8 @@
 #include <string.h>
 #include <iostream>
 
-prime_sieve::prime_sieve( size_t limit ) : limit_( limit < 2 ? 2 : limit ), sieve_( limit_ )
+prime_sieve::prime_sieve( size_t limit )
+    : limit_( limit < 2 ? 2 : limit ), sieve_( limit_ )
 {
     // set all valid, we'll mark off the ones not prime
     sieve_.set();
@@ -30,7 +31,7 @@ prime_sieve::prime_sieve( size_t limit ) : limit_( limit < 2 ? 2 : limit ), siev
 
 prime_sieve::~prime_sieve() = default;
 size_t prime_sieve::limit() { return limit_; }
-void   prime_sieve::calc_primes()
+void prime_sieve::calc_primes()
 {
     size_t n = 2;
     while ( n < limit_ )
@@ -115,8 +116,8 @@ size_t prime_sieve::num_in_range( size_t lower, size_t upper )
     return result;
 }
 
-size_t prime_sieve::sum_range( size_t  lower,
-                               size_t  upper,
+size_t prime_sieve::sum_range( size_t lower,
+                               size_t upper,
                                size_t& num_in_range )
 {
     if ( lower > upper )
@@ -150,8 +151,8 @@ size_t prime_sieve::sum_range( size_t  lower,
     return result;
 }
 
-size_t prime_sieve::shit_sum_range( size_t              lower,
-                                    size_t              upper,
+size_t prime_sieve::shit_sum_range( size_t lower,
+                                    size_t upper,
                                     std::deque<size_t>& sumees )
 {
     sumees.clear();

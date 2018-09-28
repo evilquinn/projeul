@@ -19,14 +19,14 @@ public:
     pe46() : primes_(), squares_(), name_( "pe46" ){};
     ~pe46() override = default;
     std::string& name() override;
-    int          number() override { return 46; }
-    void         run() override;
+    int number() override { return 46; }
+    void run() override;
     bool fulfills_goldbachs_conjecture( size_t i );
 
 private:
-    prime_sieve         primes_;
+    prime_sieve primes_;
     std::vector<size_t> squares_;
-    std::string         name_;
+    std::string name_;
 };
 
 #endif /* PE46_HPP_ */

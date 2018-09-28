@@ -15,7 +15,7 @@
 #include "utils.hpp"
 
 std::string& pe37::name() { return name_; }
-void         pe37::run()
+void pe37::run()
 {
     /*
      *

@@ -11,7 +11,7 @@
 #include <utils.hpp>
 
 std::string& pe56::name() { return name_; }
-void         pe56::run()
+void pe56::run()
 {
     /*
      * A googol (10^100) is a massive number: one followed by one-hundred

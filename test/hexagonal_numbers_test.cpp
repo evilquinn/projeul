@@ -14,7 +14,7 @@ protected:
 
 TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )
 {
-    std::set<size_t>  known_hexagonals = { 1, 6, 15, 28, 45 };
+    std::set<size_t> known_hexagonals = { 1, 6, 15, 28, 45 };
     hexagonal_numbers hexagonals( known_hexagonals.size() );
     hexagonals.print();
 
@@ -25,8 +25,8 @@ TEST_F( HexagonalNumbersTest, checkFirstFiveHexagonalNumbers )
             Eq( known_hexagonals.find( i ) != known_hexagonals.end() ) );
     }
 
-    auto   it = known_hexagonals.begin();
-    size_t i  = 1;
+    auto it  = known_hexagonals.begin();
+    size_t i = 1;
     while ( it != known_hexagonals.end() )
     {
         ASSERT_EQ( *it, hexagonals.get_term( i ) );

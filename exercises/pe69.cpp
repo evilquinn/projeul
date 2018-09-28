@@ -12,7 +12,7 @@
 #include <utils.hpp>
 
 std::string& pe69::name() { return name_; }
-void         pe69::run()
+void pe69::run()
 {
     /*
      * Euler's Totient function, φ(n) [sometimes called the phi function],
@@ -36,19 +36,19 @@ void         pe69::run()
      * Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
      */
 
-    size_t      limit = 1000000;
+    size_t limit = 1000000;
     prime_sieve primes( limit + 1 );
-    size_t      result          = 0;
-    double      biggest_attempt = 0;
+    size_t result          = 0;
+    double biggest_attempt = 0;
     for ( size_t i = 6; i <= limit; ++i )
     {
         if ( primes.is_prime( i ) )
         {
             continue;
         }
-        auto             prifacs = calc_prime_factors( i, primes );
+        auto prifacs = calc_prime_factors( i, primes );
         std::set<size_t> deup( prifacs.begin(), prifacs.end() );
-        size_t           total = i;
+        size_t total = i;
         for ( size_t p : deup )
         {
             total *= p - 1;

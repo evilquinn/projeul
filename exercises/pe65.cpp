@@ -11,7 +11,7 @@
 #include <iostream>
 
 std::string& pe65::name() { return name_; }
-void         pe65::run()
+void pe65::run()
 {
     /*
      * ffs
@@ -19,8 +19,8 @@ void         pe65::run()
      *
      */
 
-    size_t result       = 0;
-    gint   e_combo[101] = { gint( 0 ) };
+    size_t result     = 0;
+    gint e_combo[101] = { gint( 0 ) };
 
     size_t three_cycle = 0;
     size_t cycle_n     = 1;

@@ -40,7 +40,7 @@ void range::advance()
 unsigned int range::digit_at( unsigned int n ) const
 {
     auto const offset = n - index_begin;
-    auto       number = num_begin + offset / digits;
+    auto number       = num_begin + offset / digits;
 
     for ( auto i = digits - 1 - offset % digits; i; --i )
     {

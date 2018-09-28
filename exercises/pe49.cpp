@@ -20,7 +20,7 @@
 size_t next_prime_with_same_digits( size_t start, prime_sieve& primes );
 
 std::string& pe49::name() { return name_; }
-void         pe49::run()
+void pe49::run()
 {
     /*
      *
@@ -41,7 +41,7 @@ void         pe49::run()
     size_t first = 1487;
     size_t second;
     size_t third;
-    bool   solved = false;
+    bool solved = false;
 
     do
     {

@@ -15,9 +15,9 @@ class pe
 public:
     virtual ~pe() = default;
     // abstract, returns name of exercise
-    virtual std::string& name()   = 0;
-    virtual void         run()    = 0;
-    virtual int          number() = 0;
+    virtual std::string& name() = 0;
+    virtual void run()          = 0;
+    virtual int number()        = 0;
 };
 
 #endif /* PE_HPP_ */

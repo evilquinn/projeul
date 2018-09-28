@@ -25,9 +25,9 @@ public:
 private:
     void calc_pentagonal_numbers();
 
-    size_t              num_;
+    size_t num_;
     std::vector<size_t> pentagonals_;
-    size_t              max_;
+    size_t max_;
 };
 
 #endif /* PENTAGONAL_NUMBERS_HPP_ */

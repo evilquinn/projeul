@@ -13,7 +13,7 @@
 bool is_lychrel( size_t i );
 
 std::string& pe55::name() { return name_; }
-void         pe55::run()
+void pe55::run()
 {
     /*
      *
@@ -64,7 +64,7 @@ void         pe55::run()
 
 bool is_lychrel( size_t i )
 {
-    gint   gi( i );
+    gint gi( i );
     size_t iterations = 1;
 
     while ( iterations < 50 )

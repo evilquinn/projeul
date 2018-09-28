@@ -17,8 +17,8 @@ public:
     pe37() : primes_(), name_( "pe37" ){};
     ~pe37() override = default;
     std::string& name() override;
-    int          number() override { return 37; }
-    void         run() override;
+    int number() override { return 37; }
+    void run() override;
 
 private:
     bool is_trunc_prime_rtl( int n );

@@ -25,9 +25,9 @@ public:
 private:
     void calc_hexagonal_numbers();
 
-    size_t              num_;
+    size_t num_;
     std::vector<size_t> hexagonals_;
-    size_t              max_;
+    size_t max_;
 };
 
 #endif /* HEXAGONAL_NUMBERS_HPP_ */

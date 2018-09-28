@@ -19,8 +19,8 @@ public:
     pe58() : name_( "pe58" ), primes_(){};
     ~pe58() override = default;
     std::string& name() override;
-    int          number() override { return 58; }
-    void         run() override;
+    int number() override { return 58; }
+    void run() override;
 
 private:
     std::string name_;

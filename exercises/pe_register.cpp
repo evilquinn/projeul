@@ -63,7 +63,7 @@
 
 std::shared_ptr<pe_register> pe_register::get()
 {
-    static std::shared_ptr<pe_register> handle(new pe_register());
+    static std::shared_ptr<pe_register> handle( new pe_register() );
     return handle;
 }
 
@@ -145,9 +145,8 @@ void pe_register::run( size_t ex )
 
     if ( ex > num_registered )
     {
-        std::cout << "Exercise " << ex
-                  << " out of range, running " << num_registered
-                  << std::endl;
+        std::cout << "Exercise " << ex << " out of range, running "
+                  << num_registered << std::endl;
         ex = num_registered;
     }
     std::cout << "Exercise " << ex << std::endl;

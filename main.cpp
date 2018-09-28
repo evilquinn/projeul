@@ -38,8 +38,8 @@ int main( int argc, char* argv[] )
         return 1;
     }
 
-    int         exercise = vm["exercise"].as<int>();
-    auto pe_reg = pe_register::get();
+    int  exercise = vm["exercise"].as<int>();
+    auto pe_reg   = pe_register::get();
     pe_reg->run( exercise );
 
     return 0;

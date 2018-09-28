@@ -5,22 +5,23 @@
  *      Author: evilquinn
  */
 
-#include <pe84.hpp>
 #include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/random/uniform_int.hpp>
 #include <boost/random.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/tokenizer.hpp>
+#include <ctime>
 #include <fstream>
 #include <iostream>
-#include <utils.hpp>
+#include <pe84.hpp>
 #include <sstream>
-#include <ctime>
+#include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
-namespace tile {
-
+namespace tile
+{
 enum tile_enum
 {
     GO,
@@ -66,57 +67,10 @@ enum tile_enum
     MAX_TILE
 };
 
-std::string to_string(size_t t)
+}  // namespace tile
+
+namespace community_chest
 {
-    switch ( t )
-    {
-    case GO   :  return "GO";
-    case A1   :  return "A1";
-    case CC1  :  return "CC1";
-    case A2   :  return "A2";
-    case T1   :  return "T1";
-    case R1   :  return "R1";
-    case B1   :  return "B1";
-    case CH1  :  return "CH1";
-    case B2   :  return "B2";
-    case B3   :  return "B3";
-    case JAIL :  return "JAIL";
-    case C1   :  return "C1";
-    case U1   :  return "U1";
-    case C2   :  return "C2";
-    case C3   :  return "C3";
-    case R2   :  return "R2";
-    case D1   :  return "D1";
-    case CC2  :  return "CC2";
-    case D2   :  return "D2";
-    case D3   :  return "D3";
-    case FP   :  return "FP";
-    case E1   :  return "E1";
-    case CH2  :  return "CH2";
-    case E2   :  return "E2";
-    case E3   :  return "E3";
-    case R3   :  return "R3";
-    case F1   :  return "F1";
-    case F2   :  return "F2";
-    case U2   :  return "U2";
-    case F3   :  return "F3";
-    case G2J  :  return "G2J";
-    case G1   :  return "G1";
-    case G2   :  return "G2";
-    case CC3  :  return "CC3";
-    case G3   :  return "G3";
-    case R4   :  return "R4";
-    case CH3  :  return "CH3";
-    case H1   :  return "H1";
-    case T2   :  return "T2";
-    case H2   :  return "H2";
-    default   :  return "Uknown tile: " + t;
-    } // end switch
-}
-} // end namspace tile
-
-namespace community_chest {
-
 enum cc_enum
 {
     A2GO,
@@ -138,9 +92,9 @@ enum cc_enum
     MAX_CARD
 };
 
-} // end namespace community_chest
-namespace chance {
-
+}  // end namespace community_chest
+namespace chance
+{
 enum ch_enum
 {
     A2GO,
@@ -162,8 +116,8 @@ enum ch_enum
     MAX_CARD
 };
 
-} // end namespace chance
-tile::tile_enum next_r(tile::tile_enum t)
+}  // end namespace chance
+tile::tile_enum next_r( tile::tile_enum t )
 {
     if ( t < tile::R1 )
     {
@@ -187,7 +141,7 @@ tile::tile_enum next_r(tile::tile_enum t)
     }
 }
 
-tile::tile_enum next_u(tile::tile_enum t)
+tile::tile_enum next_u( tile::tile_enum t )
 {
     if ( t < tile::U1 )
     {
@@ -203,23 +157,24 @@ tile::tile_enum next_u(tile::tile_enum t)
     }
 }
 
-size_t random_in_range(size_t beg, size_t end)
+size_t random_in_range( size_t beg, size_t end )
 {
-    static boost::random::mt19937 rng(static_cast<unsigned int>(std::time(0)));
-    boost::random::uniform_int_distribution<> dist(beg, end);
-    return dist(rng);
+    static boost::random::mt19937 rng(
+        static_cast<unsigned int>( std::time( 0 ) ) );
+    boost::random::uniform_int_distribution<> dist( beg, end );
+    return dist( rng );
 }
 
 community_chest::cc_enum select_cc()
 {
-    return static_cast<community_chest::cc_enum>(
-               random_in_range(community_chest::A2GO, community_chest::MAX_CARD-1));
+    return static_cast<community_chest::cc_enum>( random_in_range(
+        community_chest::A2GO, community_chest::MAX_CARD - 1 ) );
 }
 
 chance::ch_enum select_chance()
 {
     return static_cast<chance::ch_enum>(
-               random_in_range(chance::A2GO, chance::MAX_CARD-1));
+        random_in_range( chance::A2GO, chance::MAX_CARD - 1 ) );
 }
 
 struct two_die_result
@@ -228,19 +183,18 @@ struct two_die_result
     bool is_double;
 };
 
-two_die_result roll_2_by(size_t die_sides)
+two_die_result roll_2_by( size_t die_sides )
 {
-    std::vector<size_t> rolls = { random_in_range(1, die_sides),
-                                  random_in_range(1, die_sides) };
+    std::vector<size_t> rolls = { random_in_range( 1, die_sides ),
+                                  random_in_range( 1, die_sides ) };
     return { rolls[0] + rolls[1], rolls[0] == rolls[1] };
 }
 
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe84::name() { return name_; }
-void         pe84::run()
+void pe84::run()
 {
-    size_t result = 0;
     size_t num_squares = tile::MAX_TILE;
     std::map<size_t, size_t> tile_counts;
     size_t pos = tile::GO;
@@ -250,7 +204,7 @@ void         pe84::run()
     size_t double_count = 0;
     for ( size_t i = 0; i < rolls; ++i )
     {
-        auto roll = roll_2_by(4);
+        auto roll = roll_2_by( 4 );
         if ( roll.is_double )
         {
             ++double_count;
@@ -262,63 +216,89 @@ void         pe84::run()
         if ( double_count >= 3 )
         {
             double_count = 0;
-            pos = tile::JAIL;
+            pos          = tile::JAIL;
             tile_counts[pos] += 1;
             continue;
         }
         pos += roll.result;
         pos %= num_squares;
-        switch(pos)
+        switch ( pos )
         {
-        case tile::CH1 :
-        case tile::CH2 :
-        case tile::CH3 :
+        case tile::CH1:
+        case tile::CH2:
+        case tile::CH3:
         {
             auto ch = select_chance();
-            switch(ch)
+            switch ( ch )
             {
-            case chance::A2GO : pos = tile::GO; break;
-            case chance::GO2J : pos = tile::JAIL; break;
-            case chance::A2C1 : pos = tile::C1; break;
-            case chance::A2E3 : pos = tile::E3; break;
-            case chance::A2H2 : pos = tile::H2; break;
-            case chance::A2R1 : pos = tile::R1; break;
-            case chance::A2NR :
-            case chance::A2RR : pos = next_r(static_cast<tile::tile_enum>(pos)); break;
-            case chance::A2NU : pos = next_u(static_cast<tile::tile_enum>(pos)); break;
-            case chance::BTHR : pos = ( ( num_squares + pos ) - 3 ) % num_squares; break;
-            default : /* don't really care */ break;
-            } // end switch
+            case chance::A2GO:
+                pos = tile::GO;
+                break;
+            case chance::GO2J:
+                pos = tile::JAIL;
+                break;
+            case chance::A2C1:
+                pos = tile::C1;
+                break;
+            case chance::A2E3:
+                pos = tile::E3;
+                break;
+            case chance::A2H2:
+                pos = tile::H2;
+                break;
+            case chance::A2R1:
+                pos = tile::R1;
+                break;
+            case chance::A2NR:
+            case chance::A2RR:
+                pos = next_r( static_cast<tile::tile_enum>( pos ) );
+                break;
+            case chance::A2NU:
+                pos = next_u( static_cast<tile::tile_enum>( pos ) );
+                break;
+            case chance::BTHR:
+                pos = ( ( num_squares + pos ) - 3 ) % num_squares;
+                break;
+            default: /* don't really care */
+                break;
+            }  // end switch
             break;
         }
-        case tile::CC1 :
-        case tile::CC2 :
-        case tile::CC3 :
+        case tile::CC1:
+        case tile::CC2:
+        case tile::CC3:
         {
             auto cc = select_cc();
-            switch(cc)
+            switch ( cc )
             {
-            case chance::A2GO : pos = tile::GO; break;
-            case chance::GO2J : pos = tile::JAIL; break;
-            default : /* don't really care */ break;
-            } // end switch
+            case chance::A2GO:
+                pos = tile::GO;
+                break;
+            case chance::GO2J:
+                pos = tile::JAIL;
+                break;
+            default: /* don't really care */
+                break;
+            }  // end switch
             break;
         }
-        case tile::G2J : pos = tile::JAIL; break;
+        case tile::G2J:
+            pos = tile::JAIL;
+            break;
 
-        } // end switch
+        }  // end switch
 
         tile_counts[pos] += 1;
     }
 
     for ( auto count : tile_counts )
     {
-        double prob = (count.second / static_cast<double>(rolls)) * 100;
+        double prob = ( count.second / static_cast<double>( rolls ) ) * 100;
         if ( prob > 3.0 )
         {
-            std::cout << count.first << ": " << count.second
-                  << "; " << (count.second / static_cast<double>(rolls)) * 100
-                  << std::endl;
+            std::cout << count.first << ": " << count.second << "; "
+                      << ( count.second / static_cast<double>( rolls ) ) * 100
+                      << std::endl;
         }
     }
 }

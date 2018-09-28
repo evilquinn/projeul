@@ -14,7 +14,7 @@
 size_t cube_n( size_t n );
 
 std::string& pe62::name() { return name_; }
-void         pe62::run()
+void pe62::run()
 {
     /*
      * The cube, 41063625 (345^3), can be permuted to produce two other cubes:
@@ -29,7 +29,7 @@ void         pe62::run()
      */
 
     polygonal_numbers cubes( 10000, cube_n );
-    size_t            result = 0;
+    size_t result = 0;
 
     for ( size_t i = 0; i < 10000; ++i )
     {

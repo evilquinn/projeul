@@ -18,7 +18,7 @@ char* conv_to_bin( char* dest, int max, long long unsigned n );
 bool is_palendrome( const char* in );
 
 std::string& pe36::name() { return name_; }
-void         pe36::run()
+void pe36::run()
 {
     /*
      *
@@ -38,10 +38,10 @@ void         pe36::run()
 
     for ( unsigned long long i = 1; i < limit; ++i )
     {
-        int  lim_str_size = num_digits( limit ) + 1;
+        int lim_str_size = num_digits( limit ) + 1;
         char lim_str[lim_str_size];
         snprintf( lim_str, lim_str_size, "%llu", i );
-        int  bin_str_size = 30;
+        int bin_str_size = 30;
         char bin_str[bin_str_size];
         memset( bin_str, 0, bin_str_size );
         char* bin_begin = conv_to_bin( bin_str, bin_str_size, i );

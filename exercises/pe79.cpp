@@ -5,16 +5,17 @@
  *      Author: evilquinn
  */
 
-#include <pe79.hpp>
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include <fstream>
 #include <iostream>
+#include <pe79.hpp>
 #include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
-template<typename Value>
+template <typename Value>
 struct digit_guy
 {
     Value val;
@@ -22,10 +23,10 @@ struct digit_guy
     std::set<Value> rights;
 };
 
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe79::name() { return name_; }
-void         pe79::run()
+void pe79::run()
 {
     /*
      * A common security method used for online banking is to ask the
@@ -47,20 +48,20 @@ void         pe79::run()
 
     std::map<int, struct digit_guy<int> > attempts;
     std::string line;
-    while ( std::getline(data_file, line ) )
+    while ( std::getline( data_file, line ) )
     {
         for ( size_t i = 0; i < line.size(); ++i )
         {
             int digit = line[i] - '0';
             auto curr = attempts[digit];
-            curr.val = digit;
+            curr.val  = digit;
             for ( size_t l = 0; l < i; ++l )
             {
-                curr.lefts.insert(line[l]-'0');
+                curr.lefts.insert( line[l] - '0' );
             }
-            for ( size_t r = i+1; r < line.size(); ++r )
+            for ( size_t r = i + 1; r < line.size(); ++r )
             {
-                curr.rights.insert(line[r]-'0');
+                curr.rights.insert( line[r] - '0' );
             }
             attempts[digit] = curr;
         }

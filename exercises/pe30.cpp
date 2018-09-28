@@ -13,7 +13,7 @@
 int sum_pow_digits( int n, int power );
 
 std::string& pe30::name() { return name_; }
-void         pe30::run()
+void pe30::run()
 {
     /*
      *
@@ -34,7 +34,7 @@ void         pe30::run()
      */
 
     const int super_power = 5;
-    double    total_sum   = 0;
+    double total_sum      = 0;
 
     for ( int i = 10; i < 400000; ++i )
     {

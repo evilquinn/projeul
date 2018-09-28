@@ -11,7 +11,7 @@
 #include <set>
 
 std::string& pe29::name() { return name_; }
-void         pe29::run()
+void pe29::run()
 {
     /*
      *

@@ -5,24 +5,25 @@
  *      Author: evilquinn
  */
 
-#include <pe82.hpp>
 #include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/tokenizer.hpp>
 #include <fstream>
 #include <iostream>
-#include <utils.hpp>
+#include <pe82.hpp>
 #include <sstream>
+#include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
 static pe82 ex;
 
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe82::name() { return name_; }
-void         pe82::run()
+void pe82::run()
 {
     /*
      * The minimal path sum in the 5 by 5 matrix below, by
@@ -50,39 +51,36 @@ void         pe82::run()
 
     std::string line;
     size_t row = 0;
-    while ( std::getline(data_file, line ) )
+    while ( std::getline( data_file, line ) )
     {
-        std::istringstream is(line);
+        std::istringstream is( line );
         std::string word;
         matrix.emplace_back();
-        while ( std::getline(is, word, ',') )
+        while ( std::getline( is, word, ',' ) )
         {
-            matrix[row].emplace_back(
-                boost::lexical_cast<size_t>(word));
+            matrix[row].emplace_back( boost::lexical_cast<size_t>( word ) );
         }
         ++row;
     }
 
     // start from the second-to-last column
-    for ( size_t col = matrix.size() - 2;
-          col < matrix.size();
-          --col )
+    for ( size_t col = matrix.size() - 2; col < matrix.size(); --col )
     {
         // create working copy of this column
         std::vector<size_t> mins;
         for ( size_t row = 0; row < matrix.size(); ++row )
         {
-            mins.push_back(matrix[row][col]);
+            mins.push_back( matrix[row][col] );
         }
         // calculate the best candidate for each row in this column
         // and save it in mins for the moment
         for ( size_t row = 0; row < matrix.size(); ++row )
         {
             // find the smallest path from any row in the prev col
-            size_t min = matrix[row][col+1];
+            size_t min = matrix[row][col + 1];
             for ( size_t i = 0; i < matrix.size(); ++i )
             {
-                size_t cand = matrix[i][col+1];
+                size_t cand = matrix[i][col + 1];
                 for ( size_t ii = i; ii < row; ++ii )
                 {
                     cand += matrix[ii][col];

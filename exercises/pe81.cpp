@@ -5,23 +5,24 @@
  *      Author: evilquinn
  */
 
-#include <pe81.hpp>
 #include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/tokenizer.hpp>
 #include <fstream>
 #include <iostream>
-#include <utils.hpp>
+#include <pe81.hpp>
 #include <sstream>
+#include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
 static pe81 ex;
 
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe81::name() { return name_; }
-void         pe81::run()
+void pe81::run()
 {
     /*
      * In the 5 by 5 matrix below, the minimal path sum from the top left
@@ -48,15 +49,14 @@ void         pe81::run()
 
     std::string line;
     size_t row = 0;
-    while ( std::getline(data_file, line ) )
+    while ( std::getline( data_file, line ) )
     {
-        std::istringstream is(line);
+        std::istringstream is( line );
         std::string word;
         matrix.emplace_back();
-        while ( std::getline(is, word, ',') )
+        while ( std::getline( is, word, ',' ) )
         {
-            matrix[row].emplace_back(
-                boost::lexical_cast<size_t>(word));
+            matrix[row].emplace_back( boost::lexical_cast<size_t>( word ) );
         }
         ++row;
     }
@@ -69,51 +69,49 @@ void         pe81::run()
         while ( irow < matrix.size() )
         {
             auto min = 0;
-            if ( irow == matrix.size() - 1 &&
-                 i == matrix[irow].size() - 1 )
+            if ( irow == matrix.size() - 1 && i == matrix[irow].size() - 1 )
             {
                 min = 0;
             }
             else if ( i == matrix[irow].size() - 1 )
             {
-                min = matrix[irow+1][i];
+                min = matrix[irow + 1][i];
             }
             else if ( irow == matrix.size() - 1 )
             {
-                min = matrix[irow][i+1];
+                min = matrix[irow][i + 1];
             }
             else
             {
-                min = matrix[irow+1][i] < matrix[irow][i+1] ?
-                          matrix[irow+1][i] :
-                          matrix[irow][i+1];
+                min = matrix[irow + 1][i] < matrix[irow][i + 1]
+                          ? matrix[irow + 1][i]
+                          : matrix[irow][i + 1];
             }
             matrix[irow][i] += min;
             --irow;
         }
         // converge from below or right walking down the row
-        auto icol = i - 1; // -1 so we don't double count this one
+        auto icol = i - 1;  // -1 so we don't double count this one
         while ( icol < matrix[i].size() )
         {
             auto min = 0;
-            if ( i == matrix.size() - 1 &&
-                 icol == matrix[i].size() - 1 )
+            if ( i == matrix.size() - 1 && icol == matrix[i].size() - 1 )
             {
                 min = 0;
             }
             else if ( i == matrix.size() - 1 )
             {
-                min = matrix[i][icol+1];
+                min = matrix[i][icol + 1];
             }
             else if ( icol == matrix[i].size() - 1 )
             {
-                min = matrix[i+1][icol];
+                min = matrix[i + 1][icol];
             }
             else
             {
-                min = matrix[i+1][icol] < matrix[i][icol+1] ?
-                          matrix[i+1][icol] :
-                          matrix[i][icol+1];
+                min = matrix[i + 1][icol] < matrix[i][icol + 1]
+                          ? matrix[i + 1][icol]
+                          : matrix[i][icol + 1];
             }
             matrix[i][icol] += min;
             --icol;

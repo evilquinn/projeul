@@ -16,8 +16,8 @@ public:
     pe31() : name_( "pe31" ){};
     ~pe31() override = default;
     std::string& name() override;
-    int          number() override { return 31; }
-    void         run() override;
+    int number() override { return 31; }
+    void run() override;
 
 private:
     std::string name_;

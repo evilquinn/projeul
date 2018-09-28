@@ -10,7 +10,7 @@
 #include <pe48.hpp>
 
 std::string& pe48::name() { return name_; }
-void         pe48::run()
+void pe48::run()
 {
     /*
      * The series:

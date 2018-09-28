@@ -19,8 +19,8 @@ public:
     pe47() : primes_(), name_( "pe47" ){};
     ~pe47() override = default;
     std::string& name() override;
-    int          number() override { return 47; }
-    void         run() override;
+    int number() override { return 47; }
+    void run() override;
     bool num_has_n_distinct_prime_factors( size_t num, size_t n );
 
 private:

@@ -17,13 +17,13 @@
 int select_digit( int n, int index );
 
 std::string& pe40::name() { return name_; }
-void         pe40::run()
+void pe40::run()
 {
     /*
      */
-    int  result      = 1;
-    int  d           = 1;
-    int  n           = 1;
+    int result       = 1;
+    int d            = 1;
+    int n            = 1;
     bool done1       = false;
     bool done10      = false;
     bool done100     = false;

@@ -70,7 +70,7 @@ class continued_fraction
 {
 public:
     continued_fraction( Container& container ) : container_( container ) {}
-    Container&                     container_;
+    Container& container_;
 };
 
 template <typename Container>
@@ -99,7 +99,7 @@ boost::multiprecision::cpp_int solve_x_for_continued_fraction(
     const std::vector<int> cf )
 {
     boost::multiprecision::cpp_int x, x1, x2 = 1;
-    size_t                         cf_size = cf.size();
+    size_t cf_size = cf.size();
     if ( cf_size == 0 )
     {
         return x;
@@ -136,7 +136,7 @@ boost::multiprecision::cpp_int solve_x_for_continued_fraction(
 }
 
 std::string& pe66::name() { return name_; }
-void         pe66::run()
+void pe66::run()
 {
     /*
      * Consider quadratic Diophantine equations of the form:
@@ -166,8 +166,8 @@ void         pe66::run()
      *
      */
 
-    size_t                         result    = 0;
-    size_t                         limit     = 1000;
+    size_t result                            = 0;
+    size_t limit                             = 1000;
     boost::multiprecision::cpp_int biggest_x = 0;
 
     for ( size_t D = 2; D <= limit; ++D )

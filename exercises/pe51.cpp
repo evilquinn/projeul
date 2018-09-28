@@ -19,7 +19,7 @@
 #define PE51_BEGIN 10000
 
 std::string& pe51::name() { return name_; }
-void         pe51::run()
+void pe51::run()
 {
     /*
      *
@@ -44,7 +44,7 @@ void         pe51::run()
 
     primes_        = prime_sieve( PE51_MAX_PRIMES );
     size_t current = primes_.next_prime( PE51_BEGIN );
-    bool   done    = false;
+    bool done      = false;
 
     typedef std::map<size_t, std::set<int>> checked_map_t;
     checked_map_t already_checked;
@@ -55,7 +55,7 @@ void         pe51::run()
     while ( !done )
     {
         // check is got two zeros
-        digit_count_map_t   digit_count;
+        digit_count_map_t digit_count;
         digit_pattern_map_t digit_pattern;
 
         BOOST_FOREACH ( digit_count_map_t::value_type& p, digit_count )

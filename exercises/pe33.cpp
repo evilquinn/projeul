@@ -13,7 +13,7 @@
 #include <set>
 
 std::string& pe33::name() { return name_; }
-void         pe33::run()
+void pe33::run()
 {
     /*
      * The fraction 49/98 is a curious fraction, as an inexperienced

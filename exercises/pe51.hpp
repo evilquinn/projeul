@@ -19,8 +19,8 @@ public:
     pe51() : primes_(), name_( "pe51" ){};
     ~pe51() override = default;
     std::string& name() override;
-    int          number() override { return 51; }
-    void         run() override;
+    int number() override { return 51; }
+    void run() override;
 
 private:
     prime_sieve primes_;

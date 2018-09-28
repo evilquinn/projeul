@@ -39,7 +39,7 @@ void gint::construct_digits_from_positive( size_t n )
 }
 
 gint::gint( const gint& ) = default;
-gint& gint::operator          =( gint rhs )
+gint& gint::operator      =( gint rhs )
 {
     swap( *this, rhs );
     return *this;
@@ -127,8 +127,8 @@ gint& gint::subtract( const gint& rhs )
         return *this;
     }
 
-    size_t  rhs_pos  = rhs.n_.size() - 1;
-    size_t  my_pos   = n_.size() - 1;
+    size_t rhs_pos   = rhs.n_.size() - 1;
+    size_t my_pos    = n_.size() - 1;
     uint8_t borrowed = 0;
     while ( rhs_pos < rhs.n_.size() || borrowed != 0 )
     {
@@ -201,7 +201,7 @@ bool gint::less_than_xor_equal( const gint& rhs, bool equal ) const
 }
 
 gint& gint::operator++() { return add( gint( 1 ) ); }
-gint  gint::operator++( int )
+gint gint::operator++( int )
 {
     gint tmp( *this );
     operator++();
@@ -209,7 +209,7 @@ gint  gint::operator++( int )
 }
 
 gint& gint::operator--() { return subtract( gint( 1 ) ); }
-gint  gint::operator--( int )
+gint gint::operator--( int )
 {
     gint tmp( *this );
     operator--();
@@ -302,7 +302,7 @@ bool gint::is_palindrome()
     return true;
 }
 
-void          gint::print() const { stream_out( std::cout ) << std::endl; }
+void gint::print() const { stream_out( std::cout ) << std::endl; }
 std::ostream& gint::stream_out( std::ostream& os ) const
 {
     if ( is_negative )
@@ -331,12 +331,12 @@ gint& gint::multiply_by( const gint& mult_by )
 
     size_t pow_ten = 0;
     size_t pos     = mult_by.n_.size() - 1;
-    gint   result;
+    gint result;
 
     while ( pos < mult_by.n_.size() )
     {
         uint8_t mult_digit = mult_by.n_[pos];
-        gint    interim( *this );
+        gint interim( *this );
         if ( mult_digit != 0 )
         {
             interim.multiply_by_digit( mult_digit );

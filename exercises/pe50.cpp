@@ -19,7 +19,7 @@
 #define PE50_LIMIT 1000000
 
 std::string& pe50::name() { return name_; }
-void         pe50::run()
+void pe50::run()
 {
     /*
      *

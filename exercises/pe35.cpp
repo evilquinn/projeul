@@ -16,7 +16,7 @@
 int cycle_ints( int n );
 
 std::string& pe35::name() { return name_; }
-void         pe35::run()
+void pe35::run()
 {
     /*
      *
@@ -34,7 +34,7 @@ void         pe35::run()
     for ( int i = 2; i < 1000000; ++i )
     {
         bool done        = false;
-        int  curr        = i;
+        int curr         = i;
         bool is_circular = true;
         while ( !done )
         {

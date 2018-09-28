@@ -18,7 +18,7 @@
 size_t prod_of_num_array( size_t* num, size_t num_nums );
 
 std::string& pe47::name() { return name_; }
-void         pe47::run()
+void pe47::run()
 {
     /*
      *
@@ -72,9 +72,9 @@ bool pe47::num_has_n_distinct_prime_factors( size_t num, size_t n )
     return n == distinct_prime_factors.size();
 }
 
-size_t calc_prime_factors( size_t               num,
+size_t calc_prime_factors( size_t num,
                            std::vector<size_t>& prime_factors,
-                           prime_sieve&         primes )
+                           prime_sieve& primes )
 {
     // try dividing num by 2, then 3, then 5, etc, etc
     // each time a division works (no remainders), cache the

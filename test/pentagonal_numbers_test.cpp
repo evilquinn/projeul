@@ -27,8 +27,8 @@ TEST_F( PentagonalNumbersTest, checkFirstTenPentagonalNumbers )
             Eq( known_pentagonals.find( i ) != known_pentagonals.end() ) );
     }
 
-    auto   it = known_pentagonals.begin();
-    size_t i  = 1;
+    auto it  = known_pentagonals.begin();
+    size_t i = 1;
     while ( it != known_pentagonals.end() )
     {
         ASSERT_EQ( *it, pentagonals.get_term( i ) );

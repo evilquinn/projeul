@@ -51,11 +51,11 @@ public:
     // utility
     size_t to_size_t();
     gint& add_reverse_of( const gint& rhs );
-    gint&         reset();
-    size_t        sum_digits();
-    size_t        num_digits();
-    bool          is_palindrome();
-    void          print() const;
+    gint& reset();
+    size_t sum_digits();
+    size_t num_digits();
+    bool is_palindrome();
+    void print() const;
     std::ostream& stream_out( std::ostream& os ) const;
     bool less_than_xor_equal( const gint& rhs, bool equal ) const;
 
@@ -64,8 +64,8 @@ private:
     gint& add_digit_at_pos( size_t& pos, uint8_t digit );
     gint& multiply_by_digit( uint8_t digit );
     typedef std::deque<uint8_t> gint_digits_t;
-    gint_digits_t               n_;
-    bool                        is_negative;
+    gint_digits_t n_;
+    bool is_negative;
 };
 
 // more operators

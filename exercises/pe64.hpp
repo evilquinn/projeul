@@ -16,8 +16,8 @@ public:
     pe64() : name_( "pe64" ){};
     ~pe64() override = default;
     std::string& name() override;
-    int          number() override { return 64; }
-    void         run() override;
+    int number() override { return 64; }
+    void run() override;
 
 private:
     std::string name_;

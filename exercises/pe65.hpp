@@ -15,8 +15,8 @@ class pe65 : public pe
 public:
     pe65() : name_( "pe65" ){};
     std::string& name() override;
-    int          number() override { return 65; }
-    void         run() override;
+    int number() override { return 65; }
+    void run() override;
 
 private:
     std::string name_;

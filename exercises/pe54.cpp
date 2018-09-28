@@ -13,7 +13,7 @@
 #include "pe54_poker.hpp"
 
 std::string& pe54::name() { return name_; }
-void         pe54::run()
+void pe54::run()
 {
     /*
      *
@@ -75,9 +75,9 @@ void         pe54::run()
      */
 
     const size_t player_length = 14;
-    size_t       p1_offset     = 0;
-    size_t       p2_offset     = p1_offset + player_length + 1;
-    size_t       p1_count      = 0;
+    size_t p1_offset           = 0;
+    size_t p2_offset           = p1_offset + player_length + 1;
+    size_t p1_count            = 0;
 
     for ( size_t i = 0; i < 1000; ++i )
     {

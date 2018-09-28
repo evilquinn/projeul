@@ -5,10 +5,10 @@
 
 #define BLOCK_SIZE_BYTES 8
 
-bool enc_encrypt_cipher( bint&             key,
-                         bint&             iv,
-                         bint&             input,
-                         bint&             output,
+bool enc_encrypt_cipher( bint& key,
+                         bint& iv,
+                         bint& input,
+                         bint& output,
                          const EVP_CIPHER* cipher )
 {
     EVP_CIPHER_CTX* encryption_context = EVP_CIPHER_CTX_new();
@@ -47,10 +47,10 @@ bool enc_encrypt_cipher( bint&             key,
     return success != 0;
 }
 
-bool enc_decrypt_cipher( bint&             key,
-                         bint&             iv,
-                         bint&             input,
-                         bint&             output,
+bool enc_decrypt_cipher( bint& key,
+                         bint& iv,
+                         bint& input,
+                         bint& output,
                          const EVP_CIPHER* cipher )
 {
     EVP_CIPHER_CTX* encryption_context = EVP_CIPHER_CTX_new();

@@ -29,8 +29,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenTriangleNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );
@@ -54,8 +54,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenSqaureNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );
@@ -78,8 +78,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenPentagonalNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );
@@ -102,8 +102,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenHexagonalNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );
@@ -126,8 +126,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenHeptagonalNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );
@@ -150,8 +150,8 @@ TEST_F( PolygonalNumbersTest, checkFirstTenOctagonalNumbers )
             Eq( known_polygonals.find( i ) != known_polygonals.end() ) );
     }
 
-    auto   it = known_polygonals.begin();
-    size_t i  = 1;
+    auto it  = known_polygonals.begin();
+    size_t i = 1;
     while ( it != known_polygonals.end() )
     {
         ASSERT_EQ( *it, polygonals.get_term( i ) );

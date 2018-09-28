@@ -64,9 +64,9 @@ size_t n_c_r( size_t n, size_t r );
  * @return distinct number of digits
  */
 typedef std::map<short, size_t> digit_pattern_map_t;
-typedef std::map<short, short>  digit_count_map_t;
-size_t pattern_of_digits( size_t               num,
-                          digit_count_map_t&   digit_count,
+typedef std::map<short, short> digit_count_map_t;
+size_t pattern_of_digits( size_t num,
+                          digit_count_map_t& digit_count,
                           digit_pattern_map_t& digit_pattern );
 
 /*
@@ -95,10 +95,10 @@ int num_digits_array( long long unsigned* ints, int ints_size );
  * @return      TRUE if the concatenation of the ints in the array is
  *              pandigital for the supplied range, FALSE otherwise.
  */
-bool is_pandigital_for_range( size_t  start,
-                              size_t  end,
+bool is_pandigital_for_range( size_t start,
+                              size_t end,
                               size_t* ints,
-                              size_t  ints_size );
+                              size_t ints_size );
 
 /*
  * determines largest prime number which is less that supplied number
@@ -127,9 +127,9 @@ size_t next_prime( prime_sieve& primes, size_t n );
  * @param primes a prime sieve
  *
  */
-size_t calc_prime_factors( size_t               num,
+size_t calc_prime_factors( size_t num,
                            std::vector<size_t>& prime_factors,
-                           prime_sieve&         primes );
+                           prime_sieve& primes );
 
 /*
  * Add two digit arrays (numbers, in the form of an array, where each element
@@ -142,9 +142,9 @@ size_t calc_prime_factors( size_t               num,
  * @param add        The digit array to add
  * @param add_len    The length of the digit array to add
  */
-void add_digit_arrays( int*   add_to,
+void add_digit_arrays( int* add_to,
                        size_t add_to_len,
-                       int*   add,
+                       int* add,
                        size_t add_len );
 
 /*

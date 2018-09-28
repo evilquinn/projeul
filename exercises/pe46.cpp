@@ -18,7 +18,7 @@
 size_t prev_prime( size_t i, prime_sieve& primes );
 
 std::string& pe46::name() { return name_; }
-void         pe46::run()
+void pe46::run()
 {
     /*
      *

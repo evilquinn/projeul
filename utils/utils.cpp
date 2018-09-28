@@ -26,7 +26,7 @@ std::vector<size_t> calc_prime_factors( size_t num, prime_sieve& primes )
     // prime factor, and move on to working out the next prime
     // factor, starting dividing from the first prime again
     //
-    size_t              curr_num = num;
+    size_t curr_num = num;
     std::vector<size_t> result;
 
     while ( curr_num > 1 )
@@ -63,7 +63,7 @@ int num_digits( long long unsigned n )
 
 size_t concat( size_t left, size_t right )
 {
-    int    mult   = pow( 10, num_digits( right ) );
+    int mult      = pow( 10, num_digits( right ) );
     size_t result = left * mult;
     result += right;
 
@@ -176,8 +176,8 @@ void set_of_digits( size_t n, digit_set_t& digits )
 bool same_digits( size_t lhs, size_t rhs )
 {
     std::multiset<uint8_t> lhs_digits;
-    unsigned               expected_count = 0;
-    unsigned               compare_count  = 0;
+    unsigned expected_count = 0;
+    unsigned compare_count  = 0;
     while ( lhs > 0 )
     {
         lhs_digits.insert( lhs % 10 );
@@ -228,8 +228,8 @@ bool same_digits_old( size_t lhs, size_t rhs )
     return lhs_digits == rhs_digits;
 }
 
-size_t pattern_of_digits( size_t               num,
-                          digit_count_map_t&   digit_count,
+size_t pattern_of_digits( size_t num,
+                          digit_count_map_t& digit_count,
                           digit_pattern_map_t& digit_pattern )
 {
     size_t working     = num;
@@ -263,9 +263,9 @@ void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by )
     }
 }
 
-void add_digit_arrays( int*   add_to,
+void add_digit_arrays( int* add_to,
                        size_t add_to_len,
-                       int*   add,
+                       int* add,
                        size_t add_len )
 {
     int add_pos    = add_len - 1;

@@ -95,7 +95,7 @@ private:
     size_t real_size() const;
 
     typedef std::vector<uint8_t> mem_type;
-    mem_type                     mem_;
+    mem_type mem_;
 };
 
 // more operators

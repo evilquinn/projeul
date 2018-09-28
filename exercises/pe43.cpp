@@ -19,7 +19,7 @@ bool has_subdivisibility_property( size_t* nums, size_t num_nums );
 size_t num_array_to_num( size_t* nums, size_t num_nums );
 
 std::string& pe43::name() { return name_; }
-void         pe43::run()
+void pe43::run()
 {
     /*
      *

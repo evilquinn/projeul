@@ -10,7 +10,7 @@
 #include "utils.hpp"
 
 std::string& pe53::name() { return name_; }
-void         pe53::run()
+void pe53::run()
 {
     /*
      *

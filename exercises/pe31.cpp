@@ -14,7 +14,7 @@
 int count_possibilities( int* coins, int num_coins, int target );
 
 std::string& pe31::name() { return name_; }
-void         pe31::run()
+void pe31::run()
 {
     /*
      *
@@ -31,7 +31,7 @@ void         pe31::run()
      *
      */
     // int coins[] = { 1, 2, 5, 10, 20, 50, 100, 200 };
-    int       coins[]   = { 200, 100, 50, 20, 10, 5, 2, 1 };
+    int coins[]         = { 200, 100, 50, 20, 10, 5, 2, 1 };
     const int num_coins = sizeof( coins ) / sizeof( int );
     std::cout << name() << ": "
               << count_possibilities( coins, num_coins, 200 ) << std::endl;

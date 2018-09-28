@@ -15,7 +15,7 @@
 #include "utils.hpp"
 
 std::string& pe39::name() { return name_; }
-void         pe39::run()
+void pe39::run()
 {
     /*
      * If p is the perimeter of a right angle triangle with integral length
@@ -35,8 +35,8 @@ void         pe39::run()
         {
             for ( int b = a; b < p; ++b )
             {
-                int    c_sqrd = pow( a, 2 ) + pow( b, 2 );
-                double c      = sqrt( c_sqrd );
+                int c_sqrd = pow( a, 2 ) + pow( b, 2 );
+                double c   = sqrt( c_sqrd );
                 if ( a + b + c == p )
                 {
                     ++curr_p_max_sols;

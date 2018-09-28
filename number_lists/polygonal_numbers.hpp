@@ -33,8 +33,8 @@ public:
 private:
     void calc_polygonal_numbers();
 
-    size_t              num_;
-    function_of_n       number_func_;
+    size_t num_;
+    function_of_n number_func_;
     std::vector<size_t> numbers_;
 };
 

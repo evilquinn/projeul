@@ -13,7 +13,7 @@
 #include <vector>
 
 std::string& pe67::name() { return name_; }
-void         pe67::run()
+void pe67::run()
 {
     /*
      * By starting at the top of the triangle below and moving to adjacent
@@ -35,14 +35,14 @@ void         pe67::run()
     data_file.open( "../data/pe67_triangle.txt" );
 
     typedef std::vector<std::vector<size_t>> triangle_type;
-    triangle_type                            tri;
+    triangle_type tri;
 
     boost::char_separator<char> space_sep( " " );
-    std::string                 line;
+    std::string line;
     while ( std::getline( data_file, line ) )
     {
         boost::tokenizer<boost::char_separator<char>> nums( line, space_sep );
-        std::vector<size_t>                           newline;
+        std::vector<size_t> newline;
         BOOST_FOREACH ( const std::string& numstring, nums )
         {
             size_t num = stoi( numstring );

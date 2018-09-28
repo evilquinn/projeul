@@ -17,12 +17,12 @@ public:
     pe27() : primes_( nullptr ), name_( "pe27" ){};
     ~pe27() override { delete primes_; };
     std::string& name() override;
-    int          number() override { return 27; }
-    void         run() override;
+    int number() override { return 27; }
+    void run() override;
 
 private:
     prime_sieve* primes_;
-    std::string  name_;
+    std::string name_;
 };
 
 #endif /* PE27_HPP_ */

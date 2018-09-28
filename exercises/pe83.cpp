@@ -5,78 +5,78 @@
  *      Author: evilquinn
  */
 
-#include <pe83.hpp>
+#include <algorithm>
 #include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/tokenizer.hpp>
 #include <fstream>
 #include <iostream>
-#include <utils.hpp>
+#include <pe83.hpp>
 #include <sstream>
-#include <algorithm>
+#include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
 typedef std::pair<size_t, size_t> coord;
 typedef std::map<coord, size_t> matrix_t;
-std::string to_string(const coord& c)
+std::string to_string( const coord& c )
 {
     std::stringstream str;
     str << c.first << "," << c.second;
     return str.str();
 }
 
-std::set<coord> set_of_adj(const coord& node,
-                           const coord& bound,
-                           const std::set<coord>& closed)
+std::set<coord> set_of_adj( const coord& node,
+                            const coord& bound,
+                            const std::set<coord>& closed )
 {
     std::set<coord> result;
     coord cand;
     // above
     if ( node.first > 0 )
     {
-        cand = { node.first-1, node.second };
-        if ( closed.count(cand) == 0 )
+        cand = { node.first - 1, node.second };
+        if ( closed.count( cand ) == 0 )
         {
-            result.insert(cand);
+            result.insert( cand );
         }
     }
     // left
     if ( node.second > 0 )
     {
-        cand = {node.first, node.second-1};
-        if ( closed.count(cand) == 0 )
+        cand = { node.first, node.second - 1 };
+        if ( closed.count( cand ) == 0 )
         {
-            result.insert(cand);
+            result.insert( cand );
         }
     }
     // right
     if ( node.second < bound.second )
     {
-        cand = {node.first, node.second+1};
-        if ( closed.count(cand) == 0 )
+        cand = { node.first, node.second + 1 };
+        if ( closed.count( cand ) == 0 )
         {
-            result.insert(cand);
+            result.insert( cand );
         }
     }
     // below
     if ( node.first < bound.first )
     {
-        cand = {node.first+1, node.second};
-        if ( closed.count(cand) == 0 )
+        cand = { node.first + 1, node.second };
+        if ( closed.count( cand ) == 0 )
         {
-            result.insert(cand);
+            result.insert( cand );
         }
     }
 
     return result;
 }
 
-
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe83::name() { return name_; }
-void         pe83::run()
+void pe83::run()
 {
     /*
      * In the 5 by 5 matrix below, the minimal path sum from the
@@ -101,14 +101,14 @@ void         pe83::run()
 
     std::string line;
     size_t row = 0;
-    while ( std::getline(data_file, line ) )
+    while ( std::getline( data_file, line ) )
     {
-        std::istringstream is(line);
+        std::istringstream is( line );
         std::string word;
         size_t col = 0;
-        while ( std::getline(is, word, ',') )
+        while ( std::getline( is, word, ',' ) )
         {
-            matrix[coord{row, col}] = boost::lexical_cast<size_t>(word);
+            matrix[coord{ row, col }] = boost::lexical_cast<size_t>( word );
             ++col;
         }
         ++row;
@@ -123,9 +123,10 @@ void         pe83::run()
      * end node calc'd. Hopefully.
      */
 
-    coord bound = { matrix.rbegin()->first.first, matrix.rbegin()->first.second };
+    coord bound = { matrix.rbegin()->first.first,
+                    matrix.rbegin()->first.second };
 
-    coord node = { 0, 0 };
+    coord node    = { 0, 0 };
     matrix_t dist = { { node, matrix[node] } };
 
     std::set<coord> closed;
@@ -136,8 +137,8 @@ void         pe83::run()
             std::cout << "algo! " << dist[node] << std::endl;
             break;
         }
-        auto opens = set_of_adj(node, bound, closed);
-        closed.insert(node);
+        auto opens = set_of_adj( node, bound, closed );
+        closed.insert( node );
         // update adjacents
         for ( auto c : opens )
         {
@@ -151,10 +152,9 @@ void         pe83::run()
         size_t lowest = -1;
         for ( auto d : dist )
         {
-            if ( closed.count(d.first) == 0 &&
-                 d.second < lowest )
+            if ( closed.count( d.first ) == 0 && d.second < lowest )
             {
-                node = d.first;
+                node   = d.first;
                 lowest = d.second;
             }
         }

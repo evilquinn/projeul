@@ -29,16 +29,16 @@ int main( int argc, char* argv[] )
 {
     /*
      */
-    int      result      = 1;
-    int      d           = 1;
-    unsigned n           = 1;
-    bool     done1       = false;
-    bool     done10      = false;
-    bool     done100     = false;
-    bool     done1000    = false;
-    bool     done10000   = false;
-    bool     done100000  = false;
-    bool     done1000000 = false;
+    int result       = 1;
+    int d            = 1;
+    unsigned n       = 1;
+    bool done1       = false;
+    bool done10      = false;
+    bool done100     = false;
+    bool done1000    = false;
+    bool done10000   = false;
+    bool done100000  = false;
+    bool done1000000 = false;
     while ( !done1 || !done10 || !done100 || !done1000 || !done10000 ||
             !done100000 || !done1000000 )
     {

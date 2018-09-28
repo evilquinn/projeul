@@ -5,16 +5,17 @@
  *      Author: evilquinn
  */
 
-#include <pe86.hpp>
 #include <iostream>
+#include <pe86.hpp>
 #include <utils.hpp>
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
-} // end namespace anonymous
+}  // namespace
 
 std::string& pe86::name() { return name_; }
-void         pe86::run()
+void pe86::run()
 {
     size_t result = 0;
     std::cout << "result: " << result << std::endl;

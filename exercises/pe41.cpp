@@ -15,7 +15,7 @@
 #include "utils.hpp"
 
 std::string& pe41::name() { return name_; }
-void         pe41::run()
+void pe41::run()
 {
     /*
      * We shall say that an n-digit number is pandigital if it makes use of
