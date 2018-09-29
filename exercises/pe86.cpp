@@ -17,6 +17,30 @@ namespace
 std::string& pe86::name() { return name_; }
 void pe86::run()
 {
+    long limit              = 1000000;
+    long goal               = 1000000;
+    long n                  = 1;
+    std::vector<long> terms = { 1 };
+    for ( ; n <= limit; ++n )
+    {
+        long subee = 1;
+        long k     = 0;
+        terms.push_back( 0 );
+        while ( subee <= n )
+        {
+            long sign = ( k % 4 > 1 ) ? -1 : 1;
+            terms[n] += sign * terms[n - subee];
+            terms[n] %= goal;
+            ++k;
+            long next = ( k % 2 == 0 ) ? k / 2 + 1 : -1 * ( k / 2 + 1 );
+            subee     = next * ( 3 * next - 1 ) / 2;
+        }
+        if ( terms[n] == 0 || n == limit )
+        {
+            std::cout << n << ", " << terms[n] << std::endl;
+            break;
+        }
+    }
     size_t result = 0;
     std::cout << "result: " << result << std::endl;
 }

@@ -16,55 +16,7 @@
 
 std::string& pe78::name() { return name_; }
 
-namespace
-{  // anonymous
-
-template <unsigned int Base>
-long divisor_f( long n )
-{
-    std::map<long, long> cache;
-    if ( cache[n] > 0 )
-    {
-        return cache[n];
-    }
-
-    long result = 0;
-    for ( long d = 1; d <= n; ++d )
-    {
-        if ( n % d == 0 )
-        {
-            result += pow( d, Base );
-        }
-    }
-
-    cache[n] = result;
-    return result;
-}
-
-long a( long /*unused*/ ) { return 1; }
-
-long c( long n )
-{
-    std::map<long, long> cache;
-    if ( cache[n] > 0 )
-    {
-        return cache[n];
-    }
-
-    long result = 0;
-    for ( long d = 1; d <= n; ++d )
-    {
-        if ( n % d == 0 )
-        {
-            result += d * a( d );
-        }
-    }
-
-    cache[n] = result;
-    return result;
-}
-
-long pentagonal_of( long n ) { return n * ( ( 3 * n ) - 1 ) / 2; }
+namespace { // anonymous
 
 }  // namespace
 
