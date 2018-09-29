@@ -40,7 +40,6 @@ bint& bint::operator=( bint rhs )
     return *this;
 }
 
-bint::~bint() = default;
 uint8_t bint::hex_to_bin( char hex )
 {
     switch ( toupper( hex ) )

@@ -20,9 +20,8 @@ public:
     explicit gint( size_t n );
     explicit gint( long int n );
     explicit gint( int n );
-    gint( const gint& rhs );
+    gint( const gint& rhs ) = default;
     gint& operator=( gint rhs );
-    virtual ~gint();
 
     friend void swap( gint& lhs, gint& rhs )
     {

@@ -38,14 +38,12 @@ void gint::construct_digits_from_positive( size_t n )
     }
 }
 
-gint::gint( const gint& ) = default;
 gint& gint::operator      =( gint rhs )
 {
     swap( *this, rhs );
     return *this;
 }
 
-gint::~gint() = default;
 gint& gint::reset()
 {
     n_.clear();

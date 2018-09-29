@@ -31,8 +31,6 @@ public:
         swap( lhs.mem_, rhs.mem_ );
     }
 
-    virtual ~bint();
-
     // equality testing
     bool equals( const bint& rhs ) const;
     bool less_than( const bint& rhs ) const;
