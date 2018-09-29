@@ -54,7 +54,7 @@ void pe69::run()
             total *= p - 1;
             total /= p;
         }
-        double attempt = i / (double)total;
+        double attempt = i / static_cast<double>( total );
         // std::cout << relper.size() << std::endl;
         if ( attempt > biggest_attempt )
         {

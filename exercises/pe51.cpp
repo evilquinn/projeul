@@ -6,10 +6,10 @@
  */
 
 #include "pe51.hpp"
-#include <ctype.h>
-#include <stdio.h>
 #include <boost/foreach.hpp>
+#include <cctype>
 #include <cmath>
+#include <cstdio>
 #include <deque>
 #include <iostream>
 #include <map>

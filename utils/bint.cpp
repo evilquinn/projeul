@@ -20,8 +20,8 @@ bint::bint( const unsigned char* bin, size_t length )
 
 bint::bint( size_t n ) : mem_( sizeof( n ) )
 {
-    const unsigned char* bin = reinterpret_cast<const unsigned char*>( &n );
-    size_t limit             = mem_.size() - 1;
+    const auto* bin = reinterpret_cast<const unsigned char*>( &n );
+    size_t limit    = mem_.size() - 1;
     for ( size_t i = 0; i < mem_.size(); ++i )
     {
         mem_[limit - i] = bin[i];
@@ -449,7 +449,7 @@ bint& bint::subtract( const bint& rhs )
 }
 
 bint& bint::operator++() { return *this += bint( 1 ); }
-bint bint::operator++( int )
+const bint bint::operator++( int )
 {
     bint tmp( *this );
     *this += bint( 1 );
@@ -457,7 +457,7 @@ bint bint::operator++( int )
 }
 
 bint& bint::operator--() { return *this -= bint( 1 ); }
-bint bint::operator--( int )
+const bint bint::operator--( int )
 {
     bint tmp( *this );
     *this -= bint( 1 );
@@ -483,7 +483,7 @@ bint& bint::pow( const bint& rhs )
 }
 
 bint& bint::transform( const bint& rhs,
-                       std::function<uint8_t( uint8_t, uint8_t )> op )
+                       const std::function<uint8_t( uint8_t, uint8_t )>& op )
 {
     if ( rhs.mem_.size() > mem_.size() )
     {

@@ -6,16 +6,14 @@
  */
 
 #include "pe46.hpp"
-#include <ctype.h>
-#include <stdio.h>
 #include <boost/foreach.hpp>
+#include <cctype>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <map>
 #include <set>
 #include "utils.hpp"
-
-size_t prev_prime( size_t i, prime_sieve& primes );
 
 std::string& pe46::name() { return name_; }
 void pe46::run()

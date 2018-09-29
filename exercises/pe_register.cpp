@@ -67,7 +67,7 @@ std::shared_ptr<pe_register> pe_register::get()
     return handle;
 }
 
-pe_register::pe_register() : reg_()
+pe_register::pe_register()
 {
     reg( std::make_unique<pe86>() );
     reg( std::make_unique<pe85>() );

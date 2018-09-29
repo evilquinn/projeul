@@ -3,7 +3,6 @@
 
 #include <card.hpp>
 
-using ::testing::Eq;
 using ::testing::Pair;
 
 class CardTest : public ::testing::Test

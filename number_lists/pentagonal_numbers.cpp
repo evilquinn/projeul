@@ -7,8 +7,8 @@
 
 #include "pentagonal_numbers.hpp"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 
 pentagonal_numbers::pentagonal_numbers( size_t num )

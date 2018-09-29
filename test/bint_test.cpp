@@ -5,7 +5,6 @@
 #include <boost/format.hpp>
 #include <utils.hpp>
 
-using ::testing::ElementsAreArray;
 using ::testing::Eq;
 using ::testing::Ge;
 using ::testing::Gt;
@@ -13,12 +12,11 @@ using ::testing::Le;
 using ::testing::Lt;
 using ::testing::Ne;
 using ::testing::StrCaseEq;
-using ::testing::StrEq;
 
 class BintTest : public ::testing::Test
 {
 public:
-    BintTest() {}
+    BintTest()           = default;
     ~BintTest() override = default;
 
 protected:
@@ -27,13 +25,13 @@ protected:
 TEST_F( BintTest, testBintConstructorWorksExpected )
 {
     std::string hex_string( "1a2b3c4d5e6f7a8b9c0d" );
-    bint stock( hex_string.c_str() );
+    bint stock( hex_string );
     std::stringstream os;
     os << stock;
     EXPECT_THAT( os.str(), StrCaseEq( hex_string ) );
 
     std::string odd_hex_string( "1a2b3c4d5e6f7a8b9c0" );
-    bint odd_stock( odd_hex_string.c_str() );
+    bint odd_stock( odd_hex_string );
 
     os.str( std::string() );
     os << odd_stock;
@@ -43,18 +41,17 @@ TEST_F( BintTest, testBintConstructorWorksExpected )
 TEST_F( BintTest, testInvalidDigitsInHexConvertedToZero )
 {
     std::string invalid_string( "abcdefghijkl" );
-    bint stock( invalid_string.c_str() );
+    bint stock( invalid_string );
     std::string valid_string( "abcdef000000" );
-    bint stock2( valid_string.c_str() );
+    bint stock2( valid_string );
 
     EXPECT_THAT( stock, Eq( stock2 ) );
 }
 
 TEST_F( BintTest, testBintConstructFromBinWorks )
 {
-    size_t bin_data = 0x10F01F11FF11FF11;
-    const unsigned char* bin_ptr =
-        reinterpret_cast<const unsigned char*>( &bin_data );
+    size_t bin_data     = 0x10F01F11FF11FF11;
+    const auto* bin_ptr = reinterpret_cast<const unsigned char*>( &bin_data );
     bint stock( bin_ptr, sizeof( bin_data ) );
     std::stringstream os;
     os << stock;
@@ -87,7 +84,7 @@ TEST_F( BintTest, testBintConstructFromSizeTWorks2 )
 TEST_F( BintTest, testBintCopyConstructor )
 {
     bint from_bint( "a1b2c3d4e5f6a7b8c9daebfc" );
-    bint to_bint( from_bint );
+    const bint& to_bint( from_bint );
     std::stringstream from_os;
     from_os << from_bint;
     std::stringstream to_os;
@@ -100,7 +97,7 @@ TEST_F( BintTest, testResize )
     size_t base = 1234;
     bint stock( base );
 
-    uint8_t s_base = static_cast<uint8_t>( base );
+    auto s_base = static_cast<uint8_t>( base );
     stock.resize( 1 );
 
     EXPECT_THAT( stock, Eq( bint( s_base ) ) );
@@ -170,7 +167,7 @@ TEST_F( BintTest, testBintComparativeOps )
 TEST_F( BintTest, testAssigmentOperator )
 {
     bint rhs( "abcdef" );
-    bint lhs = rhs;
+    const bint& lhs = rhs;
 
     EXPECT_THAT( rhs, Eq( lhs ) );
 }
@@ -356,8 +353,8 @@ TEST_F( BintTest, testCharStar )
     size_t base = 0x3039;
     bint stock( base );
 
-    unsigned char* base_string = reinterpret_cast<unsigned char*>( &base );
-    unsigned char* stock_array = (unsigned char*)stock;
+    auto* base_string = reinterpret_cast<unsigned char*>( &base );
+    auto* stock_array = (unsigned char*)stock;
 
     for ( size_t i = 0; i < sizeof( base ); ++i )
     {
@@ -368,7 +365,7 @@ TEST_F( BintTest, testCharStar )
     const char* base2   = "afebdfdb";
     unsigned char ba2[] = { 0xaf, 0xeb, 0xdf, 0xdb };
     const bint s2( base2 );
-    const unsigned char* sa2 = (const unsigned char*)s2;
+    const auto* sa2 = (const unsigned char*)s2;
 
     for ( size_t i = 0; i < sizeof( ba2 ); ++i )
     {

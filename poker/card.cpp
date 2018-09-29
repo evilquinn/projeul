@@ -7,7 +7,7 @@
 
 #include "card.hpp"
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 card::card( const std::string& string_value )

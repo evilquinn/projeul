@@ -35,8 +35,8 @@ void pe71::run()
     size_t limit = 1000000;
     std::map<double, std::pair<size_t, size_t> > resultm;
 
-    double ubound = (double)3 / 7;
-    double lbound = (double)2 / 5;
+    double ubound = static_cast<double>( 3 ) / 7;
+    double lbound = static_cast<double>( 2 ) / 5;
 
     bool finished = false;
     size_t seen   = 0;
@@ -44,7 +44,7 @@ void pe71::run()
     {
         for ( size_t n = ( d * 3 ) / 7; n < d; ++n )
         {
-            double key = (double)n / d;
+            double key = static_cast<double>( n ) / d;
             if ( key < ubound && key > lbound )
             {
                 if ( gcd( n, d ) == 1 )

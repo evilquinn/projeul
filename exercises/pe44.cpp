@@ -6,10 +6,10 @@
  */
 
 #include "pe44.hpp"
-#include <ctype.h>
-#include <stdio.h>
 #include <boost/foreach.hpp>
+#include <cctype>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <map>
 #include <set>
@@ -34,7 +34,7 @@ void pe44::run()
      */
 
     pentagonal_numbers pents( PE44_NUM_PENTS );
-    size_t result = static_cast<size_t>( -1 );
+    auto result = static_cast<size_t>( -1 );
 
     for ( size_t j = 1; j < 3000; ++j )
     {

@@ -9,7 +9,7 @@ using ::testing::Eq;
 class PentagonalNumbersTest : public ::testing::Test
 {
 protected:
-    PentagonalNumbersTest() {}
+    PentagonalNumbersTest()           = default;
     ~PentagonalNumbersTest() override = default;
 };
 

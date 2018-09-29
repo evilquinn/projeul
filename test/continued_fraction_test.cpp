@@ -4,13 +4,12 @@
 #include <iostream>
 #include <pe66.hpp>
 
-using ::testing::ElementsAreArray;
 using ::testing::Eq;
 
 class ContFractTest : public ::testing::Test
 {
 public:
-    ContFractTest() {}
+    ContFractTest()           = default;
     ~ContFractTest() override = default;
 
 protected:

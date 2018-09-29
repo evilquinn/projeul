@@ -7,8 +7,8 @@
 
 #include "polygonal_numbers.hpp"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 
 polygonal_numbers::polygonal_numbers( size_t num, function_of_n func )

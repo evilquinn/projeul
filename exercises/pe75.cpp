@@ -66,7 +66,7 @@ void pe75::run()
     {
         for ( size_t q = 1; q < p; ++q )
         {
-            if ( p & 0x1 && q & 0x1 )
+            if ( ( ( p & 0x1 ) != 0u ) && ( ( q & 0x1 ) != 0u ) )
             {
                 continue;
             }

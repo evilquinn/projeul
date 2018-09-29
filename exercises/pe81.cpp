@@ -17,7 +17,7 @@
 namespace
 {  // anonymous
 
-static pe81 ex;
+pe81 ex;
 
 }  // namespace
 
@@ -44,7 +44,7 @@ void pe81::run()
     std::ifstream data_file;
     data_file.open( "/home/evilquinn/git/projeul/data/pe81_matrix.txt" );
 
-    typedef std::vector<std::vector<size_t> > matrix_t;
+    using matrix_t = std::vector<std::vector<size_t> >;
     matrix_t matrix;
 
     std::string line;

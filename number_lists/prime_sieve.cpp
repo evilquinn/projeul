@@ -8,7 +8,7 @@
 #include "prime_sieve.hpp"
 #include <utils.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 prime_sieve::prime_sieve( size_t limit )
@@ -71,7 +71,7 @@ bool prime_sieve::is_prime( size_t n )
 size_t prime_sieve::next_prime( size_t from )
 {
     size_t result = sieve_.find_next( from );
-    if ( result == sieve_.npos )
+    if ( result == boost::dynamic_bitset<>::npos )
     {
         result = ::next_prime( *this, std::max( limit_, from ) );
     }

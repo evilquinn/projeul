@@ -10,7 +10,7 @@ using ::testing::Eq;
 class CryptoTest : public ::testing::Test
 {
 public:
-    CryptoTest() {}
+    CryptoTest()           = default;
     ~CryptoTest() override = default;
 
 protected:
@@ -31,7 +31,7 @@ TEST_F( CryptoTest, testEnc )
     bint output;
     bint full_circle;
 
-    int result = static_cast<int>(
+    auto result = static_cast<int>(
         enc_encrypt_cipher( key, iv, input, output, EVP_des_cbc() ) );
     EXPECT_THAT( result, Eq( 1 ) );
     EXPECT_THAT( output, Eq( expected_ciphertext ) );

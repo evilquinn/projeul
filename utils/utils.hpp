@@ -144,7 +144,7 @@ size_t calc_prime_factors( size_t num,
  */
 void add_digit_arrays( int* add_to,
                        size_t add_to_len,
-                       int* add,
+                       const int* add,
                        size_t add_len );
 
 /*

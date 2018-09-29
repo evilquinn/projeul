@@ -9,7 +9,7 @@ using ::testing::Eq;
 class PolygonalNumbersTest : public ::testing::Test
 {
 protected:
-    PolygonalNumbersTest() {}
+    PolygonalNumbersTest()           = default;
     ~PolygonalNumbersTest() override = default;
 };
 

@@ -20,8 +20,9 @@ size_t element_pair( size_t n, size_t e )
 {
     int interim = e % 3;
     int diff    = ( interim == 0 ? 0 : interim == 1 ? -2 : 2 );
-    int result  = (int)e + diff;
-    return ( result < 0 ? n - 1 : (size_t)result >= n ? 1 : result );
+    int result  = static_cast<int>( e ) + diff;
+    return ( result < 0 ? n - 1
+                        : static_cast<size_t>( result ) >= n ? 1 : result );
 }
 
 void set_solution_element( std::vector<int>& solution, size_t e, size_t v )
@@ -109,9 +110,8 @@ magic_solution solve_magic_n_gon_for( size_t n )
                     bool encountered_zero     = false;
                     for ( size_t i = 0; i < solution.size(); ++i )
                     {
-                        encountered_zero = encountered_zero == true
-                                               ? true
-                                               : solution[i] == 0;
+                        encountered_zero =
+                            encountered_zero ? true : solution[i] == 0;
                         intermediate_total += solution[i];
                         if ( ( i + 1 ) % 3 == 0 )
                         {
@@ -240,8 +240,7 @@ magic_solution solve_magic_n_gon_for( size_t n )
         bool encountered_zero     = false;
         for ( size_t i = 0; i < solution.size(); ++i )
         {
-            encountered_zero =
-                encountered_zero == true ? true : solution[i] == 0;
+            encountered_zero = encountered_zero ? true : solution[i] == 0;
             intermediate_total += solution[i];
             if ( ( i + 1 ) % 3 == 0 )
             {

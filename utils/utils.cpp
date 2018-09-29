@@ -1,9 +1,9 @@
 
 
-#include <string.h>
 #include <boost/dynamic_bitset.hpp>
 #include <boost/foreach.hpp>
 #include <cmath>
+#include <cstring>
 #include <iostream>
 #include <prime_sieve.hpp>
 #include <utils.hpp>
@@ -154,12 +154,7 @@ bool is_permutation( size_t a, size_t b )
             return false;
         }
     }
-    if ( ad.size() > 0 )
-    {
-        return false;
-    }
-
-    return true;
+    return ad.size() <= 0;
 }
 
 void set_of_digits( size_t n, digit_set_t& digits )
@@ -170,7 +165,6 @@ void set_of_digits( size_t n, digit_set_t& digits )
         digits.insert( n % 10 );
         n /= 10;
     }
-    return;
 }
 
 bool same_digits( size_t lhs, size_t rhs )
@@ -265,7 +259,7 @@ void mult_digit_array_by( int* mult, size_t mult_len, size_t mult_by )
 
 void add_digit_arrays( int* add_to,
                        size_t add_to_len,
-                       int* add,
+                       const int* add,
                        size_t add_len )
 {
     int add_pos    = add_len - 1;

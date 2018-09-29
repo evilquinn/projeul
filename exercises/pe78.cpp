@@ -16,8 +16,6 @@
 
 std::string& pe78::name() { return name_; }
 
-namespace bmp = boost::multiprecision;
-
 namespace
 {  // anonymous
 
@@ -43,7 +41,7 @@ long divisor_f( long n )
     return result;
 }
 
-long a( long ) { return 1; }
+long a( long /*unused*/ ) { return 1; }
 
 long c( long n )
 {

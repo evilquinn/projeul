@@ -18,7 +18,7 @@
 namespace
 {  // anonymous
 
-static pe82 ex;
+pe82 ex;
 
 }  // namespace
 
@@ -45,8 +45,7 @@ void pe82::run()
     std::ifstream data_file;
     data_file.open( "/home/evilquinn/git/projeul/data/pe82_matrix.txt" );
 
-    namespace bmp = boost::multiprecision;
-    typedef std::vector<std::vector<size_t> > matrix_t;
+    using matrix_t = std::vector<std::vector<size_t> >;
     matrix_t matrix;
 
     std::string line;
@@ -68,9 +67,9 @@ void pe82::run()
     {
         // create working copy of this column
         std::vector<size_t> mins;
-        for ( size_t row = 0; row < matrix.size(); ++row )
+        for ( auto& row : matrix )
         {
-            mins.push_back( matrix[row][col] );
+            mins.push_back( row[col] );
         }
         // calculate the best candidate for each row in this column
         // and save it in mins for the moment
@@ -105,12 +104,12 @@ void pe82::run()
     }
 
     // find the lowest value in the first column
-    size_t min = (size_t)-1;
-    for ( size_t row = 0; row < matrix.size(); ++row )
+    auto min = static_cast<size_t>( -1 );
+    for ( auto& row : matrix )
     {
-        if ( matrix[row][0] < min )
+        if ( row[0] < min )
         {
-            min = matrix[row][0];
+            min = row[0];
         }
     }
 

@@ -22,12 +22,10 @@ void poker::make_hand( const std::string& hand_string, poker::hand& hand )
         card c( card_string );
         hand.insert( c );
     }
-
-    return;
 }
 
 poker::scored_hand::scored_hand( const poker::hand& hand )
-    : rank_( RANK_UNINIT ), rank_cards_(), remaining_(), hand_( hand )
+    : rank_( RANK_UNINIT ), hand_( hand )
 {
     analyse_for_straight_flush();
 
@@ -164,7 +162,7 @@ void poker::scored_hand::analyse_for_straight_flush()
     bool flush       = true;
     bool straight    = true;
     bool starting    = true;
-    const card* last = NULL;
+    const card* last = nullptr;
     BOOST_FOREACH ( const card& c, hand_ )
     {
         if ( starting )

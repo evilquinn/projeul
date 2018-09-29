@@ -14,8 +14,8 @@ class cli
 public:
     static const size_t max_input_size = 256;
     explicit cli( boost::asio::io_context& io_context )
-        : cli_handle_( io_context, ::dup( STDIN_FILENO ) ),
-          input_buffer_( cli::max_input_size )
+        : cli_handle( io_context, fcntl( STDIN_FILENO, F_DUPFD_CLOEXEC ) ),
+          input_buffer( cli::max_input_size )
     {
         on_ready_to_wait();
     }
@@ -26,8 +26,8 @@ private:
         // Read a line of input entered by the user.
         std::cout << "Enter command: " << std::flush;
         boost::asio::async_read_until(
-            cli_handle_,
-            input_buffer_,
+            cli_handle,
+            input_buffer,
             '\n',
             boost::bind( &cli::on_input,
                          this,
@@ -40,10 +40,10 @@ private:
         if ( !error )
         {
             std::string s;
-            std::istream is( &input_buffer_ );
+            std::istream is( &input_buffer );
             is >> s;
             // eat the remaining newline
-            input_buffer_.consume( 1 );
+            input_buffer.consume( 1 );
 
             if ( s == "q" )
             {
@@ -72,8 +72,8 @@ private:
                   << std::endl;
     }
 
-    boost::asio::posix::stream_descriptor cli_handle_;
-    boost::asio::streambuf input_buffer_;
+    boost::asio::posix::stream_descriptor cli_handle;
+    boost::asio::streambuf input_buffer;
 };
 
 }  // end namespace evilquinn

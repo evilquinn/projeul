@@ -7,8 +7,8 @@
 
 #include "triangle_numbers.hpp"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 
 triangle_numbers::triangle_numbers( size_t num )

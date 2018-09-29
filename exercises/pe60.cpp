@@ -32,7 +32,7 @@ void pe60::run()
     primes_              = prime_sieve( PE60_MAX_PRIME );
     size_t limit         = 9000;
     size_t running_total = 0;
-    size_t smallest_sum  = static_cast<size_t>( -1 );
+    auto smallest_sum    = static_cast<size_t>( -1 );
     bool break_all       = false;
 
     std::cout << name() << std::endl;

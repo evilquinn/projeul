@@ -44,9 +44,9 @@ public:
     gint& operator*=( const gint& rhs );
     gint& operator/=( const gint& rhs );
     gint& operator++();
-    gint operator++( int );
+    const gint operator++( int );
     gint& operator--();
-    gint operator--( int );
+    const gint operator--( int );
 
     // utility
     size_t to_size_t();
@@ -65,7 +65,7 @@ private:
     gint& multiply_by_digit( uint8_t digit );
     typedef std::deque<uint8_t> gint_digits_t;
     gint_digits_t n_;
-    bool is_negative;
+    bool is_negative{};
 };
 
 // more operators

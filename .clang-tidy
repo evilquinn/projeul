@@ -1,5 +1,5 @@
 ---
-Checks:          '*,-llvm-include-order,-clang-analyzer-alpha.*'
+Checks:          '*,-llvm-include-order,-clang-analyzer-alpha.*,-readability-else-after-return'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 User:            evilquinn

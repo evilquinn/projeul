@@ -7,8 +7,8 @@
 
 #include "hexagonal_numbers.hpp"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 
 hexagonal_numbers::hexagonal_numbers( size_t num )

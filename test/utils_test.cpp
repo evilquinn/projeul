@@ -10,7 +10,7 @@ using ::testing::Eq;
 class UtilsTest : public ::testing::Test
 {
 public:
-    UtilsTest() {}
+    UtilsTest()           = default;
     ~UtilsTest() override = default;
 
 protected:

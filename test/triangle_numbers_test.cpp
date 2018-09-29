@@ -9,7 +9,7 @@ using ::testing::Eq;
 class TriangleNumbersTest : public ::testing::Test
 {
 protected:
-    TriangleNumbersTest() {}
+    TriangleNumbersTest()           = default;
     ~TriangleNumbersTest() override = default;
 };
 

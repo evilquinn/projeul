@@ -18,7 +18,7 @@ namespace
 template <typename Value>
 struct digit_guy
 {
-    Value val;
+    Value val{};
     std::set<Value> lefts;
     std::set<Value> rights;
 };

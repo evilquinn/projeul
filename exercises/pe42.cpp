@@ -6,10 +6,10 @@
  */
 
 #include "pe42.hpp"
-#include <ctype.h>
-#include <stdio.h>
 #include <boost/foreach.hpp>
+#include <cctype>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <map>
 #include <set>
@@ -36,7 +36,7 @@ void pe42::run()
      * two-thousand common English words, how many are triangle words?
      *
      */
-    triangle_numbers tris_( 1000 );
+    triangle_numbers tris( 1000 );
     const char* words[] = {
 // pe42_words.txt is already formatted like an initialiser list,
 // just get the preprocessor to include the file
@@ -45,7 +45,7 @@ void pe42::run()
     size_t result = 0;
     for ( auto& word : words )
     {
-        if ( tris_.is_triangle( word_value_alpha_pos( word ) ) )
+        if ( tris.is_triangle( word_value_alpha_pos( word ) ) )
         {
             ++result;
         }

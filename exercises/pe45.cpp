@@ -6,10 +6,10 @@
  */
 
 #include "pe45.hpp"
-#include <ctype.h>
-#include <stdio.h>
 #include <boost/foreach.hpp>
+#include <cctype>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <map>
 #include <set>
@@ -32,17 +32,17 @@ void pe45::run()
      *
      */
 
-    pentagonal_numbers pents_( PE45_NUM_PENTS );
-    triangle_numbers tris_( PE45_NUM_TRIS );
-    hexagonal_numbers hexs_( PE45_NUM_HEXS );
+    pentagonal_numbers pents( PE45_NUM_PENTS );
+    triangle_numbers tris( PE45_NUM_TRIS );
+    hexagonal_numbers hexs( PE45_NUM_HEXS );
     size_t result = 0;
 
     for ( size_t tris_pos = 286; tris_pos <= PE45_NUM_TRIS; ++tris_pos )
     {
-        if ( pents_.is_pentagonal( tris_.get_term( tris_pos ) ) &&
-             hexs_.is_hexagonal( tris_.get_term( tris_pos ) ) )
+        if ( pents.is_pentagonal( tris.get_term( tris_pos ) ) &&
+             hexs.is_hexagonal( tris.get_term( tris_pos ) ) )
         {
-            result = tris_.get_term( tris_pos );
+            result = tris.get_term( tris_pos );
         }
     }
 

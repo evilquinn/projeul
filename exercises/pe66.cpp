@@ -59,7 +59,7 @@ std::vector<int> pe66::continued_fraction_of_root_of( const int n )
     return result;
 }
 
-bool pe66::is_square( boost::multiprecision::cpp_int n )
+bool pe66::is_square( const boost::multiprecision::cpp_int& n )
 {
     boost::multiprecision::cpp_int test = boost::multiprecision::sqrt( n );
     return ( test * test ) == n;
@@ -69,8 +69,11 @@ template <typename Container>
 class continued_fraction
 {
 public:
-    continued_fraction( Container& container ) : container_( container ) {}
-    Container& container_;
+    explicit continued_fraction( Container& container )
+        : container( container )
+    {
+    }
+    Container& container;
 };
 
 template <typename Container>
@@ -96,7 +99,7 @@ std::ostream& operator<<( std::ostream& os, continued_fraction<Container> cf )
 }
 
 boost::multiprecision::cpp_int solve_x_for_continued_fraction(
-    const std::vector<int> cf )
+    const std::vector<int>& cf )
 {
     boost::multiprecision::cpp_int x, x1, x2 = 1;
     size_t cf_size = cf.size();
@@ -105,7 +108,7 @@ boost::multiprecision::cpp_int solve_x_for_continued_fraction(
         return x;
     }
 
-    bool r_is_odd = cf_size & 0x01;
+    bool r_is_odd = ( cf_size & 0x01 ) != 0u;
 
     x = cf[0];
     if ( cf_size > 1 )

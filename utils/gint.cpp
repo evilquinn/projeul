@@ -12,13 +12,13 @@
 #include <cstdlib>
 #include <stdexcept>
 
-gint::gint() : n_(), is_negative( false ) { n_.push_front( 0 ); }
-gint::gint( size_t n ) : n_(), is_negative( false )
+gint::gint() : is_negative( false ) { n_.push_front( 0 ); }
+gint::gint( size_t n ) : is_negative( false )
 {
     construct_digits_from_positive( n );
 }
 
-gint::gint( long int n ) : n_(), is_negative( n < 0 )
+gint::gint( long int n ) : is_negative( n < 0 )
 {
     construct_digits_from_positive( n < 0 ? -n : n );
 }
@@ -201,7 +201,7 @@ bool gint::less_than_xor_equal( const gint& rhs, bool equal ) const
 }
 
 gint& gint::operator++() { return add( gint( 1 ) ); }
-gint gint::operator++( int )
+const gint gint::operator++( int )
 {
     gint tmp( *this );
     operator++();
@@ -209,7 +209,7 @@ gint gint::operator++( int )
 }
 
 gint& gint::operator--() { return subtract( gint( 1 ) ); }
-gint gint::operator--( int )
+const gint gint::operator--( int )
 {
     gint tmp( *this );
     operator--();

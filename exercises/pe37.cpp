@@ -6,9 +6,9 @@
  */
 
 #include "pe37.hpp"
-#include <stdio.h>
 #include <boost/foreach.hpp>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <map>
 #include <set>

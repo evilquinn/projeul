@@ -160,7 +160,7 @@ tile::tile_enum next_u( tile::tile_enum t )
 size_t random_in_range( size_t beg, size_t end )
 {
     static boost::random::mt19937 rng(
-        static_cast<unsigned int>( std::time( 0 ) ) );
+        static_cast<unsigned int>( std::time( nullptr ) ) );
     boost::random::uniform_int_distribution<> dist( beg, end );
     return dist( rng );
 }

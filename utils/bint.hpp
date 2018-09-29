@@ -38,7 +38,7 @@ public:
     bool less_than( const bint& rhs ) const;
 
     bint& transform( const bint& rhs,
-                     std::function<uint8_t( uint8_t, uint8_t )> op );
+                     const std::function<uint8_t( uint8_t, uint8_t )>& op );
 
     bint& add( const bint& rhs );
     bint& subtract( const bint& rhs );
@@ -65,9 +65,9 @@ public:
     //    bint abs() const;
 
     bint& operator++();
-    bint operator++( int );
+    const bint operator++( int );
     bint& operator--();
-    bint operator--( int );
+    const bint operator--( int );
 
     void resize( size_t n );
     void resize_chararray( size_t n );

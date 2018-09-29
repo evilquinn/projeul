@@ -34,7 +34,7 @@ void pe67::run()
     std::ifstream data_file;
     data_file.open( "../data/pe67_triangle.txt" );
 
-    typedef std::vector<std::vector<size_t>> triangle_type;
+    using triangle_type = std::vector<std::vector<size_t>>;
     triangle_type tri;
 
     boost::char_separator<char> space_sep( " " );

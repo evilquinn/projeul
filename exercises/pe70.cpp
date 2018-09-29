@@ -68,7 +68,7 @@ void pe70::run()
 
         if ( is_permutation( total, i ) )
         {
-            double attempt = i / (double)total;
+            double attempt = i / static_cast<double>( total );
             // std::cout << relper.size() << std::endl;
             if ( attempt < minimum )
             {

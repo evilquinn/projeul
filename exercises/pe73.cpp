@@ -34,14 +34,14 @@ void pe73::run()
     size_t limit  = 12000;
     size_t result = 0;
 
-    double ubound = (double)1 / 2;
-    double lbound = (double)1 / 3;
+    double ubound = static_cast<double>( 1 ) / 2;
+    double lbound = static_cast<double>( 1 ) / 3;
 
     for ( size_t d = 2; d <= limit; ++d )
     {
         for ( size_t n = d / 3; n < ( d + 1 ) / 2; ++n )
         {
-            double key = (double)n / d;
+            double key = static_cast<double>( n ) / d;
             if ( key < ubound && key > lbound )
             {
                 if ( gcd( n, d ) == 1 )

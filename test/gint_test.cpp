@@ -4,12 +4,10 @@
 #include <gint.hpp>
 #include <utils.hpp>
 
-using ::testing::Eq;
-
 class GintTest : public ::testing::Test
 {
 public:
-    GintTest() {}
+    GintTest()           = default;
     ~GintTest() override = default;
 
 protected:
@@ -21,7 +19,7 @@ TEST_F( GintTest, testGintConstructorWorksExpected )
     gint gd( 1234 );
     EXPECT_EQ( gi, gd );
 
-    size_t largest = static_cast<size_t>( -1 );
+    auto largest = static_cast<size_t>( -1 );
     EXPECT_EQ( gint( largest ), gint( largest ) );
 
     auto hegi = std::make_unique<gint>( 1234 );

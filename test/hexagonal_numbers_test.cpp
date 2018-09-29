@@ -8,7 +8,7 @@ using ::testing::Eq;
 class HexagonalNumbersTest : public ::testing::Test
 {
 protected:
-    HexagonalNumbersTest() {}
+    HexagonalNumbersTest()           = default;
     ~HexagonalNumbersTest() override = default;
 };
 
