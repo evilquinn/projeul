@@ -57,9 +57,11 @@ TEST( TripletTest, triplet_tWorksAsExpected )
 {
     pyth::triplet t(3,4,5);
     pyth::triplet u(4,3,5);
-    pyth::triplets_t trips = { t, u };
-    EXPECT_THAT ( trips.size(), Eq(1) );
-    EXPECT_THAT ( *(trips.begin()), Not(Lt(t)));
-    EXPECT_THAT ( *(trips.begin()), Not(Lt(u)));
+    pyth::triplet v(5,12,13);
+    pyth::triplets_t trips = { t, u, v };
+    EXPECT_THAT ( trips.size(), Eq(2) );
+    EXPECT_THAT ( *trips.begin(), Not(Lt(t)));
+    EXPECT_THAT ( *trips.begin(), Not(Lt(u)));
+    EXPECT_THAT ( *trips.begin(), Lt(*(++trips.begin())));
 }
 
