@@ -5,13 +5,13 @@
  *      Author: evilquinn
  */
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <pe89.hpp>
 
-namespace {  // anonymous
-
-}  // namespace anonymous
+namespace  // anonymous
+{
+}  // namespace
 
 std::string& pe89::name() { return name_; }
 void pe89::run()
@@ -27,42 +27,40 @@ void pe89::run()
         bytes += line.length();
         std::cout << line << "\n";
 
-        char saw = '0';
+        char last   = '0';
         size_t seen = 0;
-        bool half = false;
+        bool half   = false;
 
-        for ( size_t i = line.length() - 1;
-              i < line.length();
-              --i )
+        for ( size_t i = line.length() - 1; i < line.length(); --i )
         {
-            if ( line[i] == 'M' )
+            char next = line[i];
+            if ( next == 'M' )
             {
                 break;
             }
-            if ( line[i] == saw )
+            if ( next == last )
             {
                 ++seen;
-                if ( seen == 4)
+                if ( seen == 4 )
                 {
                     seen = 0;
                     saved += 2;
                     half = true;
                 }
-
             }
             else
             {
                 if ( half )
                 {
-                    if ( line[i] == 'V' && saw == 'I' ||
-                         line[i] == 'L' && saw == 'X' ||
-                         line[i] == 'D' && saw == 'C' )
+                    if ( ( next == 'V' && last == 'I' ) ||
+                         ( next == 'L' && last == 'X' ) ||
+                         ( next == 'D' && last == 'C' ) )
                     {
                         ++saved;
                     }
                     half = false;
                 }
-                saw = line[i];
+                last = next;
                 seen = 1;
             }
         }

@@ -16,7 +16,8 @@
 
 std::string& pe78::name() { return name_; }
 
-namespace { // anonymous
+namespace
+{  // anonymous
 
 }  // namespace
 
