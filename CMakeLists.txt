@@ -34,6 +34,7 @@ add_subdirectory(signal_handler)
 add_subdirectory(asio)
 add_subdirectory(messenger)
 add_subdirectory(exercises)
+add_subdirectory(dinphi)
 
 
 add_executable(projeul main.cpp)
