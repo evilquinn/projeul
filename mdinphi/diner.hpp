@@ -3,6 +3,7 @@
 
 #include <mdinphi/table.hpp>
 #include <asio_context.hpp>
+#include <boost/asio/deadline_timer.hpp>
 
 class diner
 {
@@ -20,15 +21,20 @@ private:
 
     void eat();
     void think();
+    void contention();
 
     void on_fork_success();
     void on_fork_fail();
 
     size_t pos_;
     evilquinn::asio_context::handle asio_;
+    boost::asio::deadline_timer eating_timer_;
+    boost::asio::deadline_timer thinking_timer_;
     get_forks_handler get_forks_;
     release_forks_handler release_forks_;
     bool still_dining_;
     size_t eating_count_;
+    size_t thinking_count_;
+    size_t contention_count_;
 };
 #endif // MDINPHI_DINER_HPP
