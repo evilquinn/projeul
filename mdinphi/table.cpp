@@ -1,5 +1,6 @@
 
 #include <mdinphi/table.hpp>
+#include <boost/asio/post.hpp>
 
 table::table(const size_t size,
              evilquinn::asio_context::handle asio) :
@@ -14,6 +15,18 @@ size_t table::on_the_right_of(const size_t pos)
     return pos == size_ - 1 ? 0 : pos + 1;
 }
 
+void table::get_forks(const size_t pos,
+                      fork_handler on_success,
+                      fork_handler on_failure)
+{
+    boost::asio::post(*asio_,
+                      std::bind(&table::get_forked,
+                                this,
+                                pos,
+                                on_success,
+                                on_failure));
+}
+
 void table::get_forked(const size_t pos,
                        fork_handler on_success,
                        fork_handler on_failure)
@@ -24,15 +37,25 @@ void table::get_forked(const size_t pos,
     {
         forks_[left] = true;
         forks_[right] = true;
-        on_success();
+        boost::asio::post(*asio_,
+                          on_success);
     }
     else
     {
-        on_failure();
+        boost::asio::post(*asio_,
+                          on_failure);
     }
 }
 
 void table::release_forks(const size_t pos)
+{
+    boost::asio::post(*asio_,
+                      std::bind(&table::release_forked,
+                                this,
+                                pos));
+}
+
+void table::release_forked(const size_t pos)
 {
     const size_t left = pos;
     const size_t right = on_the_right_of(pos);

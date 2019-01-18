@@ -22,7 +22,7 @@ int main()
     {
         diners.emplace_back(i,
                             asio,
-                            std::bind(&table::get_forked,
+                            std::bind(&table::get_forks,
                                       std::ref(dining_table),
                                       std::placeholders::_1,
                                       std::placeholders::_2,
