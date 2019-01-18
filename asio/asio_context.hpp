@@ -9,7 +9,8 @@ namespace evilquinn
 class asio_context
 {
 public:
-    static boost::shared_ptr<boost::asio::io_context> get();
+    using handle = boost::shared_ptr<boost::asio::io_context>;
+    static handle get();
 };
 
 }  // end namespace evilquinn
