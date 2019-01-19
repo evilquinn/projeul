@@ -6,7 +6,8 @@ table::table(const size_t size,
              evilquinn::asio_context::handle asio) :
     forks_(size),
     size_(size),
-    asio_(asio)
+    asio_(asio),
+    serialiser_(*asio)
 {
 }
 
@@ -19,7 +20,7 @@ void table::get_forks(const size_t pos,
                       fork_handler on_success,
                       fork_handler on_failure)
 {
-    boost::asio::post(*asio_,
+    boost::asio::post(serialiser_,
                       std::bind(&table::get_forked,
                                 this,
                                 pos,
@@ -49,7 +50,7 @@ void table::get_forked(const size_t pos,
 
 void table::release_forks(const size_t pos)
 {
-    boost::asio::post(*asio_,
+    boost::asio::post(serialiser_,
                       std::bind(&table::release_forked,
                                 this,
                                 pos));

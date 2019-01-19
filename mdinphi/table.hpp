@@ -5,6 +5,7 @@
 #include <functional>
 #include <vector>
 #include <asio_context.hpp>
+#include <boost/asio/io_context_strand.hpp>
 
 using fork_handler = std::function<void()>;
 using get_forks_handler = std::function<void(size_t, fork_handler, fork_handler)>;
@@ -24,6 +25,7 @@ private:
     std::vector<char> forks_;
     size_t size_;
     evilquinn::asio_context::handle asio_;
+    boost::asio::io_context::strand serialiser_;
 };
 
 

@@ -6,6 +6,7 @@
 #include <mdinphi/diner.hpp>
 #include <asio_context.hpp>
 #include <vector>
+#include <thread>
 #include <functional>
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -17,6 +18,7 @@ int main()
 
     const auto num_diners = size_t{5};
     auto dining_table = table{num_diners, asio};
+
     auto diners = std::vector<diner>{};
     for ( size_t i = 0; i < num_diners; ++i )
     {
@@ -49,7 +51,20 @@ int main()
                                }
                            });
 
-    asio->run();
+    std::vector<std::thread> thread_pool;
+    const size_t num_threads = 5;
+    for ( size_t i = 0; i < num_threads; ++i )
+    {
+        thread_pool.emplace_back([&asio]()
+        {
+            asio->run();
+        });
+    }
+
+    for ( auto& thread : thread_pool )
+    {
+        thread.join();
+    }
 
     for ( auto& d : diners )
     {

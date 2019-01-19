@@ -39,7 +39,7 @@ void diner::dine()
 
 void diner::eat()
 {
-    //std::cout << pos_ << ": eating!" << std::endl;
+    std::cout << pos_ << ": eating!" << std::endl;
     ++eating_count_;
     eating_timer_.expires_from_now(eat_duration);
     eating_timer_.async_wait([this]( const boost::system::error_code& e )
@@ -60,7 +60,7 @@ void diner::contention()
 
 void diner::think()
 {
-    //std::cout << pos_ << ": thinking!" << std::endl;
+    std::cout << pos_ << ": thinking!" << std::endl;
     ++thinking_count_;
     thinking_timer_.expires_from_now(think_duration);
     thinking_timer_.async_wait([this]( const boost::system::error_code& e )
