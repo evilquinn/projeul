@@ -14,7 +14,7 @@ int main()
     auto asio = evilquinn::asio_context::get();
 
     std::shared_ptr<evilquinn::cig_smokers::table> table =
-        std::make_shared<evilquinn::cig_smokers::table>();
+        std::make_shared<evilquinn::cig_smokers::table>(asio);
     const auto materials = std::vector<evilquinn::cig_smokers::material>
                            {
                                evilquinn::cig_smokers::material::tobacco,
