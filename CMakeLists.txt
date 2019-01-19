@@ -36,6 +36,7 @@ add_subdirectory(messenger)
 add_subdirectory(exercises)
 add_subdirectory(dinphi)
 add_subdirectory(mdinphi)
+add_subdirectory(cigsmoke)
 
 
 add_executable(projeul main.cpp)

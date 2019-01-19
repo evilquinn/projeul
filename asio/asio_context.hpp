@@ -9,6 +9,7 @@ namespace evilquinn
 class asio_context
 {
 public:
+    using job = std::function<void()>;
     using handle = boost::shared_ptr<boost::asio::io_context>;
     static handle get();
 };
