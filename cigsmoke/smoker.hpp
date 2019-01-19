@@ -2,21 +2,20 @@
 #ifndef CIGSMOKE_SMOKER_HPP
 #define CIGSMOKE_SMOKER_HPP
 
+#include <boost/asio/deadline_timer.hpp>
 #include <cigsmoke/material.hpp>
 #include <cigsmoke/table.hpp>
-#include <boost/asio/deadline_timer.hpp>
 
 namespace evilquinn
 {
 namespace cig_smokers
 {
-
 class smoker
 {
 public:
-    smoker(material item,
-           asio_context::handle asio,
-           std::shared_ptr<table> table);
+    smoker( material item,
+            asio_context::handle asio,
+            std::shared_ptr<table> table );
 
     void sit();
     void quit_smoking();
@@ -38,7 +37,7 @@ private:
     size_t wait_count_;
 };
 
-} // end namespace cig_smokers
-} // end namespace evilquinn
+}  // end namespace cig_smokers
+}  // end namespace evilquinn
 
-#endif // CIGSMOKE_SMOKER_HPP
+#endif  // CIGSMOKE_SMOKER_HPP

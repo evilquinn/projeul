@@ -6,7 +6,6 @@ namespace evilquinn
 {
 namespace cig_smokers
 {
-
 enum class material
 {
     tobacco,
@@ -14,8 +13,7 @@ enum class material
     matches
 };
 
-} // end namespace cig_smokers
-} // end namespace evilquinn
+}  // end namespace cig_smokers
+}  // end namespace evilquinn
 
-#endif // CIGSMOKE_MATERIAL_HPP
-
+#endif  // CIGSMOKE_MATERIAL_HPP
