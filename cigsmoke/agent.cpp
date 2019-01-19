@@ -16,7 +16,7 @@ void evilquinn::cig_smokers::agent::replace_materials
 {
     static boost::random::mt19937 rng(
         static_cast<unsigned int>( std::time( nullptr ) ) );
-    boost::random::uniform_int_distribution<> dist( 0, 2 );
+    static boost::random::uniform_int_distribution<> dist( 0, 2 );
     boost::asio::post(*asio_, std::bind(std::move(provide_materials),
                                         static_cast<material>(dist(rng)),
                                         static_cast<material>(dist(rng))));

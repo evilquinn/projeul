@@ -26,8 +26,13 @@ void evilquinn::cig_smokers::table::request_material_for
     }
     else
     {
-        remove_materials();
-        boost::asio::post(*asio_, std::move(on_success));
+        // serialise removal of materials and firing on_success to remove risk
+        // of remove_materials being called after on_success which could lead
+        // to deadlock (where agent provides materials expected to be picked
+        // up by the next smoker, but instead are removed by a delayed action)
+        boost::asio::post(serialiser_,
+                          std::bind(&table::remove_materials, this));
+        boost::asio::post(serialiser_, std::move(on_success));
     }
 }
 
