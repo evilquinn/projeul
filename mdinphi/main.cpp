@@ -42,7 +42,7 @@ int main()
     }
 
     boost::asio::deadline_timer stop_diners(*asio,
-                                            boost::posix_time::seconds(10));
+                                            boost::posix_time::seconds(5));
     stop_diners.async_wait([&]( const boost::system::error_code& )
                            {
                                for ( auto& d : diners )

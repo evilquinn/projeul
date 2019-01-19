@@ -1,6 +1,7 @@
 
 #include <mdinphi/table.hpp>
 #include <boost/asio/post.hpp>
+#include <thread>
 
 table::table(const size_t size,
              evilquinn::asio_context::handle asio) :
@@ -28,10 +29,13 @@ void table::get_forks(const size_t pos,
                                 std::move(on_failure)));
 }
 
+//static const std::chrono::milliseconds block_duration(20);
+
 void table::get_forked(const size_t pos,
                        fork_handler on_success,
                        fork_handler on_failure)
 {
+    //std::this_thread::sleep_for(block_duration);
     const size_t left = pos;
     const size_t right = on_the_right_of(pos);
     if ( !forks_[left] && !forks_[right] )
@@ -58,6 +62,7 @@ void table::release_forks(const size_t pos)
 
 void table::release_forked(const size_t pos)
 {
+    //std::this_thread::sleep_for(block_duration);
     const size_t left = pos;
     const size_t right = on_the_right_of(pos);
 

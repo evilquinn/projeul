@@ -1,11 +1,12 @@
 
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include <mdinphi/diner.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-static const boost::posix_time::milliseconds eat_duration(234);
-static const boost::posix_time::milliseconds think_duration(123);
+static const boost::posix_time::milliseconds eat_duration(200);
+static const boost::posix_time::milliseconds think_duration(200);
 
 diner::diner(const size_t pos,
              evilquinn::asio_context::handle asio,
@@ -40,6 +41,9 @@ void diner::eat()
 {
     std::cout << pos_ << ": eating!" << std::endl;
     ++eating_count_;
+    //std::this_thread::sleep_for(eat_duration);
+    //asio_->post(std::bind(release_forks_, pos_));
+    //asio_->post(std::bind(&diner::think, this));
     eating_timer_.expires_from_now(eat_duration);
     eating_timer_.async_wait([this]( const boost::system::error_code& e )
     {
@@ -55,6 +59,8 @@ void diner::think()
 {
     std::cout << pos_ << ": thinking!" << std::endl;
     ++thinking_count_;
+    //std::this_thread::sleep_for(think_duration);
+    //asio_->post(std::bind(&diner::dine, this));
     thinking_timer_.expires_from_now(think_duration);
     thinking_timer_.async_wait([this]( const boost::system::error_code& e )
     {
