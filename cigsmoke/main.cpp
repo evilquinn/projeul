@@ -5,6 +5,7 @@
 #include <cigsmoke/table.hpp>
 #include <cigsmoke/smoker.hpp>
 #include <asio/asio_context.hpp>
+#include <boost/asio/deadline_timer.hpp>
 #include <signal_handler/signal_handler.hpp>
 
 int main()
@@ -42,6 +43,21 @@ int main()
             asio->run();
         });
     }
+
+    const boost::posix_time::seconds run_duration(5);
+    boost::asio::deadline_timer run_timer(*asio, run_duration);
+    run_timer.async_wait([&smokers]( const boost::system::error_code& ec )
+    {
+        if ( ec )
+        {
+            return;
+        }
+
+        for ( auto&& smoker : smokers )
+        {
+            smoker.quit_smoking();
+        }
+    });
 
     for ( auto&& thread : threads )
     {
