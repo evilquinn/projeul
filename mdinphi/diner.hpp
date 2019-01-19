@@ -21,7 +21,6 @@ private:
 
     void eat();
     void think();
-    void contention();
 
     void on_fork_success();
     void on_fork_fail();
@@ -35,6 +34,5 @@ private:
     bool still_dining_;
     size_t eating_count_;
     size_t thinking_count_;
-    size_t contention_count_;
 };
 #endif // MDINPHI_DINER_HPP

@@ -19,8 +19,7 @@ diner::diner(const size_t pos,
     release_forks_(release_forks),
     still_dining_(true),
     eating_count_(0),
-    thinking_count_(0),
-    contention_count_(0)
+    thinking_count_(0)
 {
 }
 
@@ -52,12 +51,6 @@ void diner::eat()
     });
 }
 
-void diner::contention()
-{
-    ++contention_count_;
-    think();
-}
-
 void diner::think()
 {
     std::cout << pos_ << ": thinking!" << std::endl;
@@ -79,7 +72,7 @@ void diner::on_fork_success()
 
 void diner::on_fork_fail()
 {
-    asio_->post(std::bind(&diner::contention, this));
+    asio_->post(std::bind(&diner::think, this));
 }
 
 void diner::stop_dining()
@@ -91,7 +84,6 @@ std::string diner::to_string()
 {
     std::ostringstream oss;
     oss << pos_ << " has eaten " << eating_count_ << " times, "
-        << "thought " << thinking_count_ << " times, "
-        << contention_count_ << " times of which were from contention.";
+        << "thought " << thinking_count_ << " times.";
     return oss.str();
 }
