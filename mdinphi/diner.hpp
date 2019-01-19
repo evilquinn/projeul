@@ -1,24 +1,23 @@
 #ifndef MDINPHI_DINER_HPP
 #define MDINPHI_DINER_HPP
 
-#include <mdinphi/table.hpp>
 #include <asio_context.hpp>
 #include <boost/asio/deadline_timer.hpp>
+#include <mdinphi/table.hpp>
 
 class diner
 {
 public:
-    diner(size_t pos,
-          evilquinn::asio_context::handle asio,
-          get_forks_handler get_forks,
-          release_forks_handler release_forks);
+    diner( size_t pos,
+           evilquinn::asio_context::handle asio,
+           get_forks_handler get_forks,
+           release_forks_handler release_forks );
 
     void dine();
     void stop_dining();
     std::string to_string();
 
 private:
-
     void eat();
     void think();
 
@@ -35,4 +34,4 @@ private:
     size_t eating_count_;
     size_t thinking_count_;
 };
-#endif // MDINPHI_DINER_HPP
+#endif  // MDINPHI_DINER_HPP
