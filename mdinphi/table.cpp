@@ -24,8 +24,8 @@ void table::get_forks(const size_t pos,
                       std::bind(&table::get_forked,
                                 this,
                                 pos,
-                                on_success,
-                                on_failure));
+                                std::move(on_success),
+                                std::move(on_failure)));
 }
 
 void table::get_forked(const size_t pos,
@@ -39,12 +39,12 @@ void table::get_forked(const size_t pos,
         forks_[left] = true;
         forks_[right] = true;
         boost::asio::post(*asio_,
-                          on_success);
+                          std::move(on_success));
     }
     else
     {
         boost::asio::post(*asio_,
-                          on_failure);
+                          std::move(on_failure));
     }
 }
 

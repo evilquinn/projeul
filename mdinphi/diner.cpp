@@ -31,8 +31,8 @@ void diner::dine()
         fork_handler on_fail = std::bind(&diner::on_fork_fail, this);
         asio_->post(std::bind(get_forks_,
                               pos_,
-                              on_success,
-                              on_fail));
+                              std::move(on_success),
+                              std::move(on_fail)));
     }
 }
 
