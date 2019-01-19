@@ -5,6 +5,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include <cigsmoke/material.hpp>
+#include <cigsmoke/agent.hpp>
 #include <asio/asio_context.hpp>
 #include <boost/asio/io_context_strand.hpp>
 
@@ -23,9 +24,12 @@ public:
     void on_smoking_done();
 
 private:
+    void remove_materials();
+    void provide_materials(material m1, material m2);
     std::vector< boost::optional<material> > on_table_;
     asio_context::handle asio_;
     boost::asio::io_context::strand serialiser_;
+    agent helper_;
 };
 
 } // end namespace cig_smokers

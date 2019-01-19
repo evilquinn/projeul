@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <string>
+#include <sstream>
 #include <cigsmoke/smoker.hpp>
 #include <boost/asio/post.hpp>
 
@@ -11,7 +13,9 @@ evilquinn::cig_smokers::smoker::smoker(const material item,
     table_(table),
     smoke_timer_(*asio_),
     wait_timer_(*asio_),
-    quit_smoking_(false)
+    quit_smoking_(false),
+    smoke_count_(0),
+    wait_count_(0)
 {
 }
 
@@ -46,6 +50,7 @@ void evilquinn::cig_smokers::smoker::try_smoke()
 void evilquinn::cig_smokers::smoker::smoke()
 {
     std::cout << static_cast<int>(item_) << ": smoking" << std::endl;
+    ++smoke_count_;
     static const boost::posix_time::milliseconds smoke_duration(100);
     smoke_timer_.expires_from_now(smoke_duration);
     smoke_timer_.async_wait([this]( const boost::system::error_code& ec )
@@ -64,6 +69,7 @@ void evilquinn::cig_smokers::smoker::smoke()
 void evilquinn::cig_smokers::smoker::wait()
 {
     std::cout << static_cast<int>(item_) << ": waiting" << std::endl;
+    ++wait_count_;
     static const boost::posix_time::milliseconds wait_duration(100);
     wait_timer_.expires_from_now(wait_duration);
     wait_timer_.async_wait([this]( const boost::system::error_code& ec )
@@ -83,5 +89,14 @@ void evilquinn::cig_smokers::smoker::on_request_success()
 void evilquinn::cig_smokers::smoker::on_request_failure()
 {
     boost::asio::post(*asio_, std::bind(&smoker::wait, this));
+}
+
+std::string evilquinn::cig_smokers::smoker::to_string()
+{
+    std::ostringstream oss;
+    oss << static_cast<int>(item_) << " smoked " << smoke_count_ << " time, waited " << wait_count_ << " times.";
+
+
+    return oss.str();
 }
 

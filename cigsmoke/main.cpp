@@ -63,6 +63,10 @@ int main()
     {
         thread.join();
     }
+    for ( auto&& smoker : smokers )
+    {
+        std::cout << smoker.to_string() << std::endl;
+    }
 
     return 0;
 }

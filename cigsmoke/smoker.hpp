@@ -20,6 +20,7 @@ public:
 
     void sit();
     void quit_smoking();
+    std::string to_string();
 
 private:
     void try_smoke();
@@ -33,6 +34,8 @@ private:
     boost::asio::deadline_timer smoke_timer_;
     boost::asio::deadline_timer wait_timer_;
     bool quit_smoking_;
+    size_t smoke_count_;
+    size_t wait_count_;
 };
 
 } // end namespace cig_smokers
