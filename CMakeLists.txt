@@ -37,6 +37,7 @@ add_subdirectory(exercises)
 add_subdirectory(dinphi)
 add_subdirectory(mdinphi)
 add_subdirectory(cigsmoke)
+add_subdirectory(log_file_stream)
 add_subdirectory(sudoku)
 
 

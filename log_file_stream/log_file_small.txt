@@ -1,0 +1,9 @@
+<133>1 2018-01-01T01:00:00Z EVILLOG some message or other
+multiline
+<133>1 2018-01-01T01:00:00Z EVILLOG some message or other
+<133>1 2018-01-01T01:00:00Z EVILLOG some message or other
+multiline
+multiline
+<133>1 2018-01-01T01:00:00Z EVILLOG some message or other
+multiline
+multiline
