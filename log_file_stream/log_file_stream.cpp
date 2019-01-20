@@ -6,6 +6,11 @@
 
 namespace evilquinn {
 
+/*
+ * attempts to behave similar to std::getline, but differs in that it captures
+ * potentially multiline strings of log messages which satisfy a particular
+ * pattern
+ */
 template<typename IStream>
 IStream& getlogline(IStream& log_stream, std::string& log_line)
 {
@@ -52,11 +57,20 @@ int main()
         std::cout << "wtf?" << std::endl;
     }
 
-    std::string logline;
-    while ( evilquinn::getlogline(log_stream, logline) )
+    const size_t bytes_written_limit = 100;
+    size_t bytes_written = 0;
+
+    for ( std::string logline; evilquinn::getlogline(log_stream, logline); )
     {
         std::cout << logline << std::endl;
         std::cout << "BOOM!" << std::endl;
+        bytes_written += logline.size() + 1;
+        if ( bytes_written >= bytes_written_limit )
+        {
+            std::ofstream next_log_stream("/home/evilquinn/git/projeul/log_file_stream/log_file_next.txt");
+            next_log_stream << log_stream.rdbuf();
+            break;
+        }
     }
 
     return 0;
