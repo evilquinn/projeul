@@ -18,6 +18,9 @@ public:
     using line = std::vector<square>;
     using matrix = std::vector<line>;
 
+    void set(coord pos, size_t value);
+    square& at(coord pos);
+
     std::string to_string() const;
 
 private:

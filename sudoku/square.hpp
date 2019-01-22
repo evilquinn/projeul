@@ -2,9 +2,11 @@
 #ifndef SUDOKU_SQUARE_HPP
 #define SUDOKU_SQUARE_HPP
 
+#include <map>
 #include <set>
 #include <stdexcept>
 #include <sstream>
+#include <boost/optional.hpp>
 
 namespace evilquinn
 {
@@ -21,6 +23,9 @@ public:
     using candidate_set = std::set<size_t>;
     void eliminate(size_t candidate);
     void eliminate(candidate_set candidates);
+    void set_value(size_t value);
+    boost::optional<size_t> value() const;
+
     std::string to_string() const;
 
     class illegal_square : public std::runtime_error

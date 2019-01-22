@@ -2,13 +2,18 @@
 #include <iostream>
 #include <sudoku/square.hpp>
 #include <sudoku/grid.hpp>
+#include <sudoku/grid_reader.hpp>
+#include <sudoku/solver.hpp>
 
 int main()
 {
-    const evilquinn::sudoku::dimensions dim = { 9, 9 };
-    evilquinn::sudoku::grid g(dim);
+    evilquinn::sudoku::grid_reader reader("/home/evilquinn/git/projeul/sudoku/p096_sudoku.txt");
 
-    std::cout << g.to_string() << std::endl;
+    while ( auto grid_from_file = reader.getgrid() )
+    {
+        evilquinn::sudoku::solver().solve(*grid_from_file);
+        std::cout << grid_from_file->to_string() << std::endl;
+    }
 
     return 0;
 }

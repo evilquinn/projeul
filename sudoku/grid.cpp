@@ -10,6 +10,7 @@ static size_t determine_number_of_candidates(evilquinn::sudoku::dimensions dim)
     }
     return larger;
 }
+
 evilquinn::sudoku::grid::grid(dimensions dim) :
     dim_(dim),
     squares_()
@@ -25,6 +26,16 @@ evilquinn::sudoku::grid::grid(dimensions dim) :
         }
         squares_.emplace_back(std::move(row));
     }
+}
+
+evilquinn::sudoku::square& evilquinn::sudoku::grid::at(const coord pos)
+{
+    return squares_[pos.y][pos.x];
+}
+
+void evilquinn::sudoku::grid::set(const coord pos, const size_t value)
+{
+    at(pos).set_value(value);
 }
 
 std::string evilquinn::sudoku::grid::to_string() const
