@@ -20,6 +20,7 @@ public:
 
     void set(coord pos, size_t value);
     square& at(coord pos);
+    dimensions get_dimensions() const;
 
     std::string to_string() const;
 

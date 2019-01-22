@@ -26,8 +26,7 @@ std::pair<dimensions, dimensions> nonet_from_coord(const coord coord)
 
 void scan_all_and_eliminate_knowns(grid& grid)
 {
-    //auto dims = grid.dimensions();
-    dimensions dims{9, 9};
+    auto dims = grid.get_dimensions();
     for ( size_t x = 0; x < dims.x; ++x )
     {
         for ( size_t y = 0; y < dims.y; ++y )

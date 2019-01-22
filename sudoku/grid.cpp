@@ -28,6 +28,11 @@ evilquinn::sudoku::grid::grid(dimensions dim) :
     }
 }
 
+evilquinn::sudoku::dimensions evilquinn::sudoku::grid::get_dimensions() const
+{
+    return dim_;
+}
+
 evilquinn::sudoku::square& evilquinn::sudoku::grid::at(const coord pos)
 {
     return squares_[pos.y][pos.x];
