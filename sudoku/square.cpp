@@ -22,6 +22,17 @@ boost::optional<size_t> evilquinn::sudoku::square::value() const
     }
     return boost::optional<size_t>{};
 }
+
+evilquinn::sudoku::coord evilquinn::sudoku::square::pos() const
+{
+    return pos_;
+}
+
+const evilquinn::sudoku::square::candidate_set& evilquinn::sudoku::square::candidates() const
+{
+    return candidates_;
+}
+
 void evilquinn::sudoku::square::eliminate(size_t candidate)
 {
     if ( candidates_.size() == 1 && *candidates_.begin() == candidate )

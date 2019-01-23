@@ -11,7 +11,7 @@ int main()
 
     while ( auto grid_from_file = reader.getgrid() )
     {
-        evilquinn::sudoku::solver().solve(*grid_from_file);
+        evilquinn::sudoku::solver(*grid_from_file).solve();
         std::cout << grid_from_file->to_string() << std::endl;
     }
 

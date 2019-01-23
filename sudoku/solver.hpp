@@ -12,8 +12,14 @@ namespace sudoku
 class solver
 {
 public:
-    bool solve(grid& grid);
+    solver(grid& grid);
+    bool solve();
+    using square_operation = std::function<void(square& s)>;
+    square_operation for_each(square_operation op);
+    square_operation for_each(coord start, coord end, square_operation op);
+    void if_value_known_eliminate(square& sq);
 private:
+    grid& grid_;
 };
 
 } // end namespace sudoku

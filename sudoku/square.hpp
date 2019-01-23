@@ -13,7 +13,15 @@ namespace evilquinn
 namespace sudoku
 {
 
-struct coord { size_t x; size_t y; };
+struct coord
+{
+    size_t x;
+    size_t y;
+    bool operator<(const coord& rhs) const
+    {
+        return x<rhs.x?true:x==rhs.x&&y<rhs.y?true:false;
+    }
+};
 std::string to_string(const coord& c);
 
 class square
@@ -25,6 +33,8 @@ public:
     void eliminate(candidate_set candidates);
     void set_value(size_t value);
     boost::optional<size_t> value() const;
+    coord pos() const;
+    const candidate_set& candidates() const;
 
     std::string to_string() const;
 
