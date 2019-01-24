@@ -42,42 +42,89 @@ void cache_coord_for_candidates( square& sq,
     }
 }
 
-solver::coord_range axis_range_from_coord( coord pos,
-                                           dimensions dims,
-                                           solver::axis ax )
+solver::coord_variant axis_range_from_coord( coord pos,
+                                             dimensions dims,
+                                             solver::axis ax )
 {
-    // determine the range to walk given the given position and axis
     switch ( ax )
     {
     case solver::axis::row:
     {
-        return { { 0, pos.y }, { dims.x, pos.y + 1 } };
+        return solver::coord_variant(
+            solver::coord_range{ { 0, pos.y }, { dims.x, pos.y + 1 } } );
         break;
     }
     case solver::axis::column:
     {
-        return { { pos.x, 0 }, { pos.x + 1, dims.y } };
+        return solver::coord_variant(
+            solver::coord_range{ { pos.x, 0 }, { pos.x + 1, dims.y } } );
         break;
     }
     case solver::axis::nonet:
     {
-        return nonet_from_coord( pos, dims );
+        return solver::coord_variant( nonet_from_coord( pos, dims ) );
+        break;
+    }
+    case solver::axis::gridwise_nonets:
+    {
+        solver::coord_sequence coords{};
+        size_t nonet_size = std::sqrt( dims.x );
+        for ( size_t x = 0; x < dims.x; x += nonet_size )
+        {
+            for ( size_t y = 0; y < dims.y; y += nonet_size )
+            {
+                coords.emplace_back( coord{ x, y } );
+            }
+        }
+        return solver::coord_variant( coords );
         break;
     }
     default:
     {
         // should probably throw instead...meh
-        return { { 0, 0 }, { 0, 0 } };
+        return solver::coord_variant( solver::coord_sequence{} );
 
     }  // end default
     }  // end switch
 }
+
+class for_each_resolver
+{
+public:
+    for_each_resolver( solver& s, solver::square_operation op )
+        : solver_( s ), op_( std::move( op ) )
+    {
+    }
+    solver::square_operation operator()( solver::coord_range range )
+    {
+        return solver_.for_each( range, std::move( op_ ) );
+    }
+    solver::square_operation operator()( solver::coord_sequence sequence )
+    {
+        return solver_.for_each( sequence, std::move( op_ ) );
+    }
+
+private:
+    solver& solver_;
+    solver::square_operation op_;
+};
 
 }  // end namespace util
 }  // end namespace sudoku
 }  // end namespace evilquinn
 
 evilquinn::sudoku::solver::solver( grid& grid ) : grid_( grid ) {}
+
+evilquinn::sudoku::solver::square_operation
+evilquinn::sudoku::solver::for_each( const coord_sequence& sequence,
+                                     square_operation op )
+{
+    for ( auto&& coord : sequence )
+    {
+        op( grid_.at( coord ) );
+    }
+    return std::move( op );
+}
 
 evilquinn::sudoku::solver::square_operation
 evilquinn::sudoku::solver::for_each( coord_range range, square_operation op )
@@ -95,7 +142,8 @@ evilquinn::sudoku::solver::for_each( coord_range range, square_operation op )
 evilquinn::sudoku::solver::square_operation
 evilquinn::sudoku::solver::for_each( square_operation op )
 {
-    return for_each( { { 0, 0 }, grid_.get_dimensions() }, std::move( op ) );
+    return for_each( coord_range{ { 0, 0 }, grid_.get_dimensions() },
+                     std::move( op ) );
 }
 
 void evilquinn::sudoku::solver::if_value_known_eliminate( square& sq )
@@ -110,13 +158,16 @@ void evilquinn::sudoku::solver::if_value_known_eliminate( square& sq )
             *value );
         auto pos = sq.pos();
         // update the column
-        for_each( util::axis_range_from_coord( pos, dims, axis::column ),
+        for_each( boost::get<coord_range>( util::axis_range_from_coord(
+                      pos, dims, axis::column ) ),
                   eliminate_value );
         // update the row
-        for_each( util::axis_range_from_coord( pos, dims, axis::row ),
+        for_each( boost::get<coord_range>(
+                      util::axis_range_from_coord( pos, dims, axis::row ) ),
                   eliminate_value );
         // update the nonet
-        for_each( util::axis_range_from_coord( pos, dims, axis::nonet ),
+        for_each( boost::get<coord_range>(
+                      util::axis_range_from_coord( pos, dims, axis::nonet ) ),
                   std::move( eliminate_value ) );
     }
 }
@@ -127,7 +178,8 @@ void evilquinn::sudoku::solver::if_candidate_unique_in_axis_solve( square& sq,
     auto pos  = sq.pos();
     auto dims = grid_.get_dimensions();
     std::map<size_t, std::set<coord> > value_pos_stats;
-    for_each( util::axis_range_from_coord( pos, dims, ax ),
+    for_each( boost::get<coord_range>(
+                  util::axis_range_from_coord( pos, dims, ax ) ),
               std::bind( &util::cache_coord_for_candidates,
                          std::placeholders::_1,
                          value_pos_stats ) );
@@ -153,29 +205,43 @@ void evilquinn::sudoku::solver::if_candidate_unique_in_axis_solve( square& sq,
     }
 }
 
+void evilquinn::sudoku::solver::eliminate_knowns_from_ranges()
+{
+    for_each( std::bind(
+        &solver::if_value_known_eliminate, this, std::placeholders::_1 ) );
+}
+
+void evilquinn::sudoku::solver::solve_if_candidate_unique_in_ranges()
+{
+    auto dims = grid_.get_dimensions();
+    std::vector<std::pair<axis, axis> > axis_pairs{
+        { axis::column, axis::row },
+        { axis::row, axis::column },
+        { axis::gridwise_nonets, axis::nonet }
+    };
+    for ( auto&& axis_pair : axis_pairs )
+    {
+        util::for_each_resolver resolver(
+            *this,
+            std::bind( &solver::if_candidate_unique_in_axis_solve,
+                       this,
+                       std::placeholders::_1,
+                       axis_pair.second ) );
+        boost::apply_visitor(
+            resolver,
+            util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ) );
+    }
+}
+
 bool evilquinn::sudoku::solver::solve()
 {
     bool solved = false;
 
     const size_t limit = 10;
-    auto dims          = grid_.get_dimensions();
     for ( size_t i = 0; i < limit; ++i )
     {
-        for_each( std::bind( &solver::if_value_known_eliminate,
-                             this,
-                             std::placeholders::_1 ) );
-        std::vector<std::pair<axis, axis> > axis_pairs{
-            { axis::column, axis::row }, { axis::row, axis::column }
-        };
-        for ( auto&& axis_pair : axis_pairs )
-        {
-            for_each( util::axis_range_from_coord(
-                          { 0, 0 }, dims, axis_pair.first ),
-                      std::bind( &solver::if_candidate_unique_in_axis_solve,
-                                 this,
-                                 std::placeholders::_1,
-                                 axis_pair.second ) );
-        }
+        eliminate_knowns_from_ranges();
+        solve_if_candidate_unique_in_ranges();
     }
 
     return solved;

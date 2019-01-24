@@ -2,6 +2,7 @@
 #ifndef SUDOKU_SOLVER_HPP
 #define SUDOKU_SOLVER_HPP
 
+#include <boost/variant.hpp>
 #include <sudoku/grid.hpp>
 
 namespace evilquinn
@@ -18,19 +19,22 @@ public:
     {
         row,
         column,
-        nonet
+        nonet,
+        gridwise_nonets
     };
+
     using square_operation = std::function<void( square& s )>;
     using coord_range      = std::pair<coord, coord>;
+    using coord_sequence   = std::vector<coord>;
+    using coord_variant    = boost::variant<coord_range, coord_sequence>;
     square_operation for_each( square_operation op );
     square_operation for_each( coord_range range, square_operation op );
+    square_operation for_each( const coord_sequence& sequence,
+                               square_operation op );
+    void eliminate_knowns_from_ranges();
     void if_value_known_eliminate( square& sq );
+    void solve_if_candidate_unique_in_ranges();
     void if_candidate_unique_in_axis_solve( square& sq, axis ax );
-    // void walk_axis_and(square& sq, axis ax, square_operation op);
-    void get_coord_for_candidates(
-        square& sq,
-        std::map<size_t, std::set<coord> >& candidate_coord_map );
-    void solve_axis_for_unique_candidate( square& sq, axis as );
 
 private:
     grid& grid_;
