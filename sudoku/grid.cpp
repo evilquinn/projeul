@@ -18,12 +18,18 @@ evilquinn::sudoku::grid::grid( dimensions dim ) : dim_( dim ), squares_()
 
     for ( size_t y = 0; y < dim_.y; ++y )
     {
-        line row;
         for ( size_t x = 0; x < dim_.x; ++x )
         {
-            row.emplace_back( square( coord{ x, y }, num_candidates ) );
+            // either start a new row else bolt onto back of existing row
+            if ( squares_.size() == x )
+            {
+                squares_.emplace_back ( line{ square( coord{ x, y }, num_candidates ) } );
+            }
+            else
+            {
+                squares_[x].emplace_back ( square( coord{ x, y }, num_candidates ) );
+            }
         }
-        squares_.emplace_back( std::move( row ) );
     }
 }
 
@@ -34,7 +40,7 @@ evilquinn::sudoku::dimensions evilquinn::sudoku::grid::get_dimensions() const
 
 evilquinn::sudoku::square& evilquinn::sudoku::grid::at( const coord pos )
 {
-    return squares_[pos.y][pos.x];
+    return squares_[pos.x][pos.y];
 }
 
 void evilquinn::sudoku::grid::set( const coord pos, const size_t value )
