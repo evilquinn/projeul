@@ -183,24 +183,28 @@ void evilquinn::sudoku::solver::if_candidate_unique_in_axis_solve( square& sq,
               std::bind( &util::cache_coord_for_candidates,
                          std::placeholders::_1,
                          value_pos_stats ) );
-    std::map<coord, std::pair<size_t, size_t> > coord_value_counts;
-    for ( auto&& value_stat : value_pos_stats )
+    std::map<std::set<coord>, std::pair<std::set<size_t>, size_t> > coord_value_counts;
+    for ( auto&& value_pos_stat : value_pos_stats )
     {
-        if ( value_stat.second.size() == 1 )
-        {
-            auto& value_count =
-                coord_value_counts[*value_stat.second.begin()];
-            value_count.first = value_stat.first;
-            value_count.second += 1;
-        }
+        auto& value_count = coord_value_counts[value_pos_stat.second];
+        value_count.first.insert(value_pos_stat.first);
+        value_count.second += 1;
     }
-    for ( auto&& coord_count : coord_value_counts )
+    for ( auto&& coord_value_count : coord_value_counts )
     {
-        if ( coord_count.second.second == 1 )
+        if ( coord_value_count.first.size() == coord_value_count.second.first.size() &&
+             coord_value_count.first.size() == coord_value_count.second.second )
         {
-            auto& solved = grid_.at( coord_count.first );
-            solved.set_value( coord_count.second.first );
-            if_value_known_eliminate( solved );
+            for_each( boost::get<coord_range>(
+                          util::axis_range_from_coord( pos, dims, ax )),
+                      [&coord_value_count](square& sq)
+                      {
+                          if ( coord_value_count.first.find(sq.pos()) ==
+                               coord_value_count.first.end() )
+                          {
+                              sq.eliminate(coord_value_count.second.first);
+                          }
+                      });
         }
     }
 }
