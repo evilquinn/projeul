@@ -1,6 +1,8 @@
 
 #include <cmath>
 #include <sudoku/solver.hpp>
+#include <sudoku/util.hpp>
+#include <iostream>
 
 namespace evilquinn
 {
@@ -52,11 +54,13 @@ solver::coord_sequence axis_range_from_coord( coord pos,
     case solver::axis::nonet:
     {
         size_t nonet_side_size = std::sqrt( dims.x );
-        size_t x               = ( pos.x / nonet_side_size ) * nonet_side_size;
-        size_t y               = ( pos.y / nonet_side_size ) * nonet_side_size;
-        for ( ; x < x + nonet_side_size; ++x )
+        size_t x_start         = ( pos.x / nonet_side_size ) * nonet_side_size;
+        size_t y_start         = ( pos.y / nonet_side_size ) * nonet_side_size;
+        size_t x_lim           = x_start + nonet_side_size;
+        size_t y_lim           = x_start + nonet_side_size;
+        for ( size_t x = x_start; x < x_lim; ++x )
         {
-            for ( ; y < y + nonet_side_size; ++y )
+            for ( size_t y = y_start; y < y_lim; ++y )
             {
                 result.emplace_back( coord{ x, y } );
             }
@@ -168,11 +172,11 @@ void evilquinn::sudoku::solver::naked_hidden_tuples()
     }
     for ( auto&& axis_pair : axis_pairs )
     {
-        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-                   std::bind( &solver::hidden_tuples_in_axis,
-                              this,
-                              std::placeholders::_1,
-                              axis_pair.second ) );
+//        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
+//                   std::bind( &solver::hidden_tuples_in_axis,
+//                              this,
+//                              std::placeholders::_1,
+//                              axis_pair.second ) );
     }
 }
 

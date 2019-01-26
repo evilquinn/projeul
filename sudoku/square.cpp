@@ -1,39 +1,7 @@
 
 #include <iostream>
 #include <sudoku/square.hpp>
-
-namespace evilquinn
-{
-namespace sudoku
-{
-
-std::ostream& operator<<( std::ostream& os, const coord& c )
-{
-    os << "[" << c.x << "," << c.y << "]";
-    return os;
-}
-
-std::string to_string( const coord& c )
-{
-    std::ostringstream as_string;
-    as_string << c;
-    return as_string.str();
-}
-
-std::ostream& operator<<( std::ostream& os, const square::candidate_set& c )
-{
-    os << "(";
-    for ( auto it = c.begin(); it != c.end(); ++it )
-    {
-        os << *it;
-        if ( std::next(it) != c.end() )
-        {
-            os << ",";
-        }
-    }
-    os << ")";
-    return os;
-}
+#include <sudoku/util.hpp>
 
 
 evilquinn::sudoku::square::square( coord pos, const size_t num_candidates )
@@ -45,9 +13,6 @@ evilquinn::sudoku::square::square( coord pos, const size_t num_candidates )
     }
     validate();
 }
-
-} // end namespace sudoku
-} // end namespace evilquinn
 
 boost::optional<size_t> evilquinn::sudoku::square::value() const
 {
@@ -83,9 +48,9 @@ void evilquinn::sudoku::square::validate()
 {
     if ( candidates_.empty() )
     {
-        std::string error(
-            sudoku::to_string( pos_ ).append( " candidate list is empty." ) );
-        throw illegal_square( error );
+        std::ostringstream error;
+        error << pos_ << " candidate list is empty";
+        throw illegal_square( error.str() );
     }
 }
 
@@ -128,7 +93,7 @@ void evilquinn::sudoku::square::set( size_t value )
 std::string evilquinn::sudoku::square::to_string() const
 {
     std::ostringstream as_string;
-    as_string << sudoku::to_string( pos_ ) << "(" << candidates_.size()
+    as_string << pos_ << "(" << candidates_.size()
               << ",";
     if ( candidates_.size() == 1 )
     {

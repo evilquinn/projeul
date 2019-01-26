@@ -51,11 +51,11 @@ void evilquinn::sudoku::grid::set( const coord pos, const size_t value )
 std::string evilquinn::sudoku::grid::to_string() const
 {
     std::ostringstream as_string;
-    for ( auto&& row : squares_ )
+    for ( size_t y = 0; y < dim_.y; ++y )
     {
-        for ( auto&& square : row )
+        for ( size_t x = 0; x < dim_.x; ++x )
         {
-            as_string << square.to_string() << ",";
+            as_string << squares_[x][y].to_string() << ",";
         }
         as_string << "\n";
     }
