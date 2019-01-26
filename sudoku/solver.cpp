@@ -107,7 +107,7 @@ evilquinn::sudoku::solver::for_each( const coord_sequence& sequence,
     return std::move( op );
 }
 
-void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
+void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
 {
     auto pos  = sq.pos();
     auto dims = grid_.get_dimensions();
@@ -126,7 +126,7 @@ void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
     {
         if ( coord_cand_entry.first.size() == coord_cand_entry.second.size() )
         {
-            // we've detected naked tuples, these are the only solutions for
+            // we've detected hidden tuples, these are the only solutions for
             // these coords
             for ( auto&& coord : coord_cand_entry.first )
             {
@@ -162,7 +162,7 @@ void evilquinn::sudoku::solver::naked_hidden_tuples()
     }
 }
 
-void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
+void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
 {
     auto pos  = sq.pos();
     auto dims = grid_.get_dimensions();
@@ -174,16 +174,74 @@ void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
                          std::ref(coord_cand_cache) ) );
 
     std::map<square::candidate_set, std::set<coord> > cand_coord_cache{};
-    for ( auto&& coord_cand_entry : coord_cand_cache )
+    for ( auto it = coord_cand_cache.begin(); it != coord_cand_cache.end(); ++it )
     {
-        auto& coord_set = cand_coord_cache[coord_cand_entry.second];
-        coord_set.insert(coord_cand_entry.first);
+        auto& coord_set = cand_coord_cache[it->second];
+        coord_set.insert(it->first);
+
+        /*
+         * BOOM!
+         * this might be madness, bear with me
+         *
+         * .. waste of time for solved squares
+         */
+        if ( grid_.at(it->first).value() )
+        {
+            continue;
+        }
+        square::candidate_set acca_cands = it->second;
+        std::set<coord> acca_coords;
+        acca_coords.insert(it->first);
+        for ( auto dit = coord_cand_cache.begin(); dit != coord_cand_cache.end(); ++dit )
+        {
+            // not interested in solved squares
+            if ( grid_.at(dit->first).value() )
+            {
+                continue;
+            }
+            if ( dit->first <= it->first )
+            {
+                // accumulate
+                acca_coords.insert(dit->first);
+                for ( auto&& candidate : dit->second )
+                {
+                    acca_cands.insert(candidate);
+                }
+            }
+            else if ( dit->first > it->first )
+            {
+                // add current row to dit and insert
+                square::candidate_set cands = it->second;
+                for ( auto&& candidate : dit->second )
+                {
+                    cands.insert(candidate);
+                }
+                cand_coord_cache[cands].insert(it->first);
+                cand_coord_cache[cands].insert(dit->first);
+
+                // then
+                // add what we acca'd with dit to dit now and insert
+                cands.clear();
+                std::set_union(dit->second.begin(), dit->second.end(), acca_cands.begin(), acca_cands.end(), std::inserter(cands, cands.begin()));
+                cand_coord_cache[cands].insert(dit->first);
+                for ( auto&& coord : acca_coords )
+                {
+                    cand_coord_cache[cands].insert(coord);
+                }
+            }
+        }
     }
+
+    //for ( auto&& coord_cand_entry : coord_cand_cache )
+    //{
+    //    auto& coord_set = cand_coord_cache[coord_cand_entry.second];
+    //    coord_set.insert(coord_cand_entry.first);
+    //}
     for ( auto&& cand_coord_entry : cand_coord_cache )
     {
         if ( cand_coord_entry.first.size() == cand_coord_entry.second.size() )
         {
-            // we've detected hidden tuples, eliminate those options from
+            // we've detected naked tuples, eliminate those options from
             // others in range
             for_each( axis_range, [&](square& sq)
             {

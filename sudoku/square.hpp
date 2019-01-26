@@ -20,6 +20,18 @@ struct coord
     {
         return x < rhs.x ? true : x == rhs.x && y < rhs.y ? true : false;
     }
+    bool operator==( const coord& rhs ) const
+    {
+        return x == rhs.x && y == rhs.y;
+    }
+    bool operator<=( const coord& rhs ) const
+    {
+        return operator<(rhs) || operator==(rhs);
+    }
+    bool operator>( const coord& rhs ) const
+    {
+        return  ! operator<=(rhs);
+    }
 };
 std::string to_string( const coord& c );
 
