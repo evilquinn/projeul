@@ -60,3 +60,22 @@ std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
     }
     return os;
 }
+
+size_t evilquinn::sudoku::grid::count_remaining() const
+{
+    size_t total = 0;
+    for ( auto&& line : squares_ )
+    {
+        for ( auto&& square : line )
+        {
+            total += square.candidates().size();
+        }
+    }
+    total -= 81;
+    return total;
+}
+
+bool evilquinn::sudoku::grid::solved() const
+{
+    return count_remaining() == 0;
+}

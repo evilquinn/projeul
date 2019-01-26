@@ -21,9 +21,9 @@ public:
     void set( coord pos, size_t value );
     square& at( coord pos );
     dimensions get_dimensions() const;
+    size_t count_remaining() const;
+    bool solved() const;
     std::ostream& stream_out( std::ostream& os ) const;
-
-    std::string to_string() const;
 
 private:
     dimensions dim_;
