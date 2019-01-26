@@ -105,26 +105,6 @@ evilquinn::sudoku::solver::for_each( const coord_sequence& sequence,
     return std::move( op );
 }
 
-evilquinn::sudoku::solver::square_operation
-evilquinn::sudoku::solver::for_each( coord_range range, square_operation op )
-{
-    for ( size_t x = range.first.x; x < range.second.x; ++x )
-    {
-        for ( size_t y = range.first.y; y < range.second.y; ++y )
-        {
-            op( grid_.at( { x, y } ) );
-        }
-    }
-    return std::move( op );
-}
-
-evilquinn::sudoku::solver::square_operation
-evilquinn::sudoku::solver::for_each( square_operation op )
-{
-    return for_each( coord_range{ { 0, 0 }, grid_.get_dimensions() },
-                     std::move( op ) );
-}
-
 void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
 {
     auto pos  = sq.pos();

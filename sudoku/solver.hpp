@@ -26,8 +26,6 @@ public:
     using square_operation = std::function<void( square& s )>;
     using coord_range      = std::pair<coord, coord>;
     using coord_sequence   = std::vector<coord>;
-    square_operation for_each( square_operation op );
-    square_operation for_each( coord_range range, square_operation op );
     square_operation for_each( const coord_sequence& sequence,
                                square_operation op );
     void naked_hidden_tuples();
