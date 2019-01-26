@@ -57,7 +57,7 @@ solver::coord_sequence axis_range_from_coord( coord pos,
         size_t x_start         = ( pos.x / nonet_side_size ) * nonet_side_size;
         size_t y_start         = ( pos.y / nonet_side_size ) * nonet_side_size;
         size_t x_lim           = x_start + nonet_side_size;
-        size_t y_lim           = x_start + nonet_side_size;
+        size_t y_lim           = y_start + nonet_side_size;
         for ( size_t x = x_start; x < x_lim; ++x )
         {
             for ( size_t y = y_start; y < y_lim; ++y )
@@ -144,19 +144,19 @@ void evilquinn::sudoku::solver::naked_hidden_tuples()
     };
     for ( auto&& axis_pair : axis_pairs )
     {
-        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-                   std::bind( &solver::naked_tuples_in_axis,
-                              this,
-                              std::placeholders::_1,
-                              axis_pair.second ) );
-    }
-    for ( auto&& axis_pair : axis_pairs )
-    {
 //        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-//                   std::bind( &solver::hidden_tuples_in_axis,
+//                   std::bind( &solver::naked_tuples_in_axis,
 //                              this,
 //                              std::placeholders::_1,
 //                              axis_pair.second ) );
+    }
+    for ( auto&& axis_pair : axis_pairs )
+    {
+        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
+                   std::bind( &solver::hidden_tuples_in_axis,
+                              this,
+                              std::placeholders::_1,
+                              axis_pair.second ) );
     }
 }
 
@@ -165,7 +165,8 @@ void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
     auto pos  = sq.pos();
     auto dims = grid_.get_dimensions();
     util::coord_candidate_map coord_cand_cache{};
-    for_each( util::axis_range_from_coord( pos, dims, ax ),
+    auto axis_range = util::axis_range_from_coord( pos, dims, ax ); //re-used
+    for_each( axis_range,
               std::bind( &util::cache_candidates_for_coord,
                          std::placeholders::_1,
                          std::ref(coord_cand_cache) ) );
@@ -182,8 +183,7 @@ void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
         {
             // we've detected hidden tuples, eliminate those options from
             // others in range
-            for_each( util::axis_range_from_coord( pos, dims, ax ),
-                      [&](square& sq)
+            for_each( axis_range, [&](square& sq)
             {
                 if ( cand_coord_entry.second.find(sq.pos()) == cand_coord_entry.second.end() )
                 {
