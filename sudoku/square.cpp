@@ -38,7 +38,9 @@ void evilquinn::sudoku::square::eliminate( size_t candidate )
 {
     if ( candidates_.size() == 1 && *candidates_.begin() == candidate )
     {
-        return;
+        std::ostringstream error;
+        error << pos_ << " eliminating " << candidate << " would result in no candidates";
+        throw illegal_square( error.str() );
     }
     candidates_.erase( candidate );
     validate();

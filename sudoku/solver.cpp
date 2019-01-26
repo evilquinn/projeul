@@ -81,7 +81,9 @@ solver::coord_sequence axis_range_from_coord( coord pos,
     }
     default:
     {
-        // should probably throw instead...meh
+        std::ostringstream error;
+        error << "unknown value for axis: " << static_cast<size_t>(ax);
+        throw std::runtime_error(error.str());
     }  // end default
     }  // end switch
 
