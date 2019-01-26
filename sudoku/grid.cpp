@@ -48,16 +48,15 @@ void evilquinn::sudoku::grid::set( const coord pos, const size_t value )
     at( pos ).set( value );
 }
 
-std::string evilquinn::sudoku::grid::to_string() const
+std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
 {
-    std::ostringstream as_string;
     for ( size_t y = 0; y < dim_.y; ++y )
     {
         for ( size_t x = 0; x < dim_.x; ++x )
         {
-            as_string << squares_[x][y].to_string() << ",";
+            os << squares_[x][y]; // << ",";
         }
-        as_string << "\n";
+        os << "\n";
     }
-    return as_string.str();
+    return os;
 }

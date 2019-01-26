@@ -36,7 +36,7 @@ public:
     coord pos() const;
     const candidate_set& candidates() const;
 
-    std::string to_string() const;
+    std::ostream& stream_out(std::ostream& os) const;
 
     class illegal_square : public std::runtime_error
     {
@@ -56,5 +56,10 @@ private:
 
 }  // end namespace sudoku
 }  // namespace evilquinn
+
+inline std::ostream& operator<<( std::ostream& os, const evilquinn::sudoku::square& sq)
+{
+    return sq.stream_out(os);
+}
 
 #endif  // SUDOKU_SQUARE_HPP

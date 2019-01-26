@@ -90,19 +90,17 @@ void evilquinn::sudoku::square::set( size_t value )
     eliminate( cands_copy );
 }
 
-std::string evilquinn::sudoku::square::to_string() const
+std::ostream& evilquinn::sudoku::square::stream_out(std::ostream& os) const
 {
-    std::ostringstream as_string;
-    as_string << pos_ << "(" << candidates_.size()
-              << ",";
+//    os << pos_ << "(" << candidates_.size() << ",";
     if ( candidates_.size() == 1 )
     {
-        as_string << *candidates_.begin();
+        os << *candidates_.begin();
     }
     else
     {
-        as_string << "*";
+        os << "*";
     }
-    as_string << ")";
-    return as_string.str();
+    os << "|";
+    return os;
 }

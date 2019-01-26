@@ -3,7 +3,6 @@
 #include <sudoku/grid.hpp>
 #include <sudoku/grid_reader.hpp>
 #include <sudoku/solver.hpp>
-#include <sudoku/square.hpp>
 #include <signal_handler/signal_handler.hpp>
 
 int main()
@@ -15,7 +14,7 @@ int main()
     while ( auto grid_from_file = reader.getgrid() )
     {
         evilquinn::sudoku::solver( *grid_from_file ).solve();
-        std::cout << grid_from_file->to_string() << std::endl;
+        std::cout << *grid_from_file << std::endl;
     }
 
     return 0;

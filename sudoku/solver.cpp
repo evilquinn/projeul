@@ -144,11 +144,11 @@ void evilquinn::sudoku::solver::naked_hidden_tuples()
     };
     for ( auto&& axis_pair : axis_pairs )
     {
-//        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-//                   std::bind( &solver::naked_tuples_in_axis,
-//                              this,
-//                              std::placeholders::_1,
-//                              axis_pair.second ) );
+        for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
+                   std::bind( &solver::naked_tuples_in_axis,
+                              this,
+                              std::placeholders::_1,
+                              axis_pair.second ) );
     }
     for ( auto&& axis_pair : axis_pairs )
     {

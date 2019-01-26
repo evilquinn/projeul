@@ -21,6 +21,7 @@ public:
     void set( coord pos, size_t value );
     square& at( coord pos );
     dimensions get_dimensions() const;
+    std::ostream& stream_out( std::ostream& os ) const;
 
     std::string to_string() const;
 
@@ -31,5 +32,10 @@ private:
 
 }  // end namespace sudoku
 }  // end namespace evilquinn
+
+inline std::ostream& operator<<( std::ostream& os, const evilquinn::sudoku::grid& grid)
+{
+    return grid.stream_out(os);
+}
 
 #endif  // SUDOKU_GRID_HPP
