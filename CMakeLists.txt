@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+enable_testing()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # CXX settings
@@ -47,6 +49,5 @@ target_link_libraries(projeul signal_handler
                               boost_program_options
                               exercises)
 
-enable_testing()
 add_subdirectory(test)
 add_subdirectory(profile)

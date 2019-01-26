@@ -26,6 +26,13 @@ set_target_properties(gtest PROPERTIES
                       IMPORTED_LOCATION ${INSTALL_DIR}/lib/libgtest.a)
 target_link_libraries(gtest INTERFACE googletest)
 
+
+add_library(gtest_main STATIC IMPORTED GLOBAL)
+add_dependencies(gtest_main googletest_dl)
+set_target_properties(gtest_main PROPERTIES
+                      IMPORTED_LOCATION ${INSTALL_DIR}/lib/libgtest_main.a)
+target_link_libraries(gtest_main INTERFACE gtest pthread)
+
 add_library(gmock STATIC IMPORTED GLOBAL)
 add_dependencies(gmock googletest_dl)
 set_target_properties(gmock PROPERTIES
