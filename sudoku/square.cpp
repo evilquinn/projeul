@@ -2,6 +2,40 @@
 #include <iostream>
 #include <sudoku/square.hpp>
 
+namespace evilquinn
+{
+namespace sudoku
+{
+
+std::ostream& operator<<( std::ostream& os, const coord& c )
+{
+    os << "[" << c.x << "," << c.y << "]";
+    return os;
+}
+
+std::string to_string( const coord& c )
+{
+    std::ostringstream as_string;
+    as_string << c;
+    return as_string.str();
+}
+
+std::ostream& operator<<( std::ostream& os, const square::candidate_set& c )
+{
+    os << "(";
+    for ( auto it = c.begin(); it != c.end(); ++it )
+    {
+        os << *it;
+        if ( std::next(it) != c.end() )
+        {
+            os << ",";
+        }
+    }
+    os << ")";
+    return os;
+}
+
+
 evilquinn::sudoku::square::square( coord pos, const size_t num_candidates )
     : pos_( pos ), candidates_()
 {
@@ -11,6 +45,9 @@ evilquinn::sudoku::square::square( coord pos, const size_t num_candidates )
     }
     validate();
 }
+
+} // end namespace sudoku
+} // end namespace evilquinn
 
 boost::optional<size_t> evilquinn::sudoku::square::value() const
 {
@@ -54,6 +91,12 @@ void evilquinn::sudoku::square::validate()
 
 void evilquinn::sudoku::square::eliminate( candidate_set candidates )
 {
+    if ( candidates_ == candidates )
+    {
+        std::ostringstream error;
+        error << pos_ << " eliminating candidates " << candidates << " would result in no candidates";
+        throw illegal_square( error.str() );
+    }
     for ( auto&& candidate : candidates )
     {
         candidates_.erase( candidate );
@@ -61,7 +104,17 @@ void evilquinn::sudoku::square::eliminate( candidate_set candidates )
     validate();
 }
 
-void evilquinn::sudoku::square::set_value( size_t value )
+void evilquinn::sudoku::square::set( candidate_set candidates )
+{
+    candidate_set intersection;
+    std::set_intersection(candidates_.begin(), candidates_.end(),
+                          candidates.begin(),  candidates.end(),
+                          std::inserter(intersection, intersection.begin()));
+    std::swap(candidates_, intersection);
+    validate();
+}
+
+void evilquinn::sudoku::square::set( size_t value )
 {
     if ( value == 0 )
     {
@@ -86,12 +139,5 @@ std::string evilquinn::sudoku::square::to_string() const
         as_string << "*";
     }
     as_string << ")";
-    return as_string.str();
-}
-
-std::string evilquinn::sudoku::to_string( const coord& c )
-{
-    std::ostringstream as_string;
-    as_string << "[" << c.x << "," << c.y << "]";
     return as_string.str();
 }

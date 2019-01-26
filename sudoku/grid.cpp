@@ -45,7 +45,7 @@ evilquinn::sudoku::square& evilquinn::sudoku::grid::at( const coord pos )
 
 void evilquinn::sudoku::grid::set( const coord pos, const size_t value )
 {
-    at( pos ).set_value( value );
+    at( pos ).set( value );
 }
 
 std::string evilquinn::sudoku::grid::to_string() const

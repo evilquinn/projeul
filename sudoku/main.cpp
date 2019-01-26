@@ -4,9 +4,11 @@
 #include <sudoku/grid_reader.hpp>
 #include <sudoku/solver.hpp>
 #include <sudoku/square.hpp>
+#include <signal_handler/signal_handler.hpp>
 
 int main()
 {
+    evilquinn::register_signal_handler();
     evilquinn::sudoku::grid_reader reader(
         "/home/evilquinn/git/projeul/sudoku/p096_sudoku.txt" );
 

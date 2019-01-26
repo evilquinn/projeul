@@ -30,7 +30,8 @@ public:
     using candidate_set = std::set<size_t>;
     void eliminate( size_t candidate );
     void eliminate( candidate_set candidates );
-    void set_value( size_t value );
+    void set( candidate_set candidates );
+    void set( size_t value );
     boost::optional<size_t> value() const;
     coord pos() const;
     const candidate_set& candidates() const;

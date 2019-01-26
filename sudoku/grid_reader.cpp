@@ -46,7 +46,7 @@ evilquinn::sudoku::grid_reader::getgrid()
         }
         for ( size_t x = 0; x < dim_x; ++x )
         {
-            current.at( { x, y } ).set_value( line[x] - '0' );
+            current.at( { x, y } ).set( line[x] - '0' );
         }
     }
     return current;
