@@ -43,7 +43,6 @@ void evilquinn::sudoku::square::eliminate( size_t candidate )
         throw illegal_square( error.str() );
     }
     candidates_.erase( candidate );
-    validate();
 }
 
 void evilquinn::sudoku::square::validate()
@@ -78,7 +77,6 @@ void evilquinn::sudoku::square::set( candidate_set candidates )
                           candidates.begin(),  candidates.end(),
                           std::inserter(intersection, intersection.begin()));
     std::swap(candidates_, intersection);
-    validate();
 }
 
 void evilquinn::sudoku::square::set( size_t value )
@@ -94,7 +92,6 @@ void evilquinn::sudoku::square::set( size_t value )
 
 std::ostream& evilquinn::sudoku::square::stream_out(std::ostream& os) const
 {
-//    os << pos_ << "(" << candidates_.size() << ",";
     if ( candidates_.size() == 1 )
     {
         os << *candidates_.begin();

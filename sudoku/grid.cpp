@@ -44,11 +44,6 @@ evilquinn::sudoku::square& evilquinn::sudoku::grid::at( const coord pos )
     return squares_[pos.x][pos.y];
 }
 
-void evilquinn::sudoku::grid::set( const coord pos, const size_t value )
-{
-    at( pos ).set( value );
-}
-
 std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
 {
     static const char* underline = "\033[4m";

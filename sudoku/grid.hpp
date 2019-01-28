@@ -18,7 +18,6 @@ public:
     using line   = std::vector<square>;
     using matrix = std::vector<line>;
 
-    void set( coord pos, size_t value );
     square& at( coord pos );
     dimensions get_dimensions() const;
     size_t count_remaining() const;
