@@ -66,17 +66,18 @@ std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
             {
                 // if next column is beginning of nonet, put a bar after this
                 // column
+                // but don't underline last bar
+                if ( underlining && x + 1 == dim_.x )
+                {
+                    underlining = false;
+                    os << underline_off;
+                }
                 os << "|";
             }
             else
             {
                 os << " ";
             }
-        }
-        if ( underlining )
-        {
-            underlining = false;
-            os << underline_off;
         }
         os << "\n";
     }
