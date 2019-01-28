@@ -87,9 +87,9 @@ void evilquinn::sudoku::square::set( size_t value )
     {
         return;
     }
-    auto cands_copy = candidates_;
-    cands_copy.erase( value );
-    eliminate( cands_copy );
+    candidate_set new_candidates;
+    new_candidates.insert(value);
+    std::swap(candidates_, new_candidates);
 }
 
 std::ostream& evilquinn::sudoku::square::stream_out(std::ostream& os) const
@@ -103,6 +103,5 @@ std::ostream& evilquinn::sudoku::square::stream_out(std::ostream& os) const
     {
         os << "*";
     }
-    os << "|";
     return os;
 }

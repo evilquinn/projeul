@@ -183,15 +183,14 @@ void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
          * BOOM!
          * this might be madness, bear with me
          *
-         * .. waste of time for solved squares
+         * .. waste of time for solved squares or squares full of candidates
          */
         if ( grid_.at(it->first).value() )
         {
             continue;
         }
-        square::candidate_set acca_cands = it->second;
+        square::candidate_set acca_cands;
         std::set<coord> acca_coords;
-        acca_coords.insert(it->first);
         for ( auto dit = coord_cand_cache.begin(); dit != coord_cand_cache.end(); ++dit )
         {
             // not interested in solved squares
