@@ -5,6 +5,8 @@ add_library ( sudoku square.cpp
                      solver.cpp
                      util.cpp )
 
+target_link_libraries ( sudoku PUBLIC boost )
+
 add_executable ( solver main.cpp )
 
 target_link_libraries ( solver sudoku
