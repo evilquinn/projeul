@@ -41,6 +41,7 @@ add_subdirectory(mdinphi)
 add_subdirectory(cigsmoke)
 add_subdirectory(log_file_stream)
 add_subdirectory(sudoku)
+add_subdirectory(resolver)
 
 
 add_executable(projeul main.cpp)
