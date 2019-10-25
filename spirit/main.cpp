@@ -1,73 +1,48 @@
 #include <boost/spirit/include/qi.hpp>
-#include <boost/variant.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
 #include <string>
-#include <vector>
+#include <boost/optional.hpp>
 #include <iostream>
-
-using namespace boost::spirit;
-
-typedef boost::variant<int, bool> int_or_bool;
-
-struct int_or_bool_values
-{
-    int_or_bool first;
-    std::vector<int_or_bool> others;
-};
-
-BOOST_FUSION_ADAPT_STRUCT(
-    int_or_bool_values,
-    (int_or_bool, first)
-    (std::vector<int_or_bool>, others)
-)
+#include <vector>
 
 template <typename Iterator>
-struct no_spaces_grammar : qi::grammar<Iterator, int_or_bool_values()>
+struct sku_grammar : boost::spirit::qi::grammar<Iterator,
+                                                boost::optional<std::string>()>
 {
-    no_spaces_grammar() : no_spaces_grammar::base_type{values}
+    sku_grammar() : sku_grammar::base_type{ra_text}
     {
-        value = qi::int_ | qi::bool_;
-        values = value >> ',' >> value % ',';
+        text %= +(boost::spirit::ascii::char_ - ']');
+        opt_text %= -text;
+        ra_text %= '[' >> opt_text >> ']';
     }
 
-    qi::rule<Iterator, int_or_bool()> value;
-    qi::rule<Iterator, int_or_bool_values()> values;
-};
-
-template <typename Iterator, typename Skipper>
-struct my_grammar : qi::grammar<Iterator, int_or_bool_values(), Skipper>
-{
-    my_grammar() : my_grammar::base_type{values}
-    {
-        value = qi::int_ | qi::bool_;
-        values = value >> ',' >> value % ',';
-    }
-
-    qi::rule<Iterator, int_or_bool(), Skipper> value;
-    qi::rule<Iterator, int_or_bool_values(), Skipper> values;
-};
-
-struct print : public boost::static_visitor<>
-{
-    template <typename T>
-    void operator()(T t) const
-    {
-        std::cout << std::boolalpha << t << ';';
-    }
+    boost::spirit::qi::rule<Iterator, std::string()> text;
+    boost::spirit::qi::rule<Iterator, boost::optional<std::string>()> opt_text;
+    boost::spirit::qi::rule<Iterator, boost::optional<std::string>()> ra_text;
 };
 
 int main()
 {
-    std::string s = "1,2,3,true,4,false,5";
-    auto it = s.begin();
-    my_grammar<std::string::iterator, ascii::space_type> g;
-    no_spaces_grammar<std::string::iterator> h;
-    int_or_bool_values v;
-    if (qi::parse(it, s.end(), h, v))
+    std::string s = "[]";
+    std::vector<std::string> inputs = {
+        "[]",
+        "[ra_text]",
+        "[[[[text]"
+        "[[[[text]]]"
+    };
+
+    for ( auto&& s : inputs )
     {
-        print p;
-        boost::apply_visitor(p, v.first);
-        for (const auto &elem : v.others)
-            boost::apply_visitor(p, elem);
+        std::cout << s << " -> ";
+        auto it = s.begin();
+        sku_grammar<std::string::iterator> h;
+        boost::optional<std::string> result;
+        if (boost::spirit::qi::parse(it, s.end(), h, result))
+        {
+            std::cout << (result ? *result : std::string("empty")) << std::endl;
+        }
+        else
+        {
+            std::cout << "no match" << std::endl;
+        }
     }
 }
