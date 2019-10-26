@@ -1,5 +1,6 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
 #include <string>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
@@ -10,6 +11,12 @@ struct c_text_data
 {
     char colour;
     boost::optional<std::string> opt_text;
+};
+
+enum class text_colour
+{
+    red,
+    undef
 };
 
 typedef boost::optional<std::string> optional_text;
@@ -63,23 +70,19 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 template <typename Iterator>
 struct sku_grammar : boost::spirit::qi::grammar<Iterator,
-                                                opt_or_c_text()>
+                                                std::string()>
 {
-    sku_grammar() : sku_grammar::base_type{either_or}
+    sku_grammar() : sku_grammar::base_type{text}
     {
-        text %= +( ( boost::spirit::ascii::char_ - ']') - ')' );
-        opt_text %= -text;
-        c_text %= '_' >> boost::spirit::ascii::char_ >> '(' >> opt_text >> ')';
-        ra_text %= '[' >> opt_text >> ']';
-        either_or %= c_text | ra_text;
-
+        text =
+            boost::spirit::qi::eps[boost::spirit::qi::_val = ""] >>
+            (
+                +( ( boost::spirit::ascii::char_ - ']') - ')' )[
+                    boost::spirit::qi::_val += boost::spirit::qi::_1]
+            );
     }
 
     boost::spirit::qi::rule<Iterator, std::string()> text;
-    boost::spirit::qi::rule<Iterator, boost::optional<std::string>()> opt_text;
-    boost::spirit::qi::rule<Iterator, c_text_data()> c_text;
-    boost::spirit::qi::rule<Iterator, boost::optional<std::string>()> ra_text;
-    boost::spirit::qi::rule<Iterator, opt_or_c_text()> either_or;
 };
 
 int main()
@@ -102,9 +105,10 @@ int main()
         boost::optional<std::string> result;
         c_text_data c_result;
         opt_or_c_text o_result;
-        if (boost::spirit::qi::parse(it, s.end(), h, o_result))
+        std::string s_result;
+        if (boost::spirit::qi::parse(it, s.end(), h, s_result))
         {
-            std::cout << "matched: " << o_result;
+            std::cout << "matched: " << s_result;
             if ( it != s.end() )
             {
                 std::cout << ", remaining: \""
