@@ -6,6 +6,7 @@ ExternalProject_Add(googletest_dl
     GIT_REPOSITORY https://github.com/google/googletest
     GIT_TAG release-1.8.0
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+               -DCMAKE_INSTALL_MESSAGE=LAZY
     BUILD_BYPRODUCTS ${INSTALL_DIR}/lib/libgmock.a
                      ${INSTALL_DIR}/lib/libgmock_main.a
                      ${INSTALL_DIR}/lib/libgtest.a
