@@ -68,21 +68,18 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-template <typename Iterator>
+template <typename Iterator, typename Value>
 struct sku_grammar : boost::spirit::qi::grammar<Iterator,
-                                                std::string()>
+                                                Value()>
 {
     sku_grammar() : sku_grammar::base_type{text}
     {
         text =
-            boost::spirit::qi::eps[boost::spirit::qi::_val = ""] >>
-            (
-                +( ( boost::spirit::ascii::char_ - ']') - ')' )[
-                    boost::spirit::qi::_val += boost::spirit::qi::_1]
-            );
+            +( ( boost::spirit::ascii::char_ - ']') - ')' )[
+                     boost::spirit::qi::_val << boost::spirit::qi::_1];
     }
 
-    boost::spirit::qi::rule<Iterator, std::string()> text;
+    boost::spirit::qi::rule<Iterator, Value()> text;
 };
 
 int main()
@@ -101,14 +98,21 @@ int main()
     {
         std::cout << s << " -> ";
         auto it = s.begin();
-        sku_grammar<std::string::iterator> h;
         boost::optional<std::string> result;
         c_text_data c_result;
         opt_or_c_text o_result;
         std::string s_result;
-        if (boost::spirit::qi::parse(it, s.end(), h, s_result))
+        std::ostringstream ss_result;
+
+        sku_grammar<std::string::iterator,
+                    std::ostringstream> h;
+        if (boost::spirit::qi::parse(
+               it,
+               s.end(),
+               h,
+               ss_result))
         {
-            std::cout << "matched: " << s_result;
+            std::cout << "matched: " << ss_result.str();
             if ( it != s.end() )
             {
                 std::cout << ", remaining: \""
