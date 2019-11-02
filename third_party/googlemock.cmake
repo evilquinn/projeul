@@ -9,6 +9,7 @@ ExternalProject_Add(googletest_dl
                -DCMAKE_INSTALL_MESSAGE=LAZY
     BUILD_BYPRODUCTS ${INSTALL_DIR}/lib/libgmock.a
                      ${INSTALL_DIR}/lib/libgmock_main.a
+                     ${INSTALL_DIR}/lib/libgtest_main.a
                      ${INSTALL_DIR}/lib/libgtest.a
 )
 
