@@ -51,6 +51,7 @@ add_subdirectory(sudoku)
 add_subdirectory(spirit)
 add_subdirectory(quoted)
 add_subdirectory(resolver)
+add_subdirectory(rulez)
 
 
 add_executable(projeul main.cpp)
