@@ -104,7 +104,7 @@ evilquinn::sudoku::solver::for_each( const coord_sequence& sequence,
     {
         op( grid_.at( coord ) );
     }
-    return std::move( op );
+    return op;
 }
 
 void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )

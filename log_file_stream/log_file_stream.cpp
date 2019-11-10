@@ -62,7 +62,7 @@ IStream& getlogline(IStream& log_stream, std::string& log_line)
         first_line = false;
     }
     // return whatever we got
-    log_line = std::move(line_acca.str());
+    log_line = line_acca.str();
     if ( !log_line.empty() )
     {
         // if we captured something, make sure we return a "good" state

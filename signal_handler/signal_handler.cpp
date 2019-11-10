@@ -1,6 +1,7 @@
 #include <boost/stacktrace.hpp>
 #include <iostream>
 #include <signal_handler.hpp>
+#include <string.h>
 
 namespace evilquinn
 {
