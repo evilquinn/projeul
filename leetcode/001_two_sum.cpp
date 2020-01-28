@@ -12,9 +12,7 @@
  */
 #include <iostream>
 #include <vector>
-#include <unordered_set>
 #include <unordered_map>
-#include <map>
 #include <utility>
 #include <algorithm>
 
@@ -26,6 +24,10 @@ std::ostream& operator<< (std::ostream& os, const std::vector<int>& elements)
         os << sep << element;
         sep = ", ";
     }
+    if ( elements.empty() )
+    {
+        os << sep;
+    }
     return os << "]";
 }
 
@@ -34,25 +36,29 @@ public:
     std::vector<int> two_sum(std::vector<int>& nums, int target)
     {
         std::vector<int> result;
-        std::unordered_set<int> nums_hash;
-        int i = 0;
-        std::copy(nums.begin(),
-                  nums.end(),
-                  std::inserter(nums_hash, nums_hash.begin()));
-        const auto& nums_start = std::begin(nums_hash);
-        for ( auto it = nums_start; it != std::end(nums_hash); ++it )
-        {
-            auto find_begin = it;
-            auto found = std::find(++find_begin,
-                                   std::end(nums_hash),
-                                   target-(*it));
-            if ( found != std::end(nums_hash) )
-            {
-                result.emplace_back(*it);
-                result.emplace_back(*found);
-                return result;
-            }
-        }
+        std::unordered_map<int, int> nums_hash;
+        int idx = 0;
+        std::transform(nums.begin(),
+                       nums.end(),
+                       std::inserter(nums_hash, nums_hash.begin()),
+                       [&idx](const int& val)
+                       {
+                           return std::make_pair(val, idx++);
+                       });
+        std::find_if(nums_hash.begin(),
+                     nums_hash.end(),
+                     [&](const std::pair<int, int>& val)
+                     {
+                         const auto complement = target - ( val.first );
+                         const auto found = nums_hash.find(complement);
+                         if ( found != std::end(nums_hash) )
+                         {
+                             result.emplace_back(val.second);
+                             result.emplace_back(found->second);
+                             return true;
+                         }
+                         return false;
+                     });
         return result;
     }
 };
