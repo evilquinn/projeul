@@ -28,9 +28,11 @@ if ( ${ENABLE_COVERAGE} )
 endif()
 
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
+option(BUILD_TESTS "Builds tests" OFF) # tests? pfft.
 
 message("CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 message("BUILD_BOOST=${BUILD_BOOST}")
+message("BUILD_TESTS=${BUILD_TESTS}")
 message("ENABLE_COVERAGE=${ENABLE_COVERAGE}")
 
 add_subdirectory(third_party)
@@ -62,5 +64,9 @@ target_link_libraries(projeul signal_handler
                               boost_program_options
                               exercises)
 
-add_subdirectory(test)
-add_subdirectory(profile)
+if ( ${BUILD_TESTS} )
+
+    add_subdirectory(test)
+    add_subdirectory(profile)
+
+endif()

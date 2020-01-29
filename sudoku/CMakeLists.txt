@@ -11,5 +11,6 @@ add_executable ( solver main.cpp )
 
 target_link_libraries ( solver sudoku
                                signal_handler )
-
+if ( ${BUILD_TESTS} )
 add_subdirectory ( test )
+endif()
