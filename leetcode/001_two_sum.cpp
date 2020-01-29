@@ -35,28 +35,21 @@ class solution {
 public:
     std::vector<int> two_sum(std::vector<int>& nums, int target)
     {
+        std::cout << "input: " << nums << ", goal: " << target << std::endl;
         std::vector<int> result;
         std::unordered_map<int, int> nums_hash;
-        int idx = 0;
-        std::transform(nums.begin(),
-                       nums.end(),
-                       std::inserter(nums_hash, nums_hash.begin()),
-                       [&idx](const int& val)
-                       {
-                           return std::make_pair(val, idx++);
-                       });
-        std::find_if(nums_hash.begin(),
-                     nums_hash.end(),
-                     [&](const std::pair<int, int>& val)
+        int idx = -1;
+        std::find_if(nums.begin(),
+                     nums.end(),
+                     [&](const int& val)
                      {
-                         const auto complement = target - ( val.first );
-                         const auto found = nums_hash.find(complement);
+                         auto found = nums_hash.find(target-val);
                          if ( found != std::end(nums_hash) )
                          {
-                             result.emplace_back(val.second);
-                             result.emplace_back(found->second);
+                             result = { found->second, ++idx };
                              return true;
                          }
+                         nums_hash.insert({ val, ++idx });
                          return false;
                      });
         return result;
@@ -65,8 +58,11 @@ public:
 
 int main()
 {
-    auto nums = std::vector<int>{ 2, 7, 11, 15 };
-    auto result = solution().two_sum(nums, 9);
-    std::cout << result << std::endl;
-    std::cout << nums << std::endl;
+    auto nums = std::unordered_map<int, std::vector<int> >{ { 9, { 2, 7, 11, 15 } }, { 6, { 3, 3 } } };
+    for ( auto&& inputs : nums )
+    {
+        std::cout << "input: " << inputs.second << ", goal: " << inputs.first << std::endl;
+        auto result = solution().two_sum(inputs.second, inputs.first);
+        std::cout << "result: " << result << std::endl;
+    }
 }
