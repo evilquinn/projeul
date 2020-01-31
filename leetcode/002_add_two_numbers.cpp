@@ -94,18 +94,17 @@ public:
             {
                 if ( !l1->next )
                 {
-                    l1->next = new ListNode( l1->val % 10 );
+                    l1->next = new ListNode( 1 );
                 }
                 else
                 {
-                    l1->next->val += l1->val % 10;
+                    ++l1->next->val;
                 }
-                l1->val /= 10;
+                l1->val -= 10;
             }
             l1 = l1->next;
             if ( l2 ) { l2 = l2->next; }
         }
-
         return result;
     }
 };
