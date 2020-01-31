@@ -85,8 +85,28 @@ public:
     }
     ListNode* add_two_numbers(ListNode* l1, ListNode* l2)
     {
+        ListNode* result = l1;
+        while(l1 != NULL || l2 != NULL)
+        {
+            if ( l1 == NULL ) { std::swap(l1, l2); }
+            l1->val += l2 ? l2->val : 0;
+            if ( l1->val >= 10 )
+            {
+                if ( !l1->next )
+                {
+                    l1->next = new ListNode( l1->val % 10 );
+                }
+                else
+                {
+                    l1->next->val += l1->val % 10;
+                }
+                l1->val /= 10;
+            }
+            l1 = l1->next;
+            if ( l2 ) { l2 = l2->next; }
+        }
 
-        return int_to_listnode(listnode_to_int(l1) + listnode_to_int(l2));
+        return result;
     }
 };
 
@@ -94,13 +114,14 @@ int main()
 {
  //* Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
  //* Output: 7 -> 0 -> 8
-    ListNode* l1 = solution().int_to_listnode(342);
-    ListNode* l2 = solution().int_to_listnode(465);
-    ListNode* result = solution().add_two_numbers(l1, l2);
+    //ListNode* l1 = solution().int_to_listnode(342);
+    //ListNode* l2 = solution().int_to_listnode(465);
+    ListNode* l1 = solution().int_to_listnode(340700242);
+    ListNode* l2 = solution().int_to_listnode(4885365);
     std::cout << "l1: " << l1 << ", as int: " << solution().listnode_to_int(l1) << std::endl;
     std::cout << "l2: " << l2 << ", as int: " << solution().listnode_to_int(l2) << std::endl;
+    ListNode* result = solution().add_two_numbers(l1, l2);
     std::cout << "re: " << result << ", as int: " << solution().listnode_to_int(result) << std::endl;
     delete l1;
     delete l2;
-    delete result;
 }
