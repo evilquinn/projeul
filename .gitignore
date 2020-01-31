@@ -3,3 +3,4 @@ tags
 static_analysis
 CMakeLists.txt.user
 .idea/
+.vscode/

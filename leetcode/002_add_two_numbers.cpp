@@ -65,8 +65,8 @@ public:
             return new ListNode(0);
         }
         ListNode* result = NULL;
-        ListNode* n;
-        ListNode* p;
+        ListNode* n = NULL;
+        ListNode* p = NULL;
         while ( i > 0 )
         {
             p = n;
@@ -85,21 +85,22 @@ public:
     }
     ListNode* add_two_numbers(ListNode* l1, ListNode* l2)
     {
-        return NULL;
+
+        return int_to_listnode(listnode_to_int(l1) + listnode_to_int(l2));
     }
 };
 
 int main()
 {
-    ListNode l1(3);
-    ListNode l2(2);
-    l1.next = &l2;
-    auto result = solution().add_two_numbers(&l1, &l2);
-    std::cout << "l1: " << &l1 << ", as int: " << solution().listnode_to_int(&l1) << std::endl;
-    std::cout << "l2: " << &l2 << ", as int: " << solution().listnode_to_int(&l2) << std::endl;
-    int k = 12345432;
-    ListNode* l3 = solution().int_to_listnode(k);
-    std::cout << "l3: " << l3 << ", as int: " << solution().listnode_to_int(l3) << std::endl;
-    delete l3;
-
+ //* Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+ //* Output: 7 -> 0 -> 8
+    ListNode* l1 = solution().int_to_listnode(342);
+    ListNode* l2 = solution().int_to_listnode(465);
+    ListNode* result = solution().add_two_numbers(l1, l2);
+    std::cout << "l1: " << l1 << ", as int: " << solution().listnode_to_int(l1) << std::endl;
+    std::cout << "l2: " << l2 << ", as int: " << solution().listnode_to_int(l2) << std::endl;
+    std::cout << "re: " << result << ", as int: " << solution().listnode_to_int(result) << std::endl;
+    delete l1;
+    delete l2;
+    delete result;
 }
