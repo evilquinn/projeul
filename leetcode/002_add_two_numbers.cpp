@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <utility>
 #include <algorithm>
+#include <memory>
 
 /**
  *  * Definition for singly-linked list.
@@ -86,24 +87,28 @@ public:
     ListNode* add_two_numbers(ListNode* l1, ListNode* l2)
     {
         ListNode* result = l1;
-        while(l1 != NULL || l2 != NULL)
+        while( l1 != NULL )
         {
-            if ( l1 == NULL ) { std::swap(l1, l2); }
-            l1->val += l2 ? l2->val : 0;
+            if ( l2 )
+            {
+                l1->val += l2->val;
+                if ( !l1->next ) { std::swap(l1->next, l2->next); }
+                l2 = l2->next;
+            }
             if ( l1->val >= 10 )
             {
-                if ( !l1->next )
-                {
-                    l1->next = new ListNode( 1 );
-                }
-                else
+                l1->val -= 10;
+                if ( l1->next )
                 {
                     ++l1->next->val;
                 }
-                l1->val -= 10;
+                else
+                {
+                    l1->next = new ListNode(1);
+                    break;
+                }
             }
             l1 = l1->next;
-            if ( l2 ) { l2 = l2->next; }
         }
         return result;
     }
@@ -111,16 +116,14 @@ public:
 
 int main()
 {
- //* Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
- //* Output: 7 -> 0 -> 8
-    //ListNode* l1 = solution().int_to_listnode(342);
-    //ListNode* l2 = solution().int_to_listnode(465);
-    ListNode* l1 = solution().int_to_listnode(340700242);
-    ListNode* l2 = solution().int_to_listnode(4885365);
-    std::cout << "l1: " << l1 << ", as int: " << solution().listnode_to_int(l1) << std::endl;
-    std::cout << "l2: " << l2 << ", as int: " << solution().listnode_to_int(l2) << std::endl;
-    ListNode* result = solution().add_two_numbers(l1, l2);
-    std::cout << "re: " << result << ", as int: " << solution().listnode_to_int(result) << std::endl;
-    delete l1;
-    delete l2;
+    std::vector<std::pair<int, int> > nums = { { 342, 465 }, { 0, 37 }, { 1, 99 }, { 1, 999 } };
+    for ( auto&& num : nums )
+    {
+        std::unique_ptr<ListNode> l1(solution().int_to_listnode(num.first));
+        std::unique_ptr<ListNode> l2(solution().int_to_listnode(num.second));
+        std::cout << "l1: " << l1.get() << ", as int: " << solution().listnode_to_int(l1.get()) << std::endl;
+        std::cout << "l2: " << l2.get() << ", as int: " << solution().listnode_to_int(l2.get()) << std::endl;
+        ListNode* result = solution().add_two_numbers(l1.get(), l2.get());
+        std::cout << "re: " << result << ", as int: " << solution().listnode_to_int(result) << std::endl;
+    }
 }
