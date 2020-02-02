@@ -21,6 +21,7 @@
  */
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 #include <algorithm>
 #include <vector>
 
@@ -28,21 +29,25 @@ class solution {
 public:
     static int length_of_longest_substring(std::string s)
     {
-        std::vector<char> cache;
+        std::unordered_map<char, size_t> cache;
         size_t result = 0;
-        std::for_each(s.begin(), s.end(), [&cache, &result](char c)
+        size_t curr = 0;
+        size_t sidx = 0;
+        for(size_t i = 0; i < s.size(); ++i)
         {
-            auto in_cache = std::find(cache.begin(), cache.end(), c);
-            if ( in_cache != cache.end() )
+            if ( cache.find(s[i]) != cache.end() && cache[s[i]] >= sidx )
             {
-                result = std::max(result, cache.size());
-                cache.erase(cache.begin(), ++in_cache);
+                result = std::max(result, curr);
+                curr = i - cache[s[i]];
+                sidx = cache[s[i]] + 1;
             }
-            cache.emplace_back(c);
-            return;
-        });
-        result = std::max(result, cache.size());
-        return result;
+            else
+            {
+                ++curr;
+            }
+            cache[s[i]] = i;
+        }
+        return std::max(result, curr);
     }
 };
 
@@ -50,7 +55,8 @@ int main()
 {
     std::vector<std::string> ins =
     {
-        "hello", "bye", "jimym", "booboo", "eirujsdlkdvnsokc", "abcabcbb", "bbbbb", "pwwkew", "dvdf", "aabaab!bb"
+        "hello", "bye", "jimym", "booboo", "eirujsdlkdvnsokc", " ", "",
+        "abcabcbb", "bbbbb", "pwwkew", "dvdf", "aabaab!bb", "abba"
     };
     for ( auto&& in : ins )
     {
