@@ -20,9 +20,29 @@
 
 class solution {
 public:
+    static bool is_palindrome(const char* s, size_t length)
+    {
+        if ( !length ) return false;
+        for ( size_t i = 0; i < length/2; ++i )
+        {
+            if ( s[i] != s[(length-1)-i] )
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     static std::string longest_palindromic_substring(std::string s)
     {
-        return s;
+        // sliding shrinking window
+        for ( size_t l = s.size(); l <= s.size(); --l )
+        {
+            for ( size_t i = 0; i + l <= s.size(); ++i )
+            {
+                if ( is_palindrome(s.data()+i, l) ) return std::string(s.data()+i, l);
+            }
+        }
+        return std::string(s.data(), 1);
     }
 };
 
@@ -31,11 +51,12 @@ int main()
     std::vector<std::string> ins =
     {
         "hello", "bye", "jimym", "booboo", "eirujsdlkdvnsokc", " ", "",
-        "abcabcbb", "bbbbb", "pwwkew", "dvdf", "aabaab!bb", "abba"
+        "abcabcbb", "bbbbb", "pwwkew", "dvdf", "aabaab!bb", "abba", "ababa"
     };
     for ( auto&& in : ins )
     {
         auto result = solution::longest_palindromic_substring(in);
         std::cout << in << ": " << result << std::endl;
     }
+    return 0;
 }
