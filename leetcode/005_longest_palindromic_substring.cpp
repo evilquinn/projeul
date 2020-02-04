@@ -62,15 +62,32 @@ public:
 
 int main()
 {
-    std::vector<std::string> ins =
+    std::vector<std::pair<std::string, std::string> > ins =
     {
-        "hello", "bye", "jimym", "booboo", "eirujsdlkdvnsokc", " ", "",
-        "abcabcbb", "bbbbb", "pwwkew", "dvdf", "aabaab!bb", "abba", "ababa"
+        { "hello", "ll" },
+        { "bye", "b" },
+        { "jimym", "mym" },
+        { "booboo", "ooboo" },
+        { "eirujsdlkdvnsokc", "e" },
+        { " ", " " },
+        { "", "" },
+        { "abcabcbb", "bcb" },
+        { "bbbbb", "bbbbb" },
+        { "pwwkew", "ww" },
+        { "dvdf", "dvd" },
+        { "aabaab!bb", "aabaa" },
+        { "abba", "abba" },
+        { "ababa", "ababa" }
     };
     for ( auto&& in : ins )
     {
-        auto result = solution::longest_palindromic_substring(in);
-        std::cout << in << ": " << result << std::endl;
+        auto result = solution::longest_palindromic_substring(in.first);
+        std::cout << in.first << ": " << result << std::endl;
+        if ( result != in.second )
+        {
+            throw std::runtime_error("Failed to determine correct result, in: " + in.first +
+                                     ", expected: " + in.second + ", got: " + result);
+        }
     }
     return 0;
 }
