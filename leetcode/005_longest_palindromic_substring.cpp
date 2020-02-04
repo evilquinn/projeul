@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
 
 class solution {
 public:
@@ -26,15 +27,36 @@ public:
     }
     static std::string longest_palindromic_substring(std::string s)
     {
-        // sliding shrinking window
-        for ( size_t l = s.size(); l <= s.size(); --l )
+        // ===============
+        //  = = = = = = = 
+        // =================
+        //  = = = = = = = =
+        size_t max_length = 0;
+        size_t pos_max = 0;
+        for ( size_t i = 0; i < ( s.size() * 2 ) + 1; ++i )
         {
-            for ( size_t i = 0; i + l <= s.size(); ++i )
+            size_t curr_max = 0;
+            bool no_point = i & 0x1;
+            for ( size_t j = i - 1; j < i; --j )
             {
-                if ( is_palindrome(s.data()+i, l) ) return std::string(s.data()+i, l);
+                size_t idist = i - j;
+                if ( no_point || s[(i-idist)/2] == s[(i+idist)/2] )
+                {
+                    no_point = !(no_point);
+                    curr_max = idist;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if ( curr_max > max_length )
+            {
+                max_length = curr_max;
+                pos_max = i;
             }
         }
-        return std::string(s.data(), 1);
+        return s.substr(pos_max/2 - max_length/2, max_length+1/2);
     }
 };
 
