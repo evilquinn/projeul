@@ -21,10 +21,6 @@
 
 class solution {
 public:
-    static bool is_palindrome(const char* s, size_t l)
-    {
-        return std::equal(s, s + l/2, std::reverse_iterator<const char*>(s+l));
-    }
     static std::string longest_palindromic_substring(std::string s)
     {
         // ===============
