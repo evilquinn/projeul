@@ -31,32 +31,39 @@ public:
         //  = = = = = = = 
         // =================
         //  = = = = = = = =
-        size_t max_length = 0;
-        size_t pos_max = 0;
-        for ( size_t i = 0; i < ( s.size() * 2 ) + 1; ++i )
+
+        std::vector<int> cache(( s.size() * 2 ) + 1 );
+        int max_length = 0;
+        int pos_max = 0;
+        int most_right_right = -1;
+        int most_right_center = 0;
+        for ( int i = 0; i < (int)cache.size(); ++i )
         {
-            size_t curr_max = 0;
-            bool no_point = i & 0x1;
-            for ( size_t j = i - 1; j < i; --j )
+            if ( i < most_right_right )
             {
-                size_t idist = i - j;
-                if ( no_point || s[(i-idist)/2] == s[(i+idist)/2] )
-                {
-                    no_point = !(no_point);
-                    curr_max = idist;
-                }
-                else
-                {
-                    break;
-                }
+                cache[i] = std::min(cache[most_right_center - ( i - most_right_center )], most_right_right - i );
             }
-            if ( curr_max > max_length )
+            for ( bool no_point = ( i + cache[i] ) & 0x1;
+                  no_point ||
+                  ( i-cache[i]-1 >= 0 &&
+                    i+cache[i]+1 < (int)cache.size() &&
+                    s[(i-cache[i]-1)/2] == s[(i+cache[i]+1)/2] );
+                  ++cache[i], no_point = !(no_point) )
             {
-                max_length = curr_max;
+                // noop
+            }
+            if ( i + cache[i] > most_right_right )
+            {
+                most_right_right = i + cache[i];
+                most_right_center = i;
+            }
+            if ( cache[i] > max_length )
+            {
+                max_length = cache[i];
                 pos_max = i;
             }
         }
-        return s.substr(pos_max/2 - max_length/2, max_length+1/2);
+        return s.substr( ( pos_max - max_length ) / 2 , max_length);
     }
 };
 
@@ -77,7 +84,8 @@ int main()
         { "dvdf", "dvd" },
         { "aabaab!bb", "aabaa" },
         { "abba", "abba" },
-        { "ababa", "ababa" }
+        { "ababa", "ababa" },
+        { "babcbabcbaccba", "abcbabcba" }
     };
     for ( auto&& in : ins )
     {
