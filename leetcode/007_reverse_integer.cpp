@@ -31,22 +31,24 @@ class solution {
 public:
     static int reverse(int x)
     {
+        int limit_modifier = -1;
         std::function<int()> limiter = std::bind(std::numeric_limits<int>::max);
         std::function<bool(int, int)> cmp = std::bind(std::greater<int>(), std::placeholders::_1, std::placeholders::_2);
         if ( x < 0 )
         {
             limiter = std::bind(std::numeric_limits<int>::min);
             cmp = std::bind(std::less<int>(), std::placeholders::_1, std::placeholders::_2);
+            limit_modifier = 1;
         }
-        const int max_before = limiter() / 10;
+        const int max_before = ( limiter() / 10 ) + limit_modifier;
         int result = 0;
         while ( cmp(x, 0) )
         {
             int xmod = x % 10;
+            if ( cmp(result, max_before+xmod) ) return 0;
             result *= 10;
             result += xmod;
             x /= 10;
-            if ( cmp(result, max_before+xmod) ) return 0;
         }
         return result;
     }
@@ -59,7 +61,9 @@ int main()
         { -123, -321 },
         { 120, 21 },
         { 1534236469, 0 },
-        { -2147483412, -2143847412 }
+        { -2147483412, -2143847412 },
+        { 1563847412, 0 },
+        { -1563847412, 0 },
     };
     for ( auto&& datum : data )
     {
