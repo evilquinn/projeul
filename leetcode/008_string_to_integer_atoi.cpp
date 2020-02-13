@@ -17,8 +17,8 @@
  *
  * Only the space character ' ' is considered as whitespace character.
  * Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range:
- * [−231,  231 − 1]. If the numerical value is out of the range of representable values, INT_MAX (231 − 1) or
- * INT_MIN (−231) is returned.
+ * [−2^31,  2^31 − 1]. If the numerical value is out of the range of representable values, INT_MAX (2^31 − 1) or
+ * INT_MIN (−2^31) is returned.
  *
  * Example 1:
  * Input: "42"
@@ -55,20 +55,56 @@ class solution {
 public:
     static int myAtoi(std::string str)
     {
-        return boost::lexical_cast<int>(str);
+        // eat spaces
+        auto start = str.begin();
+        for ( ; *start == ' '; ++start );
+        // negative?
+        int sign_mult = ( *start == '-' ? -1 : 1 );
+        // eat sign
+        if ( sign_mult < 0 || *start == '+' )
+        {
+            ++start;
+        }
+        // determine limits
+        int limit = std::numeric_limits<int>::max();
+        int digl = 7;
+        std::function<bool(int, int)> cmp = std::bind(std::greater<int>(), std::placeholders::_1, std::placeholders::_2);
+        if ( sign_mult < 0 )
+        {
+            limit = std::numeric_limits<int>::min();
+            digl = -8;
+            cmp = std::bind(std::less<int>(), std::placeholders::_1, std::placeholders::_2);
+        }
+        int max_before = ( limit / 10 );
+        int result = 0;
+        for ( ; start != str.end() && std::isdigit(*start); ++start )
+        {
+            int dig = ( *start - '0' ) * sign_mult;
+            if ( cmp(result, max_before) || ( result == max_before && cmp(dig, digl) ) ) return limit;
+            result *= 10;
+            result += dig;
+        }
+        return result;
     }
 };
 
 int main()
 {
     std::vector<std::pair<std::string, int> > data = {
-        { "123", 321 },
-        { "-123", -321 },
-        { "120", 21 },
-        { "1534236469", 0 },
-        { "-2147483412", -2143847412 },
-        { "1563847412", 0 },
-        { "-1563847412", 0 },
+        { "123", 123 },
+        { "-123", -123 },
+        { "120", 120 },
+        { "1534236469", 1534236469 },
+        { "-2147483412", -2147483412 },
+        { "1563847412", 1563847412 },
+        { "-1563847412", -1563847412 },
+        { "42", 42 },
+        { "    -42", -42 },
+        { "4193 with words", 4193 },
+        { "words and 987", 0 },
+        { "-91283472332", -2147483648 },
+        { "2147483648", 2147483647 },
+        { "2147483646", 2147483646 }
     };
     for ( auto&& datum : data )
     {
