@@ -8,4 +8,5 @@ add_executable ( 005_longest_palindromic_substring 005_longest_palindromic_subst
 add_executable ( 006_zigzag_conversion 006_zigzag_conversion.cpp )
 add_executable ( 007_reverse_integer 007_reverse_integer.cpp )
 add_executable ( 008_string_to_integer_atoi 008_string_to_integer_atoi.cpp )
-target_compile_options( 008_string_to_integer_atoi PRIVATE "-ftrapv" )
+#target_compile_options( 008_string_to_integer_atoi PRIVATE "-ftrapv" )
+add_executable ( 009_palindrome_number 009_palindrome_number.cpp )
