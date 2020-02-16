@@ -17,3 +17,4 @@ add_executable ( 03_1 03_1.cpp )
 add_executable ( 03_2 03_2.cpp )
 
 add_executable ( 04_1 04_1.cpp )
+add_executable ( 04_2 04_2.cpp )
