@@ -12,3 +12,5 @@ add_dependencies ( 01_2 01_input )
 
 add_executable ( 02_1 02_1.cpp )
 add_executable ( 02_2 02_2.cpp )
+
+add_executable ( 03_1 03_1.cpp )
