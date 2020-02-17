@@ -68,6 +68,7 @@ program to_program(const std::string& in)
     return result;
 
 }
+
 std::ostream& operator<<(std::ostream& os, const program& prog)
 {
     std::string sep = "";
@@ -78,7 +79,6 @@ std::ostream& operator<<(std::ostream& os, const program& prog)
     }
     return os;
 }
-
 namespace op
 {
     enum type
@@ -95,92 +95,85 @@ namespace op
     };
 }
 
-template<typename ArrayType>
-void set_param_modes(ArrayType& param_modes, int p)
+std::vector<int> get_argices(const program& prog, int ptr, int num_args)
 {
-    for( unsigned pos = 1; p > 0 && pos < param_modes.size(); param_modes[pos++] = p%10, p /= 10 );
+    std::vector<int> argices(num_args, ptr);
+    for( int param_modes = prog[ptr]/100, pos = 1;
+         pos < (int)argices.size(); ++pos, param_modes /= 10 )
+    {
+        argices[pos] = param_modes % 10 ? ptr+pos : prog[ptr+pos];
+    }
+    return argices;
 }
+
 int do_input(program& prog, int ptr)
 {
     const int num_args = 2;
     prog[prog[ptr+1]] = 5;
     return ptr + num_args;
 }
+
 int do_output(program& prog, int ptr)
 {
     const int num_args = 2;
-    std::array<int, num_args> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
+    auto args = get_argices(prog, ptr, num_args);
     //if ( lop > 0 ) throw std::runtime_error("unexpected output: " + boost::lexical_cast<std::string>(lop));
-    std::cout << lop << "\n";
+    std::cout << prog[args[1]] << "\n";
     return ptr + num_args;
 }
+
 int do_sum(program& prog, int ptr)
 {
     const int num_args = 4;
-    std::array<int, num_args> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    prog[prog[ptr+3]] = lop + rop;
+    auto args = get_argices(prog, ptr, num_args);
+    prog[args[3]] = prog[args[1]] + prog[args[2]];
     return ptr + num_args;
 }
+
 int do_mult(program& prog, int ptr)
 {
-    const int num_params = 4;
-    std::array<int, num_params> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    prog[prog[ptr+3]] = lop * rop;
-    return ptr + num_params;
+    const int num_args = 4;
+    auto args = get_argices(prog, ptr, num_args);
+    prog[args[3]] = prog[args[1]] * prog[args[2]];
+    return ptr + num_args;
 }
+
 int do_stop(program& prog, int)
 {
     return prog.size();
 }
+
 int jump_if_true(program& prog, int ptr)
 {
-    const int num_params = 3;
-    std::array<int, num_params> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    if ( lop != 0 ) return rop;
-    return ptr + num_params;
-}
-int jump_if_false(program& prog, int ptr)
-{
-    const int num_params = 3;
-    std::array<int, num_params> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    if ( lop == 0 ) return rop;
-    return ptr + num_params;
-}
-int less_than(program& prog, int ptr)
-{
-    const int num_params = 4;
-    std::array<int, num_params> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    prog[prog[ptr+3]] = lop < rop ? 1 : 0;
-    return ptr + num_params;
-}
-int equals(program& prog, int ptr)
-{
-    const int num_params = 4;
-    std::array<int, num_params> param_modes = { 0 };
-    set_param_modes(param_modes, prog[ptr]/100);
-    auto lop = param_modes[1] == 0 ? prog[prog[ptr+1]] : prog[ptr+1];
-    auto rop = param_modes[2] == 0 ? prog[prog[ptr+2]] : prog[ptr+2];
-    prog[prog[ptr+3]] = lop == rop ? 1 : 0;
-    return ptr + num_params;
+    const int num_args = 3;
+    auto args = get_argices(prog, ptr, num_args);
+    if ( prog[args[1]] != 0 ) return prog[args[2]];
+    return ptr + num_args;
 }
 
+int jump_if_false(program& prog, int ptr)
+{
+    const int num_args = 3;
+    auto args = get_argices(prog, ptr, num_args);
+    if ( prog[args[1]] == 0 ) return prog[args[2]];
+    return ptr + num_args;
+}
+
+int less_than(program& prog, int ptr)
+{
+    const int num_args = 4;
+    auto args = get_argices(prog, ptr, num_args);
+    prog[args[3]] = prog[args[1]] < prog[args[2]] ? 1 : 0;
+    return ptr + num_args;
+}
+
+int equals(program& prog, int ptr)
+{
+    const int num_args = 4;
+    auto args = get_argices(prog, ptr, num_args);
+    prog[args[3]] = prog[args[1]] == prog[args[2]] ? 1 : 0;
+    return ptr + num_args;
+}
 
 int run_instruction(program& prog, int ptr)
 {
@@ -207,7 +200,8 @@ void run(program& prog)
 int main()
 {
     std::vector<std::pair<program, program> > data = {
-        { to_program("3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99"), to_program("2,0,0,0,99") }
+        { to_program("3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,"
+                     "125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99"), to_program("2,0,0,0,99") }
     };
 
     for ( auto&& datum : data )
