@@ -1,4 +1,6 @@
 
+set ( PROJEUL_AOC_PATH PROJEUL_AOC_PATH="${CMAKE_CURRENT_BINARY_DIR}" )
+
 add_custom_target(01_input
     COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_CURRENT_SOURCE_DIR}/01_input.txt
@@ -28,5 +30,8 @@ add_custom_target(06_input
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/06_input.txt)
 add_executable ( 06_1 06_1.cpp )
 add_dependencies ( 06_1 06_input )
-set ( PROJEUL_AOC_PATH PROJEUL_AOC_PATH="${CMAKE_CURRENT_BINARY_DIR}" )
 target_compile_definitions( 06_1 PUBLIC ${PROJEUL_AOC_PATH} )
+
+add_executable ( 06_2 06_2.cpp )
+add_dependencies ( 06_2 06_input )
+target_compile_definitions( 06_2 PUBLIC ${PROJEUL_AOC_PATH} )
