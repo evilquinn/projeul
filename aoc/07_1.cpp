@@ -1,16 +1,28 @@
 /**
  *
+ * The Elves have sent you some Amplifier Controller Software (your puzzle input),
+ * a program that should run on your existing Intcode computer. Each amplifier will
+ * need to run a copy of the program.
+ *
+ * When a copy of the program starts running on an amplifier, it will first use an
+ * input instruction to ask the amplifier for its current phase setting (an integer from 0 to 4).
+ *
+ * Each phase setting is used exactly once, but the Elves can't remember which amplifier needs which phase setting.
+ *
+ * The program will then call another input instruction to get the amplifier's input signal,
+ * compute the correct output signal, and supply it back to the amplifier with an output instruction.
+ * (If the amplifier has not yet received an input signal, it waits until one arrives.)
+ *
  * Here are some example programs:
  *
  * Max thruster signal 43210 (from phase setting sequence 4,3,2,1,0):
- *
  * 3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0
- * Max thruster signal 54321 (from phase setting sequence 0,1,2,3,4):
  *
+ * Max thruster signal 54321 (from phase setting sequence 0,1,2,3,4):
  * 3,23,3,24,1002,24,10,24,1002,23,-1,23,
  * 101,5,23,23,1,24,23,23,4,23,99,0,0
- * Max thruster signal 65210 (from phase setting sequence 1,0,4,3,2):
  *
+ * Max thruster signal 65210 (from phase setting sequence 1,0,4,3,2):
  * 3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,
  * 1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0
  *
@@ -27,75 +39,87 @@
 #include <boost/lexical_cast.hpp>
 
 const std::string super_source =
-"3,225,1,225,6,6,1100,1,238,225,104,0,2,218,57,224,101,"
-"-3828,224,224,4,224,102,8,223,223,1001,224,2,224,1,223,"
-"224,223,1102,26,25,224,1001,224,-650,224,4,224,1002,223,"
-"8,223,101,7,224,224,1,223,224,223,1102,44,37,225,1102,51,"
-"26,225,1102,70,94,225,1002,188,7,224,1001,224,-70,224,4,"
-"224,1002,223,8,223,1001,224,1,224,1,223,224,223,1101,86,"
-"70,225,1101,80,25,224,101,-105,224,224,4,224,102,8,223,"
-"223,101,1,224,224,1,224,223,223,101,6,91,224,1001,224,"
-"-92,224,4,224,102,8,223,223,101,6,224,224,1,224,223,223,"
-"1102,61,60,225,1001,139,81,224,101,-142,224,224,4,224,102,"
-"8,223,223,101,1,224,224,1,223,224,223,102,40,65,224,1001,"
-"224,-2800,224,4,224,1002,223,8,223,1001,224,3,224,1,224,"
-"223,223,1102,72,10,225,1101,71,21,225,1,62,192,224,1001,"
-"224,-47,224,4,224,1002,223,8,223,101,7,224,224,1,224,223,"
-"223,1101,76,87,225,4,223,99,0,0,0,677,0,0,0,0,0,0,0,0,0,0,"
-"0,1105,0,99999,1105,227,247,1105,1,99999,1005,227,99999,"
-"1005,0,256,1105,1,99999,1106,227,99999,1106,0,265,1105,1,"
-"99999,1006,0,99999,1006,227,274,1105,1,99999,1105,1,280,"
-"1105,1,99999,1,225,225,225,1101,294,0,0,105,1,0,1105,1,"
-"99999,1106,0,300,1105,1,99999,1,225,225,225,1101,314,0,0,"
-"106,0,0,1105,1,99999,108,226,677,224,102,2,223,223,1005,"
-"224,329,1001,223,1,223,1107,677,226,224,102,2,223,223,1006,"
-"224,344,1001,223,1,223,7,226,677,224,1002,223,2,223,1005,"
-"224,359,101,1,223,223,1007,226,226,224,102,2,223,223,1005,"
-"224,374,101,1,223,223,108,677,677,224,102,2,223,223,1006,"
-"224,389,1001,223,1,223,107,677,226,224,102,2,223,223,1006,"
-"224,404,101,1,223,223,1108,677,226,224,102,2,223,223,1006,"
-"224,419,1001,223,1,223,1107,677,677,224,1002,223,2,223,1006,"
-"224,434,101,1,223,223,1007,677,677,224,102,2,223,223,1006,"
-"224,449,1001,223,1,223,1108,226,677,224,1002,223,2,223,1006,"
-"224,464,101,1,223,223,7,677,226,224,102,2,223,223,1006,224,"
-"479,101,1,223,223,1008,226,226,224,102,2,223,223,1006,224,"
-"494,101,1,223,223,1008,226,677,224,1002,223,2,223,1005,224,"
-"509,1001,223,1,223,1007,677,226,224,102,2,223,223,1005,224,"
-"524,1001,223,1,223,8,226,226,224,102,2,223,223,1006,224,539,"
-"101,1,223,223,1108,226,226,224,1002,223,2,223,1006,224,554,"
-"101,1,223,223,107,226,226,224,1002,223,2,223,1005,224,569,"
-"1001,223,1,223,7,226,226,224,102,2,223,223,1005,224,584,101,"
-"1,223,223,1008,677,677,224,1002,223,2,223,1006,224,599,1001,"
-"223,1,223,8,226,677,224,1002,223,2,223,1006,224,614,1001,223,"
-"1,223,108,226,226,224,1002,223,2,223,1006,224,629,101,1,223,"
-"223,107,677,677,224,102,2,223,223,1005,224,644,1001,223,1,223,"
-"8,677,226,224,1002,223,2,223,1005,224,659,1001,223,1,223,1107,"
-"226,677,224,102,2,223,223,1005,224,674,1001,223,1,223,4,223,99,226";
+"3,8,1001,8,10,8,105,1,0,0,21,34,47,72,93,110,191,272,"
+"353,434,99999,3,9,102,3,9,9,1001,9,3,9,4,9,99,3,9,102,"
+"4,9,9,1001,9,4,9,4,9,99,3,9,101,3,9,9,1002,9,3,9,1001,"
+"9,2,9,1002,9,2,9,101,4,9,9,4,9,99,3,9,1002,9,3,9,101,5,"
+"9,9,102,4,9,9,1001,9,4,9,4,9,99,3,9,101,3,9,9,102,4,9,9,"
+"1001,9,3,9,4,9,99,3,9,101,2,9,9,4,9,3,9,1001,9,2,9,4,9,"
+"3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,"
+"3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,"
+"3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,99,3,9,102,2,9,9,"
+"4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,"
+"4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,"
+"4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,"
+"4,9,99,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,"
+"9,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,"
+"1,9,4,9,3,9,1001,9,1,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,"
+"9,9,4,9,3,9,1001,9,2,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1001,"
+"9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,"
+"9,9,4,9,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,"
+"2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,99,3,9,101,"
+"1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,3,9,102,2,"
+"9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,"
+"9,4,9,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,"
+"9,4,9,99";
 
-using program = std::vector<int>;
-program to_program(const std::string& in)
+class computer
 {
-    program result;
-    std::vector<std::string> tokens;
-    boost::algorithm::split(tokens, in, boost::is_any_of(", "));
-    std::transform(tokens.begin(), tokens.end(), std::back_inserter(result), boost::lexical_cast<int, std::string> );
-    return result;
+public:
+    typedef std::vector<int> program;
+    typedef std::string source;
+    typedef std::function<int()> get_input_cb;
+    typedef std::function<void(int)> take_output_cb;
 
-}
-
-std::ostream& operator<<(std::ostream& os, const program& prog)
-{
-    std::string sep = "";
-    for ( auto&& token : prog )
+    computer() :
+        input_cb_(get_from_stdin),
+        output_cb_(send_to_stdout)
     {
-        os << sep << token;
-        sep = ",";
     }
-    return os;
-}
-namespace op
-{
-    enum type
+    computer(get_input_cb input_cb,
+             take_output_cb output_cb) :
+        input_cb_(input_cb),
+        output_cb_(output_cb)
+    {
+    }
+    int run(const source& src)
+    {
+        return run(compile(src));
+    }
+    int run(program prog)
+    {
+        for ( size_t op_idx = 0;
+              op_idx < prog.size();
+              op_idx = run_instruction(prog, op_idx) );
+        return ( !prog.empty() ? prog[0] : 0 );
+    }
+
+    program compile(const source& src)
+    {
+        program result;
+        std::vector<std::string> tokens;
+        boost::algorithm::split(tokens, src, boost::is_any_of(", "));
+
+        try
+        {
+            std::transform(tokens.begin(), tokens.end(), std::back_inserter(result), boost::lexical_cast<int, std::string> );
+        }
+        catch ( const std::exception& ex )
+        {
+            std::cout << "failed to compile: " << ex.what() << "\n";
+            std::cout << "last compiled operands: ";
+            for ( size_t i = result.size() - 5; i < result.size(); ++i )
+            {
+                std::cout << result[i] << ", ";
+            }
+            std::cout << ";\n";
+        }
+
+        return result;
+    }
+
+private:
+    enum class op
     {
         sum = 1,
         mult = 2,
@@ -107,128 +131,241 @@ namespace op
         eq = 8,
         stop = 99
     };
-}
 
-std::vector<int> get_argices(const program& prog, int ptr, int num_args)
-{
-    std::vector<int> argices(num_args, ptr);
-    for( int param_modes = prog[ptr]/100, pos = 1;
-         pos < (int)argices.size(); ++pos, param_modes /= 10 )
+    std::vector<int> get_arg_indices(const program& prog, int ptr, int num_args)
     {
-        argices[pos] = param_modes % 10 ? ptr+pos : prog[ptr+pos];
+        std::vector<int> argices(num_args, ptr);
+        for( int param_modes = prog[ptr]/100, pos = 1;
+            pos < (int)argices.size(); ++pos, param_modes /= 10 )
+        {
+            argices[pos] = param_modes % 10 ? ptr+pos : prog[ptr+pos];
+        }
+        return argices;
     }
-    return argices;
+
+    static int get_from_stdin()
+    {
+        std::cout << "next intput: ";
+        std::string in_val;
+        std::cin >> in_val;
+        try
+        {
+            return boost::lexical_cast<int>(in_val);
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "Failed to parse input value: " << in_val << '\n';
+            return 0;
+        }
+    }
+    static void send_to_stdout(int n)
+    {
+        std::cout << "output: " << n << "\n";
+    }
+
+    int do_input(program& prog, int ptr)
+    {
+        const int num_args = 2;
+        prog[prog[ptr+1]] = input_cb_();
+        return ptr + num_args;
+    }
+
+    int do_output(program& prog, int ptr)
+    {
+        const int num_args = 2;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        //if ( lop > 0 ) throw std::runtime_error("unexpected output: " + boost::lexical_cast<std::string>(lop));
+        output_cb_(prog[args[1]]);
+        return ptr + num_args;
+    }
+
+    int do_sum(program& prog, int ptr)
+    {
+        const int num_args = 4;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        prog[args[3]] = prog[args[1]] + prog[args[2]];
+        return ptr + num_args;
+    }
+
+    int do_mult(program& prog, int ptr)
+    {
+        const int num_args = 4;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        prog[args[3]] = prog[args[1]] * prog[args[2]];
+        return ptr + num_args;
+    }
+
+    int do_stop(program& prog, int)
+    {
+        return prog.size();
+    }
+
+    int jump_if_true(program& prog, int ptr)
+    {
+        const int num_args = 3;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        if ( prog[args[1]] != 0 ) return prog[args[2]];
+        return ptr + num_args;
+    }
+
+    int jump_if_false(program& prog, int ptr)
+    {
+        const int num_args = 3;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        if ( prog[args[1]] == 0 ) return prog[args[2]];
+        return ptr + num_args;
+    }
+
+    int less_than(program& prog, int ptr)
+    {
+        const int num_args = 4;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        prog[args[3]] = prog[args[1]] < prog[args[2]] ? 1 : 0;
+        return ptr + num_args;
+    }
+
+    int equals(program& prog, int ptr)
+    {
+        const int num_args = 4;
+        auto args = get_arg_indices(prog, ptr, num_args);
+        prog[args[3]] = prog[args[1]] == prog[args[2]] ? 1 : 0;
+        return ptr + num_args;
+    }
+
+    int run_instruction(program& prog, int ptr)
+    {
+        computer::op op = static_cast<computer::op>(prog[ptr] % 100);
+        if ( op == op::sum ) return do_sum(prog, ptr);
+        else if ( op == op::mult ) return do_mult(prog, ptr);
+        else if ( op == op::stop ) return do_stop(prog, ptr);
+        else if ( op == op::in ) return do_input(prog, ptr);
+        else if ( op == op::out ) return do_output(prog, ptr);
+        else if ( op == op::jit ) return jump_if_true(prog, ptr);
+        else if ( op == op::jif ) return jump_if_false(prog, ptr);
+        else if ( op == op::lt ) return less_than(prog, ptr);
+        else if ( op == op::eq ) return equals(prog, ptr);
+
+        throw std::runtime_error("unknown instruction: " + boost::lexical_cast<std::string>(static_cast<int>(op)));
+    }
+
+    get_input_cb input_cb_;
+    take_output_cb output_cb_;
+};
+
+std::ostream& operator<<(std::ostream& os, const computer::program& prog)
+{
+    std::string sep = "";
+    for ( auto&& token : prog )
+    {
+        os << sep << token;
+        sep = ",";
+    }
+    return os;
 }
 
-int do_input(program& prog, int ptr)
+class amplifier
 {
-    const int num_args = 2;
-    prog[prog[ptr+1]] = 5;
-    return ptr + num_args;
-}
+public:
+    amplifier(int stages, const std::string& src) :
+        stages_(stages),
+        value_(0),
+        guess_({ 1, 2, 3, 4, 5 }),
+        guess_idx_(0),
+        send_guess_(false),
+        runner_(std::bind(&amplifier::input_sender, this),
+                std::bind(&amplifier::value_saver, this, std::placeholders::_1)),
+        prog_(runner_.compile(src))
+    {}
 
-int do_output(program& prog, int ptr)
-{
-    const int num_args = 2;
-    auto args = get_argices(prog, ptr, num_args);
-    //if ( lop > 0 ) throw std::runtime_error("unexpected output: " + boost::lexical_cast<std::string>(lop));
-    std::cout << prog[args[1]] << "\n";
-    return ptr + num_args;
-}
+    int run_once()
+    {
+        return run_once(guess_);
+    }
+    int run_once(const std::vector<int>& guess)
+    {
+        reset();
+        guess_ = guess;
+        std::cout << "guess: " << guess_ << "\n";
+        for ( int stage = 0; stage < stages_; ++stage )
+        {
+            std::cout << "stage " << stage << "\n";
+            runner_.run(prog_);
+        }
+        return value_;
+    }
 
-int do_sum(program& prog, int ptr)
-{
-    const int num_args = 4;
-    auto args = get_argices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] + prog[args[2]];
-    return ptr + num_args;
-}
+private:
 
-int do_mult(program& prog, int ptr)
-{
-    const int num_args = 4;
-    auto args = get_argices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] * prog[args[2]];
-    return ptr + num_args;
-}
+    void reset()
+    {
+        value_ = 0;
+        guess_idx_ = 0;
+        send_guess_ = false;
+    }
 
-int do_stop(program& prog, int)
-{
-    return prog.size();
-}
+    void value_saver(int n)
+    {
+        std::cout << "  output: " << n << "\n";
+        value_ = n;
+    }
+    int input_sender()
+    {
+        send_guess_ = !send_guess_;
+        int val = send_guess_ ? guess_[guess_idx_++] : value_;
+        std::cout << "  input : " << val << "\n";
+        return val;
+    }
 
-int jump_if_true(program& prog, int ptr)
-{
-    const int num_args = 3;
-    auto args = get_argices(prog, ptr, num_args);
-    if ( prog[args[1]] != 0 ) return prog[args[2]];
-    return ptr + num_args;
-}
-
-int jump_if_false(program& prog, int ptr)
-{
-    const int num_args = 3;
-    auto args = get_argices(prog, ptr, num_args);
-    if ( prog[args[1]] == 0 ) return prog[args[2]];
-    return ptr + num_args;
-}
-
-int less_than(program& prog, int ptr)
-{
-    const int num_args = 4;
-    auto args = get_argices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] < prog[args[2]] ? 1 : 0;
-    return ptr + num_args;
-}
-
-int equals(program& prog, int ptr)
-{
-    const int num_args = 4;
-    auto args = get_argices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] == prog[args[2]] ? 1 : 0;
-    return ptr + num_args;
-}
-
-int run_instruction(program& prog, int ptr)
-{
-    int op = prog[ptr] % 100;
-    if ( op == op::sum ) return do_sum(prog, ptr);
-    else if ( op == op::mult ) return do_mult(prog, ptr);
-    else if ( op == op::stop ) return do_stop(prog, ptr);
-    else if ( op == op::in ) return do_input(prog, ptr);
-    else if ( op == op::out ) return do_output(prog, ptr);
-    else if ( op == op::jit ) return jump_if_true(prog, ptr);
-    else if ( op == op::jif ) return jump_if_false(prog, ptr);
-    else if ( op == op::lt ) return less_than(prog, ptr);
-    else if ( op == op::eq ) return equals(prog, ptr);
-
-    throw std::runtime_error("unknown instruction: " + boost::lexical_cast<std::string>(op));
-}
-void run(program& prog)
-{
-    for ( int op_idx = 0;
-          op_idx < (int)prog.size();
-          op_idx = run_instruction(prog, op_idx) );
-}
+    int stages_;
+    int value_;
+    std::vector<int> guess_;
+    int guess_idx_;
+    bool send_guess_;
+    computer runner_;
+    computer::program prog_;
+};
 
 int main()
 {
-    std::vector<std::pair<program, program> > data = {
-        { to_program("3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,"
-                     "125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99"), to_program("2,0,0,0,99") }
+
+#if 0
+    std::vector<std::pair<std::string, std::vector<int> > > data = {
+// Max thruster signal 43210 (from phase setting sequence 4,3,2,1,0):
+        { "3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0", { 4, 3, 2, 1, 0 } },
+// Max thruster signal 54321 (from phase setting sequence 0,1,2,3,4):
+        { "3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0", { 0, 1, 2, 3, 4 } },
+// Max thruster signal 65210 (from phase setting sequence 1,0,4,3,2):
+        { "3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0", { 1, 0, 4, 3, 2 } }
     };
 
+    computer me;
     for ( auto&& datum : data )
     {
-        std::cout << "Run [ " << datum.first << " ], ";
-        run(datum.first);
+        std::cout << "Run [ " << datum.first << " ]\n";
+        amplifier ampy(5, datum.first);
+        int result = ampy.run_once(datum.second);
+        std::cout << "result: " << result << "\n";
     }
 
-    auto super_prog = to_program(super_source);
-    std::cout << "running: " << "\n";
-    run(super_prog);
+#endif
 
-    std::cout << super_prog[0] << "\n";
+    std::vector<int> super_guess = { 0, 1, 2, 3, 4 };
+    std::vector<int> winner_guess;
+    int winner = 0;
+
+    amplifier amp2(super_guess.size(), super_source);
+    do
+    {
+        int result = amp2.run_once(super_guess);
+        if ( result > winner )
+        {
+            winner = result;
+            winner_guess = super_guess;
+        }
+
+    } while ( std::next_permutation(super_guess.begin(), super_guess.end() ) );
+
+    std::cout << "result: " << winner << ", " << winner_guess << "\n";
 
     return 0;
 }
