@@ -37,3 +37,4 @@ add_dependencies ( 06_2 06_input )
 target_compile_definitions( 06_2 PUBLIC ${PROJEUL_AOC_PATH} )
 
 add_executable ( 07_1 07_1.cpp )
+add_executable ( 07_2 07_2.cpp )
