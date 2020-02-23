@@ -37,76 +37,88 @@
 
 
 #include <iostream>
+#include <sstream>
+#include <unordered_map>
 #include <vector>
+#include <algorithm>
+#include <limits>
+#include <iterator>
 #include <fstream>
 
 
 #if !defined(PROJEUL_AOC_PATH)
 #define PROJEUL_AOC_PATH "."
 #endif
-/**
-struct layer
-{
-    typedef std::vector<int> line;
-    std::vector<line> lines;
-}**/
 
-using line = std::string;
-using layer = std::vector<line>;
-using picture = std::vector<layer>;
-
-picture to_picture(const std::string& s, size_t w, size_t h)
+class picture
 {
-    picture result = {};
-    auto it = s.begin();
-    while ( it != s.end() )
+public:
+    typedef std::string data_type;
+    typedef data_type::iterator iterator;
+    typedef data_type::const_iterator const_iterator;
+    typedef data_type::size_type size_type;
+
+    picture(const data_type& data, size_type w, size_type h) :
+        data_(data),
+        width_(w),
+        height_(h),
+        layer_size_(width_*height_),
+        layers_(data.size() / layer_size_)
     {
-        result.push_back({});
-        for ( size_t i = 0; i < h; ++i )
+        if ( layer_size_ * layers_ != data.size() )
         {
-            result.rbegin()->push_back({});
-            std::copy(it, std::next(it, w), std::back_inserter(*result.rbegin()->rbegin()));
-            std::advance(it, w);
+            std::ostringstream msg;
+            msg << "failed construct picture of width: " << width_
+                << ", heigth: " << height_
+                << " with data size: " << data.size();
+            throw std::runtime_error(msg.str());
         }
     }
-    return result;
-}
 
-int elf_check(const picture& pic)
+    data_type data_;
+    size_type width_;
+    size_type height_;
+    size_type layer_size_;
+    size_type layers_;
+
+private:
+};
+
+int elf_check(const picture& p)
 {
     // find the layer that contains the fewest 0 digits. On that layer, what
     // is the number of 1 digits multiplied by the number of 2 digits?
+    const char least_of = '0';
     int num_zeroes = std::numeric_limits<int>::max();
-    auto least_zeroes = pic.end();
-    for ( auto&& layer : pic )
+    auto least_zeroes = p.data_.end();
+    std::unordered_map<char, int> least_counts;
+    for ( auto it = p.data_.begin(); it != p.data_.end(); std::advance(it, p.layer_size_) )
     {
-        int num_zeroes_this_layer = 0;
-        for ( auto&& line : layer )
+        std::unordered_map<char, int> layer_counts;
+        std::for_each(it, std::next(it, p.layer_size_), [&](char c){ ++layer_counts[c]; });
+        if ( layer_counts[least_of] < num_zeroes )
         {
-            num_zeroes_this_layer += std::count(line.begin(), line.end(), 0);
+            num_zeroes = layer_counts[least_of];
+            least_zeroes = it;
+            least_counts = layer_counts;
         }
-        if ( num_zeroes_this_layer < num_zeroes )
-        {
-            num_zeroes = num_zeroes_this_layer;
-            // todo: fix least_zeroes
-        }
-
     }
-
+    size_t ones = least_counts['1'];
+    size_t twos = least_counts['2'];
+    size_t result = ones * twos;
+    return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const picture& p)
 {
-    std::string space = "";
-    int idx = 0;
-    for ( auto&& layer : p )
+    for ( auto it = p.data_.begin(); it != p.data_.end(); /* noop */ )
     {
-        os << "Layer " << ++idx << ":\n";
-        for ( auto&& line : layer )
+        os << "Layer " << std::distance(p.data_.begin(), it) / p.layer_size_ << ":\n";
+        for ( auto linlim = std::next(it, p.layer_size_); it != linlim; std::advance(it, p.width_) )
         {
-            os << space << line << "\n";
+            std::copy(it, std::next(it, p.width_), std::ostream_iterator<char>(os));
+            os << "\n";
         }
-        space.append("  ");
     }
     return os;
 }
@@ -119,17 +131,15 @@ int main()
 
     for ( auto&& datum : data )
     {
-        std::cout << to_picture(datum.first, datum.second.first, datum.second.second) << "\n";
+        std::cout << "elf: " << picture(datum.first, datum.second.first, datum.second.second) << "\n";
     }
-/**
-    std::ifstream ifs(PROJEUL_AOC_PATH "/08_input.txt");
-    std::string ins;
-    while ( ifs >> ins )
-    {
-        std::cout << ins << std::endl;
 
-    }
-*/
+    std::ifstream ifs(PROJEUL_AOC_PATH "/08_input.txt");
+    std::string super_data;
+    ifs >> super_data;
+    picture super_pic(super_data, 25, 6 );
+    auto result = elf_check(super_pic);
+    std::cout << "result: " << result << "\n";
 
     return 0;
 }
