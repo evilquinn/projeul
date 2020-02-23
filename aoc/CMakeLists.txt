@@ -1,6 +1,8 @@
 
 set ( PROJEUL_AOC_PATH PROJEUL_AOC_PATH="${CMAKE_CURRENT_BINARY_DIR}" )
 
+add_library(computer computer.cpp)
+
 add_custom_target(01_input
     COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_CURRENT_SOURCE_DIR}/01_input.txt
@@ -51,3 +53,6 @@ target_compile_definitions( 08_1 PUBLIC ${PROJEUL_AOC_PATH} )
 add_executable ( 08_2 08_2.cpp )
 add_dependencies ( 08_2 08_input )
 target_compile_definitions( 08_2 PUBLIC ${PROJEUL_AOC_PATH} )
+
+add_executable ( 09_1 09_1.cpp )
+target_link_libraries( 09_1 computer )
