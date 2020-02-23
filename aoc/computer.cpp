@@ -27,8 +27,7 @@ bool computer::run(executable& exe) const
 {
     while ( !exe.paused && !exe.finished() )
     {
-        int next = run_instruction(exe.prog, exe.ptr);
-        if ( !exe.paused ) exe.ptr = next;
+        run_instruction(exe);
     }
     return exe.finished();
 }
@@ -56,13 +55,13 @@ computer::program computer::compile(const source& src)
     return prog;
 }
 
-std::vector<int> computer::get_arg_indices(const program& prog, int ptr, int num_args) const
+std::vector<int> computer::get_arg_indices(const executable& exe, int num_args) const
 {
-    std::vector<int> argices(num_args, ptr);
-    for( int param_modes = prog[ptr]/100, pos = 1;
+    std::vector<int> argices(num_args, exe.ptr);
+    for( int param_modes = exe.prog[exe.ptr]/100, pos = 1;
         pos < (int)argices.size(); ++pos, param_modes /= 10 )
     {
-        argices[pos] = param_modes % 10 ? ptr+pos : prog[ptr+pos];
+        argices[pos] = param_modes % 10 ? exe.ptr+pos : exe.prog[exe.ptr+pos];
     }
     return argices;
 }
@@ -87,89 +86,103 @@ void computer::send_to_stdout(int n)
     std::cout << "output: " << n << "\n";
 }
 
-int computer::do_input(program& prog, int ptr) const
+void computer::do_input(executable& exe) const
 {
     const int num_args = 2;
-    prog[prog[ptr+1]] = input_cb_();
-    return ptr + num_args;
+    exe.prog[exe.prog[exe.ptr+1]] = input_cb_();
+    exe.inc(num_args);
 }
 
-int computer::do_output(program& prog, int ptr) const
+void computer::do_output(executable& exe) const
 {
     const int num_args = 2;
-    auto args = get_arg_indices(prog, ptr, num_args);
+    auto args = get_arg_indices(exe, num_args);
     //if ( lop > 0 ) throw std::runtime_error("unexpected output: " + boost::lexical_cast<std::string>(lop));
-    output_cb_(prog[args[1]]);
-    return ptr + num_args;
+    output_cb_(exe.prog[args[1]]);
+    exe.inc(num_args);
 }
 
-int computer::do_sum(program& prog, int ptr) const
+void computer::do_sum(executable& exe) const
 {
     const int num_args = 4;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] + prog[args[2]];
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    exe.prog[args[3]] = exe.prog[args[1]] + exe.prog[args[2]];
+    exe.inc(num_args);
 }
 
-int computer::do_mult(program& prog, int ptr) const
+void computer::do_mult(executable& exe) const
 {
     const int num_args = 4;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] * prog[args[2]];
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    exe.prog[args[3]] = exe.prog[args[1]] * exe.prog[args[2]];
+    exe.inc(num_args);
 }
 
-int computer::do_stop(program& prog, int) const
+void computer::do_stop(executable& exe) const
 {
-    return prog.size();
+    exe.set(exe.prog.size());
 }
 
-int computer::jump_if_true(program& prog, int ptr) const
+void computer::jump_if_true(executable& exe) const
 {
     const int num_args = 3;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    if ( prog[args[1]] != 0 ) return prog[args[2]];
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    if ( exe.prog[args[1]] != 0 )
+    {
+        exe.set(exe.prog[args[2]]);
+    }
+    else
+    {
+        exe.inc(num_args);
+    }
 }
 
-int computer::jump_if_false(program& prog, int ptr) const
+void computer::jump_if_false(executable& exe) const
 {
     const int num_args = 3;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    if ( prog[args[1]] == 0 ) return prog[args[2]];
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    if ( exe.prog[args[1]] == 0 )
+    {
+        exe.set(exe.prog[args[2]]);
+    }
+    else
+    {
+        exe.inc(num_args);
+    }
 }
 
-int computer::less_than(program& prog, int ptr) const
+void computer::less_than(executable& exe) const
 {
     const int num_args = 4;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] < prog[args[2]] ? 1 : 0;
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    exe.prog[args[3]] = exe.prog[args[1]] < exe.prog[args[2]] ? 1 : 0;
+    exe.inc(num_args);
 }
 
-int computer::equals(program& prog, int ptr) const
+void computer::equals(executable& exe) const
 {
     const int num_args = 4;
-    auto args = get_arg_indices(prog, ptr, num_args);
-    prog[args[3]] = prog[args[1]] == prog[args[2]] ? 1 : 0;
-    return ptr + num_args;
+    auto args = get_arg_indices(exe, num_args);
+    exe.prog[args[3]] = exe.prog[args[1]] == exe.prog[args[2]] ? 1 : 0;
+    exe.inc(num_args);
 }
 
-int computer::run_instruction(program& prog, int ptr) const
+void computer::run_instruction(executable& exe) const
 {
-    computer::op op = static_cast<computer::op>(prog[ptr] % 100);
-    if ( op == op::sum ) return do_sum(prog, ptr);
-    else if ( op == op::mult ) return do_mult(prog, ptr);
-    else if ( op == op::stop ) return do_stop(prog, ptr);
-    else if ( op == op::in ) return do_input(prog, ptr);
-    else if ( op == op::out ) return do_output(prog, ptr);
-    else if ( op == op::jit ) return jump_if_true(prog, ptr);
-    else if ( op == op::jif ) return jump_if_false(prog, ptr);
-    else if ( op == op::lt ) return less_than(prog, ptr);
-    else if ( op == op::eq ) return equals(prog, ptr);
-
-    throw std::runtime_error("unknown instruction: " + boost::lexical_cast<std::string>(static_cast<int>(op)));
+    computer::op op = static_cast<computer::op>(exe.prog[exe.ptr] % 100);
+    switch(op)
+    {
+    case op::sum : return do_sum(exe);
+    case op::mult : return do_mult(exe);
+    case op::stop : return do_stop(exe);
+    case op::in : return do_input(exe);
+    case op::out : return do_output(exe);
+    case op::jit : return jump_if_true(exe);
+    case op::jif : return jump_if_false(exe);
+    case op::lt : return less_than(exe);
+    case op::eq : return equals(exe);
+    default: throw std::runtime_error("unknown instruction: " + boost::lexical_cast<std::string>(static_cast<int>(op)));
+    } // end switch
 }
 
 std::ostream& operator<<(std::ostream& os, const computer::program& prog)

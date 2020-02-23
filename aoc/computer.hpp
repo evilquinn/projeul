@@ -22,7 +22,10 @@ public:
         program prog;
         int ptr = 0;
         bool paused = false;
+        int relative_base = 0;
         bool finished() const { return ptr >= (int)prog.size(); }
+        void inc(int i = 1) { set(ptr + i); }
+        void set(int v) { if ( !paused ) ptr = v; }
     };
 
     computer();
@@ -44,23 +47,24 @@ private:
         jif = 6,
         lt = 7,
         eq = 8,
+//        arb = 9,
         stop = 99
     };
 
-    std::vector<int> get_arg_indices(const program& prog, int ptr, int num_args) const;
+    std::vector<int> get_arg_indices(const executable& exe, int num_args) const;
 
     static int get_from_stdin();
     static void send_to_stdout(int n);
-    int do_input(program& prog, int ptr) const;
-    int do_output(program& prog, int ptr) const;
-    int do_sum(program& prog, int ptr) const;
-    int do_mult(program& prog, int ptr) const;
-    int do_stop(program& prog, int) const;
-    int jump_if_true(program& prog, int ptr) const;
-    int jump_if_false(program& prog, int ptr) const;
-    int less_than(program& prog, int ptr) const;
-    int equals(program& prog, int ptr) const;
-    int run_instruction(program& prog, int ptr) const;
+    void do_input(executable& exe) const;
+    void do_sum(executable& exe) const;
+    void do_output(executable& exe) const;
+    void do_mult(executable& exe) const;
+    void do_stop(executable& exe) const;
+    void jump_if_true(executable& exe) const;
+    void jump_if_false(executable& exe) const;
+    void less_than(executable& exe) const;
+    void equals(executable& exe) const;
+    void run_instruction(executable& exe) const;
 
     get_input_cb input_cb_;
     take_output_cb output_cb_;
