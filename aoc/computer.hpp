@@ -13,19 +13,21 @@
 class computer
 {
 public:
-    typedef std::vector<int> program;
+
+    typedef long long size_type;
+    typedef std::vector<size_type> program;
     typedef std::string source;
-    typedef std::function<int()> get_input_cb;
-    typedef std::function<void(int)> take_output_cb;
+    typedef std::function<size_type()> get_input_cb;
+    typedef std::function<void(size_type)> take_output_cb;
     struct executable
     {
         program prog;
-        int ptr = 0;
+        size_type ptr = 0;
         bool paused = false;
-        int relative_base = 0;
-        bool finished() const { return ptr >= (int)prog.size(); }
-        void inc(int i = 1) { set(ptr + i); }
-        void set(int v) { if ( !paused ) ptr = v; }
+        size_type relative_base = 0;
+        bool finished() const { return ptr >= (size_type)prog.size(); }
+        void inc(size_type i = 1) { set(ptr + i); }
+        void set(size_type v) { if ( !paused ) ptr = v; }
     };
 
     computer();
@@ -47,14 +49,14 @@ private:
         jif = 6,
         lt = 7,
         eq = 8,
-//        arb = 9,
+        arb = 9,
         stop = 99
     };
 
-    std::vector<int> get_arg_indices(const executable& exe, int num_args) const;
+    std::vector<int> get_arg_indices(executable& exe, int num_args) const;
 
-    static int get_from_stdin();
-    static void send_to_stdout(int n);
+    static size_type get_from_stdin();
+    static void send_to_stdout(size_type n);
     void do_input(executable& exe) const;
     void do_sum(executable& exe) const;
     void do_output(executable& exe) const;
@@ -64,6 +66,7 @@ private:
     void jump_if_false(executable& exe) const;
     void less_than(executable& exe) const;
     void equals(executable& exe) const;
+    void adj_rel_base(executable& exe) const;
     void run_instruction(executable& exe) const;
 
     get_input_cb input_cb_;

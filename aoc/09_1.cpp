@@ -5,6 +5,7 @@
 
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -13,134 +14,51 @@
 
 #include "computer.hpp"
 
-const std::string super_source =
-"3,8,1001,8,10,8,105,1,0,0,21,34,47,72,93,110,191,272,"
-"353,434,99999,3,9,102,3,9,9,1001,9,3,9,4,9,99,3,9,102,"
-"4,9,9,1001,9,4,9,4,9,99,3,9,101,3,9,9,1002,9,3,9,1001,"
-"9,2,9,1002,9,2,9,101,4,9,9,4,9,99,3,9,1002,9,3,9,101,5,"
-"9,9,102,4,9,9,1001,9,4,9,4,9,99,3,9,101,3,9,9,102,4,9,9,"
-"1001,9,3,9,4,9,99,3,9,101,2,9,9,4,9,3,9,1001,9,2,9,4,9,"
-"3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,"
-"3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,"
-"3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,99,3,9,102,2,9,9,"
-"4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,"
-"4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,"
-"4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,"
-"4,9,99,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,"
-"9,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,"
-"1,9,4,9,3,9,1001,9,1,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,"
-"9,9,4,9,3,9,1001,9,2,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1001,"
-"9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,"
-"9,9,4,9,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,"
-"2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,99,3,9,101,"
-"1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,3,9,102,2,"
-"9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,"
-"9,4,9,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,"
-"9,4,9,99";
+#if !defined(PROJEUL_AOC_PATH)
+#define PROJEUL_AOC_PATH "."
+#endif
 
 
-class amplifier
-{
-public:
-    amplifier(int stages, const std::string& src) :
-        stages_(stages),
-        stage_(0),
-        runner_(std::bind(&amplifier::input_sender, this),
-                std::bind(&amplifier::value_saver, this, std::placeholders::_1)),
-        exe_stages_(stages, { { runner_.compile(src) } } ),
-        phases_({ 1, 2, 3, 4, 5 })
-    {
-        // prime the first stage
-        exe_stages_[0].input_ready = true;
-    }
-
-    int run(const std::vector<int>& guess)
-    {
-        phases_ = guess;
-        std::cout << "guess: " << phases_ << "\n";
-        while ( ! all_done() )
-        {
-            for ( stage_ = 0; stage_ < stages_; ++stage_ )
-            {
-                std::cout << "stage " << stage_ << "\n";
-                runner_.run(exe_stages_[stage_].exe);
-            }
-        }
-        return exe_stages_[stages_ - 1].value;
-    }
-
-private:
-
-    void signal_next(int val)
-    {
-        int cal = ( stage_ + 1 ) % stages_;
-        exe_stages_[cal].value = val;
-        exe_stages_[cal].input_ready = true;
-        exe_stages_[cal].exe.paused = false;
-        std::cout << "stage " << stage_ << " signaling stage " << cal << " : " << val << "\n";
-    }
-    void value_saver(int n)
-    {
-        std::cout << "  output: " << n << "\n";
-        exe_stages_[stage_].value = n;
-        signal_next(n);
-    }
-    int input_sender()
-    {
-        if ( exe_stages_[stage_].phase_mode )
-        {
-            std::cout << "  phase : " << phases_[stage_] << "\n";
-            exe_stages_[stage_].phase_mode = false;
-            return phases_[stage_];
-        }
-        if ( exe_stages_[stage_].input_ready )
-        {
-            std::cout << "  input : " << exe_stages_[stage_].value << "\n";
-            exe_stages_[stage_].input_ready = false;
-            return exe_stages_[stage_].value;
-        }
-        std::cout << "pausing stage " << stage_ << ", waiting on input..." << "\n";
-        exe_stages_[stage_].exe.paused = true;
-        const int dummy = 0;
-        return dummy;
-    }
-
-    bool all_done()
-    {
-        for ( auto&& stage : exe_stages_ )
-        {
-            if ( !stage.exe.finished() ) return false;
-        }
-        return true;
-    }
-
-    int stages_;
-    int stage_;
-    computer runner_;
-    struct exe_stage
-    {
-        computer::executable exe;
-        bool phase_mode = true;
-        bool input_ready = false;
-        int phase = 0;
-        int value = 0;
-    };
-    std::vector<exe_stage> exe_stages_;
-    std::vector<int> phases_;
-};
 
 int main()
 {
 
-#if 0
-    std::string ts = "3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,"
-                     "1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,"
-                     "1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99";
-    computer::executable exe = { computer::compile(ts) };
-    computer runner([](){return 7;}, [](int v){std::cout << "output: " << v << "\n";});
-    auto result = runner.run(exe);
+#if 1
+
+/**
+ * Here are some example programs that use these features:
+ *
+ * 109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99 takes no input and produces a copy of itself as output.
+ *
+ * 1102,34915192,34915192,7,4,7,99,0 should output a 16-digit number.
+ *
+ * 104,1125899906842624,99 should output the large number in the middle.
+ *
+ **/
+
+    std::vector<std::string> data = {
+//        "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99",
+//        "1102,34915192,34915192,7,4,7,99,0",
+//        "104,1125899906842624,99",
+        "109,45,203,-17,99"
+    };
+
+    for ( auto&& datum : data )
+    {
+        computer::executable exe = { computer::compile(datum) };
+        computer runner;
+        auto result = runner.run(exe);
+        std::cout << "result: " << result << "\n";
+    }
 
 #endif
+
+    std::ifstream ifs(PROJEUL_AOC_PATH "/09_input.txt");
+    std::string super_data;
+    ifs >> super_data;
+    computer::executable exe = { computer::compile(super_data) };
+    computer runner;
+    runner.run(exe);
 
 #if 0
     std::vector<std::pair<std::string, std::vector<int> > > data = {
@@ -179,6 +97,7 @@ int main()
 
 #endif
 
+#if 0
     std::vector<int> super_guess = { 5, 6, 7, 8, 9 };
     std::vector<int> winner_guess;
     int winner = 0;
@@ -196,6 +115,7 @@ int main()
     } while ( std::next_permutation(super_guess.begin(), super_guess.end() ) );
 
     std::cout << "result: " << winner << ", " << winner_guess << "\n";
+#endif
 
 
     return 0;

@@ -40,6 +40,7 @@ target_compile_definitions( 06_2 PUBLIC ${PROJEUL_AOC_PATH} )
 
 add_executable ( 07_1 07_1.cpp )
 add_executable ( 07_2 07_2.cpp )
+target_link_libraries( 07_2 computer )
 
 add_custom_target(08_input
     COMMAND ${CMAKE_COMMAND} -E copy
@@ -54,5 +55,12 @@ add_executable ( 08_2 08_2.cpp )
 add_dependencies ( 08_2 08_input )
 target_compile_definitions( 08_2 PUBLIC ${PROJEUL_AOC_PATH} )
 
+add_custom_target(09_input
+    COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_CURRENT_SOURCE_DIR}/09_input.txt
+            ${CMAKE_CURRENT_BINARY_DIR}/09_input.txt
+    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/09_input.txt)
 add_executable ( 09_1 09_1.cpp )
+add_dependencies ( 09_1 09_input )
+target_compile_definitions( 09_1 PUBLIC ${PROJEUL_AOC_PATH} )
 target_link_libraries( 09_1 computer )

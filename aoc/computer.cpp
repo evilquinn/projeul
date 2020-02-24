@@ -40,7 +40,7 @@ computer::program computer::compile(const source& src)
 
     try
     {
-        std::transform(tokens.begin(), tokens.end(), std::back_inserter(prog), boost::lexical_cast<int, std::string> );
+        std::transform(tokens.begin(), tokens.end(), std::back_inserter(prog), boost::lexical_cast<size_type, std::string> );
     }
     catch ( const std::exception& ex )
     {
@@ -55,25 +55,33 @@ computer::program computer::compile(const source& src)
     return prog;
 }
 
-std::vector<int> computer::get_arg_indices(const executable& exe, int num_args) const
+std::vector<int> computer::get_arg_indices(executable& exe, int num_args) const
 {
     std::vector<int> argices(num_args, exe.ptr);
     for( int param_modes = exe.prog[exe.ptr]/100, pos = 1;
         pos < (int)argices.size(); ++pos, param_modes /= 10 )
     {
-        argices[pos] = param_modes % 10 ? exe.ptr+pos : exe.prog[exe.ptr+pos];
+        int param_mode = param_modes % 10;
+        switch(param_mode)
+        {
+        case 0 : argices[pos] = exe.prog[exe.ptr+pos]; break;
+        case 1 : argices[pos] = exe.ptr+pos; break;
+        case 2 : argices[pos] = exe.prog[exe.ptr+pos] + exe.relative_base; break;
+        default : throw std::runtime_error("unknown param_mode: " + boost::lexical_cast<std::string>(param_mode));
+        } // end switch
+        if ( ! ( argices[pos] < (int)exe.prog.size() ) ) exe.prog.resize(argices[pos] + 1);
     }
     return argices;
 }
 
-int computer::get_from_stdin()
+computer::size_type computer::get_from_stdin()
 {
     std::cout << "next intput: ";
     std::string in_val;
     std::cin >> in_val;
     try
     {
-        return boost::lexical_cast<int>(in_val);
+        return boost::lexical_cast<size_type>(in_val);
     }
     catch(const std::exception& e)
     {
@@ -81,7 +89,7 @@ int computer::get_from_stdin()
         return 0;
     }
 }
-void computer::send_to_stdout(int n)
+void computer::send_to_stdout(size_type n)
 {
     std::cout << "output: " << n << "\n";
 }
@@ -89,7 +97,8 @@ void computer::send_to_stdout(int n)
 void computer::do_input(executable& exe) const
 {
     const int num_args = 2;
-    exe.prog[exe.prog[exe.ptr+1]] = input_cb_();
+    auto args = get_arg_indices(exe, num_args);
+    exe.prog[args[1]] = input_cb_();
     exe.inc(num_args);
 }
 
@@ -167,6 +176,14 @@ void computer::equals(executable& exe) const
     exe.inc(num_args);
 }
 
+void computer::adj_rel_base(executable& exe) const
+{
+    const int num_args = 2;
+    auto args = get_arg_indices(exe, num_args);
+    exe.relative_base += exe.prog[args[1]];
+    exe.inc(num_args);
+}
+
 void computer::run_instruction(executable& exe) const
 {
     computer::op op = static_cast<computer::op>(exe.prog[exe.ptr] % 100);
@@ -181,6 +198,7 @@ void computer::run_instruction(executable& exe) const
     case op::jif : return jump_if_false(exe);
     case op::lt : return less_than(exe);
     case op::eq : return equals(exe);
+    case op::arb : return adj_rel_base(exe);
     default: throw std::runtime_error("unknown instruction: " + boost::lexical_cast<std::string>(static_cast<int>(op)));
     } // end switch
 }
