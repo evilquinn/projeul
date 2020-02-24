@@ -55,9 +55,9 @@ computer::program computer::compile(const source& src)
     return prog;
 }
 
-std::vector<int> computer::get_arg_indices(executable& exe, int num_args) const
+std::vector<computer::program::size_type> computer::get_arg_indices(executable& exe, int num_args) const
 {
-    std::vector<int> argices(num_args, exe.ptr);
+    std::vector<program::size_type> argices(num_args, exe.ptr);
     for( int param_modes = exe.prog[exe.ptr]/100, pos = 1;
         pos < (int)argices.size(); ++pos, param_modes /= 10 )
     {
@@ -69,7 +69,7 @@ std::vector<int> computer::get_arg_indices(executable& exe, int num_args) const
         case 2 : argices[pos] = exe.prog[exe.ptr+pos] + exe.relative_base; break;
         default : throw std::runtime_error("unknown param_mode: " + boost::lexical_cast<std::string>(param_mode));
         } // end switch
-        if ( ! ( argices[pos] < (int)exe.prog.size() ) ) exe.prog.resize(argices[pos] + 1);
+        if ( ! ( argices[pos] < exe.prog.size() ) ) exe.prog.resize(argices[pos] + 1);
     }
     return argices;
 }

@@ -14,7 +14,7 @@ class computer
 {
 public:
 
-    typedef long long size_type;
+    typedef size_t size_type;
     typedef std::vector<size_type> program;
     typedef std::string source;
     typedef std::function<size_type()> get_input_cb;
@@ -25,7 +25,7 @@ public:
         size_type ptr = 0;
         bool paused = false;
         size_type relative_base = 0;
-        bool finished() const { return ptr >= (size_type)prog.size(); }
+        bool finished() const { return ptr >= prog.size(); }
         void inc(size_type i = 1) { set(ptr + i); }
         void set(size_type v) { if ( !paused ) ptr = v; }
     };
@@ -53,7 +53,7 @@ private:
         stop = 99
     };
 
-    std::vector<int> get_arg_indices(executable& exe, int num_args) const;
+    std::vector<program::size_type> get_arg_indices(executable& exe, int num_args) const;
 
     static size_type get_from_stdin();
     static void send_to_stdout(size_type n);
