@@ -93,7 +93,6 @@ public:
     int run(const std::vector<int>& guess)
     {
         phases_ = guess;
-        std::cout << "guess: " << phases_ << "\n";
         while ( ! all_done() )
         {
             for ( stage_ = 0; stage_ < stages_; ++stage_ )
@@ -231,7 +230,7 @@ int main()
 
     } while ( std::next_permutation(super_guess.begin(), super_guess.end() ) );
 
-    std::cout << "result: " << winner << ", " << winner_guess << "\n";
+    std::cout << "result: " << winner << "\n";
 
 
     return 0;

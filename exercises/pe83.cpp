@@ -20,12 +20,14 @@ namespace
 
 typedef std::pair<size_t, size_t> coord;
 typedef std::map<coord, size_t> matrix_t;
+/**
 std::string to_string( const coord& c )
 {
     std::stringstream str;
     str << c.first << "," << c.second;
     return str.str();
 }
+*/
 
 std::set<coord> set_of_adj( const coord& node,
                             const coord& bound,

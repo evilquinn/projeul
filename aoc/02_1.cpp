@@ -48,7 +48,7 @@ void run(program& prog)
     }
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     std::vector<std::pair<program, program> > data = {
         { to_program("1,0,0,0,99"), to_program("2,0,0,0,99") },
