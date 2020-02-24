@@ -15,15 +15,20 @@ add_executable ( 01_2 01_2.cpp )
 add_dependencies ( 01_2 01_input )
 
 add_executable ( 02_1 02_1.cpp )
+target_link_libraries ( 02_1 PUBLIC boost )
 add_executable ( 02_2 02_2.cpp )
+target_link_libraries ( 02_2 PUBLIC boost )
 
 add_executable ( 03_1 03_1.cpp )
+target_link_libraries ( 03_1 PUBLIC boost )
 add_executable ( 03_2 03_2.cpp )
+target_link_libraries ( 03_2 PUBLIC boost )
 
 add_executable ( 04_1 04_1.cpp )
 add_executable ( 04_2 04_2.cpp )
 
 add_executable ( 05_1 05_1.cpp )
+target_link_libraries ( 05_1 PUBLIC boost )
 
 add_custom_target(06_input
     COMMAND ${CMAKE_COMMAND} -E copy
@@ -39,6 +44,7 @@ add_dependencies ( 06_2 06_input )
 target_compile_definitions( 06_2 PUBLIC ${PROJEUL_AOC_PATH} )
 
 add_executable ( 07_1 07_1.cpp )
+target_link_libraries ( 07_1 PUBLIC boost )
 add_executable ( 07_2 07_2.cpp )
 target_link_libraries( 07_2 computer )
 

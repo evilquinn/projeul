@@ -1,4 +1,6 @@
 
+add_library(boost INTERFACE IMPORTED GLOBAL)
+
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 if ( ${BUILD_BOOST} )
 
@@ -56,10 +58,5 @@ add_library( boost_program_options STATIC IMPORTED GLOBAL)
 set_target_properties( boost_program_options PROPERTIES
     IMPORTED_LOCATION ${LIB_DIR}/libboost_program_options${LIB_SUFFIX} )
 target_link_libraries( boost_program_options INTERFACE boost )
-
-else()
-
-# dummy target to link against when we didn't build boost ourselves
-add_library(boost INTERFACE IMPORTED GLOBAL)
 
 endif()
