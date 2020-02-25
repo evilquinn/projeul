@@ -12,7 +12,7 @@ enable_testing()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # CXX settings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")
 option(ENABLE_NO_PIE
        "Enables --no-pie compiler option (netbeans executable workaround)" OFF)
 if ( ${ENABLE_NO_PIE} )

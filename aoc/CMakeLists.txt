@@ -70,3 +70,5 @@ add_executable ( 09_1 09_1.cpp )
 add_dependencies ( 09_1 09_input )
 target_compile_definitions( 09_1 PUBLIC ${PROJEUL_AOC_PATH} )
 target_link_libraries( 09_1 computer )
+
+add_executable ( 10_1 10_1.cpp )
