@@ -135,6 +135,10 @@ bool within_limit(const coord& a, const coord& b)
 {
     return a.x < b.x && a.y < b.y;
 }
+bool operator==(const coord& a, const coord& b)
+{
+    return a.x == b.x && a.y == b.y;
+}
 
 struct coord_incrementer
 {
@@ -170,11 +174,69 @@ struct coord_incrementer
     }
 };
 
+struct perim_walker
+{
+    coord origin;
+    coord bound;
+    mutable coord first_ = { 0, 0 };
+    coord first() const
+    {
+        first_ = { origin.x, 0 };
+        if ( first_ == origin ) return next(first_);
+        return first_;
+    }
+    void advance(coord& c) const
+    {
+        if ( c.x == 0 )
+        {
+            if ( --c.y >= bound.y )
+            {
+                ++c.x;
+                c.y = 0;
+            }
+        }
+        else if ( c.y == 0 )
+        {
+            if ( ++c.x >= bound.x )
+            {
+                ++c.y;
+                c.x = bound.x - 1;
+            }
+        }
+        else if ( c.x == bound.x - 1 )
+        {
+            if ( ++c.y >= bound.y )
+            {
+                --c.x;
+                c.y = bound.y - 1;
+            }
+        }
+        else if ( c.y == bound.y - 1 )
+        {
+            if ( --c.x >= bound.x )
+            {
+                --c.y;
+                c.x = 0;
+            }
+        }
+        // now goes round for ever
+        //if ( c == first_ ) c = bound;
+        if ( c == origin ) advance(c);
+    }
+    coord next(coord c) const
+    {
+        advance(c);
+        return c;
+    }
+
+};
+
 enum class status {
     occd = '#',
     unoccd = '.',
     org = 'O',
-    hidden = 'x'
+    hidden = 'x',
+    vapd = '*'
 };
 typedef std::vector<status> line_type;
 typedef std::vector<line_type> map_type;
@@ -221,6 +283,10 @@ map_type::value_type::value_type& at(map_type& map, coord c)
     return const_cast< map_type::value_type::value_type& >(at(
                const_cast< const map_type& >(map), c));
 }
+bool is_set(const map_type& map, coord c, status v)
+{
+    return at(map, c) == v;
+}
 bool is_clear(const map_type& map, coord c)
 {
     return at(map, c) == status::unoccd;
@@ -228,6 +294,14 @@ bool is_clear(const map_type& map, coord c)
 void set(map_type& map, coord c, status v)
 {
     at(map, c) = v;
+}
+typedef std::pair<int, int> axis_dim_type;
+axis_dim_type axis_step(coord from, coord to)
+{
+    axis_dim_type dist = { to.x - from.x, to.y - from.y };
+    const auto gcdiv = std::gcd(dist.first, dist.second);
+    dist = { dist.first/gcdiv, dist.second/gcdiv };
+    return dist;
 }
 map_type eliminate_obstructed(const map_type& map, const coord origin)
 {
@@ -241,9 +315,7 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     {
         if ( at(result, i) == status::occd )
         {
-            std::pair<int, int> dist = { i.x - origin.x, i.y - origin.y };
-            const auto gcdiv = std::gcd(dist.first, dist.second);
-            dist = { dist.first/gcdiv, dist.second/gcdiv };
+            axis_dim_type dist = axis_step(origin, i);
             //std::cout << "DIST: " << dist.first << " : " << dist.second << "\n";
             for ( coord cant_see = { i.x + dist.first, i.y + dist.second };
                   within_limit(cant_see, lim);
@@ -258,9 +330,7 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     {
         if ( at(result, i) == status::occd )
         {
-            std::pair<int, int> dist = { i.x - origin.x, i.y - origin.y };
-            const auto gcdiv = std::gcd(dist.first, dist.second);
-            dist = { dist.first/gcdiv, dist.second/gcdiv };
+            axis_dim_type dist = axis_step(origin, i);
             for ( coord cant_see = { i.x + dist.first, i.y + dist.second };
                   within_limit(cant_see, lim);
                   cant_see = { cant_see.x + dist.first, cant_see.y + dist.second } )
@@ -271,19 +341,54 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     }
     return result;
 }
-size_t count_asteroids(const map_type& map)
+coord vapourise(map_type map, coord origin, const size_t n)
+{
+    coord result;
+    auto count = std::min(map.empty()?0:map[0].size()*map.size() - 1, n);
+    std::cout << "trimming n: " << n << " down to only the available: " << count << "\n";
+
+    perim_walker walker = { origin, limit(map) };
+
+    axis_dim_type last_axis;
+    for ( auto i = walker.first(); within_limit(i, walker.bound); walker.advance(i) )
+    {
+        // laser the closest asteroid on this axis
+        axis_dim_type dist = axis_step(origin, i);
+        if ( last_axis == dist ) continue;
+        for ( coord j = { origin.x + dist.first, origin.y + dist.second };
+              within_limit(j, walker.bound);
+              j = { j.x + dist.first, j.y + dist.second })
+        {
+            if ( at(map, j) == status::occd )
+            {
+                at(map, j) = status::vapd;
+                if ( --count == 0 ) return j; else std::cout << map << "\n\n";
+                std::cout << "vapd: " << j << ", to go: " << count << "\n";
+                break;
+            }
+        }
+        last_axis = dist;
+    }
+    return result;
+}
+size_t count(const map_type& map, status v)
 {
     size_t total = 0;
     for ( auto&& line : map )
     {
-        total += std::count(line.begin(), line.end(), status::occd);
+        total += std::count(line.begin(), line.end(), v);
     }
     return total;
 }
-size_t find_best(const map_type& map)
+size_t count_asteroids(const map_type& map)
+{
+    return count(map, status::occd);
+}
+coord find_best(const map_type& map)
 {
     coord_incrementer incr = { map.empty() ? 0 : map[0].size() };
     size_t best_count = 0;
+    coord best_coord;
     std::cout << "map:\n" << map << "\n";
     for ( coord i = { 0, 0 }; within_limit(i, limit(map)); incr(i) )
     {
@@ -294,10 +399,11 @@ size_t find_best(const map_type& map)
             if ( count > best_count )
             {
                 best_count = count;
+                best_coord = i;
             }
         }
     }
-    return best_count;
+    return best_coord;
 }
 map_type to_map(std::istream& map_input)
 {
@@ -505,8 +611,13 @@ int main()
     {
 
         auto map = asteroid_map::to_map(datum);
-        //std::cout << "map:\n" << map << "\n";
-        auto result = asteroid_map::find_best(map);
+
+        // 10_1
+        auto best_coord = asteroid_map::find_best(map);
+
+        // 10_2
+        auto result = asteroid_map::vapourise(map, best_coord, 200);
+
         std::cout << "best count: " << result << "\n";
     }
 
