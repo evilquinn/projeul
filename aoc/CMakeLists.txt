@@ -39,10 +39,11 @@ add_custom_target(06_input
 add_executable ( 06_1 06_1.cpp )
 add_dependencies ( 06_1 06_input )
 target_compile_definitions( 06_1 PUBLIC ${PROJEUL_AOC_PATH} )
+target_link_libraries( 06_1 PUBLIC boost )
 
 add_executable ( 06_2 06_2.cpp )
 add_dependencies ( 06_2 06_input )
-target_compile_definitions( 06_2 PUBLIC ${PROJEUL_AOC_PATH} )
+target_link_libraries( 06_2 PUBLIC boost )
 
 add_executable ( 07_1 07_1.cpp )
 target_link_libraries ( 07_1 PUBLIC boost )
