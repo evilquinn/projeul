@@ -31,7 +31,6 @@ ExternalProject_Add( external_boost
 
 file(MAKE_DIRECTORY ${INCLUDE_DIR})
 
-add_library(boost INTERFACE IMPORTED GLOBAL)
 add_dependencies(boost external_boost)
 set_target_properties(boost PROPERTIES
                       INTERFACE_INCLUDE_DIRECTORIES ${INCLUDE_DIR}
