@@ -174,11 +174,14 @@ struct coord_incrementer
     }
 };
 
+typedef std::pair<int, int> axis_type;
+
+
 struct perim_walker
 {
     coord origin;
     coord bound;
-    mutable coord first_ = { 0, 0 };
+    mutable coord first_ = { origin.x, 0 };
     coord first() const
     {
         first_ = { origin.x, 0 };
@@ -295,10 +298,9 @@ void set(map_type& map, coord c, status v)
 {
     at(map, c) = v;
 }
-typedef std::pair<int, int> axis_dim_type;
-axis_dim_type axis_step(coord from, coord to)
+axis_type axis_step(coord from, coord to)
 {
-    axis_dim_type dist = { to.x - from.x, to.y - from.y };
+    axis_type dist = { to.x - from.x, to.y - from.y };
     const auto gcdiv = std::gcd(dist.first, dist.second);
     dist = { dist.first/gcdiv, dist.second/gcdiv };
     return dist;
@@ -315,7 +317,7 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     {
         if ( at(result, i) == status::occd )
         {
-            axis_dim_type dist = axis_step(origin, i);
+            axis_type dist = axis_step(origin, i);
             //std::cout << "DIST: " << dist.first << " : " << dist.second << "\n";
             for ( coord cant_see = { i.x + dist.first, i.y + dist.second };
                   within_limit(cant_see, lim);
@@ -330,7 +332,7 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     {
         if ( at(result, i) == status::occd )
         {
-            axis_dim_type dist = axis_step(origin, i);
+            axis_type dist = axis_step(origin, i);
             for ( coord cant_see = { i.x + dist.first, i.y + dist.second };
                   within_limit(cant_see, lim);
                   cant_see = { cant_see.x + dist.first, cant_see.y + dist.second } )
@@ -344,16 +346,17 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
 coord vapourise(map_type map, coord origin, const size_t n)
 {
     coord result;
+    set(map, origin, status::org);
     auto count = std::min(map.empty()?0:map[0].size()*map.size() - 1, n);
     std::cout << "trimming n: " << n << " down to only the available: " << count << "\n";
 
     perim_walker walker = { origin, limit(map) };
 
-    axis_dim_type last_axis;
+    axis_type last_axis;
     for ( auto i = walker.first(); within_limit(i, walker.bound); walker.advance(i) )
     {
         // laser the closest asteroid on this axis
-        axis_dim_type dist = axis_step(origin, i);
+        axis_type dist = axis_step(origin, i);
         if ( last_axis == dist ) continue;
         for ( coord j = { origin.x + dist.first, origin.y + dist.second };
               within_limit(j, walker.bound);
@@ -619,6 +622,7 @@ int main()
         auto result = asteroid_map::vapourise(map, best_coord, 200);
 
         std::cout << "best count: " << result << "\n";
+        break;
     }
 
     return 0;
