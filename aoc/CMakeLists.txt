@@ -4,6 +4,13 @@ set ( PROJEUL_AOC_PATH PROJEUL_AOC_PATH="${CMAKE_CURRENT_BINARY_DIR}" )
 add_library(computer computer.cpp)
 target_link_libraries ( computer PUBLIC boost )
 
+add_library(coord coord.cpp)
+target_link_libraries ( coord PUBLIC boost )
+
+add_library(map map.cpp)
+target_link_libraries ( map PUBLIC coord
+                                   boost )
+
 add_custom_target(01_input
     COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_CURRENT_SOURCE_DIR}/01_input.txt
@@ -74,4 +81,7 @@ target_compile_definitions( 09_1 PUBLIC ${PROJEUL_AOC_PATH} )
 target_link_libraries( 09_1 computer )
 
 add_executable ( 10_1 10_1.cpp )
-target_link_libraries( 10_1 boost )
+target_link_libraries( 10_1 boost
+                            coord
+                            map )
+

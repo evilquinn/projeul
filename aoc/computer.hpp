@@ -2,7 +2,8 @@
  *
  *
  */
-
+#ifndef AOC_COMPUTER_HPP
+#define AOC_COMPUTER_HPP
 
 #include <iosfwd>
 #include <vector>
@@ -74,3 +75,4 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const computer::program& prog);
+#endif // AOC_COMPUTER_HPP
