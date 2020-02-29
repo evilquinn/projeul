@@ -121,7 +121,11 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <set>
+#include <map>
+#include <iterator>
 #include <numeric>
+#include <cmath>
 #include <boost/lexical_cast.hpp>
 
 struct coord { size_t x = 0; size_t y = 0; };
@@ -129,6 +133,26 @@ struct coord { size_t x = 0; size_t y = 0; };
 std::ostream& operator<< (std::ostream& os, const coord& c)
 {
     return os << "[ " << c.x << ", " << c.y << " ]";
+}
+coord& operator+= (coord& lhs, coord rhs)
+{
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
+}
+coord operator+ (coord lhs, coord rhs)
+{
+    return lhs += rhs;
+}
+coord& operator-= (coord& lhs, coord rhs)
+{
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
+}
+coord operator- (coord lhs, coord rhs)
+{
+    return lhs -= rhs;
 }
 
 bool within_limit(const coord& a, const coord& b)
@@ -175,63 +199,135 @@ struct coord_incrementer
 };
 
 typedef std::pair<int, int> axis_type;
-
-
-struct perim_walker
+axis_type to_axis(coord c)
 {
-    coord origin;
-    coord bound;
-    mutable coord first_ = { origin.x, 0 };
-    coord first() const
+    return { static_cast<int>(c.x), static_cast<int>(c.y) };
+}
+
+axis_type axis_step(coord from, coord to)
+{
+    axis_type dist = { to.x - from.x, to.y - from.y };
+    const auto gcdiv = std::gcd(dist.first, dist.second);
+    dist = { dist.first/gcdiv, dist.second/gcdiv };
+    return dist;
+}
+
+class foob_walker
+{
+public:
+    foob_walker(coord origin, coord bound) :
+        origin_(origin),
+        bound_(bound),
+        first_({ origin.x, 0 }),
+        angles_(sort_by_angles(origin_, bound_))
+    {}
+    axis_type first() const
     {
-        first_ = { origin.x, 0 };
-        if ( first_ == origin ) return next(first_);
-        return first_;
+        if ( angles_.size() == 0 )
+        {
+            return to_axis(bound_);
+        }
+        return angles_.begin()->second;
     }
-    void advance(coord& c) const
+    void advance(axis_type& a) const
     {
-        if ( c.x == 0 )
+        auto pos = angles_.find(axis_to_angle(a));
+        if ( pos != angles_.end() )
         {
-            if ( --c.y >= bound.y )
+            std::advance(pos, 1);
+            if ( pos != angles_.end() )
             {
-                ++c.x;
-                c.y = 0;
+                a = pos->second;
+            }
+            else
+            {
+                a = first();
             }
         }
-        else if ( c.y == 0 )
-        {
-            if ( ++c.x >= bound.x )
-            {
-                ++c.y;
-                c.x = bound.x - 1;
-            }
-        }
-        else if ( c.x == bound.x - 1 )
-        {
-            if ( ++c.y >= bound.y )
-            {
-                --c.x;
-                c.y = bound.y - 1;
-            }
-        }
-        else if ( c.y == bound.y - 1 )
-        {
-            if ( --c.x >= bound.x )
-            {
-                --c.y;
-                c.x = 0;
-            }
-        }
-        // now goes round for ever
-        //if ( c == first_ ) c = bound;
-        if ( c == origin ) advance(c);
     }
-    coord next(coord c) const
+    axis_type next(axis_type a) const
     {
-        advance(c);
-        return c;
+        advance(a);
+        return a;
+    }
+    coord bound() const { return bound_; }
+private:
+    typedef std::map<ptrdiff_t, axis_type> angles_type;
+    static angles_type sort_by_angles(coord origin, coord bound)
+    {
+        angles_type result;
+        coord_incrementer incr = { bound.x };
+        for ( coord i = { 0, 0 }; within_limit(i, bound); incr(i) )
+        {
+            if ( i == origin ) continue;
+            axis_type dist = axis_step(origin, i);
+            result[axis_to_angle(dist)] = dist;
+        }
+        return result;
+    }
+    static ptrdiff_t axis_to_angle(const axis_type& a)
+    {
+        // don't even look at this
+        static const size_t fac = 100000;
+        ptrdiff_t qpi = static_cast<ptrdiff_t>( std::acos(-1) * fac );
+        qpi += qpi/2;
+        double op = 0;
+        double adj = 0;
+        ptrdiff_t mult = 0;
+        if ( a.first < 0 && a.second < 0 )
+        {
+            adj = std::abs(a.first);
+            op = std::abs(a.second);
+            mult = qpi * 3;
+        }
+        else if ( a.first < 0 && a.second > 0 )
+        {
+            op = std::abs(a.first);
+            adj = std::abs(a.second);
+            mult = qpi * 2;
+        }
+        else if ( a.first > 0 && a.second > 0 )
+        {
+            adj = std::abs(a.first);
+            op = std::abs(a.second);
+            mult = qpi * 1;
+        }
+        else if ( a.first > 0 && a.second < 0 )
+        {
+            op = std::abs(a.first);
+            adj = std::abs(a.second);
+        }
+        else if ( a.first == 0 && a.second == 0 )
+        {
+            throw std::runtime_error("it's origin!");
+        }
+        else if ( a.first == 0 )
+        {
+            if ( a.second < 0 )
+            {
+                return 0;
+            }
+            else return qpi * 2;
+        }
+        else
+        {
+            if ( a.first < 0 )
+            {
+                return qpi * 3;
+            }
+            else return qpi;
+        }
+
+        auto ratio = op / adj;
+        auto atangent = std::atan(ratio);
+        auto intangent = static_cast<ptrdiff_t>(atangent * fac) + mult;
+        return intangent;
     }
 
+    coord origin_;
+    coord bound_;
+    coord first_;
+    angles_type angles_;
 };
 
 enum class status {
@@ -298,13 +394,6 @@ void set(map_type& map, coord c, status v)
 {
     at(map, c) = v;
 }
-axis_type axis_step(coord from, coord to)
-{
-    axis_type dist = { to.x - from.x, to.y - from.y };
-    const auto gcdiv = std::gcd(dist.first, dist.second);
-    dist = { dist.first/gcdiv, dist.second/gcdiv };
-    return dist;
-}
 map_type eliminate_obstructed(const map_type& map, const coord origin)
 {
     coord_incrementer incr = { map.empty() ? 0 : map[0].size() };
@@ -343,37 +432,6 @@ map_type eliminate_obstructed(const map_type& map, const coord origin)
     }
     return result;
 }
-coord vapourise(map_type map, coord origin, const size_t n)
-{
-    coord result;
-    set(map, origin, status::org);
-    auto count = std::min(map.empty()?0:map[0].size()*map.size() - 1, n);
-    std::cout << "trimming n: " << n << " down to only the available: " << count << "\n";
-
-    perim_walker walker = { origin, limit(map) };
-
-    axis_type last_axis;
-    for ( auto i = walker.first(); within_limit(i, walker.bound); walker.advance(i) )
-    {
-        // laser the closest asteroid on this axis
-        axis_type dist = axis_step(origin, i);
-        if ( last_axis == dist ) continue;
-        for ( coord j = { origin.x + dist.first, origin.y + dist.second };
-              within_limit(j, walker.bound);
-              j = { j.x + dist.first, j.y + dist.second })
-        {
-            if ( at(map, j) == status::occd )
-            {
-                at(map, j) = status::vapd;
-                if ( --count == 0 ) return j; else std::cout << map << "\n\n";
-                std::cout << "vapd: " << j << ", to go: " << count << "\n";
-                break;
-            }
-        }
-        last_axis = dist;
-    }
-    return result;
-}
 size_t count(const map_type& map, status v)
 {
     size_t total = 0;
@@ -382,6 +440,36 @@ size_t count(const map_type& map, status v)
         total += std::count(line.begin(), line.end(), v);
     }
     return total;
+}
+coord vapourise(map_type map, coord origin, const size_t n)
+{
+    coord result;
+    set(map, origin, status::org);
+    auto count = std::min(map.empty()?0: asteroid_map::count(map, status::occd) - 1, n);
+    if ( count < n )
+    {
+        std::cout << "trimming n: " << n << " down to only the available: " << count << "\n";
+    }
+
+    coord bound = limit(map);
+    foob_walker walker = { origin, bound };
+
+    for ( auto i = walker.first(); i.first != (int)bound.x && i.second != (int)bound.y; walker.advance(i) )
+    {
+        // laser the closest asteroid on this axis
+        for ( coord j = { origin.x + i.first, origin.y + i.second };
+              within_limit(j, bound);
+              j = { j.x + i.first, j.y + i.second })
+        {
+            if ( at(map, j) == status::occd )
+            {
+                at(map, j) = status::vapd;
+                if ( --count == 0 ) return j;
+                break;
+            }
+        }
+    }
+    throw std::runtime_error("no more asteroids to vape");
 }
 size_t count_asteroids(const map_type& map)
 {
@@ -431,6 +519,7 @@ map_type to_map(const std::string& s)
 
 int main()
 {
+
     std::vector<std::string> data = {
 /**
  * #######
@@ -621,8 +710,7 @@ int main()
         // 10_2
         auto result = asteroid_map::vapourise(map, best_coord, 200);
 
-        std::cout << "best count: " << result << "\n";
-        break;
+        std::cout << "finished at: " << result << "\n";
     }
 
     return 0;
