@@ -89,3 +89,6 @@ add_executable ( 11_1 11_1.cpp )
 target_link_libraries( 11_1 boost
                             computer
                             coord )
+
+add_executable ( 12_1 12_1.cpp )
+target_link_libraries( 12_1 boost )
