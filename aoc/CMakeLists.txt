@@ -85,3 +85,7 @@ target_link_libraries( 10_1 boost
                             coord
                             map )
 
+add_executable ( 11_1 11_1.cpp )
+target_link_libraries( 11_1 boost
+                            computer
+                            coord )
