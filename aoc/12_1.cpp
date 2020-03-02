@@ -44,24 +44,40 @@
  **/
 
 #include <iostream>
+#include <array>
 #include <vector>
+#include <numeric>
 
 
-struct mag
+typedef std::array<ptrdiff_t, 3> mag_type;
+static const int x = 0;
+static const int y = 1;
+static const int z = 2;
+
+std::ostream& operator<< (std::ostream& os, const mag_type& m)
 {
-    ptrdiff_t x = 0;
-    ptrdiff_t y = 0;
-    ptrdiff_t z = 0;
-};
-std::ostream& operator<< (std::ostream& os, const mag& m)
+    return os << "<" << m[x] << ", " << m[y] << ", " << m[z] << ">";
+}
+bool operator== (const mag_type& lhs, const mag_type& rhs)
 {
-    return os << "<" << m.x << ", " << m.y << ", " << m.z << ">";
+    return lhs[x] == rhs[x] && lhs[y] == rhs[y] && lhs[z] == rhs[z];
+}
+mag_type& operator+= (mag_type& lhs, const mag_type& rhs)
+{
+    lhs[x] += rhs[x];
+    lhs[y] += rhs[y];
+    lhs[z] += rhs[z];
+    return lhs;
+}
+mag_type operator+ (mag_type lhs, const mag_type& rhs)
+{
+    return lhs += rhs;
 }
 class moon
 {
 public:
-    typedef mag pos_type;
-    typedef mag vel_type;
+    typedef mag_type pos_type;
+    typedef mag_type vel_type;
     moon() :
         pos_(),
         vel_()
@@ -70,34 +86,51 @@ public:
         pos_(pos),
         vel_()
     {}
-    void update_velocity(const moon& other)
+    void update_velocity(moon& other)
     {
-        if ( pos_.x < other.pos_.x ) ++vel_.x;
-        else if ( pos_.x > other.pos_.x ) --vel_.x;
-        if ( pos_.y < other.pos_.y ) ++vel_.y;
-        else if ( pos_.y > other.pos_.y ) --vel_.y;
-        if ( pos_.z < other.pos_.z ) ++vel_.z;
-        else if ( pos_.z > other.pos_.z ) --vel_.z;
+        for ( mag_type::size_type i = 0; i < pos_.size(); ++i )
+        {
+            update_velocity_n(other, i);
+        }
+    }
+    void update_velocity_n(moon& other, mag_type::size_type n)
+    {
+        if ( pos_[n] < other.pos_[n] )
+        {
+            ++vel_[n];
+            --other.vel_[n];
+        }
+        else if ( pos_[n] > other.pos_[n] )
+        {
+            --vel_[n];
+            ++other.vel_[n];
+        }
     }
     void move()
     {
-        pos_.x += vel_.x;
-        pos_.y += vel_.y;
-        pos_.z += vel_.z;
+        for( mag_type::size_type i = 0; i < pos_.size(); ++i )
+        {
+            move_dim(i);
+        }
+    }
+    void move_dim(mag_type::size_type dim)
+    {
+        pos_[dim] += vel_[dim];
     }
     size_t energy() const
     {
-        return ( std::abs(pos_.x) +
-                 std::abs(pos_.y) +
-                 std::abs(pos_.z) ) *
-               ( std::abs(vel_.x) +
-                 std::abs(vel_.y) +
-                 std::abs(vel_.z) );
+        return ( std::abs(pos_[x]) +
+                 std::abs(pos_[y]) +
+                 std::abs(pos_[z]) ) *
+               ( std::abs(vel_[x]) +
+                 std::abs(vel_[y]) +
+                 std::abs(vel_[z]) );
     }
     std::ostream& to_ostream(std::ostream& os) const
     {
         return os << "pos:" << pos_ << ", vel: " << vel_;
     }
+    bool equal(const moon& other) const { return pos_ == other.pos_ && vel_ == other.vel_; }
 
 private:
     pos_type pos_;
@@ -107,15 +140,99 @@ std::ostream& operator<< (std::ostream& os, const moon& m)
 {
     return m.to_ostream(os);
 }
-
-typedef std::vector<moon> moons_type;
-std::ostream& operator<< (std::ostream& os, const moons_type& m)
+bool operator== (const moon& lhs, const moon& rhs)
 {
-    for ( auto&& moon : m )
+    return lhs.equal(rhs);
+}
+
+class moon_system
+{
+public:
+    typedef std::vector<moon> moons_type;
+    typedef std::vector<moon::pos_type> positions_type;
+    moon_system(const moons_type& moons) :
+        origin_(moons),
+        moons_(moons)
+    {}
+    moon_system(const positions_type& moon_positions) :
+        origin_(),
+        moons_()
     {
-        os << moon << "\n";
+        std::copy(moon_positions.begin(), moon_positions.end(), std::back_inserter(origin_));
+        moons_ = origin_;
     }
-    return os;
+    std::ostream& to_ostream(std::ostream& os) const
+    {
+        for ( auto&& moon : moons_ )
+        {
+            os << moon << "\n";
+        }
+        return os;
+    }
+    void step()
+    {
+        for ( auto i = moons_.begin(); i != moons_.end(); ++i )
+        {
+            for ( auto j = std::next(i); j != moons_.end(); ++j )
+            {
+                i->update_velocity(*j);
+            }
+        }
+        for ( auto&& moon : moons_ )
+        {
+            moon.move();
+        }
+    }
+    void step_dim(mag_type::size_type dim)
+    {
+        for ( auto i = moons_.begin(); i != moons_.end(); ++i )
+        {
+            for ( auto j = std::next(i); j != moons_.end(); ++j )
+            {
+                i->update_velocity_n(*j, dim);
+            }
+        }
+        for ( auto&& moon : moons_ )
+        {
+            moon.move_dim(dim);
+        }
+    }
+    size_t find_period()
+    {
+        size_t xp = find_period_n(x);
+        size_t yp = find_period_n(y);
+        size_t zp = find_period_n(z);
+        return std::lcm(std::lcm(xp, yp), zp);
+    }
+    size_t find_period_n(mag_type::size_type dim)
+    {
+        size_t steps = 0;
+        do
+        {
+            step_dim(dim);
+            ++steps;
+        }
+        while ( moons_ != origin_ );
+        return steps;
+    }
+    size_t energy() const
+    {
+        size_t total = 0;
+        for ( auto&& moon : moons_ )
+        {
+            total += moon.energy();
+        }
+        return total;
+    }
+    moons_type& moons() { return moons_; }
+private:
+    moons_type origin_;
+    moons_type moons_;
+};
+
+std::ostream& operator<< (std::ostream& os, const moon_system& m)
+{
+    return m.to_ostream(os);
 }
 
 
@@ -158,37 +275,19 @@ int main()
 
     for ( auto&& datum : data )
     {
-        moons_type moons;
-        for ( auto&& moon : datum.first )
-        {
-            moons.emplace_back(moon);
-        }
+        moon_system moons(datum.first);
 
         std::cout << "After Step 0:\n" << moons << "\n";
+        /**
         const int steps = datum.second;
         for ( int step = 0; step < steps; ++step )
         {
-            for ( auto&& moon : moons )
-            {
-                for ( auto&& other_moon : moons )
-                {
-                    moon.update_velocity(other_moon);
-                }
-            }
-            for ( auto&& moon : moons )
-            {
-                moon.move();
-            }
-
+            moons.step();
         }
-        std::cout << "After Step " << steps << ":\n";
-        size_t total = 0;
-        for ( auto&& moon : moons )
-        {
-            total += moon.energy();
-            std::cout << moon << ", energy: " << moon.energy() << "\n";
-        }
-        std::cout << "total: " << total << "\n\n";
+        **/
+        auto steps = moons.find_period();
+        std::cout << "After Step " << steps << ":\n" << moons << "\n";
+        //std::cout << "total: " << total << "\n\n";
     }
 
     return 0;
