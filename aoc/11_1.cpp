@@ -195,7 +195,7 @@ private:
         if ( it != blocks_.end() )
         {
             coord normaliser = { 0 - it->first.x, 0 - it->first.y };
-            std::map<coord, size_t> normd;
+            decltype(blocks_) normd;
             std::transform(blocks_.begin(), blocks_.end(), std::inserter(normd, normd.begin()),
             [&normaliser](const decltype(normd)::value_type& v)
             {

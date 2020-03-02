@@ -15,7 +15,7 @@ class computer
 {
 public:
 
-    typedef size_t size_type;
+    typedef ptrdiff_t size_type;
     typedef std::vector<size_type> program;
     typedef std::string source;
     typedef std::function<size_type()> get_input_cb;
@@ -26,7 +26,7 @@ public:
         size_type ptr = 0;
         bool paused = false;
         size_type relative_base = 0;
-        bool finished() const { return ptr >= prog.size(); }
+        bool finished() const { return ptr >= static_cast<size_type>(prog.size()); }
         void inc(size_type i = 1) { set(ptr + i); }
         void set(size_type v) { if ( !paused ) ptr = v; }
     };
@@ -38,6 +38,8 @@ public:
     bool run(executable& exe) const;
 
     static program compile(const source& src);
+    static size_type get_from_stdin();
+    static void send_to_stdout(size_type n);
 
 private:
     enum class op
@@ -56,8 +58,6 @@ private:
 
     std::vector<program::size_type> get_arg_indices(executable& exe, int num_args) const;
 
-    static size_type get_from_stdin();
-    static void send_to_stdout(size_type n);
     void do_input(executable& exe) const;
     void do_sum(executable& exe) const;
     void do_output(executable& exe) const;

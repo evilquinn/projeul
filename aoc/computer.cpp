@@ -51,6 +51,7 @@ computer::program computer::compile(const source& src)
             std::cout << prog[i] << ", ";
         }
         std::cout << ";\n";
+        throw 42;
     }
     return prog;
 }
