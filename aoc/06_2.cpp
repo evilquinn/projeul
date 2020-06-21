@@ -64,9 +64,7 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-#if !defined(PROJEUL_AOC_PATH)
-#define PROJEUL_AOC_PATH "."
-#endif
+#include "path_def.hpp"
 
 const std::string orbit_map =
 "COM)B\n"

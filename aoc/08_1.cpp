@@ -45,10 +45,7 @@
 #include <iterator>
 #include <fstream>
 
-
-#if !defined(PROJEUL_AOC_PATH)
-#define PROJEUL_AOC_PATH "."
-#endif
+#include "path_def.hpp"
 
 class picture
 {

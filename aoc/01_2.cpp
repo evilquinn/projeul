@@ -17,11 +17,11 @@
 
 #include <fstream>
 #include <iostream>
+#include "path_def.hpp"
 
 int main(int, char* argv[])
 {
-    std::cout << argv[0] << ", " << argv[1] << "\n";
-    std::ifstream input(argv[0]);
+    std::ifstream input(PROJEUL_AOC_PATH "/01_input.txt");
     int in = 0;
     int result = 0;
     while ( input >> in )
