@@ -9,8 +9,8 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 
-typedef std::pair<std::string, int> chem_type;
-typedef std::map<std::string, int> chem_list;
+typedef std::pair<std::string, size_t> chem_type;
+typedef std::map<std::string, size_t> chem_list;
 typedef std::pair<chem_type, chem_list> rule_type;
 typedef std::map<std::string, rule_type> rules_type;
 
@@ -34,7 +34,7 @@ public:
     nanofactory(const std::string& rulestring) :
         rules_(parse_rules(rulestring))
     {}
-    int calc_ore_for(int quantity, const std::string& target_name)
+    size_t calc_ore_for(size_t quantity, const std::string& target_name)
     {
         chem_list cauldron;
         cauldron[target_name] = quantity;
@@ -96,7 +96,7 @@ public:
                 else
                 {
                     // entirely satisfied, deal with spares
-                    int remaining = target_rule.first.second - target.second;
+                    size_t remaining = target_rule.first.second - target.second;
                     target.second = 0;
                     if ( remaining > 0 ) spares[target.first] += remaining;
                 }
@@ -150,7 +150,7 @@ private:
                   return std::find(delims.begin(), delims.end(), v) != delims.end();
               });
         auto delim = std::find_first_of(beg, end, delims.begin(), delims.end());
-        auto quantity = boost::lexical_cast<int>(&*beg, std::distance(beg, delim));
+        auto quantity = boost::lexical_cast<size_t>(&*beg, std::distance(beg, delim));
         beg = ++delim;
         delim = std::find_first_of(beg, end, delims.begin(), delims.end());
         std::string symbol(beg, delim);
@@ -176,7 +176,7 @@ std::ostream& operator<< (std::ostream& os, const nanofactory& nf)
 int main()
 {
 
-    std::vector<std::pair<std::string, int> > data = {
+    std::vector<std::pair<std::string, size_t> > data = {
 
         { "10 ORE => 10 A\n"
           "1 ORE => 1 B\n"
@@ -234,62 +234,62 @@ int main()
           "7 XCVML => 6 RJRHP\n"
           "5 BHXH, 4 VRPVC => 5 LTCX\n", 2210736 },
 
-          { "165 ORE => 2 PNBGW\n"
-            "2 FTZDF, 14 RHWGQ => 8 JTRM\n"
-            "1 QSKQ, 1 GPRK => 8 HKXF\n"
-            "2 GKLGP => 3 MTJLK\n"
-            "4 HXMPQ => 8 VCRLF\n"
-            "2 DMXC, 2 MTJLK => 8 QSKQ\n"
-            "39 TCLZ, 17 DKHX, 7 HVPQT, 1 DWMW, 33 THWX, 67 JVGP, 44 RDZSG, 7 JCKT, 22 TDSC, 1 QHVR => 1 FUEL\n"
-            "6 VCRLF, 1 HXMPQ, 6 WQSDR => 3 GKLGP\n"
-            "1 WLSQZ => 1 WQSDR\n"
-            "1 MTJLK => 2 PVSV\n"
-            "5 HVPQT, 4 WCTW => 8 NWGDN\n"
-            "3 KNTQG => 9 TCLZ\n"
-            "1 JTRM, 3 QSKQ, 2 RGWB => 9 RDZSG\n"
-            "1 MTJLK, 15 DZMQ => 6 RCPN\n"
-            "1 PVSV, 3 HBWDW => 7 DZMQ\n"
-            "1 CTKPZ, 2 HKXF => 3 RFCDH\n"
-            "5 QNXTS, 2 GSJNV, 1 JVGP, 10 HJTHM, 5 HKXF, 10 DZMQ => 4 JCKT\n"
-            "1 PNBGW => 2 HVPQT\n"
-            "187 ORE => 1 XLNC\n"
-            "16 GPRK => 6 QNXTS\n"
-            "1 FTZDF => 9 GPRK\n"
-            "9 KNTQG => 2 WCTW\n"
-            "35 WQSDR, 2 HVPQT => 8 RPVGN\n"
-            "5 RPVGN => 2 RHWGQ\n"
-            "1 CTKPZ, 9 QSKQ, 2 QNXTS => 5 DTFRT\n"
-            "1 HXMPQ, 12 VCRLF, 1 RHQH => 6 FTZDF\n"
-            "3 RHWGQ, 19 DZMQ, 8 FPNMC => 9 FGNK\n"
-            "7 RHQH, 3 HWSG => 9 HBWDW\n"
-            "11 QNXTS, 1 CNVKX => 8 QHVR\n"
-            "4 HVPQT => 6 NRLP\n"
-            "4 NWGDN, 1 HWSG => 2 DMXC\n"
-            "20 DTFRT, 4 NRLP, 1 CTKPZ => 8 HJTHM\n"
-            "2 BSVPD, 7 RHQH => 6 FPNMC\n"
-            "3 NSRB => 4 BSVPD\n"
-            "1 DZMQ => 3 GSJNV\n"
-            "2 GMNXP, 4 GSJNV, 1 ZRBR => 3 WPWM\n"
-            "6 RCPN => 4 CNVKX\n"
-            "1 NSRB => 5 RGWB\n"
-            "22 VCRLF => 4 NSRB\n"
-            "4 XLNC, 24 KNTQG => 9 WLSQZ\n"
-            "36 NWGDN => 2 WQZQ\n"
-            "5 CPMCX, 2 FGNK, 5 DTFRT => 2 ZRBR\n"
-            "1 CTKPZ, 1 GMNXP, 6 QNXTS => 4 KRDWH\n"
-            "9 RHWGQ, 16 FTZDF, 1 JVGP, 1 GMNXP, 3 HKXF, 9 DTFRT, 27 CTKPZ, 1 GKLGP => 9 DWMW\n"
-            "5 WQSDR, 4 NRLP, 3 TCLZ => 1 RHQH\n"
-            "4 NRLP => 5 GMNXP\n"
-            "158 ORE => 5 KNTQG\n"
-            "24 GMNXP, 6 JVGP, 1 BHVR, 4 KRDWH, 1 WPWM, 2 RFCDH => 7 TDSC\n"
-            "1 WCTW => 7 HXMPQ\n"
-            "10 BSVPD => 9 THWX\n"
-            "18 RGWB, 1 HJTHM => 3 DKHX\n"
-            "1 WQZQ, 4 VCRLF, 10 HVPQT => 3 CPMCX\n"
-            "14 BSVPD, 6 FPNMC, 5 TCLZ => 8 JVGP\n"
-            "4 WQZQ, 1 HXMPQ, 4 VCRLF => 3 HWSG\n"
-            "2 HWSG => 9 CTKPZ\n"
-            "4 NSRB, 1 GPRK => 4 BHVR\n", 337075 }
+        { "165 ORE => 2 PNBGW\n"
+          "2 FTZDF, 14 RHWGQ => 8 JTRM\n"
+          "1 QSKQ, 1 GPRK => 8 HKXF\n"
+          "2 GKLGP => 3 MTJLK\n"
+          "4 HXMPQ => 8 VCRLF\n"
+          "2 DMXC, 2 MTJLK => 8 QSKQ\n"
+          "39 TCLZ, 17 DKHX, 7 HVPQT, 1 DWMW, 33 THWX, 67 JVGP, 44 RDZSG, 7 JCKT, 22 TDSC, 1 QHVR => 1 FUEL\n"
+          "6 VCRLF, 1 HXMPQ, 6 WQSDR => 3 GKLGP\n"
+          "1 WLSQZ => 1 WQSDR\n"
+          "1 MTJLK => 2 PVSV\n"
+          "5 HVPQT, 4 WCTW => 8 NWGDN\n"
+          "3 KNTQG => 9 TCLZ\n"
+          "1 JTRM, 3 QSKQ, 2 RGWB => 9 RDZSG\n"
+          "1 MTJLK, 15 DZMQ => 6 RCPN\n"
+          "1 PVSV, 3 HBWDW => 7 DZMQ\n"
+          "1 CTKPZ, 2 HKXF => 3 RFCDH\n"
+          "5 QNXTS, 2 GSJNV, 1 JVGP, 10 HJTHM, 5 HKXF, 10 DZMQ => 4 JCKT\n"
+          "1 PNBGW => 2 HVPQT\n"
+          "187 ORE => 1 XLNC\n"
+          "16 GPRK => 6 QNXTS\n"
+          "1 FTZDF => 9 GPRK\n"
+          "9 KNTQG => 2 WCTW\n"
+          "35 WQSDR, 2 HVPQT => 8 RPVGN\n"
+          "5 RPVGN => 2 RHWGQ\n"
+          "1 CTKPZ, 9 QSKQ, 2 QNXTS => 5 DTFRT\n"
+          "1 HXMPQ, 12 VCRLF, 1 RHQH => 6 FTZDF\n"
+          "3 RHWGQ, 19 DZMQ, 8 FPNMC => 9 FGNK\n"
+          "7 RHQH, 3 HWSG => 9 HBWDW\n"
+          "11 QNXTS, 1 CNVKX => 8 QHVR\n"
+          "4 HVPQT => 6 NRLP\n"
+          "4 NWGDN, 1 HWSG => 2 DMXC\n"
+          "20 DTFRT, 4 NRLP, 1 CTKPZ => 8 HJTHM\n"
+          "2 BSVPD, 7 RHQH => 6 FPNMC\n"
+          "3 NSRB => 4 BSVPD\n"
+          "1 DZMQ => 3 GSJNV\n"
+          "2 GMNXP, 4 GSJNV, 1 ZRBR => 3 WPWM\n"
+          "6 RCPN => 4 CNVKX\n"
+          "1 NSRB => 5 RGWB\n"
+          "22 VCRLF => 4 NSRB\n"
+          "4 XLNC, 24 KNTQG => 9 WLSQZ\n"
+          "36 NWGDN => 2 WQZQ\n"
+          "5 CPMCX, 2 FGNK, 5 DTFRT => 2 ZRBR\n"
+          "1 CTKPZ, 1 GMNXP, 6 QNXTS => 4 KRDWH\n"
+          "9 RHWGQ, 16 FTZDF, 1 JVGP, 1 GMNXP, 3 HKXF, 9 DTFRT, 27 CTKPZ, 1 GKLGP => 9 DWMW\n"
+          "5 WQSDR, 4 NRLP, 3 TCLZ => 1 RHQH\n"
+          "4 NRLP => 5 GMNXP\n"
+          "158 ORE => 5 KNTQG\n"
+          "24 GMNXP, 6 JVGP, 1 BHVR, 4 KRDWH, 1 WPWM, 2 RFCDH => 7 TDSC\n"
+          "1 WCTW => 7 HXMPQ\n"
+          "10 BSVPD => 9 THWX\n"
+          "18 RGWB, 1 HJTHM => 3 DKHX\n"
+          "1 WQZQ, 4 VCRLF, 10 HVPQT => 3 CPMCX\n"
+          "14 BSVPD, 6 FPNMC, 5 TCLZ => 8 JVGP\n"
+          "4 WQZQ, 1 HXMPQ, 4 VCRLF => 3 HWSG\n"
+          "2 HWSG => 9 CTKPZ\n"
+          "4 NSRB, 1 GPRK => 4 BHVR\n", 337075 }
     };
 
     for ( auto&& datum : data )
