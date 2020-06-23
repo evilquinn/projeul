@@ -19,7 +19,7 @@
 #include <iostream>
 #include "path_def.hpp"
 
-int main(int, char* argv[])
+int main()
 {
     std::ifstream input(PROJEUL_AOC_PATH "/01_input.txt");
     int in = 0;
