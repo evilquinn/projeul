@@ -75,3 +75,6 @@ target_link_libraries( 13_1 boost
 
 add_executable ( 14_1 14_1.cpp )
 target_link_libraries( 14_1 boost )
+
+add_executable ( 14_2 14_2.cpp )
+target_link_libraries( 14_2 boost )
