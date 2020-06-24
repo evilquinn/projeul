@@ -5,14 +5,15 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <boost/lexical_cast.hpp>
 
 typedef std::pair<std::string, size_t> chem_type;
-typedef std::map<std::string, size_t> chem_list;
+typedef std::unordered_map<std::string, size_t> chem_list;
 typedef std::pair<chem_type, chem_list> rule_type;
-typedef std::map<std::string, rule_type> rules_type;
+typedef std::unordered_map<std::string, rule_type> rules_type;
 
 std::ostream& operator<< (std::ostream& os, const chem_list& cl)
 {
@@ -58,20 +59,19 @@ public:
         {
             throw std::runtime_error(std::string("no rule to make target_name: ") + target_name);
         }
-        auto target_rule = rules_[target_name];
+        auto target_quantity = rules_[target_name].first.second;
         chem_list spares;
         size_t ores = quantity;
 
         while ( ores <= quantity && ores > 0 )
         {
-            chem_list cauldron;
-            cauldron[target_name] = target_rule.first.second;
+            chem_list cauldron = { { target_name, target_quantity } };
 
             // keep going until we've only got ORE
             while ( ! ( cauldron.size() == 1 && cauldron.count("ORE") == 1 ) )
             {
                 auto target_it = cauldron.begin();
-                if ( target_it != cauldron.end() && target_it->first == "ORE" )
+                if ( target_it->first == "ORE" )
                 {
                     ++target_it;
                 }
@@ -79,21 +79,17 @@ public:
                 cauldron.erase(target_it);
 
                 // first check if we've got anything in spares
-                if ( spares.count(target.first) > 0 )
+                if ( spares[target.first] >= target.second )
                 {
-                    if ( spares[target.first] >= target.second )
-                    {
-                        // don't need to manufacture, satisfy from spares
-                        spares[target.first] -= target.second;
-                        if ( spares[target.first] == 0 ) spares.erase(target.first);
-                        target.second = 0;
-                        continue;
-                    }
-                    else if ( spares[target.first] < target.second )
-                    {
-                        target.second -= spares[target.first];
-                        spares.erase(target.first);
-                    }
+                    // don't need to manufacture, satisfy from spares
+                    spares[target.first] -= target.second;
+                    target.second = 0;
+                    continue;
+                }
+                else if ( spares[target.first] > 0 )
+                {
+                    target.second -= spares[target.first];
+                    spares[target.first] = 0;
                 }
 
                 auto cauldron_target_rule = rules_[target.first];
@@ -112,27 +108,19 @@ public:
                     else
                     {
                         // entirely satisfied, deal with spares
-                        size_t remaining = cauldron_target_rule.first.second - target.second;
+                        spares[target.first] += cauldron_target_rule.first.second - target.second;
                         target.second = 0;
-                        if ( remaining > 0 ) spares[target.first] += remaining;
                     }
                 }
             }
             if ( cauldron["ORE"] <= ores )
             {
                 ores -= cauldron["ORE"];
-                result += target_rule.first.second;
+                result += target_quantity;
             }
-            else ores = 0;
-
-            if ( spares.size() == 0 )
+            else
             {
-                // cheeky shortcut
-                size_t result_step = result;
-                size_t ore_step = quantity - ores;
-                size_t remaining_steps = ores / ore_step;
-                result += ( result_step * remaining_steps );
-                ores %= ore_step;
+                ores = 0;
             }
         }
         return result;
@@ -211,7 +199,7 @@ int main()
 {
 
     std::vector<std::pair<std::string, size_t> > data = {
-
+/*
         { "10 ORE => 10 A\n"
           "1 ORE => 1 B\n"
           "7 A, 1 B => 1 C\n"
@@ -266,7 +254,7 @@ int main()
           "3 BHXH, 2 VRPVC => 7 MZWV\n"
           "121 ORE => 7 VRPVC\n"
           "7 XCVML => 6 RJRHP\n"
-          "5 BHXH, 4 VRPVC => 5 LTCX\n", 460664 },
+          "5 BHXH, 4 VRPVC => 5 LTCX\n", 460664 },*/
 
         { "165 ORE => 2 PNBGW\n"
           "2 FTZDF, 14 RHWGQ => 8 JTRM\n"
