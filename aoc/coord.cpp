@@ -44,7 +44,7 @@ bool operator==(const coord& a, const coord& b)
     return a.x == b.x && a.y == b.y;
 }
 
-void coord_incrementer::operator()(coord& c, int by) const
+void coord_incrementer::operator()(coord& c, ptrdiff_t by) const
 {
     if ( by > 0 )
     {
