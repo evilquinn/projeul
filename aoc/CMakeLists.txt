@@ -84,3 +84,5 @@ target_link_libraries( 15_1 boost
                             computer
                             coord )
 target_compile_definitions( 15_1 PUBLIC ${PROJEUL_AOC_PATH} )
+
+add_executable ( 16_1 16_1.cpp )
