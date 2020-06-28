@@ -75,12 +75,10 @@ struct node
 class node_walker
 {
 public:
-    node_walker() :
-        root_(std::make_unique<node>()),
-        curr_(root_.get()),
-        retreating_(false),
-        goal_value_(0)
-    {}
+    node_walker()
+    {
+        reset_root();
+    }
     int next_direction(computer::size_type last_status)
     {
         switch(last_status)
@@ -100,16 +98,25 @@ public:
                     return stop;
                 }
                 retreating_ = true;
+                if ( goal_value_ > 0 && curr_->value > farthest_from_goal_ )
+                {
+                    farthest_from_goal_ = curr_->value;
+                }
                 return reverse_dir(curr_->parent->pointing);
             }
             return curr_->pointing;
         }
         case goal :
         {
-            // return final answer;
+            // cache distance to goal
             if ( goal_value_ == 0 )
             {
                 goal_value_ = curr_->value + 1;
+
+                // now, let's just cheat, consider this now root, and look for
+                // longest path from here
+                reset_root();
+                return curr_->pointing;
             }
             [[fallthrough]];
         }
@@ -153,11 +160,23 @@ public:
     {
         return goal_value_;
     }
+    computer::size_type farthest_from_goal() const
+    {
+        return farthest_from_goal_;
+    }
 private:
+    void reset_root()
+    {
+        root_ = std::make_unique<node>();
+        curr_ = root_.get();
+        retreating_ = false;
+    }
+
     std::unique_ptr<node> root_;
     node*                 curr_;
     bool                  retreating_;
     computer::size_type   goal_value_;
+    computer::size_type   farthest_from_goal_;
 };
 
 }
@@ -181,6 +200,11 @@ public:
     {
         run();
         return path_finder_.goal_value();
+    }
+    computer::size_type time_to_fill_maze()
+    {
+        run();
+        return path_finder_.farthest_from_goal();
     }
 private:
     computer::size_type movement_command()
@@ -211,7 +235,7 @@ int main()
     std::ifstream ifs(PROJEUL_AOC_PATH "/15_input.txt");
     std::string source = std::string(std::istream_iterator<char>(ifs), std::istream_iterator<char>());
     robot_remote rob(source);
-    size_t result = rob.find_distance_to_goal();
+    size_t result = rob.time_to_fill_maze();
     std::cout << "result: " << result << "\n";
 
     return 0;
