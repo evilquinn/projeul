@@ -9,29 +9,37 @@
 namespace
 {
 
-int get_multiplier(int index, int mult)
+int get_multiplier(ptrdiff_t index, ptrdiff_t mult)
 {
     static const std::array<int, 4> base_pattern = { 0, 1, 0, -1 };
-
-    return base_pattern[ ( (index +1) / mult ) % base_pattern.size() ];
+    return base_pattern[ ( (index + 1) / mult ) % base_pattern.size() ];
 }
 
-std::vector<int> fft(std::vector<int> input, int iters)
+std::vector<int> fft(const std::vector<int>& cinput, int repeated, int iters)
 {
+    // fuck it, let's see.
+    std::vector<int> input;
+    for ( int r = 0; r < repeated; ++r )
+    {
+        std::copy(cinput.begin(), cinput.end(), std::back_inserter(input));
+    }
+
     for ( int i = 0; i < iters; ++i )
     {
         std::vector<int> output(input.size(), 0);
-        for ( size_t out_idx = 0; out_idx < input.size(); ++out_idx )
+        for ( size_t out_idx = 0; out_idx < output.size(); ++out_idx )
         {
-            for ( size_t in_idx = 0; in_idx < input.size(); ++in_idx )
+            for ( size_t in_idx = out_idx; in_idx < input.size(); ++in_idx )
             {
-                output[out_idx] += get_multiplier(in_idx, out_idx+1) * input[in_idx];
+                switch(get_multiplier(in_idx, out_idx+1))
+                {
+                case -1 : output[out_idx] -= input[in_idx]; break;
+                case  1 : output[out_idx] += input[in_idx]; break;
+                case  0 : in_idx += out_idx; break;
+                }
             }
             output[out_idx] %= 10;
-            if ( output[out_idx] < 0 )
-            {
-                output[out_idx] = std::abs(output[out_idx]);
-            }
+            output[out_idx] = std::abs(output[out_idx]);
         }
         input = std::move(output);
     }
@@ -66,7 +74,7 @@ int main()
     };
     for ( auto&& datum : data )
     {
-        auto result = fft(datum, 100);
+        auto result = fft(datum, 1, 100);
         std::cout << "result: " << result << "\n";
     }
 
@@ -76,7 +84,7 @@ int main()
     {
         input.push_back(ch - '0');
     }
-    std::cout << "super: " << fft(input, 100) << "\n";
+    std::cout << "super: " << fft(input, 10, 100) << "\n";
 
     return 0;
 }
