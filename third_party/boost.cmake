@@ -1,7 +1,6 @@
 
 add_library(boost INTERFACE IMPORTED GLOBAL)
 
-option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 if ( ${BUILD_BOOST} )
 
 include( ExternalProject )
@@ -23,6 +22,7 @@ ExternalProject_Add( external_boost
             --with-libraries=system
             --with-libraries=date_time
             --with-libraries=program_options
+            --with-libraries=iostreams
             --prefix=<INSTALL_DIR>
         BUILD_COMMAND
         ./b2 -d0 link=static variant=release threading=multi runtime-link=static
@@ -34,7 +34,7 @@ file(MAKE_DIRECTORY ${INCLUDE_DIR})
 add_dependencies(boost external_boost)
 set_target_properties(boost PROPERTIES
                       INTERFACE_INCLUDE_DIRECTORIES ${INCLUDE_DIR}
-                      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES ${INCLUDE_DIR})
+                      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES ${INCLUDE_DIR} )
 
 set( LIB_SUFFIX .a )
 

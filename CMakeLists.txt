@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.4)
 
 option(USE_CLANG "Use clang to build." OFF)
 if ( ${USE_CLANG} )
