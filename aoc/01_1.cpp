@@ -29,10 +29,11 @@
 
 #include <fstream>
 #include <iostream>
+#include "path_def.hpp"
 
 int main()
 {
-    std::ifstream input("/home/evilquinn/git/projeul/aoc/01_input.txt");
+    std::ifstream input( PROJEUL_AOC_PATH "/01_input.txt");
     int in = 0;
     int result = 0;
     while ( input >> in )

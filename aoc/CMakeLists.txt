@@ -1,5 +1,6 @@
 
 set ( PROJEUL_AOC_PATH PROJEUL_AOC_PATH="${CMAKE_CURRENT_SOURCE_DIR}" )
+add_compile_definitions( ${PROJEUL_AOC_PATH} )
 
 add_library(computer computer.cpp)
 target_link_libraries ( computer PUBLIC boost )
