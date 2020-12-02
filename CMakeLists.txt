@@ -39,6 +39,7 @@ add_subdirectory(third_party)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(aoc)
+add_subdirectory(aoc2020)
 add_subdirectory(number_lists)
 add_subdirectory(poker)
 add_subdirectory(utils)
