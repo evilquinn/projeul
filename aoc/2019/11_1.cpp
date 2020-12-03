@@ -81,9 +81,9 @@
 #include <iostream>
 #include <vector>
 
-#include <aoc/computer.hpp>
-#include <aoc/coord.hpp>
-#include <aoc/map.hpp>
+#include "../computer.hpp"
+#include "../coord.hpp"
+#include "../map.hpp"
 #include <set>
 #include <map>
 

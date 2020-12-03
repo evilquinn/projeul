@@ -12,9 +12,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "computer.hpp"
+#include "../computer.hpp"
 
-#include "path_def.hpp"
+#include "../path_def.hpp"
 
 
 

@@ -128,8 +128,8 @@
 #include <cmath>
 #include <boost/lexical_cast.hpp>
 
-#include "coord.hpp"
-#include <aoc/map.hpp>
+#include "../coord.hpp"
+#include "../map.hpp"
 
 //temp
 using coord_util::coord;

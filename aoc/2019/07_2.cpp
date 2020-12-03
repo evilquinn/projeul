@@ -46,7 +46,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "computer.hpp"
+#include "../computer.hpp"
 
 const std::string super_source =
 "3,8,1001,8,10,8,105,1,0,0,21,34,47,72,93,110,191,272,"

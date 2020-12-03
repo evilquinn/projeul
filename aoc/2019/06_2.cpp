@@ -64,7 +64,7 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-#include "path_def.hpp"
+#include "../path_def.hpp"
 
 const std::string orbit_map =
 "COM)B\n"

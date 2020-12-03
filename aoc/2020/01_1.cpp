@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
-#include "../aoc/path_def.hpp"
+#include "../path_def.hpp"
 
 size_t find_product_for_recurs(const std::vector<size_t>& data, size_t offset, size_t num_cands, size_t sum_target)
 {
@@ -12,11 +12,15 @@ size_t find_product_for_recurs(const std::vector<size_t>& data, size_t offset, s
     {
         for ( auto it = std::next(data.begin(), offset); it != data.end(); ++it )
         {
+            if ( *it > sum_target / num_cands )
+            {
+                break;
+            }
             size_t cand = sum_target - *it;
             if ( std::binary_search(std::next(it), data.end(), cand) )
             {
                 result = *it * cand;
-                std::cout << "cands: " << num_cands << ", target: " << sum_target << ", answer: " << result << std::endl;
+                //std::cout << "cands: " << num_cands << ", target: " << sum_target << ", answer: " << result << std::endl;
                 break;
             }
         }
@@ -25,12 +29,16 @@ size_t find_product_for_recurs(const std::vector<size_t>& data, size_t offset, s
     {
         for ( size_t i = offset; i < data.size(); ++i )
         {
+            if ( data[i] > sum_target / num_cands )
+            {
+                break;
+            }
             size_t next_target = sum_target - data[i];
             size_t cand_result = find_product_for_recurs(data, i + 1, num_cands - 1, next_target);
             if ( cand_result != 0 )
             {
                 result = data[i] * cand_result;
-                std::cout << "answer: " << result << std::endl;
+                //std::cout << "answer: " << result << std::endl;
                 break;
             }
         }
@@ -52,14 +60,7 @@ int main()
         data.push_back(boost::lexical_cast<size_t>(line));
     }
     std::sort(data.begin(), data.end());
-    for ( auto it = data.begin(); it != data.end(); ++it )
-    {
-        size_t cand = 2020 - *it;
-        if ( std::binary_search(std::next(it), data.end(), cand) )
-        {
-            std::cout << "answer: " << *it * cand << std::endl;
-        }
-    }
+
     size_t result = find_product_for(data, 2, 2020);
     std::cout << "result: " << result << std::endl;
     result = find_product_for(data, 3, 2020);

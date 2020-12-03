@@ -17,7 +17,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "path_def.hpp"
+#include "../path_def.hpp"
 
 int main()
 {
