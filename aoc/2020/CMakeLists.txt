@@ -5,3 +5,6 @@ add_executable ( 2020_01_1 01_1.cpp )
 
 add_executable ( 2020_02_1 02_1.cpp )
 target_link_libraries ( 2020_02_1 boost_regex )
+
+add_executable ( 2020_03_1 03_1.cpp )
+target_link_libraries ( 2020_03_1 map )
