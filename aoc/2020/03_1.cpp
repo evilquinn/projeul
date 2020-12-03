@@ -3,7 +3,6 @@
 
 #include "../coord.hpp"
 #include "../map.hpp"
-
 #include "../path_def.hpp"
 
 namespace status

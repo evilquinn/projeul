@@ -65,5 +65,7 @@ int main()
     std::cout << "result: " << result << std::endl;
     result = find_product_for(data, 3, 2020);
     std::cout << "result: " << result << std::endl;
+    result = find_product_for(data, 4, 1344);
+    std::cout << "result: " << result << std::endl;
     return 0;
 }
