@@ -11,6 +11,7 @@ namespace map_util
 
 typedef std::string line_type;
 typedef std::vector<line_type> map_type;
+typedef map_type::value_type::value_type value_type;
 
 std::ostream& operator<<(std::ostream& os, const line_type& line);
 std::ostream& operator<<(std::ostream& os, const map_type& map);
