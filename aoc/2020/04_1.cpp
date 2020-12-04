@@ -11,7 +11,7 @@
 
 #include "../path_def.hpp"
 
-typedef boost::function<bool(const std::string&)> field_validator_type;
+typedef bool(*field_validator_type)(const std::string&);
 typedef std::map<std::string, std::pair<bool, field_validator_type> > passport_fields_type;
 bool byr_validator(const std::string& value)
 {
