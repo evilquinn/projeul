@@ -32,6 +32,11 @@ bool computer::run(executable& exe) const
     return exe.finished();
 }
 
+void computer::set_output_cb(take_output_cb cb)
+{
+    output_cb_ = cb;
+}
+
 computer::program computer::compile(const source& src)
 {
     program prog;

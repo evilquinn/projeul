@@ -36,6 +36,7 @@ public:
              take_output_cb output_cb);
 
     bool run(executable& exe) const;
+    void set_output_cb(take_output_cb cb);
 
     static program compile(const source& src);
     static size_type get_from_stdin();
