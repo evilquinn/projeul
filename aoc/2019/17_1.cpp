@@ -60,19 +60,27 @@ void print_as_char(size_t val)
     std::cout << static_cast<char>(val);
 }
 
+static const std::string mr = "A,B,A,C,B,C,A,C,B,C\n";
+static const std::string a = "L,8,R,10,L,10\n";
+static const std::string b = "R,10,L,8,L,8,L,10\n";
+static const std::string c = "L,4,L,6,L,8,L,8\n";
+static const std::string v = "n\n";
+
+static const std::string all_moves = mr + a + b + c + v;
+
 class robot
 {
 public:
-    robot(std::istream& is) :
+    robot(const std::string& source) :
         martin_(),
-        comp_(computer::get_from_stdin,
-              martin_.tracker_hook()),
-        exe_( { comp_.compile(std::string(std::istream_iterator<char>(is), std::istream_iterator<char>())) } )
+        comp_(input_hook(),
+              print_as_char),
+        exe_( { comp_.compile(source) } )
     {}
     void run()
     {
         comp_.run(exe_);
-        std::cout << "tracked: " << martin_ << std::endl;
+        std::cout << martin_ << std::endl;
     }
     size_t sum_align_params()
     {
@@ -89,18 +97,38 @@ public:
         }
         return result;
     }
+    computer::size_type input_move()
+    {
+        auto tmp = move_pos_++;
+        std::cout << "sending: " << all_moves.at(tmp) << std::endl;
+        if ( move_pos_ == all_moves.size() ) comp_.set_output_cb(computer::send_to_stdout);
+        return static_cast<computer::size_type>(all_moves.at(tmp));
+    }
+    computer::get_input_cb input_hook()
+    {
+        return boost::bind(&robot::input_move, this);
+    }
 private:
     tracker martin_;
     computer comp_;
     computer::executable exe_;
+    size_t move_pos_;
 };
 
 int main()
 {
     std::ifstream inf(PROJEUL_AOC_PATH "/17_input.txt");
-    robot robby(inf);
+    std::string source((std::istream_iterator<char>(inf)), std::istream_iterator<char>());
+
+#if 0
+    robot robby(source);
     robby.run();
     size_t result = robby.sum_align_params();
-    std::cout << "result: " << result << std::endl;
+    std::cout << "sum_align_params: " << result << std::endl;
+#endif
+
+    source[0] = '2'; // hack the code
+    robot ghost(source);
+    ghost.run();
     return 0;
 }
