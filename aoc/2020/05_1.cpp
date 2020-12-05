@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 #include <aoc/path_def.hpp>
 #include <aoc/coord.hpp>
@@ -48,18 +49,21 @@ size_t find_seat_id(const std::string& seat_spec)
 int main()
 {
     std::ifstream inf(PROJEUL_AOC_PATH "/05_input.txt");
-    std::vector<std::string> data;
+    std::vector<size_t> data;
     for ( std::string line; std::getline(inf, line); )
     {
-        data.emplace_back(std::move(line));
+        data.emplace_back(find_seat_id(line));
     }
-    size_t max = 0;
-    for ( auto&& datum : data )
+    std::sort(data.begin(), data.end());
+    std::cout << "max: " << data.back() << "\n";
+
+    for ( size_t i = 0; i < data.size() - 1; ++i )
     {
-        auto result = find_seat_id(datum);
-        if ( result > max ) max = result;
-        std::cout << "spec: " << datum << ", seat id: " << result << "\n";
+        if ( data[i] + 1 != data[i + 1] )
+        {
+            std::cout << "my seat: " << data[i] + 1 << "\n";
+            break;
+        }
     }
-    std::cout << "max: " << max << "\n";
     return 0;
 }
