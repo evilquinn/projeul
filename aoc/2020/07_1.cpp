@@ -54,7 +54,7 @@ public:
                 result.adj = groups[1];
                 if ( groups[2] == "no other bags")
                 {
-                    bags_.emplace_back(result);
+                    bags_[groups[1]] = {};
                     continue;
                 }
                 auto contained_begin = groups[2].begin();
@@ -64,9 +64,10 @@ public:
                 {
                     if ( boost::regex_search(contained_begin, contained_end, contained_groups, contained) )
                     {
-                        result.contains[contained_groups[2]] = boost::lexical_cast<int>(contained_groups[1]);
+                        bags_[groups[1]][contained_groups[2]] = boost::lexical_cast<int>(contained_groups[1]);
                         contained_in_[contained_groups[2]].insert(result.adj);
                     }
+                    else throw 42;
                     if ( contained_end != groups[2].end() )
                     {
                         contained_begin = contained_end + contained_delim.size();
@@ -77,7 +78,6 @@ public:
                         contained_begin = contained_end;
                     }
                 } while ( contained_begin != groups[2].end() );
-                bags_.emplace_back(result);
                 continue;
             }
             throw 42;
@@ -100,9 +100,24 @@ public:
         }
         return containers.size();
     }
+    int count_contained_bags(const std::string& container)
+    {
+        if ( contained_count_cache_.count(container) > 0 )
+        {
+            return contained_count_cache_[container];
+        }
+        int result = 0;
+        for ( auto&& contained : bags_[container] )
+        {
+            result += contained.second + ( contained.second * count_contained_bags(contained.first) );
+        }
+        contained_count_cache_[container] = result;
+        return result;
+    }
 private:
-    std::vector<bag> bags_;
+    std::map<std::string, std::map<std::string, int> > bags_;
     std::map<std::string, std::set<std::string> > contained_in_;
+    std::map<std::string, int> contained_count_cache_;
 };
 
 int main()
@@ -113,5 +128,7 @@ int main()
     bp.parse_bags(inf);
     auto result = bp.count_bags_could_contain("shiny gold");
     std::cout << "result: " << result << std::endl;
+    auto count = bp.count_contained_bags("shiny gold");
+    std::cout << "count: " << count << std::endl;
     return 0;
 }
