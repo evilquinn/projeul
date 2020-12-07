@@ -358,9 +358,23 @@ std::ostream& operator<< (std::ostream& os, const path_node* from)
     }
     return os;
 }
-void print_tree(std::ostream& os, const path_node* origin)
+void print_tree(std::ostream& os, const path_node* origin, const std::string& indent = "")
 {
-    
+    static const std::string indent_by = "  ";
+    if ( !os ) return;
+    if ( !origin ) return;
+    os << indent << origin->value << origin->pos;
+    std::string sep = "=>";
+    for ( auto&& next : origin->paths )
+    {
+        os << sep << next->value << next->pos;
+        sep = ",";
+    }
+    os << "\n";
+    for ( auto&& next : origin->paths )
+    {
+        print_tree(os, next.get(), indent + indent_by);
+    }
 }
 
 typedef std::pair<int, std::vector<char> > goal_distance_score_type;
@@ -409,79 +423,31 @@ class maze_walker
 {
 public:
     std::unique_ptr<path_node> root;
-    std::unique_ptr<path_node> goal_root;
 
     maze_walker(map_type& map, aoc::coord origin) :
-        root(),
-        map_(map),
-        coord_to_node_()
+        map_(map)
     {
-        root = explore_maze(map, origin);
-        goal_posies_ = find_goals(map);
+        generate_tree(map, origin);
+        goal_posies_ = find_goals();
         std::cout << "goal_posies:\n" << goal_posies_ << std::endl;
-        goal_scores_ = find_goal_distances(goal_posies_);
+        goal_scores_ = find_goal_distances();
         std::cout << "goal_scores:\n" << goal_scores_ << std::endl;
     }
-    std::vector<aoc::coord> solve_maze()
+    void generate_tree(map_type& map, aoc::coord origin)
     {
-        std::vector<aoc::coord> result;
-        std::vector<char> gates;
-        std::vector<char> targets;
-        for ( auto&& key : goal_posies_ )
-        {
-            if ( isupper(key.first) ) gates.push_back(key.first);
-            else if ( key.first == '@' ) continue;
-            else targets.push_back(key.first);
-        }
-
-        std::map<char, int> goal_guesses_;
-        for ( auto&& goal : goal_posies_ )
-        {
-            for ( auto&& other_goal : goal_posies_ )
-            {
-                if ( other_goal == goal ) continue;
-
-            }
-        }
-
-        char curr = '@';
-        while ( targets.size() > 1 )
-        {
-            std::map<char, int> option_scores;
-            for ( auto&& target : targets )
-            {
-                if ( goal_scores_[curr][target].second.size() > 0 ) continue;
-                int h = 0;
-                option_scores[target] = goal_scores_[curr][target].first + h;
-            }
-        }
-
-
-
-
-
-        return result;
-    }
-    std::vector<char> options_for();
-    std::unique_ptr<path_node> explore_maze(map_type& map, aoc::coord origin)
-    {
-        std::unique_ptr<path_node> root_node = std::make_unique<path_node>(origin, map[origin]);
-        goal_root = std::make_unique<path_node>(origin, map[origin]);
-
+        root = std::make_unique<path_node>(origin, map[origin]);
         std::map<path_node*, std::vector<aoc::coord> > unexplored = {
-            { root_node.get(), explore_directions }
+            { root.get(), explore_directions }
         };
-        coord_to_node_[root_node->pos] = root_node.get();
+        coord_to_node_[root->pos] = root.get();
+        goal_to_node_[root->value] = root.get();
         path_node* pos = unexplored.begin()->first;
-        path_node* goal_pos = goal_root.get();
         while ( pos )
         {
             if ( unexplored[pos].size() == 0 )
             {
                 // backtrack
                 pos = pos->parent;
-                if ( !pos || !islower(pos->value) ) continue;
-                goal_pos = goal_pos->parent;
                 continue;
             }
             aoc::coord dir = unexplored[pos].back(); unexplored[pos].pop_back();
@@ -495,38 +461,34 @@ public:
 
             // goal?
             if ( !islower(pos->value) ) continue;
-            goal_pos->paths.emplace_back(std::make_unique<path_node>(pos->pos, pos->value, goal_pos));
-            goal_pos = goal_pos->paths.rbegin()->get();
+            goal_to_node_[pos->value] = pos;
         }
-        return root_node;
     }
 
-    static goal_pos_type find_goals(const map_type& map)
+    goal_pos_type find_goals()
     {
         goal_pos_type result;
-        for ( auto&& position : map )
+        for ( auto&& position : goal_to_node_ )
         {
-            if ( position.second == '.' ||
-                 position.second == '#' ) continue;
-            result[position.second] = position.first;
+            result[position.first] = position.second->pos;
         }
         return result;
     }
     
-    goal_dist_type find_goal_distances(goal_pos_type& goal_positions)
+    goal_dist_type find_goal_distances()
     {
         goal_dist_type result;
-        for ( auto&& goal_pos : goal_positions )
+        for ( auto&& goal_pos : goal_to_node_ )
         {
             if ( isupper(goal_pos.first) ) continue;
-            result[goal_pos.first] = find_goal_distances_for_goal(goal_pos.first, goal_positions, result);
+            result[goal_pos.first] = find_goal_distances_for_goal(goal_pos.first, result);
         }
         return result;
     }
-    std::map<char, goal_distance_score_type> find_goal_distances_for_goal(char goal, goal_pos_type& goal_positions, goal_dist_type& cache_)
+    std::map<char, goal_distance_score_type> find_goal_distances_for_goal(char goal, goal_dist_type& cache_)
     {
         std::map<char, goal_distance_score_type> result;
-        for ( auto&& goal_pos : goal_positions )
+        for ( auto&& goal_pos : goal_to_node_ )
         {
             if ( isupper(goal_pos.first) ) continue;
             if ( goal_pos.first == goal ) continue;
@@ -537,7 +499,7 @@ public:
             }
             else
             {
-                result[goal_pos.first] = distance_from(goal_positions[goal], goal_pos.second, cache_);
+                result[goal_pos.first] = distance_from(goal_to_node_[goal]->pos, goal_pos.second->pos, cache_);
             }
         }
         return result;
@@ -553,9 +515,8 @@ public:
         std::vector<char> gates;
         for ( auto&& step : from_path )
         {
-            if ( goal_posies_.count(map_[step]) == 0 ) continue;
             if ( !isupper(map_[step]) ) continue;
-            gates.push_back(map_[step]);
+            gates.push_back(tolower(map_[step]));
         }
         return { from_path.size() - 1, std::move(gates) };
     }
@@ -597,6 +558,7 @@ public:
 private:
     map_type& map_;
     std::map<aoc::coord, path_node*> coord_to_node_;
+    std::map<char, path_node*> goal_to_node_;
     goal_pos_type goal_posies_;
     goal_dist_type goal_scores_;
     
