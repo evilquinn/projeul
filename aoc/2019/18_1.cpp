@@ -317,6 +317,359 @@ private:
 int main()
 {
 #if 0
+=======
+aoc::coord map_end(const map_type& map)
+{
+    aoc::coord result;
+    if ( map.empty() ) return result;
+    return map.rbegin()->first + aoc::coord{ 1, 1 };
+}
+
+struct path_node
+{
+    aoc::coord pos;
+    char value;
+    path_node* parent;
+    size_t score;
+    std::vector<std::unique_ptr<path_node> > paths;
+
+    path_node(aoc::coord pos, char value) : path_node(pos, value, nullptr)
+    {}
+    path_node(aoc::coord pos,
+              char value,
+              path_node* parent) : pos(pos), value(value), parent(parent), score(1)
+    {}
+};
+std::ostream& operator<< (std::ostream& os, const path_node* from)
+{
+    if ( !os ) return os;
+    std::map<aoc::coord, char> path;
+    while ( from )
+    {
+        path[from->pos] = from->value;
+        from = from->parent;
+    }
+    auto path_rend = path.rend();
+    std::string sep;
+    for ( auto rit = path.rbegin(); rit != path_rend; ++rit)
+    {
+        os << sep << rit->second << rit->first;
+        sep = "->";
+    }
+    return os;
+}
+void print_tree(std::ostream& os, const path_node* origin)
+{
+    
+}
+
+typedef std::pair<int, std::vector<char> > goal_distance_score_type;
+typedef std::map<char, std::map<char, goal_distance_score_type> > goal_dist_type;
+std::ostream& operator<< ( std::ostream& os, const goal_dist_type& goal_distances)
+{
+    if ( !os ) return os;
+    for ( auto&& goal_distance : goal_distances )
+    {
+        os << goal_distance.first << " : {";
+        for ( auto&& distance : goal_distance.second )
+        {
+            os << " { " << distance.first << ", " << distance.second.first << ", {";
+            std::string sep = " ";
+            for ( auto&& dependency : distance.second.second )
+            {
+                os << sep << dependency;
+                sep = ", ";
+            }
+            os << " }";
+        }
+        os << " }\n";
+    }
+    return os;
+}
+
+static const aoc::coord up = { -1, 0 };
+static const aoc::coord down = { 1, 0 };
+static const aoc::coord left = { 0, -1 };
+static const aoc::coord right = { 0, 1 };
+static const std::vector<aoc::coord> explore_directions = { up, right, down, left };
+
+std::ostream& operator<< ( std::ostream& os, const std::vector<aoc::coord> coords)
+{
+    if ( !os ) return os;
+    std::string sep;
+    for ( auto&& coord : coords )
+    {
+        os << sep << coord;
+        sep = ", ";
+    }
+    return os;
+}
+
+class maze_walker
+{
+public:
+    std::unique_ptr<path_node> root;
+    std::unique_ptr<path_node> goal_root;
+
+    maze_walker(map_type& map, aoc::coord origin) :
+        root(),
+        map_(map),
+        coord_to_node_()
+    {
+        root = explore_maze(map, origin);
+        goal_posies_ = find_goals(map);
+        std::cout << "goal_posies:\n" << goal_posies_ << std::endl;
+        goal_scores_ = find_goal_distances(goal_posies_);
+        std::cout << "goal_scores:\n" << goal_scores_ << std::endl;
+    }
+    std::vector<aoc::coord> solve_maze()
+    {
+        std::vector<aoc::coord> result;
+        std::vector<char> gates;
+        std::vector<char> targets;
+        for ( auto&& key : goal_posies_ )
+        {
+            if ( isupper(key.first) ) gates.push_back(key.first);
+            else if ( key.first == '@' ) continue;
+            else targets.push_back(key.first);
+        }
+
+        std::map<char, int> goal_guesses_;
+        for ( auto&& goal : goal_posies_ )
+        {
+            for ( auto&& other_goal : goal_posies_ )
+            {
+                if ( other_goal == goal ) continue;
+
+            }
+        }
+
+        char curr = '@';
+        while ( targets.size() > 1 )
+        {
+            std::map<char, int> option_scores;
+            for ( auto&& target : targets )
+            {
+                if ( goal_scores_[curr][target].second.size() > 0 ) continue;
+                int h = 0;
+                option_scores[target] = goal_scores_[curr][target].first + h;
+            }
+        }
+
+
+
+
+
+        return result;
+    }
+    std::vector<char> options_for();
+    std::unique_ptr<path_node> explore_maze(map_type& map, aoc::coord origin)
+    {
+        std::unique_ptr<path_node> root_node = std::make_unique<path_node>(origin, map[origin]);
+        goal_root = std::make_unique<path_node>(origin, map[origin]);
+
+        std::map<path_node*, std::vector<aoc::coord> > unexplored = {
+            { root_node.get(), explore_directions }
+        };
+        coord_to_node_[root_node->pos] = root_node.get();
+        path_node* pos = unexplored.begin()->first;
+        path_node* goal_pos = goal_root.get();
+        while ( pos )
+        {
+            if ( unexplored[pos].size() == 0 )
+            {
+                // backtrack
+                pos = pos->parent;
+                if ( !pos || !islower(pos->value) ) continue;
+                goal_pos = goal_pos->parent;
+                continue;
+            }
+            aoc::coord dir = unexplored[pos].back(); unexplored[pos].pop_back();
+            aoc::coord cand = pos->pos + dir;
+            if ( map[cand] == '#' ) continue;
+            if ( pos->parent && cand == pos->parent->pos ) continue; // we came this way..
+            pos->paths.emplace_back(std::make_unique<path_node>(cand, map[cand], pos));
+            pos = pos->paths.rbegin()->get();
+            unexplored.insert({ pos, explore_directions }); // no change if already there
+            coord_to_node_[pos->pos] = pos;
+
+            // goal?
+            if ( !islower(pos->value) ) continue;
+            goal_pos->paths.emplace_back(std::make_unique<path_node>(pos->pos, pos->value, goal_pos));
+            goal_pos = goal_pos->paths.rbegin()->get();
+        }
+        return root_node;
+    }
+
+    static goal_pos_type find_goals(const map_type& map)
+    {
+        goal_pos_type result;
+        for ( auto&& position : map )
+        {
+            if ( position.second == '.' ||
+                 position.second == '#' ) continue;
+            result[position.second] = position.first;
+        }
+        return result;
+    }
+    
+    goal_dist_type find_goal_distances(goal_pos_type& goal_positions)
+    {
+        goal_dist_type result;
+        for ( auto&& goal_pos : goal_positions )
+        {
+            if ( isupper(goal_pos.first) ) continue;
+            result[goal_pos.first] = find_goal_distances_for_goal(goal_pos.first, goal_positions, result);
+        }
+        return result;
+    }
+    std::map<char, goal_distance_score_type> find_goal_distances_for_goal(char goal, goal_pos_type& goal_positions, goal_dist_type& cache_)
+    {
+        std::map<char, goal_distance_score_type> result;
+        for ( auto&& goal_pos : goal_positions )
+        {
+            if ( isupper(goal_pos.first) ) continue;
+            if ( goal_pos.first == goal ) continue;
+            // in the cache??
+            if ( cache_.count(goal_pos.first) )
+            {
+                result[goal_pos.first] = cache_[goal_pos.first][goal];
+            }
+            else
+            {
+                result[goal_pos.first] = distance_from(goal_positions[goal], goal_pos.second, cache_);
+            }
+        }
+        return result;
+    }
+    goal_distance_score_type distance_from(aoc::coord from, aoc::coord to, goal_dist_type& cache_)
+    {
+        if ( cache_.count(map_[from]) > 0 &&
+             cache_[map_[from]].count(map_[to]) )
+        {
+            return cache_[map_[from]][map_[to]];
+        }
+        std::vector<aoc::coord> from_path = path_from(from, to);
+        std::vector<char> gates;
+        for ( auto&& step : from_path )
+        {
+            if ( goal_posies_.count(map_[step]) == 0 ) continue;
+            if ( !isupper(map_[step]) ) continue;
+            gates.push_back(map_[step]);
+        }
+        return { from_path.size() - 1, std::move(gates) };
+    }
+    std::vector<aoc::coord> path_from(aoc::coord from, aoc::coord to)
+    {
+        std::vector<aoc::coord> result;
+        if ( from == to ) return result;
+
+        if ( from == root->pos )
+        {
+            path_node* cur = coord_to_node_[to]; // be nice
+            while ( cur )
+            {
+                result.push_back(cur->pos);
+                cur = cur->parent;
+            }
+            std::reverse(result.begin(), result.end());
+            return result;
+        }
+
+        std::cout << "working path from: " << from << " to: " << to << "\n";
+        std::vector<aoc::coord> from_path = path_from(root->pos, from);
+        std::cout << "path to from: " << from_path << "\n";
+        std::vector<aoc::coord> to_path = path_from(root->pos, to);
+        std::cout << "path to to: " << to_path << "\n";
+
+        auto diff_point = std::mismatch(from_path.begin(), from_path.end(),
+                                        to_path.begin(), to_path.end());
+        from_path.erase(from_path.begin(), diff_point.first - 1);
+        to_path.erase(to_path.begin(), diff_point.second);
+        result.insert(result.end(), from_path.rbegin(), from_path.rend());
+        std::cout << "result.1: " << result << "\n";
+        result.insert(result.end(), to_path.begin(), to_path.end());
+        std::cout << "result.2: " << result << "\n";
+
+        return result;
+    }
+
+private:
+    map_type& map_;
+    std::map<aoc::coord, path_node*> coord_to_node_;
+    goal_pos_type goal_posies_;
+    goal_dist_type goal_scores_;
+    
+};
+
+
+class maze
+{
+public:
+    
+    maze(std::istream& is) :
+        map_(map_from_input(is)),
+        map_boundary_(map_end(map_)),
+        goals_(find_goals(map_)),
+        origin_(goals_['@']),
+        maze_runner_(map_, origin_)
+    {
+    }
+    static map_type map_from_input(std::istream& is)
+    {
+        aoc::coord pos;
+        map_type result;
+        for ( std::string line; std::getline(is, line); )
+        {
+            for ( auto&& square : line )
+            {
+                result[pos] = square;
+                ++pos.y;
+            }
+            pos.y = 0;
+            ++pos.x;
+        }
+        return result;
+    }
+    static goal_pos_type find_goals(const map_type& map)
+    {
+        goal_pos_type result;
+        for ( auto&& position : map )
+        {
+            if ( position.second == '.' ||
+                 position.second == '#' ) continue;
+            result[position.second] = position.first;
+        }
+        return result;
+    }
+    std::ostream& to_ostream(std::ostream& os)
+    {
+        if ( !os ) return os;
+        for ( int i = 0; i < map_boundary_.x; ++i )
+        {
+            for ( int j = 0; j < map_boundary_.y; ++j )
+            {
+                os << map_[{ i, j }];
+            }
+            os << '\n';
+        }
+        for ( auto&& goal : goals_ )
+        {
+            os << "[ " << goal.first << " -> " << goal.second << " ]\n";
+        }
+        return os;
+    }
+private:
+    map_type map_;
+    aoc::coord map_boundary_;
+    goal_pos_type goals_;
+    aoc::coord origin_;
+    maze_walker maze_runner_;
+};
+
+int main()
+{
+>>>>>>> 0ed1cf2... aoc 2019 day 18, lots of mechanics, no solution
     std::vector<std::string> data = {
         "#########\n"
         "#b.A.@.a#\n"
@@ -331,6 +684,7 @@ int main()
         "###d#e#f################\n"
         "###A#B#C################\n"
         "###g#h#i################\n"
+<<<<<<< HEAD
         "########################",
         "#################\n"
         "#i.G..c...e..H.p#\n"
