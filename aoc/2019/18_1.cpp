@@ -428,9 +428,7 @@ public:
         map_(map)
     {
         generate_tree(map, origin);
-        goal_posies_ = find_goals();
-        std::cout << "goal_posies:\n" << goal_posies_ << std::endl;
-        goal_scores_ = find_goal_distances();
+        find_goal_distances();
         std::cout << "goal_scores:\n" << goal_scores_ << std::endl;
     }
     void generate_tree(map_type& map, aoc::coord origin)
@@ -464,61 +462,47 @@ public:
             goal_to_node_[pos->value] = pos;
         }
     }
-
-    goal_pos_type find_goals()
-    {
-        goal_pos_type result;
-        for ( auto&& position : goal_to_node_ )
-        {
-            result[position.first] = position.second->pos;
-        }
-        return result;
-    }
     
-    goal_dist_type find_goal_distances()
+    void find_goal_distances()
     {
-        goal_dist_type result;
         for ( auto&& goal_pos : goal_to_node_ )
         {
-            if ( isupper(goal_pos.first) ) continue;
-            result[goal_pos.first] = find_goal_distances_for_goal(goal_pos.first, result);
+            goal_scores_[goal_pos.first] = find_goal_distances_for_goal(goal_pos.first);
         }
-        return result;
     }
-    std::map<char, goal_distance_score_type> find_goal_distances_for_goal(char goal, goal_dist_type& cache_)
+    std::map<char, goal_distance_score_type> find_goal_distances_for_goal(char goal)
     {
         std::map<char, goal_distance_score_type> result;
         for ( auto&& goal_pos : goal_to_node_ )
         {
-            if ( isupper(goal_pos.first) ) continue;
-            if ( goal_pos.first == goal ) continue;
+            if ( goal_pos.first == goal ) continue; // don't care about distance to me
             // in the cache??
-            if ( cache_.count(goal_pos.first) )
+            if ( goal_scores_.count(goal_pos.first) )
             {
-                result[goal_pos.first] = cache_[goal_pos.first][goal];
+                result[goal_pos.first] = goal_scores_[goal_pos.first][goal];
             }
             else
             {
-                result[goal_pos.first] = distance_from(goal_to_node_[goal]->pos, goal_pos.second->pos, cache_);
+                result[goal_pos.first] = distance_from(goal_to_node_[goal]->pos, goal_pos.second->pos);
             }
         }
         return result;
     }
-    goal_distance_score_type distance_from(aoc::coord from, aoc::coord to, goal_dist_type& cache_)
+    goal_distance_score_type distance_from(aoc::coord from, aoc::coord to)
     {
-        if ( cache_.count(map_[from]) > 0 &&
-             cache_[map_[from]].count(map_[to]) )
+        if ( goal_scores_.count(map_[from]) > 0 &&
+             goal_scores_[map_[from]].count(map_[to]) > 0 )
         {
-            return cache_[map_[from]][map_[to]];
+            return goal_scores_[map_[from]][map_[to]];
         }
         std::vector<aoc::coord> from_path = path_from(from, to);
-        std::vector<char> gates;
+        std::vector<char> depends;
         for ( auto&& step : from_path )
         {
             if ( !isupper(map_[step]) ) continue;
-            gates.push_back(tolower(map_[step]));
+            depends.push_back(tolower(map_[step]));
         }
-        return { from_path.size() - 1, std::move(gates) };
+        return { from_path.size() - 1, std::move(depends) };
     }
     std::vector<aoc::coord> path_from(aoc::coord from, aoc::coord to)
     {
@@ -537,20 +521,15 @@ public:
             return result;
         }
 
-        std::cout << "working path from: " << from << " to: " << to << "\n";
         std::vector<aoc::coord> from_path = path_from(root->pos, from);
-        std::cout << "path to from: " << from_path << "\n";
         std::vector<aoc::coord> to_path = path_from(root->pos, to);
-        std::cout << "path to to: " << to_path << "\n";
 
         auto diff_point = std::mismatch(from_path.begin(), from_path.end(),
                                         to_path.begin(), to_path.end());
         from_path.erase(from_path.begin(), diff_point.first - 1);
         to_path.erase(to_path.begin(), diff_point.second);
         result.insert(result.end(), from_path.rbegin(), from_path.rend());
-        std::cout << "result.1: " << result << "\n";
         result.insert(result.end(), to_path.begin(), to_path.end());
-        std::cout << "result.2: " << result << "\n";
 
         return result;
     }
@@ -559,7 +538,6 @@ private:
     map_type& map_;
     std::map<aoc::coord, path_node*> coord_to_node_;
     std::map<char, path_node*> goal_to_node_;
-    goal_pos_type goal_posies_;
     goal_dist_type goal_scores_;
     
 };
@@ -614,10 +592,6 @@ public:
                 os << map_[{ i, j }];
             }
             os << '\n';
-        }
-        for ( auto&& goal : goals_ )
-        {
-            os << "[ " << goal.first << " -> " << goal.second << " ]\n";
         }
         return os;
     }
