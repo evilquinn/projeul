@@ -59,3 +59,6 @@ add_executable ( 16_1 16_1.cpp )
 add_executable ( 2019_17_1 17_1.cpp )
 target_link_libraries( 2019_17_1 computer
                                  coord )
+
+add_executable ( 2019_18_1 18_1.cpp )
+target_link_libraries( 2019_18_1 coord )
