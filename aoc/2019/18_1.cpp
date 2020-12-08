@@ -148,6 +148,7 @@ public:
         explore_targets();
         //std::cout << goal_paths_ << std::endl;
         solve_maze();
+        std::cout << "maze solved" << std::endl;
     }
     void parse_map(std::istream& is)
     {
