@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <boost/dynamic_bitset.hpp>
+#include <boost/optional.hpp>
 
 #include <aoc/path_def.hpp>
 
@@ -64,28 +66,86 @@ instructions_type parse_instructions(std::istream& is)
     }
     return result;
 }
-std::pair<ptrdiff_t, bool> process(instructions_type& instructions)
+
+class processor
 {
-    std::vector<bool> used(instructions.size(), false);
-    ptrdiff_t result = 0;
-    if ( instructions.empty() ) return { result, true };
-    size_t idx = 0;
-    size_t count = 0;
-    while ( true )
+public:
+    processor(instructions_type ins) :
+        instructions_(ins),
+        used_(instructions_.size(), false),
+        idx_(0),
+        accumulator_(0)
+    {}
+    bool process()
     {
-        std::cout << count++ << std::endl;
-        if ( idx == instructions.size() ) return { result, true };
-        if ( used[idx] ) { return { result, false }; }
-        used[idx] = true;
-        switch(instructions[idx].operation)
+        while ( idx_ < instructions_.size() && process_one() )
         {
-        case jmp : idx    += instructions[idx].arg;        break;
-        case acc : result += instructions[idx].arg; ++idx; break;
-        case nop : ++idx;                                        break;
-        default  : throw 42;
         }
+        return idx_ == instructions_.size();
     }
-}
+    ptrdiff_t accumulator() const
+    {
+        return accumulator_;
+    }
+    bool process_one()
+    {
+        //std::cout << ins_list_.size() << ", " << idx_ << ", " << instructions_[idx_] << std::endl;
+        if ( idx_ == instructions_.size() ) return true;
+        if ( idx_ > instructions_.size() ) throw std::runtime_error("idx_ > instructions_.size()");
+        if ( used_[idx_] ) { return false; }
+        used_[idx_] = true;
+        ins_list_.push_back(idx_);
+        switch(instructions_[idx_].operation)
+        {
+        case jmp : idx_ += instructions_[idx_].arg; break;
+        case acc : accumulator_ += instructions_[idx_].arg; ++idx_; break;
+        case nop : ++idx_; break;
+        default  : throw std::runtime_error("unexpected instruction operation");
+        }
+        return true;
+    }
+    void reset()
+    {
+        accumulator_ = 0;
+        idx_ = 0;
+        used_.reset();
+        ins_list_.clear();
+    }
+    bool special_hack()
+    {
+        if ( process() )
+        {
+            std::cout << "we won! accumed: " << accumulator_ << "\n";
+            return true;
+        }
+
+        std::vector<size_t> fix_cands;
+        for ( auto&& ins : ins_list_ )
+        {
+            if ( instructions_[ins].operation != acc ) fix_cands.push_back(ins);
+        }
+        for ( auto&& cand : fix_cands )
+        {
+            reset();
+            if ( instructions_[cand].operation == nop ) instructions_[cand].operation = jmp;
+            else instructions_[cand].operation = nop;
+            if ( process() )
+            {
+                std::cout << "we won! accumed: " << accumulator_ << "\n";
+                return true;
+            }
+            if ( instructions_[cand].operation == nop ) instructions_[cand].operation = jmp;
+            else instructions_[cand].operation = nop;
+        }
+        return false;
+    }
+private:
+    instructions_type instructions_;
+    std::vector<size_t> ins_list_;
+    boost::dynamic_bitset<> used_;
+    size_t idx_;
+    ptrdiff_t accumulator_;
+};
 
 int main()
 {
@@ -105,8 +165,6 @@ int main()
     {
         std::istringstream iss(datum);
         auto instructions = parse_instructions(iss);
-        auto res = process(instructions);
-        std::cout << "res: " << res << std::endl;
     }
     return 0;
 #endif
@@ -116,9 +174,9 @@ int main()
     {
         instructions.emplace_back(std::move(ins));
     }
-    auto result = process(instructions);
-    //auto result = find_broken_instruction(instructions);
-    //auto result = try_fix(instructions, 7);
-    std::cout << "result: " << result.first << ", completed: " << result.second << std::endl;
+    processor poker(std::move(instructions));
+    auto completed = poker.special_hack();
+    auto accumed = poker.accumulator();
+    std::cout << "accumed: " << accumed << ", completed: " << completed << std::endl;
     return 0;
 }
