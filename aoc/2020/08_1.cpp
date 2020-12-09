@@ -54,31 +54,33 @@ std::ostream& operator<< (std::ostream& os, const instruction& ins)
     return os;
 }
 
-typedef std::vector<std::pair<instruction, bool> > instructions_type;
+typedef std::vector<instruction> instructions_type;
 instructions_type parse_instructions(std::istream& is)
 {
     instructions_type result;
     for ( instruction ins; is >> ins; )
     {
-        result.emplace_back( std::pair{ std::move(ins), false } );
+        result.emplace_back(std::move(ins));
     }
     return result;
 }
-ptrdiff_t process(instructions_type& instructions)
+std::pair<ptrdiff_t, bool> process(instructions_type& instructions)
 {
+    std::vector<bool> used(instructions.size(), false);
     ptrdiff_t result = 0;
-    if ( instructions.empty() ) return result;
+    if ( instructions.empty() ) return { result, true };
     size_t idx = 0;
     size_t count = 0;
     while ( true )
     {
         std::cout << count++ << std::endl;
-        if ( instructions[idx].second ) return result;
-        instructions[idx].second = true;
-        switch(instructions[idx].first.operation)
+        if ( idx == instructions.size() ) return { result, true };
+        if ( used[idx] ) { return { result, false }; }
+        used[idx] = true;
+        switch(instructions[idx].operation)
         {
-        case jmp : idx    += instructions[idx].first.arg;        break;
-        case acc : result += instructions[idx].first.arg; ++idx; break;
+        case jmp : idx    += instructions[idx].arg;        break;
+        case acc : result += instructions[idx].arg; ++idx; break;
         case nop : ++idx;                                        break;
         default  : throw 42;
         }
@@ -109,12 +111,14 @@ int main()
     return 0;
 #endif
     std::ifstream inf(PROJEUL_AOC_PATH "/08_input.txt");
-    std::vector<std::pair<instruction, bool> > instructions;
+    instructions_type instructions;
     for ( instruction ins; inf >> ins; )
     {
-        instructions.emplace_back( std::pair{ std::move(ins), false } );
+        instructions.emplace_back(std::move(ins));
     }
     auto result = process(instructions);
-    std::cout << "result: " << result << std::endl;
+    //auto result = find_broken_instruction(instructions);
+    //auto result = try_fix(instructions, 7);
+    std::cout << "result: " << result.first << ", completed: " << result.second << std::endl;
     return 0;
 }
