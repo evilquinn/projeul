@@ -9,33 +9,48 @@
 #include <algorithm>
 #include <aoc/path_def.hpp>
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 class lister
 {
 public:
-    lister(std::istream& is, size_t preamble_size)
+    lister(std::istream& is, size_t preamble_size) : list_(), presort(preamble_size)
     {
-        for ( size_t i = 0; i < preamble_size; ++i )
+        size_t idx = preamble_size;
+        while ( is.good() )
         {
-            preamble_.push_back(get_next(is));
+            list_.push_back(get_next(is));
         }
+        prebegin_ = list_.begin();
+        preend_ = prebegin_ + preamble_size;
         bool uhoh = false;
         while ( ! uhoh )
         {
-            size_t next = get_next(is);
-            if ( validate(next) )
+            if ( validate(list_[idx]) )
             {
-                insert_preamble(next);
+                ++prebegin_;
+                ++preend_;
+                ++idx;
                 continue;
             }
-            std::cout << "value: " << next << " isn't valid for preamble:\n { ";
+            std::cout << "value: " << list_[idx] << " isn't valid for preamble:\n { ";
             uhoh = true;
+        }
+        //auto cand = find_nums_for(4, list_[idx]);
+        for ( size_t i = 2; i < 1000; ++i )
+        {
+            auto cand = find_nums_for(i, list_[idx]);
+            if ( cand > 0 )
+            {
+                std::cout << "found: " << cand << "\n";
+                break;
+            }
         }
     }
     bool validate(size_t value)
     {
         // find mid, sum will always be from num in either part
-        std::deque<size_t> presort(preamble_.size());
-        std::partial_sort_copy(preamble_.begin(), preamble_.end(), presort.begin(), presort.end());
+        std::partial_sort_copy(prebegin_, preend_, presort.begin(), presort.end());
         size_t value_mid = value / 2;
         auto premid = std::upper_bound(presort.begin(), presort.end(), value_mid);
         auto preend = std::lower_bound(premid, presort.end(), value);
@@ -46,19 +61,48 @@ public:
         }
         return false;
     }
-    void insert_preamble(size_t next)
-    {
-        preamble_.pop_front();
-        preamble_.push_back(next);
-    }
     size_t get_next(std::istream& is)
     {
         size_t result;
         is >> result;
         return result;
     }
+
+    boost::multiprecision::cpp_int find_nums_for(size_t num_cands, size_t sum_target)
+    {
+        boost::multiprecision::cpp_int cand = 0;
+        for ( size_t i = 0; i < num_cands; ++i )
+        {
+            cand += list_[i];
+        }
+        size_t cont_begin = num_cands;
+        for ( size_t i = num_cands; i < list_.size(); ++i )
+        {
+            if ( cand == sum_target )
+            {
+                cont_begin = i-num_cands;
+                break;
+            }
+            cand -= list_[i-num_cands];
+            cand += list_[i];
+        }
+        if ( cand != sum_target ) return 0;
+        boost::multiprecision::cpp_int smallest = std::numeric_limits<size_t>::max();
+        boost::multiprecision::cpp_int biggest = 0;
+        for ( size_t j = cont_begin; j < cont_begin + num_cands; ++j )
+        {
+            std::cout << j << " : " << list_[j] << ", ";
+            if ( list_[j] < smallest ) smallest = list_[j];
+            if ( list_[j] > biggest ) biggest = list_[j];
+        }
+        std::cout << " : " << smallest << ", " << biggest << "\n";
+        return smallest + biggest;
+    }
 private:
-    std::deque<size_t> preamble_;
+    std::vector<size_t> list_;
+    std::vector<size_t> presort;
+    std::vector<size_t>::iterator prebegin_;
+    std::vector<size_t>::iterator preend_;
 };
 
 
