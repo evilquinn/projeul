@@ -85,7 +85,7 @@ public:
             }
             else if ( position.second == occd )
             {
-                if ( count_adj_occd(position.first) >= 4 )
+                if ( count_adj_occd(position.first) >= 5 )
                 {
                     next[position.first] = empty;
                     ++result;
@@ -100,9 +100,12 @@ public:
         size_t result = 0;
         for ( auto&& direction : directions )
         {
-            auto cand = c + direction;
-            if ( floor_plan_.count(cand) == 0 ) continue;
-            if ( floor_plan_[cand] == occd ) ++result;
+            for ( auto cand = c + direction; floor_plan_.count(cand) != 0; cand += direction )
+            {
+                if ( floor_plan_[cand] == floor ) continue;
+                if ( floor_plan_[cand] == occd ) ++result;
+                break;
+            }
         }
         return result;
     }
