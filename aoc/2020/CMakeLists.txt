@@ -24,3 +24,6 @@ add_executable ( 2020_08_1 08_1.cpp )
 add_executable ( 2020_09_1 09_1.cpp )
 
 add_executable ( 2020_10_1 10_1.cpp )
+
+add_executable ( 2020_11_1 11_1.cpp )
+target_link_libraries ( 2020_11_1 coord )
