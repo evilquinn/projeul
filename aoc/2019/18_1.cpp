@@ -124,7 +124,17 @@ std::ostream& operator<< ( std::ostream& os, const goal_paths_type& goal_paths)
             os << sep << "{ '" << goals_to_string(to_goal_data.first) << "' : " << to_goal_data.second << " }";
             sep = ", ";
         }
-        os << " }\n";
+        os << " }";
+    }
+    return os;
+}
+typedef std::map<size_t, goal_paths_type> robot_goal_paths_type;
+std::ostream& operator<< (std::ostream& os, const robot_goal_paths_type robot_goals)
+{
+    if ( !os ) return os;
+    for ( auto&& robot : robot_goals )
+    {
+        os << "{ " << robot.first << ": " << robot.second << " }";
     }
     return os;
 }
@@ -136,7 +146,7 @@ public:
         parse_map(is);
         std::cout << map_ << std::endl;
         explore_targets();
-        std::cout << goal_paths_ << std::endl;
+        //std::cout << goal_paths_ << std::endl;
         solve_maze();
     }
     void parse_map(std::istream& is)
@@ -154,7 +164,7 @@ public:
                 else if ( square == '@' )
                 {
                     targets_[square] = pos;
-                    origin_ = pos;
+                    origins_.push_back(pos);
                 }
                 ++pos.x;
             }
@@ -169,18 +179,21 @@ public:
     }
     void explore_targets()
     {
-        auto targets_copy = targets_;
-        for ( auto&& from_target : targets_ )
+        for ( size_t robot = 0; robot < origins_.size(); ++robot )
         {
-            explore_paths_from(from_target.first);
+            explore_paths_from(origins_[robot], robot);
+            for ( auto&& from_target : targets_ )
+            {
+                if ( goal_paths_[robot][goalbits['@']].count(goalbits[from_target.first]) == 0 ) continue; // bypass unless this target can be seen by this robot
+                explore_paths_from(from_target.second, robot);
+            }
         }
     }
-    void explore_paths_from(char from)
+    void explore_paths_from(aoc::coord from, size_t robot)
     {
-        aoc::coord pos = targets_[from];
         goal_path pos_data(0);
         std::map<aoc::coord, size_t> costs;
-        std::deque<std::pair<std::pair<aoc::coord, aoc::coord>, goal_path> > to_explore = { { { pos, pos }, pos_data } };
+        std::deque<std::pair<std::pair<aoc::coord, aoc::coord>, goal_path> > to_explore = { { { from, from }, pos_data } };
         // to_explore[n].first.first -> coord (from)
         // to_explore[n].first.second -> coord (to)
         // to_explore[n].second -> goal_path: cost, goals passed and gates passed on the way to here
@@ -201,10 +214,10 @@ public:
                 if ( islower(map_[cand]) )
                 {
                     cand_goal_path.goals |= goalbits[map_[cand]];
-                    auto path_key = std::pair{ goalbits[map_[targets_[from]]], goalbits[map_[cand]] };
-                    if ( goal_paths_[path_key.first][path_key.second].cost > cand_goal_path.cost )
+                    auto path_key = std::pair{ goalbits[map_[from]], goalbits[map_[cand]] };
+                    if ( goal_paths_[robot][path_key.first][path_key.second].cost > cand_goal_path.cost )
                     {
-                        goal_paths_[path_key.first][path_key.second] = cand_goal_path;
+                        goal_paths_[robot][path_key.first][path_key.second] = cand_goal_path;
                     }
                 }
                 if ( isupper(map_[cand]) ) cand_goal_path.gates |= goalbits[tolower(map_[cand])];
@@ -215,61 +228,95 @@ public:
     void solve_maze()
     {
         char start = '@';
-        uint32_t start_bit = goalbits['@'];
-        std::deque<std::pair<uint32_t, goal_path> > to_explore = { { start_bit, { 0, start_bit, 0 } } };
-        // to_explore[].first -> char (exploring from here)
+        uint32_t start_bit = goalbits[start];
+        //std::deque<std::pair<aoc::coord, goal_path> > to_explore;
+        // to_explore[].first -> coord (exploring from here)
         // to_explore[].second.cost -> cost to here
         // to_explore[].second.goals -> keys to here
+        std::deque<std::pair<std::vector<std::pair<aoc::coord, size_t> >, uint32_t> > to_explore;
+        // to_explore[].first -> position of each robot and cost to that point, and their collected keys
+        // to_explore[].first[].first -> a coord of a robot at this state
+        // to_explore[].first[].second -> cost to reach associated coord
+        // to_explore[].second -> keys collected by robot(s) so far
+        std::map<std::pair<aoc::coord, uint32_t>, size_t> costs;
+        // costs[pair{goal_coord, keys}] -> best cost so far to get to this goal with these keys
 
-        std::map<std::pair<uint32_t, uint32_t>, goal_path> costs = { { { start_bit, start_bit }, 0 } };
-        // costs[pair{goal_bit, keys}].cost -> best cost so far to get to this goal with these keys
+        std::vector<std::pair<aoc::coord, size_t> > start_spots;
+        for ( size_t i = 0; i < origins_.size(); ++i )
+        {
+            aoc::coord start_coord = origins_[i];
+            start_spots.push_back( { start_coord, 0 } );
+            costs[{ start_coord, start_bit}] = 0;
+        }
+        to_explore.push_back( { start_spots, start_bit } );
 
         while ( to_explore.size() > 0 )
         {
             auto explore_pos = to_explore.front();
             to_explore.pop_front();
-            auto curr_bit = explore_pos.first; // my bit
-            auto cand_targets = ( goalbits['*'] & ~(explore_pos.second.goals) ); // all other bits i haven't been to yet
-            for ( uint32_t i = 0; i < goalbits.size(); ++i )
+            bool explored = false;
+            for ( size_t ri = 0; ri < explore_pos.first.size(); ++ri )
             {
-                uint32_t cand_bit = ( 1 << i ); // next potential bit
-                if ( curr_bit == cand_bit ) continue; // the pos we're on isn't a candidate
-                if ( ! ( cand_targets & cand_bit ) ) continue; // it's not a candidate
-                auto gates = ( goal_paths_[curr_bit][cand_bit].gates & ~(explore_pos.second.goals) );
-                if ( gates != 0 ) continue; // there are gates we don't yet have keys to
-                auto cand_goal_path = explore_pos.second; // prepare next cand details
-                cand_goal_path.cost += goal_paths_[curr_bit][cand_bit].cost; // update the cost
-                cand_goal_path.goals |= goal_paths_[curr_bit][cand_bit].goals; // update the keys we've collected
-                if ( costs[{ cand_bit, cand_goal_path.goals }].cost <= cand_goal_path.cost ) continue; // already same/better path to here
-                costs[{ cand_bit, cand_goal_path.goals }] = cand_goal_path; // record new best path
-                to_explore.push_back({ cand_bit, cand_goal_path }); // remember to explore from there
+                auto& robot = explore_pos.first[ri];
+                auto curr_coord = robot.first; // my coord
+                auto curr_bit = goalbits[map_[curr_coord]]; // my bit
+                auto cand_targets = ( goalbits['*'] & ~(explore_pos.second) ); // all other bits i haven't been to yet
+                for ( uint32_t i = 0; i < goalbits.size(); ++i )
+                {
+                    uint32_t cand_bit = ( 1 << i ); // next potential bit
+                    auto cand_coord = targets_[std::next(goalbits.begin(), i + 1)->first]; // next potential coord
+                    if ( curr_bit == cand_bit ) continue; // the pos we're on isn't a candidate
+                    if ( goal_paths_[ri][goalbits['@']].count(cand_bit) == 0 ) continue; // bypass unless this target can be seen by this robot
+                    if ( ! ( cand_targets & cand_bit ) ) continue; // not a candidate, seen it already
+                    auto gates = ( goal_paths_[ri][curr_bit][cand_bit].gates & ~(explore_pos.second) );
+                    if ( gates != 0 ) continue; // there are gates we don't yet have keys to
+                    goal_path cand_goal_path;
+                    cand_goal_path.cost = robot.second + goal_paths_[ri][curr_bit][cand_bit].cost; // update the cost
+                    cand_goal_path.goals = explore_pos.second | goal_paths_[ri][curr_bit][cand_bit].goals; // update the keys we've collected
+                    auto new_robot_state = explore_pos;
+                    new_robot_state.first[ri].first = cand_coord;
+                    new_robot_state.first[ri].second = cand_goal_path.cost;
+                    new_robot_state.second |= cand_goal_path.goals;
+                    size_t cand_total_cost = 0;
+                    for ( auto&& coord_cost : new_robot_state.first )
+                    {
+                        cand_total_cost += coord_cost.second;
+                    }
+                    auto costkey = std::pair{cand_coord, new_robot_state.second };
+                    if ( costs.count(costkey) > 0 && costs[costkey] <= cand_total_cost ) continue; // already same/better path to here
+                    costs[costkey] = cand_total_cost; // record new best path
+                    to_explore.push_back(new_robot_state); // remember to explore from there
+                    explored = true;
+                }
+                if ( explored ) break;
             }
         }
 
         auto smallest_all_keys = std::numeric_limits<size_t>::max();
-        auto final_goal = goalbits['@'];
+        auto final_goal = origins_[0];
         for ( auto&& cost : costs )
         {
             if ( cost.first.second != goalbits['*'] ) continue; // doesn't have all keys
-            if ( smallest_all_keys > cost.second.cost )
+            size_t cand_cost = cost.second;
+            if ( smallest_all_keys > cand_cost )
             {
-                smallest_all_keys = cost.second.cost;
+                smallest_all_keys = cand_cost;
                 final_goal = cost.first.first;
             }
         }
-        std::cout << "WIN? finished at: " << goals_to_string(final_goal) << ", cost: " << smallest_all_keys << std::endl;
+        std::cout << "WIN? finished at: '" << map_[final_goal] << "' " << final_goal << ", cost: " << smallest_all_keys << std::endl;
     }
 private:
     std::map<aoc::coord, char> map_;
-    aoc::coord origin_;
+    std::vector<aoc::coord> origins_;
     std::map<char, aoc::coord> targets_;
-    goal_paths_type goal_paths_;
+    robot_goal_paths_type goal_paths_;
 };
 
 
 int main()
 {
-#if 1
+#if 0
     std::vector<std::string> data = {
         "#########\n"
         "#b.A.@.a#\n"
@@ -302,8 +349,23 @@ int main()
     }
 #endif
 #if 1
-
-    std::ifstream inf(PROJEUL_AOC_PATH "/18_input.txt");
+    std::vector<std::string> data = {
+        "#######\n"
+        "#a.#Cd#\n"
+        "##@#@##\n"
+        "#######\n"
+        "##@#@##\n"
+        "#cB#Ab#\n"
+        "#######"
+    };
+    for ( auto&& datum : data )
+    {
+        std::istringstream iss(datum);
+        maze_wanker maisy(iss);
+    }
+#endif
+#if 1
+    std::ifstream inf(PROJEUL_AOC_PATH "/18_2_input.txt");
     maze_wanker maisy(inf);
 #endif
 
