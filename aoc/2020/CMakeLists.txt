@@ -30,3 +30,5 @@ target_link_libraries ( 2020_11_1 coord )
 
 add_executable ( 2020_12_1 12_1.cpp )
 target_link_libraries ( 2020_12_1 coord )
+
+add_executable ( 2020_13_1 13_1.cpp )
