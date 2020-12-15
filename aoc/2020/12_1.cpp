@@ -21,8 +21,13 @@ const char left    = 'L';
 const char right   = 'R';
 const char forward = 'F';
 
-
-
+enum quadrant
+{
+    pospos = 0,
+    posneg = 1,
+    negpos = 2,
+    negneg = 3
+};
 struct action
 {
     char dir;
@@ -52,19 +57,16 @@ class ship
 public:
     ship() :
         pos_(),
-        heading_(east)
+        waypoint_({ 10, -1 })
     {}
     size_t take_actions(std::istream& is)
     {
         for ( std::string action_string; std::getline(is, action_string); )
         {
             auto action = to_action(action_string);
-            //std::cout << "before: "; to_ostream(std::cout);
-            //std::cout << " -> " << action;
             take_action(action);
-            //std::cout << ", after: "; to_ostream(std::cout); std::cout << std::endl;
         }
-        return pos_.x + pos_.y;
+        return ::abs(pos_.x) + ::abs(pos_.y);
     }
     void take_action(const action& action)
     {
@@ -77,7 +79,7 @@ public:
         case 'W' : move(action.dir, action.units); break;
         case 'L' : turn(action.dir, action.units); break;
         case 'R' : turn(action.dir, action.units); break;
-        case 'F' : move(heading_,   action.units); break;
+        case 'F' : forward(action.units); break;
         default  : throw std::runtime_error("take_action called with unexpected action.dir");
         }
     }
@@ -85,10 +87,10 @@ public:
     {
         switch(dir)
         {
-        case 'N' : pos_.y -= units; break;
-        case 'S' : pos_.y += units; break;
-        case 'E' : pos_.x += units; break;
-        case 'W' : pos_.x -= units; break;
+        case 'N' : waypoint_.y -= units; break;
+        case 'S' : waypoint_.y += units; break;
+        case 'E' : waypoint_.x += units; break;
+        case 'W' : waypoint_.x -= units; break;
         default  : throw std::runtime_error("move called with unexpected direction");
         }
     }
@@ -101,31 +103,106 @@ public:
             turn(side);
         }
     }
+    quadrant get_quadrant(const aoc::coord& c)
+    {
+        if ( c.x < 0 && c.y < 0 ) return negneg;
+        else if ( c.x < 0 && c.y >= 0 ) return negpos;
+        else if ( c.x >= 0 && c.y >= 0 ) return pospos;
+        else return posneg; // ( c.x >= 0 && c.y < 0 )
+    }
     void turn(char side)
     {
         if ( side != left && side != right ) throw std::runtime_error("turn called with unexpected side");
-        switch(heading_)
+        auto prev = waypoint_;
+        switch(get_quadrant(prev))
         {
-        case north : side == left ? heading_ = west  : heading_ = east;  break;
-        case south : side == left ? heading_ = east  : heading_ = west;  break;
-        case east  : side == left ? heading_ = north : heading_ = south; break;
-        case west  : side == left ? heading_ = south : heading_ = north; break;
+        case posneg :
+        {
+            if ( side == left )
+            {
+                waypoint_.x = prev.y;
+                waypoint_.y = -prev.x;
+            }
+            else // ( side == right )
+            {
+                waypoint_.x = ::abs(prev.y);
+                waypoint_.y = prev.x;
+            }
+            break;
+        }
+        case negpos :
+        {
+            if ( side == left )
+            {
+                waypoint_.x = prev.y;
+                waypoint_.y = ::abs(prev.x);
+            }
+            else // ( side == right )
+            {
+                waypoint_.x = -prev.y;
+                waypoint_.y = prev.x;
+            }
+            break;
+        }
+        case pospos :
+        {
+            if ( side == left )
+            {
+                waypoint_.x = prev.y;
+                waypoint_.y = -prev.x;
+            }
+            else // ( side == right )
+            {
+                waypoint_.x = -prev.y;
+                waypoint_.y = prev.x;
+            }
+            break;
+        }
+        case negneg :
+        {
+            if ( side == left )
+            {
+                waypoint_.x = prev.y;
+                waypoint_.y = ::abs(prev.x);
+            }
+            else // ( side == right )
+            {
+                waypoint_.x = ::abs(prev.y);
+                waypoint_.y = prev.x;
+            }
+            break;
+        }
         default    : throw std::runtime_error("turn called but have unexpected heading_");
         }
     }
-    void to_ostream(std::ostream& os)
+    void forward(size_t units)
     {
-        os << "pos: " << pos_ << ", head: " << heading_;
+        for ( size_t i = 0; i < units; ++i )
+        {
+            pos_ += waypoint_;
+        }
     }
 private:
     aoc::coord pos_;
-    char heading_;
+    aoc::coord waypoint_;
 };
 
 int main()
 {
 #if 1
     std::vector<std::string> data = {
+        "L90\n"
+        "L90\n"
+        "L90\n"
+        "L90\n"
+        "L90\n"
+        "R90\n"
+        "R90\n"
+        "R90\n"
+        "R90\n"
+        "R90\n"
+        "R90\n"
+        "L90",
         "F10\n"
         "N3\n"
         "F7\n"
