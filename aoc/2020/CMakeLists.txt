@@ -32,3 +32,6 @@ add_executable ( 2020_12_1 12_1.cpp )
 target_link_libraries ( 2020_12_1 coord )
 
 add_executable ( 2020_13_1 13_1.cpp )
+
+add_executable ( 2020_14_1 14_1.cpp )
+target_link_libraries ( 2020_14_1 boost_regex )
