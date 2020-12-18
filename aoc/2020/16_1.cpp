@@ -71,7 +71,7 @@ public:
             if ( line == "nearby tickets:") { section = other_tickets; continue; }
             switch ( section )
             {
-            case rules : rules_.push_back(rule_from_string(line)); break;
+            case rules : { auto tmp = rule_from_string(line); rules_[tmp.name] = tmp; break; }
             case my_ticket : my_ticket_ = ticket_from_string(line); break;
             case other_tickets : other_tickets_.push_back(ticket_from_string(line)); break;
             default : throw std::runtime_error("unexpected section");
@@ -95,7 +95,7 @@ public:
             bool valid = false;
             for ( auto&& rule : rules_ )
             {
-                if ( is_valid_for_rule(field, rule) )
+                if ( is_valid_for_rule(field, rule.second) )
                 {
                     valid = true;
                     break;
@@ -110,8 +110,69 @@ public:
         return ( field >= rule.range_1.first && field <= rule.range_1.second ) ||
                ( field >= rule.range_2.first && field <= rule.range_2.second );
     }
+    void remove_invalid_tickets()
+    {
+        other_tickets_.erase(std::remove_if(other_tickets_.begin(), other_tickets_.end(),
+        [this](const ticket_type& ticket)
+        {
+            return sum_invalid_fields(ticket) > 0;
+        }), other_tickets_.end());
+    }
+    size_t mult_departure_fields()
+    {
+        std::map<std::string, std::vector<size_t> > columns_cands;
+        std::map<std::string, size_t> columns_numbers;
+        std::set<std::string> columns;
+        for ( auto&& rule : rules_ )
+        {
+            if ( true ) // if ( boost::starts_with(rule.first, "departure") )
+            {
+                columns.insert(rule.first);
+            }
+        }
+        for ( auto&& column : columns )
+        {
+            for ( size_t i = 0; i < my_ticket_.size(); ++i ) // all same size
+            {
+                bool is_cand = true;
+                for ( auto&& other_ticket : other_tickets_ )
+                {
+                    if ( ! is_valid_for_rule(other_ticket[i], rules_[column]) )
+                    {
+                        is_cand = false;
+                        break;
+                    }
+                }
+                if ( is_cand ) columns_cands[column].push_back(i);
+            }
+        }
+        bool more = true;
+        while ( more )
+        {
+            more = false;
+            for ( auto&& column_cands : columns_cands )
+            {
+                if ( column_cands.second.size() == 1 )
+                {
+                    more = true;
+                    auto column_number = column_cands.second.front();
+                    columns_numbers[column_cands.first] = column_number;
+                    for ( auto&& column_cand : columns_cands )
+                    {
+                        column_cand.second.erase(std::remove(column_cand.second.begin(), column_cand.second.end(), column_number), column_cand.second.end());
+                    }
+                }
+            }
+        }
+        size_t result = 1;
+        for ( auto&& column_number : columns_numbers )
+        {
+            if ( boost::starts_with(column_number.first, "departure") ) result *= my_ticket_[column_number.second];
+        }
+        return result;
+    }
 private:
-    std::vector<rule> rules_;
+    std::map<std::string, rule> rules_;
     ticket_type my_ticket_;
     std::vector<ticket_type> other_tickets_;
 };
@@ -129,13 +190,24 @@ int main()
         "7,3,47\n"
         "40,4,50\n"
         "55,2,20\n"
-        "38,6,12\n"
+        "38,6,12\n",
+        "class: 0-1 or 4-19\n"
+        "row: 0-5 or 8-19\n"
+        "seat: 0-13 or 16-19\n\n"
+        "your ticket:\n"
+        "11,12,13\n\n"
+        "nearby tickets:\n"
+        "3,9,18\n"
+        "15,1,5\n"
+        "5,14,9"
     };
     for ( auto&& datum : data )
     {
         std::istringstream iss(datum);
         scanner scanny(iss);
-        auto result  = scanny.calc_error_rate();
+        auto result = scanny.calc_error_rate();
+        scanny.remove_invalid_tickets();
+        result = scanny.mult_departure_fields();
         std::cout << "result: " << result << std::endl;
     }
 #endif
@@ -143,6 +215,8 @@ int main()
     std::ifstream inf(PROJEUL_AOC_PATH "/16_input.txt");
     scanner scanny(inf);
     auto result  = scanny.calc_error_rate();
+    scanny.remove_invalid_tickets();
+    result = scanny.mult_departure_fields();
     std::cout << "result: " << result << std::endl;
 #endif
     return 0;
