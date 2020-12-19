@@ -16,13 +16,18 @@ struct coord
     ptrdiff_t x;
     ptrdiff_t y;
     ptrdiff_t z;
-    coord() : x(0), y(0), z(0)
+    ptrdiff_t w;
+    coord() : x(0), y(0), z(0), w(0)
     {}
-    coord(ptrdiff_t x, ptrdiff_t y, ptrdiff_t z) : x(x), y(y), z(z)
+    coord(ptrdiff_t x, ptrdiff_t y, ptrdiff_t z) : x(x), y(y), z(z), w(0)
+    {}
+    coord(ptrdiff_t x, ptrdiff_t y, ptrdiff_t z, ptrdiff_t w) : x(x), y(y), z(z), w(w)
     {}
 };
 bool operator< (const coord& lhs, const coord& rhs)
 {
+    if ( lhs.w < rhs.w ) return true;
+    if ( lhs.w > rhs.w ) return false;
     if ( lhs.z < rhs.z ) return true;
     if ( lhs.z > rhs.z ) return false;
     if ( lhs.y < rhs.y ) return true;
@@ -33,13 +38,15 @@ bool operator== (const coord& lhs, const coord& rhs)
 {
     return lhs.x == rhs.x &&
            lhs.y == rhs.y &&
-           lhs.z == rhs.z;
+           lhs.z == rhs.z &&
+           lhs.w == rhs.w;
 }
 coord& operator+= (coord& lhs, const coord& rhs)
 {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
     lhs.z += rhs.z;
+    lhs.w += rhs.w;
     return lhs;
 }
 coord operator+ (coord lhs, const coord& rhs)
@@ -48,7 +55,7 @@ coord operator+ (coord lhs, const coord& rhs)
 }
 std::ostream& operator<< (std::ostream& os, const coord& c)
 {
-    return os << "[ " << c.x << ", " << c.y << ", " << c.z << " ]";
+    return os << "[ " << c.x << ", " << c.y << ", " << c.z << ", " << c.w << " ]";
 }
 enum map_char
 {
@@ -108,38 +115,106 @@ std::ostream& operator<< (std::ostream& os, const std::set<coord>& coords)
 }
 
 const std::vector<coord> neighbour_units = {
+    // time -1
     // z-layer below
-    coord{ -1, -1, -1 },
-    coord{ -1,  0, -1 },
-    coord{ -1,  1, -1 },
-    coord{  0, -1, -1 },
-    coord{  0,  0, -1 },
-    coord{  0,  1, -1 },
-    coord{  1, -1, -1 },
-    coord{  1,  0, -1 },
-    coord{  1,  1, -1 },
+    coord{ -1, -1, -1, -1 },
+    coord{ -1,  0, -1, -1 },
+    coord{ -1,  1, -1, -1 },
+    coord{  0, -1, -1, -1 },
+    coord{  0,  0, -1, -1 },
+    coord{  0,  1, -1, -1 },
+    coord{  1, -1, -1, -1 },
+    coord{  1,  0, -1, -1 },
+    coord{  1,  1, -1, -1 },
 
     // current z-layer
-    coord{ -1, -1,  0 },
-    coord{ -1,  0,  0 },
-    coord{ -1,  1,  0 },
-    coord{  0, -1,  0 },
-    coord{  0,  0,  0 }, // me!
-    coord{  0,  1,  0 },
-    coord{  1, -1,  0 },
-    coord{  1,  0,  0 },
-    coord{  1,  1,  0 },
+    coord{ -1, -1,  0, -1 },
+    coord{ -1,  0,  0, -1 },
+    coord{ -1,  1,  0, -1 },
+    coord{  0, -1,  0, -1 },
+    coord{  0,  0,  0, -1 },
+    coord{  0,  1,  0, -1 },
+    coord{  1, -1,  0, -1 },
+    coord{  1,  0,  0, -1 },
+    coord{  1,  1,  0, -1 },
 
     // z-layer above
-    coord{ -1, -1,  1 },
-    coord{ -1,  0,  1 },
-    coord{ -1,  1,  1 },
-    coord{  0, -1,  1 },
-    coord{  0,  0,  1 },
-    coord{  0,  1,  1 },
-    coord{  1, -1,  1 },
-    coord{  1,  0,  1 },
-    coord{  1,  1,  1 }
+    coord{ -1, -1,  1, -1 },
+    coord{ -1,  0,  1, -1 },
+    coord{ -1,  1,  1, -1 },
+    coord{  0, -1,  1, -1 },
+    coord{  0,  0,  1, -1 },
+    coord{  0,  1,  1, -1 },
+    coord{  1, -1,  1, -1 },
+    coord{  1,  0,  1, -1 },
+    coord{  1,  1,  1, -1 },
+
+    // time 0
+    // z-layer below
+    coord{ -1, -1, -1,  0 },
+    coord{ -1,  0, -1,  0 },
+    coord{ -1,  1, -1,  0 },
+    coord{  0, -1, -1,  0 },
+    coord{  0,  0, -1,  0 },
+    coord{  0,  1, -1,  0 },
+    coord{  1, -1, -1,  0 },
+    coord{  1,  0, -1,  0 },
+    coord{  1,  1, -1,  0 },
+
+    // current z-layer
+    coord{ -1, -1,  0,  0 },
+    coord{ -1,  0,  0,  0 },
+    coord{ -1,  1,  0,  0 },
+    coord{  0, -1,  0,  0 },
+    coord{  0,  0,  0,  0 }, // me!
+    coord{  0,  1,  0,  0 },
+    coord{  1, -1,  0,  0 },
+    coord{  1,  0,  0,  0 },
+    coord{  1,  1,  0,  0 },
+
+    // z-layer above
+    coord{ -1, -1,  1,  0 },
+    coord{ -1,  0,  1,  0 },
+    coord{ -1,  1,  1,  0 },
+    coord{  0, -1,  1,  0 },
+    coord{  0,  0,  1,  0 },
+    coord{  0,  1,  1,  0 },
+    coord{  1, -1,  1,  0 },
+    coord{  1,  0,  1,  0 },
+    coord{  1,  1,  1,  0 },
+
+    // z-layer below
+    coord{ -1, -1, -1,  1 },
+    coord{ -1,  0, -1,  1 },
+    coord{ -1,  1, -1,  1 },
+    coord{  0, -1, -1,  1 },
+    coord{  0,  0, -1,  1 },
+    coord{  0,  1, -1,  1 },
+    coord{  1, -1, -1,  1 },
+    coord{  1,  0, -1,  1 },
+    coord{  1,  1, -1,  1 },
+
+    // current z-layer
+    coord{ -1, -1,  0,  1 },
+    coord{ -1,  0,  0,  1 },
+    coord{ -1,  1,  0,  1 },
+    coord{  0, -1,  0,  1 },
+    coord{  0,  0,  0,  1 },
+    coord{  0,  1,  0,  1 },
+    coord{  1, -1,  0,  1 },
+    coord{  1,  0,  0,  1 },
+    coord{  1,  1,  0,  1 },
+
+    // z-layer above
+    coord{ -1, -1,  1,  1 },
+    coord{ -1,  0,  1,  1 },
+    coord{ -1,  1,  1,  1 },
+    coord{  0, -1,  1,  1 },
+    coord{  0,  0,  1,  1 },
+    coord{  0,  1,  1,  1 },
+    coord{  1, -1,  1,  1 },
+    coord{  1,  0,  1,  1 },
+    coord{  1,  1,  1,  1 }
 };
 
 class cycler
@@ -151,7 +226,7 @@ public:
     {}
     void cycle()
     {
-        static const coord zeroc = { 0, 0, 0 };
+        static const coord zeroc = { 0, 0, 0, 0 };
         std::set<coord> cands;
         std::set<coord> next_actives;
         for ( auto&& a : actives_ )
