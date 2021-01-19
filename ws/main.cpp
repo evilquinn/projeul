@@ -2,6 +2,8 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/function.hpp>
+#include <websocketpp/client.hpp>
+#include <websocketpp/config/asio_no_tls_client.hpp>
 
 class cli
 {
