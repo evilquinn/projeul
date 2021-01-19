@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-set(INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/googletest)
+set(INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 ExternalProject_Add(googletest_dl
     GIT_REPOSITORY https://github.com/google/googletest
