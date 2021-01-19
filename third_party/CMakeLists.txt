@@ -1,5 +1,5 @@
 
 if ( ${BUILD_TESTS} )
-include ( googlemock.cmake )
+    add_subdirectory(googletest)
 endif()
-include ( boost.cmake )
+add_subdirectory(boost)
