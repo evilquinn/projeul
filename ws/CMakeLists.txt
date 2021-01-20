@@ -1,4 +1,6 @@
 
 add_executable (ws main.cpp)
 target_link_libraries (ws websocketpp
-                          pthread)
+                          pthread
+                          boost_system
+                          boost_thread)
