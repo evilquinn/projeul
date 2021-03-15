@@ -57,6 +57,7 @@ add_subdirectory(spirit)
 add_subdirectory(quoted)
 add_subdirectory(resolver)
 add_subdirectory(rulez)
+add_subdirectory(wancurses)
 add_subdirectory(ws)
 
 
