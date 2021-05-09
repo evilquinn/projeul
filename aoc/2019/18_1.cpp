@@ -317,7 +317,7 @@ private:
 
 int main()
 {
-#if 1
+#if 0
     std::vector<std::string> data = {
         "#########\n"
         "#b.A.@.a#\n"
