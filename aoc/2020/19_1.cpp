@@ -3,8 +3,9 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <string_view>
 
-#include <boost/utility/string_view.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/function.hpp>
 
 #include <aoc/path_def.hpp>
@@ -12,15 +13,15 @@
 namespace aoc
 {
 
-typedef boost::function<size_t(boost::string_view)> matcher_type;
+typedef boost::function<size_t(std::string_view)> matcher_type;
 struct string_matcher
 {
     explicit string_matcher(std::string literal) :
         literal_(literal)
     {}
-    size_t operator()(boost::string_view sample)
+    size_t operator()(std::string_view sample)
     {
-        return sample.starts_with(literal_) ? literal_.size() : 0;
+        return boost::algorithm::starts_with(sample, literal_) ? literal_.size() : 0;
     }
 private:
     std::string literal_;
@@ -39,9 +40,9 @@ struct or_matcher
         matchers_.push_back(matcher);
         return *this;
     }
-    size_t operator()(boost::string_view sample)
+    size_t operator()(std::string_view sample)
     {
-        for ( const matcher_type& matcher : matchers_ )
+        for ( auto&& matcher : matchers_ )
         {
             size_t res = matcher(sample);
             if ( res > 0 )
@@ -67,7 +68,7 @@ struct sequential_matcher
         matchers_.push_back(matcher);
         return *this;
     }
-    size_t operator() (boost::string_view sample)
+    size_t operator() (std::string_view sample)
     {
         size_t pos = 0;
         size_t matcher_idx = 0;
@@ -91,7 +92,7 @@ public:
     {
         parse_rules(is);
     }
-    bool test(boost::string_view sample)
+    bool test(std::string_view sample)
     {
         return matcher_(sample) == sample.size();
     }
@@ -103,19 +104,19 @@ private:
         while ( std::getline(is, line) )
         {
             if ( line.empty() ) break;
-            boost::string_view rule_id(line.data(), line.find(':'));
+            std::string_view rule_id(line.data(), line.find(':'));
             size_t rule_part_begin = line.find_first_not_of(' ', rule_id.size() + 1);
-            rules_[rule_id.to_string()] = line.substr(rule_part_begin, line.size() - rule_part_begin);
+            rules_[std::string(rule_id)] = line.substr(rule_part_begin, line.size() - rule_part_begin);
         }
 
         matcher_ = parse_matcher("0");
     }
 
-    matcher_type& parse_matcher(boost::string_view rule_id)
+    matcher_type& parse_matcher(std::string_view rule_id)
     {
         if ( matchers_.count(rule_id) > 0 ) return matchers_[rule_id];
 
-        boost::string_view rule = rules_[rule_id.to_string()];
+        std::string_view rule = rules_[std::string(rule_id)];
         size_t part_begin = 0;
         bool saw_or = false;
         or_matcher orer;
@@ -165,7 +166,7 @@ private:
     }
     matcher_type matcher_;
     std::map<std::string, std::string> rules_;
-    std::map<boost::string_view, matcher_type> matchers_;
+    std::map<std::string_view, matcher_type> matchers_;
 };
 
 } // end namespace aoc
@@ -250,6 +251,7 @@ int main()
 
 #endif
 
+#if 1
     std::ifstream input_file( PROJEUL_AOC_PATH "/19_input.txt" );
     aoc::message_rules rulio(input_file);
     size_t result = 0;
@@ -259,6 +261,7 @@ int main()
         if ( rulio.test(sample) ) ++result;
     }
     std::cout << "result: " << result << std::endl;
+#endif
 
     return 0;
 }
