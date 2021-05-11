@@ -14,37 +14,64 @@ namespace aoc
 {
 
 typedef boost::function<size_t(std::string_view)> matcher_type;
-struct string_matcher
+
+typedef std::vector<std::string> list_matcher_type;
+typedef std::vector<list_matcher_type> distinct_matcher_type;
+class matcher;
+typedef std::map<std::string, matcher> matcher_registry_type;
+class matcher
 {
-    explicit string_matcher(std::string literal) :
-        literal_(literal)
-    {}
-    size_t operator()(std::string_view sample)
+public:
+    matcher(){}
+    explicit matcher(const matcher_registry_type& registry) :
+        registry_(&registry)
+    {
+        matchers_.push_back(list_matcher_type());
+    }
+    void start_alternative()
+    {
+        if ( ! literal_.empty() ) throw std::runtime_error("Cannot add matcher to matcher already set with literal");
+        matchers_.push_back(list_matcher_type());
+    }
+    void add_matcher(std::string_view matcher)
+    {
+        if ( ! literal_.empty() ) throw std::runtime_error("Cannot add matcher to matcher already set with literal");
+        matchers_.back().push_back(std::string(matcher));
+    }
+    void set_literal(std::string_view literal)
+    {
+        for ( auto&& matcher_list : matchers_ )
+        {
+            for ( auto&& dummy : matcher_list )
+            {
+                (void)dummy;
+                throw std::runtime_error("Cannot set literal on matcher with other matchers already set");
+            }
+        }
+        literal_ = literal;
+    }
+    bool test(std::string_view sample) const
+    {
+        return match(sample) == sample.size();
+    }
+private:
+    size_t match(std::string_view sample) const
+    {
+        if ( ! literal_.empty() )
+        {
+            return match_literal(sample);
+        }
+        return match_matchers(sample);
+    }
+    size_t match_literal(std::string_view sample) const
     {
         return boost::algorithm::starts_with(sample, literal_) ? literal_.size() : 0;
     }
-private:
-    std::string literal_;
-};
-struct or_matcher
-{
-    or_matcher()
-    {}
-    explicit or_matcher(const matcher_type& matcher) :
-        matchers_()
+    size_t match_matchers(std::string_view sample) const
     {
-        matchers_.push_back(matcher);
-    }
-    or_matcher& or_match(const matcher_type& matcher)
-    {
-        matchers_.push_back(matcher);
-        return *this;
-    }
-    size_t operator()(std::string_view sample)
-    {
-        for ( auto&& matcher : matchers_ )
+        for ( auto&& matcher_list : matchers_ )
         {
-            size_t res = matcher(sample);
+            size_t res = match_list(sample, matcher_list);
             if ( res > 0 )
             {
                 return res;
@@ -52,37 +79,22 @@ struct or_matcher
         }
         return 0;
     }
-private:
-    std::vector<matcher_type> matchers_;
-};
-struct sequential_matcher
-{
-    sequential_matcher()
-    {}
-    explicit sequential_matcher(const matcher_type& matcher)
-    {
-        matchers_.push_back(matcher);
-    }
-    sequential_matcher& then_match(const matcher_type& matcher)
-    {
-        matchers_.push_back(matcher);
-        return *this;
-    }
-    size_t operator() (std::string_view sample)
+    size_t match_list(std::string_view sample, list_matcher_type matcher_list) const
     {
         size_t pos = 0;
         size_t matcher_idx = 0;
-        while ( pos < sample.size() && matcher_idx < matchers_.size() )
+        while ( pos < sample.size() && matcher_idx < matcher_list.size() )
         {
-            size_t match = matchers_[matcher_idx](sample.substr(pos));
+            size_t match = registry_->at(matcher_list[matcher_idx]).match(sample.substr(pos));
             if ( match == 0 ) break;
             pos += match;
             ++matcher_idx;
         }
-        return matcher_idx == matchers_.size() ? pos : 0;
+        return matcher_idx == matcher_list.size() ? pos : 0;
     }
-private:
-    std::vector<matcher_type> matchers_;
+    const matcher_registry_type* registry_;
+    std::string literal_;
+    distinct_matcher_type matchers_;
 };
 
 class message_rules
@@ -94,7 +106,13 @@ public:
     }
     bool test(std::string_view sample)
     {
-        return matcher_(sample) == sample.size();
+        return registry_.at("0").test(sample);
+    }
+    void update_rule(const std::string& rule_id, std::string_view hack)
+    {
+        auto&& rule = rules_[rule_id];
+        rule = hack;
+        registry_[rule_id] = parse_rule(rule);
     }
 
 private:
@@ -109,18 +127,16 @@ private:
             rules_[std::string(rule_id)] = line.substr(rule_part_begin, line.size() - rule_part_begin);
         }
 
-        matcher_ = parse_matcher("0");
+        for ( auto&& rule : rules_ )
+        {
+            registry_[rule.first] = parse_rule(rule.second);
+        }
     }
 
-    matcher_type& parse_matcher(std::string_view rule_id)
+    matcher parse_rule(std::string_view rule)
     {
-        if ( matchers_.count(rule_id) > 0 ) return matchers_[rule_id];
-
-        std::string_view rule = rules_[std::string(rule_id)];
+        matcher result(registry_);
         size_t part_begin = 0;
-        bool saw_or = false;
-        or_matcher orer;
-        sequential_matcher current;
         while ( part_begin < rule.size() )
         {
             switch ( rule[part_begin] )
@@ -129,15 +145,13 @@ private:
             {
                 ++part_begin;
                 size_t part_end = rule.find('"', part_begin);
-                current.then_match(string_matcher(std::string(rule.substr(part_begin, part_end - part_begin))));
+                result.set_literal(rule.substr(part_begin, part_end - part_begin));
                 part_begin = rule.find_first_not_of(' ', part_end + 1 );
                 break;
             }
             case '|' :
             {
-                orer.or_match(current);
-                current = sequential_matcher();
-                saw_or = true;
+                result.start_alternative();
                 part_begin = rule.find_first_not_of(' ', part_begin + 1 );
                 break;
             }
@@ -145,28 +159,16 @@ private:
             default  : /* it's a rule id reference */
             {
                 size_t part_end = rule.find(' ', part_begin);
-                matcher_type& part_matcher = parse_matcher(rule.substr(part_begin, part_end - part_begin));
-                current.then_match(part_matcher);
+                result.add_matcher(rule.substr(part_begin, part_end - part_begin));
                 part_begin = rule.find_first_not_of(' ', part_end);
                 break;
             }
             }
         }
-        if ( saw_or )
-        {
-            orer.or_match(current);
-            matchers_[rule_id] = orer;
-        }
-        else
-        {
-            matchers_[rule_id] = current;
-        }
-
-        return matchers_[rule_id];
+        return result;
     }
-    matcher_type matcher_;
     std::map<std::string, std::string> rules_;
-    std::map<std::string_view, matcher_type> matchers_;
+    matcher_registry_type registry_;
 };
 
 } // end namespace aoc
@@ -258,7 +260,11 @@ int main()
     std::string sample;
     while ( std::getline(input_file, sample) )
     {
-        if ( rulio.test(sample) ) ++result;
+        if ( rulio.test(sample) )
+        {
+            std::cout << sample << std::endl;
+            ++result;
+        }
     }
     std::cout << "result: " << result << std::endl;
 #endif
