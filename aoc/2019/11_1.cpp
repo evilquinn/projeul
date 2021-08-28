@@ -86,6 +86,7 @@
 #include "../map.hpp"
 #include <set>
 #include <map>
+#include <limits>
 
 
 using coord_util::coord;
