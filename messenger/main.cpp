@@ -66,7 +66,7 @@ private:
 
     static void echo(std::string message)
     {
-        //std::cout << message << std::endl;
+        std::cout << " > " << message << std::endl;
     }
 
     boost::asio::io_context& io_context_;
@@ -79,7 +79,7 @@ private:
 
 int main( int /*argc*/, char** /*argv*/ )
 {
-    auto asio_context = boost::asio::io_context();
+    boost::asio::io_context asio_context;
     evilquinn::register_signal_handler();
 
     std::cout << "hello" << std::endl;

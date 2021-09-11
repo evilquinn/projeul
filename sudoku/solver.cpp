@@ -28,6 +28,14 @@ void cache_candidates_for_coord( square& sq,
     coord_cand_cache[sq.pos()] = sq.candidates();
 }
 
+size_t nonet_from_coord ( coord pos )
+{
+    // HACK hardcoding 9*9 grid...
+    pos.x /= 3;
+    pos.y /= 3;
+    return (pos.x * 3) + pos.y;
+}
+
 solver::coord_sequence axis_range_from_coord( coord pos,
                                               dimensions dims,
                                               solver::axis ax )
@@ -90,6 +98,72 @@ solver::coord_sequence axis_range_from_coord( coord pos,
     return result;
 }
 
+solver::axis inverse_for_line(solver::axis axis)
+{
+    switch(axis)
+    {
+    case solver::axis::row: return solver::axis::column;
+    case solver::axis::column: return solver::axis::row;
+    default: throw std::runtime_error("dick");
+    }
+}
+
+boost::optional<solver::axis> contained_within_inverse_of_axis(const std::set<coord>& coords, solver::axis axis)
+{
+    bool same_nonet = true;
+    bool same_row = true;
+    bool same_col = true;
+    for ( auto it = coords.begin(), limit = std::prev(coords.end()); it != limit; ++it )
+    {
+        auto nextit = std::next(it);
+        if ( it->x != nextit->x ) same_col = false;
+        if ( it->y != nextit->y ) same_row = false;
+        if ( nonet_from_coord(*it) != nonet_from_coord(*nextit) ) same_nonet = false;
+    }
+    switch(axis)
+    {
+    case solver::axis::row:
+    case solver::axis::column:
+    {
+        if ( same_nonet ) return solver::axis::nonet;
+        return boost::none;
+    }
+    case solver::axis::nonet:
+    {
+        if ( same_row ) return solver::axis::row;
+        if ( same_col ) return solver::axis::column;
+        return boost::none;
+    }
+    default: throw std::runtime_error("it's silly to call this function with axis=gridwise_nonet, silly.");
+    }
+}
+
+bool is_x_wing_pattern(const std::set<coord>& lhs, const std::set<coord>& rhs, solver::axis axis)
+{
+    if ( lhs.size() != 2 ) return false;
+    if ( lhs.size() != rhs.size() ) return false;
+    for ( auto lhsit = lhs.begin(), rhsit = rhs.begin(); lhsit != lhs.end(); ++lhsit, ++rhsit )
+    {
+        switch(axis)
+        {
+        case solver::axis::column:
+        {
+            if ( lhsit->x != rhsit->x ) return false;
+            break;
+        }
+        case solver::axis::row:
+        {
+            if ( lhsit->y != rhsit->y ) return false;
+            break;
+        }
+        default: throw std::runtime_error("silly");
+        }
+    }
+    return true;
+}
+
+
+
 }  // end namespace util
 }  // end namespace sudoku
 }  // end namespace evilquinn
@@ -134,6 +208,100 @@ void evilquinn::sudoku::solver::hidden_tuples_in_axis( square& sq, axis ax )
             }
         }
     }
+
+#if 1
+    /*
+     * can we do line by nonet interaction?
+     * If there's a candidate in _this_ axis who's coordinates are entirely
+     * within another axis, then this candidate can be eliminated
+     * from other coords within that other axis
+     */
+    for ( auto&& cand_coord_entry : cand_coord_cache )
+    {
+        auto other_axis = util::contained_within_inverse_of_axis(cand_coord_entry.second, ax);
+        if ( other_axis )
+        {
+            // get the coords from other_axis, minus the coords in this entry, and eliminate cand
+            auto other_coords = util::axis_range_from_coord( *cand_coord_entry.second.begin(), dims, *other_axis );
+            for ( auto&& coord : other_coords )
+            {
+                if ( cand_coord_entry.second.count(coord) > 0 ) continue; //skip
+                grid_.at(coord).eliminate(cand_coord_entry.first);
+            }
+        }
+    }
+#endif
+
+}
+
+void evilquinn::sudoku::solver::x_wing()
+{
+    std::vector<axis> axises {
+        axis::column,
+        axis::row
+    };
+    for ( auto&& axis : axises )
+    {
+        x_wing_in_axis(axis);
+    }
+}
+
+void evilquinn::sudoku::solver::x_wing_in_axis(axis ax)
+{
+
+#if 1
+
+    auto dims = grid_.get_dimensions();
+    auto axis_start_coords = util::axis_range_from_coord( { 0, 0 }, dims, ax );
+    /**
+     * Can we do x-wing?
+     * If a canditate has only _n_ possible coords in a given row,
+     * if that candidate is limited to the same columns in another row,
+     * that candidate can be eliminated from the other coords in the _n_ columns.
+     * (and vice-versa for columns vs rows)
+     */
+    std::map<coord, util::candidate_coord_map> coord_to_cand_coord_cache;
+    for ( auto ax_coord_it = axis_start_coords.begin(); ax_coord_it != axis_start_coords.end(); ++ax_coord_it )
+    {
+        util::candidate_coord_map& cand_coord_cache = coord_to_cand_coord_cache[*ax_coord_it];
+        for_each( util::axis_range_from_coord( *ax_coord_it, dims, util::inverse_for_line(ax) ),
+                std::bind( &util::cache_coord_for_candidates,
+                            std::placeholders::_1,
+                            std::ref(cand_coord_cache) ) );
+    }
+
+    for ( auto it = coord_to_cand_coord_cache.begin(), limit = std::prev(coord_to_cand_coord_cache.end());
+          it != limit;
+          ++it )
+    {
+        for ( auto rit = std::next(it); rit != coord_to_cand_coord_cache.end(); ++rit )
+        {
+            for ( auto&& cand_coord_entry : it->second )
+            {
+                auto cand_coord_rit_entry = rit->second.find(cand_coord_entry.first);
+                if ( cand_coord_rit_entry != rit->second.end() )
+                {
+                    if ( util::is_x_wing_pattern(cand_coord_entry.second, cand_coord_rit_entry->second, ax) )
+                    {
+                        for ( auto&& corner_coord : cand_coord_entry.second )
+                        {
+                            auto elim_cand_from_coords = util::axis_range_from_coord(corner_coord, dims, ax);
+                            for ( auto&& elim_cand_from_coord : elim_cand_from_coords )
+                            {
+                                if ( cand_coord_entry.second.count(elim_cand_from_coord) > 0 ) continue; // skip
+                                if ( cand_coord_rit_entry->second.count(elim_cand_from_coord) > 0 ) continue; // skip
+                                grid_.at(elim_cand_from_coord).eliminate(cand_coord_entry.first);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+#endif
+
 }
 
 void evilquinn::sudoku::solver::naked_hidden_tuples()
@@ -147,15 +315,12 @@ void evilquinn::sudoku::solver::naked_hidden_tuples()
     for ( auto&& axis_pair : axis_pairs )
     {
         for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-                   std::bind( &solver::naked_tuples_in_axis,
+                   std::bind( &solver::hidden_tuples_in_axis,
                               this,
                               std::placeholders::_1,
                               axis_pair.second ) );
-    }
-    for ( auto&& axis_pair : axis_pairs )
-    {
         for_each ( util::axis_range_from_coord( { 0, 0 }, dims, axis_pair.first ),
-                   std::bind( &solver::hidden_tuples_in_axis,
+                   std::bind( &solver::naked_tuples_in_axis,
                               this,
                               std::placeholders::_1,
                               axis_pair.second ) );
@@ -189,6 +354,8 @@ void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
         {
             continue;
         }
+
+#if 0
         square::candidate_set acca_cands;
         std::set<coord> acca_coords;
         for ( auto dit = coord_cand_cache.begin(); dit != coord_cand_cache.end(); ++dit )
@@ -229,13 +396,10 @@ void evilquinn::sudoku::solver::naked_tuples_in_axis( square& sq, axis ax )
                 }
             }
         }
+#endif
+
     }
 
-    //for ( auto&& coord_cand_entry : coord_cand_cache )
-    //{
-    //    auto& coord_set = cand_coord_cache[coord_cand_entry.second];
-    //    coord_set.insert(coord_cand_entry.first);
-    //}
     for ( auto&& cand_coord_entry : cand_coord_cache )
     {
         if ( cand_coord_entry.first.size() == cand_coord_entry.second.size() )
@@ -257,10 +421,18 @@ bool evilquinn::sudoku::solver::solve()
 {
     bool solved = false;
 
-    const size_t limit = 10;
-    for ( size_t i = 0; i < limit; ++i )
+    size_t a = grid_.count_remaining();
+    while ( true )
     {
         naked_hidden_tuples();
+        x_wing();
+        size_t b = grid_.count_remaining();
+        if ( b<a )
+        {
+            a = b;
+            continue;
+        }
+        break;
     }
 
     return solved;

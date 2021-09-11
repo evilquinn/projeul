@@ -3,7 +3,8 @@
 #define SUDOKU_GRID_READER_HPP
 
 #include <boost/optional.hpp>
-#include <fstream>
+#include <iosfwd>
+#include <memory>
 #include <sudoku/grid.hpp>
 
 namespace evilquinn
@@ -14,12 +15,13 @@ class grid_reader
 {
 public:
     grid_reader( const std::string& file );
+    grid_reader( std::istringstream iss );
     boost::optional<grid> getgrid();
 
-    class file_error : public std::runtime_error
+    class input_error : public std::runtime_error
     {
     public:
-        file_error( std::string what )
+        input_error( std::string what )
             : std::runtime_error( std::move( what ) )
         {
         }
@@ -34,7 +36,8 @@ public:
     };
 
 private:
-    std::ifstream file_;
+    std::unique_ptr<std::istream> input_owner_;
+    std::istream& input_;
 };
 
 }  // end namespace sudoku

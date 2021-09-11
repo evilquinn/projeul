@@ -20,7 +20,7 @@ boost::optional<size_t> evilquinn::sudoku::square::value() const
     {
         return *candidates_.begin();
     }
-    return boost::optional<size_t>{};
+    return boost::none;
 }
 
 evilquinn::sudoku::coord evilquinn::sudoku::square::pos() const

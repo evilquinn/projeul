@@ -48,7 +48,6 @@ std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
 {
     static const char* underline = "\033[4m";
     static const char* underline_off = "\033[0m";
-    bool underlining = false;
     const size_t nonet_side = std::sqrt(dim_.x);
 
     for ( size_t y = 0; y < dim_.y; ++y )
@@ -56,7 +55,6 @@ std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
         if ( ( ( y + 1 ) / nonet_side ) * nonet_side == y + 1 )
         {
             // if next line is beginning of a nonet, underline this line
-            underlining = true;
             os << underline;
         }
         for ( size_t x = 0; x < dim_.x; ++x )
@@ -67,9 +65,8 @@ std::ostream& evilquinn::sudoku::grid::stream_out( std::ostream& os ) const
                 // if next column is beginning of nonet, put a bar after this
                 // column
                 // but don't underline last bar
-                if ( underlining && x + 1 == dim_.x )
+                if ( x + 1 == dim_.x )
                 {
-                    underlining = false;
                     os << underline_off;
                 }
                 os << "|";

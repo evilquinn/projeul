@@ -31,6 +31,8 @@ public:
     void naked_hidden_tuples();
     void naked_tuples_in_axis( square& sq, axis ax );
     void hidden_tuples_in_axis( square& sq, axis ax );
+    void x_wing();
+    void x_wing_in_axis(axis ax);
 
 private:
     grid& grid_;
