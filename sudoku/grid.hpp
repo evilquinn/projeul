@@ -14,7 +14,7 @@ using dimensions = coord;
 class grid
 {
 public:
-    grid( dimensions dim );
+    explicit grid( dimensions dim );
     using line   = std::vector<square>;
     using matrix = std::vector<line>;
 
@@ -27,6 +27,24 @@ public:
 private:
     dimensions dim_;
     matrix squares_;
+};
+
+class named_grid : public grid
+{
+public:
+    explicit named_grid( dimensions dim ) :
+        grid(dim)
+    {}
+    void set_name( std::string name )
+    {
+        name_ = name;
+    }
+    const std::string& get_name() const
+    {
+        return name_;
+    }
+private:
+    std::string name_;
 };
 
 }  // end namespace sudoku

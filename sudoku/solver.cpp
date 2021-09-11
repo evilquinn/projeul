@@ -257,10 +257,17 @@ bool evilquinn::sudoku::solver::solve()
 {
     bool solved = false;
 
-    const size_t limit = 10;
-    for ( size_t i = 0; i < limit; ++i )
+    size_t a = grid_.count_remaining();
+    while ( true )
     {
         naked_hidden_tuples();
+        size_t b = grid_.count_remaining();
+        if ( b<a )
+        {
+            a = b;
+            continue;
+        }
+        break;
     }
 
     return solved;

@@ -8,7 +8,7 @@ evilquinn::sudoku::grid_reader::grid_reader( const std::string& file )
 {
     if ( !file_ )
     {
-        throw file_error( "failed to open file" );
+        throw file_error( "failed to open file: " + file );
     }
 }
 
@@ -21,7 +21,7 @@ evilquinn::sudoku::grid_reader::getgrid()
         return boost::optional<grid>{};
     }
 
-    std::cout << "reading: " << line << std::endl;
+    //std::cout << "reading: " << line << std::endl;
     auto first_line_cache = file_.tellg();
 
     // get first line, determine length, and ass-u-me it's a square

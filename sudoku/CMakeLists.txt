@@ -7,10 +7,18 @@ add_library ( sudoku square.cpp
 
 target_link_libraries ( sudoku PUBLIC boost )
 
-add_executable ( solver main.cpp )
+add_executable ( solver solver_main.cpp )
 
 target_link_libraries ( solver sudoku
                                signal_handler )
 if ( ${BUILD_TESTS} )
 add_subdirectory ( test )
 endif()
+
+
+add_executable ( cli cli_main.cpp )
+
+target_link_libraries ( cli sudoku
+                            signal_handler
+                            pthread
+                            asio_user_input )
