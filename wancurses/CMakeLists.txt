@@ -13,3 +13,6 @@ target_link_libraries( window_border ncurses )
 
 add_executable( example example.cpp )
 target_link_libraries( example ncurses )
+
+add_executable( cfire cfire.cpp )
+target_link_libraries( cfire ncurses )

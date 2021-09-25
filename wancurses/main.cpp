@@ -152,4 +152,5 @@ int main()
     io_context.run();
 
     endwin();
+    return 0;
 }
