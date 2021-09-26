@@ -50,19 +50,12 @@ class processor : public input_observer
 public:
     processor()
     {
-        status_bar_ = newwin(1, COLS, LINES - 1, 0); // one line, at the bottom
-        wrefresh(status_bar_);
-        cbreak();
-        keypad(stdscr, TRUE);
-        nodelay(status_bar_, true);
-        noecho();
-        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-        printf("\033[?1003h\n");
+        init_windows();
     }
     ~processor()
     {
         printf("\033[?1003l\n");
-        delwin(status_bar_);
+        for ( auto&& window : windows_ ) delwin(window);
     }
     bool on_input()
     {
@@ -90,10 +83,36 @@ public:
             }
             }
         }
-        wrefresh(status_bar_);
+        refresh_windows();
         return true;
     }
 private:
+    void init_windows()
+    {
+        start_color();
+        windows_[0] = canvas_ = newwin(LINES - 1, COLS, 0, 0); // every line but for one at the bottom
+        windows_[1] = status_bar_ = newwin(1, COLS, LINES - 1, 0); // one line, at the bottom
+        cbreak();
+        keypad(stdscr, TRUE);
+        nodelay(stdscr, TRUE);
+        noecho();
+        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+        printf("\033[?1003h\n");
+        refresh_windows();
+
+        // colours
+        for ( auto&& colour_id : tail_colour_id_ )
+        {
+            init_pair(colour_id,
+                      tail_colour_f_[colour_id],
+                      tail_colour_b_[colour_id]);
+        }
+    }
+    void refresh_windows()
+    {
+        for ( auto&& window : windows_ ) wnoutrefresh(window);
+        doupdate();
+    }
     void handle_mouse(const MEVENT& event)
     {
         std::string mouse_state_str;
@@ -135,9 +154,21 @@ private:
 
         mvwprintw(status_bar_, 0, 0, "Mouse: id=%d, x=%d, y=%d, z=%d, bstate=0x%08lx, desc=%s\n",
                   event.id, event.y, event.x, event.z, event.bstate, mouse_state_str.c_str());
+        mvwaddch(canvas_, event.y, event.x, 'o' | COLOR_PAIR(1));
+
     }
     WINDOW* status_bar_;
+    WINDOW* canvas_;
+    WINDOW* windows_[2];
+    static const int tail_colour_size_ = 4;
+    static const short tail_colour_id_[tail_colour_size_];
+    static const short tail_colour_f_[tail_colour_size_];
+    static const short tail_colour_b_[tail_colour_size_];
 };
+
+const short processor::tail_colour_id_[] = { 1, 2, 3, 4 };
+const short processor::tail_colour_f_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_WHITE, COLOR_WHITE };
+const short processor::tail_colour_b_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_WHITE, COLOR_WHITE };
 
 int main()
 {

@@ -39,14 +39,14 @@ int main()
         }
         for ( int i = 0; i < size; ++i )
         {
-            b[i] = int((b[i]+b[i+1]+b[i+width]+b[i+width+1])/4);
+            b[i] = (b[i]+b[i+1]+b[i+width]+b[i+width+1])/4;
             auto colour = b[i] > 15 ? 4 :
                           b[i] >  9 ? 3 :
                           b[i] >  4 ? 2 :
                                       1 ;
             if ( i < size - 1 )
             {
-                mvaddch(i/width, i%width, c[(b[i]>9?9:b[i])] | COLOR_PAIR(colour) | A_BOLD );
+                mvaddch(i/width, i%width, c[b[i]>9?9:b[i]] | COLOR_PAIR(colour) | A_BOLD );
             }
         }
         refresh();
