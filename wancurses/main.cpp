@@ -2,6 +2,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/posix/descriptor.hpp>
 #include <boost/bind/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -48,7 +49,9 @@ private:
 class processor : public input_observer
 {
 public:
-    processor()
+    processor(boost::asio::io_context& io_context) :
+        io_context_(io_context),
+        refresh_timer_(io_context_)
     {
         init_windows();
     }
@@ -83,7 +86,6 @@ public:
             }
             }
         }
-        refresh_windows();
         return true;
     }
 private:
@@ -101,17 +103,26 @@ private:
         refresh_windows();
 
         // colours
-        for ( auto&& colour_id : tail_colour_id_ )
+        for ( auto&& colour_id : tail_colour_b_ )
         {
-            init_pair(colour_id,
-                      tail_colour_f_[colour_id],
-                      tail_colour_b_[colour_id]);
+            init_pair(colour_id, colour_id, colour_id);
         }
     }
     void refresh_windows()
     {
-        for ( auto&& window : windows_ ) wnoutrefresh(window);
-        doupdate();
+        static boost::function<void(const boost::system::error_code&)> refresh_loop =
+        [&](const boost::system::error_code& ec)
+        {
+            if (!ec)
+            {
+                for ( auto&& window : windows_ ) wnoutrefresh(window);
+                doupdate();
+
+                refresh_timer_.expires_from_now(boost::posix_time::milliseconds(20));
+                refresh_timer_.async_wait(boost::bind(refresh_loop, boost::placeholders::_1));
+            }
+        };
+        io_context_.post(boost::bind(refresh_loop, boost::system::error_code()));
     }
     void handle_mouse(const MEVENT& event)
     {
@@ -154,21 +165,44 @@ private:
 
         mvwprintw(status_bar_, 0, 0, "Mouse: id=%d, x=%d, y=%d, z=%d, bstate=0x%08lx, desc=%s\n",
                   event.id, event.y, event.x, event.z, event.bstate, mouse_state_str.c_str());
-        mvwaddch(canvas_, event.y, event.x, 'o' | COLOR_PAIR(1));
-
+        mvwaddch(canvas_, event.y, event.x, ' ' | COLOR_PAIR(tail_colour_b_[6]));
+        start_decay(event.y, event.x);
     }
+    void start_decay(int y, int x)
+    {
+        static boost::function<void(const boost::system::error_code&, int, int, int)> decay_loop =
+        [&](const boost::system::error_code& ec, int y, int x, int c)
+        {
+            if (!ec)
+            {
+                mvwaddch(canvas_, y, x, ' ' | COLOR_PAIR(tail_colour_b_[--c]));
+                auto t = decay_timers_.find({y, x});
+                if ( c )
+                {
+                    if ( t == decay_timers_.end() ) throw std::runtime_error("timer wasn't there...");
+                    t->second.expires_from_now(boost::posix_time::seconds(1));
+                    t->second.async_wait(boost::bind(decay_loop, boost::placeholders::_1, y, x, c));
+                }
+                else
+                {
+                    decay_timers_.erase(t);
+                }
+            }
+        };
+        decay_timers_.emplace(std::make_pair(std::make_pair(y, x), boost::asio::deadline_timer(io_context_)));
+        io_context_.post(boost::bind(decay_loop, boost::system::error_code(), y, x, 7));
+    }
+    boost::asio::io_context& io_context_;
     WINDOW* status_bar_;
     WINDOW* canvas_;
     WINDOW* windows_[2];
-    static const int tail_colour_size_ = 4;
-    static const short tail_colour_id_[tail_colour_size_];
-    static const short tail_colour_f_[tail_colour_size_];
+    static const int tail_colour_size_ = 7;
     static const short tail_colour_b_[tail_colour_size_];
+    std::map<std::pair<int, int>, boost::asio::deadline_timer> decay_timers_;
+    boost::asio::deadline_timer refresh_timer_;
 };
 
-const short processor::tail_colour_id_[] = { 1, 2, 3, 4 };
-const short processor::tail_colour_f_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_WHITE, COLOR_WHITE };
-const short processor::tail_colour_b_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_WHITE, COLOR_WHITE };
+const short processor::tail_colour_b_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA, COLOR_RED };
 
 int main()
 {
@@ -177,7 +211,7 @@ int main()
     refresh();
 
     boost::asio::io_context io_context;
-    boost::shared_ptr<processor> io_processor = boost::make_shared<processor>();
+    boost::shared_ptr<processor> io_processor = boost::make_shared<processor>(io_context);
     boost::shared_ptr<input_listener> io_listener = boost::make_shared<input_listener>(io_context, io_processor);
 
     io_context.run();
