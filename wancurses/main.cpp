@@ -89,25 +89,7 @@ public:
         return true;
     }
 private:
-    void init_windows()
-    {
-        start_color();
-        windows_[0] = canvas_ = newwin(LINES - 1, COLS, 0, 0); // every line but for one at the bottom
-        windows_[1] = status_bar_ = newwin(1, COLS, LINES - 1, 0); // one line, at the bottom
-        cbreak();
-        keypad(stdscr, TRUE);
-        nodelay(stdscr, TRUE);
-        noecho();
-        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-        printf("\033[?1003h\n");
-        refresh_windows();
-
-        // colours
-        for ( auto&& colour_id : tail_colour_b_ )
-        {
-            init_pair(colour_id, colour_id, colour_id);
-        }
-    }
+    void init_windows();
     void refresh_windows()
     {
         static boost::function<void(const boost::system::error_code&)> refresh_loop =
@@ -165,10 +147,9 @@ private:
 
         mvwprintw(status_bar_, 0, 0, "Mouse: id=%d, x=%d, y=%d, z=%d, bstate=0x%08lx, desc=%s\n",
                   event.id, event.y, event.x, event.z, event.bstate, mouse_state_str.c_str());
-        mvwaddch(canvas_, event.y, event.x, ' ' | COLOR_PAIR(tail_colour_b_[6]));
-        start_decay(event.y, event.x);
+        prepend_to_tail(event.y, event.x);
     }
-    void start_decay(int y, int x)
+    void prepend_to_tail(int y, int x)
     {
         static boost::function<void(const boost::system::error_code&, int, int, int)> decay_loop =
         [&](const boost::system::error_code& ec, int y, int x, int c)
@@ -190,19 +171,39 @@ private:
             }
         };
         decay_timers_.emplace(std::make_pair(std::make_pair(y, x), boost::asio::deadline_timer(io_context_)));
-        io_context_.post(boost::bind(decay_loop, boost::system::error_code(), y, x, 7));
+        io_context_.post(boost::bind(decay_loop, boost::system::error_code(), y, x, num_tail_colours_));
     }
     boost::asio::io_context& io_context_;
     WINDOW* status_bar_;
     WINDOW* canvas_;
     WINDOW* windows_[2];
-    static const int tail_colour_size_ = 7;
-    static const short tail_colour_b_[tail_colour_size_];
+    static const int num_tail_colours_;
+    static const short tail_colour_b_[];
     std::map<std::pair<int, int>, boost::asio::deadline_timer> decay_timers_;
     boost::asio::deadline_timer refresh_timer_;
 };
 
 const short processor::tail_colour_b_[] = { COLOR_BLACK, COLOR_WHITE, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA, COLOR_RED };
+const int processor::num_tail_colours_ = sizeof(processor::tail_colour_b_) / sizeof(processor::tail_colour_b_[0]);
+
+void processor::init_windows()
+{
+    start_color();
+    windows_[0] = canvas_ = newwin(LINES - 1, COLS, 0, 0); // every line but for one at the bottom
+    windows_[1] = status_bar_ = newwin(1, COLS, LINES - 1, 0); // one line, at the bottom
+    cbreak();
+    keypad(stdscr, TRUE);
+    nodelay(stdscr, TRUE);
+    noecho();
+    mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+    printf("\033[?1003h\n");
+    refresh_windows();
+    // colours
+    for ( auto&& colour_id : tail_colour_b_ )
+    {
+        init_pair(colour_id, colour_id, colour_id);
+    }
+}
 
 int main()
 {
