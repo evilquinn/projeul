@@ -23,9 +23,10 @@ struct key_data
     typedef std::vector<uint8_t> key_type;
     std::string id;
     key_type key;
+    size_t totps_digits;
     key_data()
     {}
-    key_data(std::string id) :
+    explicit key_data(std::string id) :
         id(id)
     {}
     key_data(std::string id, std::vector<uint8_t> key) :
@@ -71,6 +72,7 @@ public:
                 if ( decode_result != OATH_OK ) throw decode_result;
                 keys.back().key.resize(binkey_size);
                 memcpy(keys.back().key.data(), binkey, binkey_size);
+                keys.back().totps_digits = 6; // default everything to 6 digits for now
             }
         }
         return keys;
@@ -114,13 +116,13 @@ private:
         totps_.resize(keys_.size());
         for ( size_t i = 0; i < keys_.size(); ++i )
         {
-            totps_[i].resize(7);
+            totps_[i].resize(keys_[i].totps_digits + 1);
             int gen_result = oath_totp_generate(reinterpret_cast<char*>(keys_[i].key.data()),
                                                 keys_[i].key.size(),
                                                 std::time(NULL),
                                                 OATH_TOTP_DEFAULT_TIME_STEP_SIZE,
                                                 OATH_TOTP_DEFAULT_START_TIME,
-                                                6,
+                                                keys_[i].totps_digits,
                                                 totps_[i].data());
             if ( gen_result != OATH_OK ) throw gen_result;
         }
