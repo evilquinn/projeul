@@ -4,10 +4,14 @@
 #include <memory>
 #include <vector>
 #include <iterator>
+#include <chrono>
 #include <string_view>
 #include <boost/regex.hpp>
 #include <boost/algorithm/hex.hpp>
+#include <boost/asio.hpp>
+#include <boost/bind/bind.hpp>
 #include <liboath/oath.h>
+#include <ansi/escapes.hpp>
 
 #ifndef OATHSTUFF_DIR
 #define OATHSTUFF_DIR "."
@@ -76,16 +80,67 @@ private:
 const boost::regex keys_reader_authenticator::capture_pattern_(
     "\\?secret=([A-Za-z0-9]*)\\&issuer=([a-zA-Z0-9]*)");
 
+class totps_display
+{
+public:
+    totps_display(boost::asio::io_context& asio_context, keys_data_type keys) :
+        asio_context_(asio_context),
+        timer_(asio_context),
+        keys_(keys)
+    {
+        std::cout << "screen updating..." << std::endl;
+        for ( size_t i = 0; i < keys_.size(); ++i )
+        {
+            std::cout << "\n";
+        }
+        asio_context_.post(boost::bind(&totps_display::update, this));
+    }
+private:
+    void update()
+    {
+        generate();
+        std::cout << ansi_escapes::move::left(1000) << ansi_escapes::move::up(keys_.size()) << std::flush;
+        for ( size_t i = 0; i < keys_.size(); ++i )
+        {
+            std::cout << "| " << keys_[i].id << "\t | " << totps_[i] << "\t |" << std::endl;
+        }
+        timer_.expires_from_now(boost::posix_time::seconds(1));
+        timer_.async_wait(boost::bind(&totps_display::update, this));
+    }
+
+    void generate()
+    {
+        using system_clock = std::chrono::system_clock;
+        totps_.resize(keys_.size());
+        for ( size_t i = 0; i < keys_.size(); ++i )
+        {
+            totps_[i].resize(7);
+            int gen_result = oath_totp_generate(reinterpret_cast<char*>(keys_[i].key.data()),
+                                                keys_[i].key.size(),
+                                                system_clock::to_time_t(
+                                                    system_clock::now()),
+                                                OATH_TOTP_DEFAULT_TIME_STEP_SIZE,
+                                                OATH_TOTP_DEFAULT_START_TIME,
+                                                6,
+                                                totps_[i].data());
+            if ( gen_result != OATH_OK ) throw gen_result;
+        }
+    }
+
+    boost::asio::io_context& asio_context_;
+    boost::asio::deadline_timer timer_;
+    keys_data_type keys_;
+    std::vector<std::string> totps_;
+};
+
 int main()
 {
-    std::cout << "hello" << std::endl;
     std::ifstream thef(OATHSTUFF_DIR "/authenticator.txt");
-    std::unique_ptr<keys_reader_authenticator> reader =
+    std::unique_ptr<keys_reader> reader =
         std::make_unique<keys_reader_authenticator>();
     auto keys = reader->read_keys(thef);
-    for ( auto&& key : keys )
-    {
-        std::cout << "key: " << key << std::endl;
-    }
+    boost::asio::io_context asio_context;
+    totps_display display(asio_context, keys);
+    asio_context.run();
     return 0;
 }
