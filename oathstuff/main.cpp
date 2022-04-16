@@ -5,6 +5,7 @@
 #include <vector>
 #include <iterator>
 #include <chrono>
+#include <ctime>
 #include <string_view>
 #include <boost/regex.hpp>
 #include <boost/algorithm/hex.hpp>
@@ -110,15 +111,13 @@ private:
 
     void generate()
     {
-        using system_clock = std::chrono::system_clock;
         totps_.resize(keys_.size());
         for ( size_t i = 0; i < keys_.size(); ++i )
         {
             totps_[i].resize(7);
             int gen_result = oath_totp_generate(reinterpret_cast<char*>(keys_[i].key.data()),
                                                 keys_[i].key.size(),
-                                                system_clock::to_time_t(
-                                                    system_clock::now()),
+                                                std::time(NULL),
                                                 OATH_TOTP_DEFAULT_TIME_STEP_SIZE,
                                                 OATH_TOTP_DEFAULT_START_TIME,
                                                 6,
