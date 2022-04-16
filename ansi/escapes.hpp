@@ -4,13 +4,21 @@
 namespace ansi_escapes
 {
 static const std::string escape = "\033[";
-static const char move_up   = 'A';
-static const char move_down = 'B';
-static const char move_left = 'D';
+static const char direction_up   = 'A';
+static const char direction_down = 'B';
+static const char direction_left = 'D';
 std::string move_by(char d, int n)
 {
     return escape + boost::lexical_cast<std::string>(n) + d;
 }
+class move
+{
+public:
+static std::string by(char d, int n) { return escape + boost::lexical_cast<std::string>(n) + d; }
+static std::string up(int n) { return move::by(direction_up, n); }
+static std::string down(int n) { return move::by(direction_down, n); }
+static std::string left(int n) { return move::by(direction_left, n); }
+};
 static const std::string clear_current_line    = escape + 'K';
 static const std::string clear_cursor_to_end   = escape + "0K";
 static const std::string clear_cursor_to_start = escape + "1K";
