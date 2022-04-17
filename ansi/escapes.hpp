@@ -19,6 +19,22 @@ static std::string up(int n) { return move::by(direction_up, n); }
 static std::string down(int n) { return move::by(direction_down, n); }
 static std::string left(int n) { return move::by(direction_left, n); }
 };
+class colour
+{
+public:
+static std::string black()   { return escape + "30m"; }
+static std::string red()     { return escape + "31m"; }
+static std::string green()   { return escape + "32m"; }
+static std::string yellow()  { return escape + "33m"; }
+static std::string blue()    { return escape + "34m"; }
+static std::string magenta() { return escape + "35m"; }
+static std::string cyan()    { return escape + "36m"; }
+static std::string white()   { return escape + "37m"; }
+static std::string reset()   { return escape + "0m";  }
+static std::string by_arg(int n) { return escape + boost::lexical_cast<std::string>(n) + "m"; }
+static std::string brighten(std::string s) { s.insert(s.find_last_of('m'), ";1"); return s; }
+static std::string by_arg_256(int n) { return escape + "38;5;" + boost::lexical_cast<std::string>(n) + "m"; };
+};
 static const std::string clear_current_line    = escape + 'K';
 static const std::string clear_cursor_to_end   = escape + "0K";
 static const std::string clear_cursor_to_start = escape + "1K";
