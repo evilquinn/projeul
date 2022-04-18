@@ -5,7 +5,10 @@
 #include <vector>
 #include <iterator>
 #include <chrono>
+#include <filesystem>
 #include <ctime>
+#include <cstdlib>
+#include <cstdio>
 #include <string_view>
 #include <boost/regex.hpp>
 #include <boost/algorithm/hex.hpp>
@@ -17,6 +20,12 @@
 #ifndef OATHSTUFF_DIR
 #define OATHSTUFF_DIR "."
 #endif
+
+const char* env_home = std::getenv("HOME");
+const std::string user_config_dir_path_prefix = env_home ? env_home : ".";
+const std::string user_config_dir_path = user_config_dir_path_prefix + "/.otps";
+const std::string user_keys_file_path = user_config_dir_path + "/keys";
+
 
 struct key_data
 {
@@ -48,6 +57,41 @@ class keys_reader
 {
 public:
     virtual keys_data_type read_keys(std::istream& is) const = 0;
+};
+
+class config
+{
+public:
+    config() :
+        user_dir_path_(user_config_dir_path),
+        user_keys_path_(user_keys_file_path)
+    {
+        init();
+    }
+    void save_keys(keys_data_type keys)
+    {
+        keys_ = std::move(keys);
+        auto temp_keys_file = std::tmpfile();
+        if ( !temp_keys_file ) throw std::runtime_error("failed to open temp file");
+    }
+private:
+    void init()
+    {
+        // check config dir exists
+        auto dir_status = std::filesystem::status(user_dir_path_);
+        if ( ! std::filesystem::exists(dir_status) ) return; // no config dir, fair enough
+        if ( ! std::filesystem::is_directory(dir_status) ) throw std::runtime_error("config dir isn't a dir");
+        auto keys_status = std::filesystem::status(user_keys_path_);
+        if ( ! std::filesystem::exists(keys_status) ) return; // no keys file, fair enough
+        if ( ! std::filesystem::is_regular_file(keys_status) ) throw std::runtime_error("keys file is not regular file");
+        auto keys_perms = keys_status.permissions();
+        if ( ( keys_perms & ( std::filesystem::perms::group_all |
+                              std::filesystem::perms::others_all ) )
+                 != std::filesystem::perms::none ) throw std::runtime_error("keys file incorrect perms");
+    }
+    std::filesystem::path user_dir_path_;
+    std::filesystem::path user_keys_path_;
+    keys_data_type keys_;
 };
 class keys_reader_authenticator : public keys_reader
 {
@@ -188,10 +232,11 @@ private:
 
 int main()
 {
+    config c;
     std::ifstream thef(OATHSTUFF_DIR "/authenticator.txt");
     std::unique_ptr<keys_reader> reader =
         std::make_unique<keys_reader_authenticator>();
-    auto keys = reader->read_keys(thef);
+    auto keys = reader->read_keys(thef); c.save_keys(keys);
     boost::asio::io_context asio_context;
     totps_display display(asio_context, keys);
     asio_context.run();
