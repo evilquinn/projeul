@@ -48,27 +48,49 @@ int main()
     std::cout << ansi_escapes::style::reset << std::endl;
 
     std::cout << "256 colours:" << std::endl;
+    int split_at = 7;
+    int split_count = 0;
     for ( int i = 0; i < 16; ++i )
     {
         for ( int j = 0; j < 16; ++j )
         {
             int v = i * 16 + j;
             std::cout << ansi_escapes::style::by_arg_256(ansi_escapes::style::foreground, v) << std::setw(4) << v;
-            if ( j == 7 ) std::cout << ansi_escapes::style::reset << std::endl;
+            if ( split_count == split_at )
+            {
+                std::cout << ansi_escapes::style::reset << std::endl;
+                split_count = 0;
+                if ( v == 15 ) split_at = 5;
+            }
+            else
+            {
+                ++split_count;
+            }
         }
-        std::cout << ansi_escapes::style::reset << std::endl;
     }
+    std::cout << ansi_escapes::style::reset << std::endl;
     std::cout << std::endl;
+    split_at = 7;
+    split_count = 0;
     for ( int i = 0; i < 16; ++i )
     {
         for ( int j = 0; j < 16; ++j )
         {
             int v = i * 16 + j;
             std::cout << ansi_escapes::style::by_arg_256(ansi_escapes::style::background, v) << std::setw(4) << v;
-            if ( j == 7 ) std::cout << ansi_escapes::style::reset << std::endl;
+            if ( split_count == split_at )
+            {
+                std::cout << ansi_escapes::style::reset << std::endl;
+                split_count = 0;
+                if ( v == 15 ) split_at = 5;
+            }
+            else
+            {
+                ++split_count;
+            }
         }
-        std::cout << ansi_escapes::style::reset << std::endl;
     }
+    std::cout << ansi_escapes::style::reset << std::endl;
     std::cout << std::endl;
     std::cout << ansi_escapes::style::reset << std::endl;
 
