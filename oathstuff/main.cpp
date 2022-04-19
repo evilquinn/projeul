@@ -3,6 +3,7 @@
 #include <fstream>
 #include <memory>
 #include <vector>
+#include <optional>
 #include <iterator>
 #include <chrono>
 #include <filesystem>
@@ -16,6 +17,14 @@
 #include <boost/bind/bind.hpp>
 #include <liboath/oath.h>
 #include <ansi/escapes.hpp>
+
+#include <getopt.h>
+
+#include <rapidjson/document.h>
+#include <rapidjson/filewritestream.h>
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/filereadstream.h>
+#include <rapidjson/writer.h>
 
 #ifndef OATHSTUFF_DIR
 #define OATHSTUFF_DIR "."
@@ -45,51 +54,142 @@ struct key_data
         key(key)
     {}
 };
-std::ostream& operator<< (std::ostream& os, struct key_data data)
+
+template<typename OutputStream>
+rapidjson::Writer<OutputStream>& operator<< (rapidjson::Writer<OutputStream>& rjw, const struct key_data& data)
 {
-    os << "{ \"id\": \"" << data.id << "\", \"key\": \"";
-    boost::algorithm::hex(data.key, std::ostream_iterator<char>(os));
-    os << "\", \"digits\": \"" << data.digits << "\", \"interval\": \"" << data.interval << "\", \"offset\": \"" << data.offset << "\" }";
+    rjw.StartObject();
+    rjw.Key("id"); rjw.String(data.id.data(), data.id.size());
+    std::string hex_key;
+    boost::algorithm::hex(data.key, std::back_inserter(hex_key));
+    rjw.Key("key"); rjw.String(hex_key.data(), hex_key.size());
+    rjw.Key("digits"); rjw.Int64(data.digits);
+    rjw.Key("interval"); rjw.Int64(data.interval);
+    rjw.Key("offset"); rjw.Int64(data.offset);
+    rjw.EndObject();
+    return rjw;
+}
+std::ostream& operator<< (std::ostream& os, const struct key_data& data)
+{
+    rapidjson::OStreamWrapper osw(os);
+    rapidjson::Writer<rapidjson::OStreamWrapper> rjw(osw);
+    rjw << data;
     return os;
 }
+rapidjson::Value& operator>> (rapidjson::Value& json_in, struct key_data& data)
+{
+    struct key_data result;
+
+    result.id = json_in["id"].GetString();
+    boost::algorithm::unhex(json_in["key"].GetString(), std::back_inserter(result.key));
+    result.digits = json_in["digits"].GetInt64();
+    result.interval = json_in["interval"].GetInt64();
+    result.offset = json_in["offset"].GetInt64();
+
+    data = std::move(result);
+    return json_in;
+}
+
 typedef std::vector<key_data> keys_data_type;
+template<typename OutputStream>
+rapidjson::Writer<OutputStream>& operator<< (rapidjson::Writer<OutputStream>& rjw, const keys_data_type& data)
+{
+    rjw.StartArray();
+    for ( auto&& key : data )
+    {
+        rjw << key;
+    }
+    rjw.EndArray();
+    return rjw;
+}
+rapidjson::Value& operator>> (rapidjson::Value& json_in, keys_data_type& data)
+{
+    keys_data_type result;
+    key_data temp_key;
+    for ( auto&& json_key : json_in.GetArray() )
+    {
+        json_key >> temp_key;
+        result.push_back(temp_key);
+    }
+    data = std::move(result);
+    return json_in;
+}
 class keys_reader
 {
 public:
     virtual keys_data_type read_keys(std::istream& is) const = 0;
 };
 
-class config
+class config_file
 {
 public:
-    config() :
-        user_dir_path_(user_config_dir_path),
+    config_file() :
         user_keys_path_(user_keys_file_path)
     {
         init();
     }
+    const keys_data_type& read_keys()
+    {
+        keys_.clear();
+
+        auto keys_status = std::filesystem::status(user_keys_path_);
+        if ( ! std::filesystem::exists(keys_status) ) return keys_; // no keys file, fair enough
+        validate_key_file(keys_status);
+        auto keys_file = fopen(user_keys_path_.c_str(), "r");
+        // prepare the writer
+        size_t json_file_stream_buf_size = 1024;
+        char json_file_stream_buf[json_file_stream_buf_size];
+        auto json_file_stream = rapidjson::FileReadStream(keys_file, json_file_stream_buf, json_file_stream_buf_size);
+
+        rapidjson::Document parsed;
+        parsed.ParseStream(json_file_stream);
+        parsed >> keys_;
+        return keys_;
+    }
+    void append_keys(keys_data_type keys)
+    {
+        keys.insert(keys.end(), keys_.begin(), keys_.end());
+        save_keys(keys);
+    }
     void save_keys(keys_data_type keys)
     {
+        // create the new file
+        std::string temp_file_name = user_keys_file_path + "-XXXXXX";
+        auto temp_keys_fd = mkostemp(&temp_file_name[0], O_WRONLY);
+        if ( temp_keys_fd < 0 ) throw std::runtime_error("failed to open temp file");
+        auto temp_keys_file = fdopen(temp_keys_fd, "w");
+        if ( !temp_keys_file ) throw std::runtime_error("failed to open temp file stream");
+
+        // prepare the writer
+        size_t json_file_stream_buf_size = 1024;
+        char json_file_stream_buf[json_file_stream_buf_size];
+        auto json_file_stream = rapidjson::FileWriteStream(temp_keys_file, json_file_stream_buf, json_file_stream_buf_size);
+        auto json_writer = rapidjson::Writer<rapidjson::FileWriteStream>(json_file_stream);
+
+        // write
+        json_writer << keys;
+        json_file_stream.Flush();
+        fclose(temp_keys_file);
+
+        // finally, save
+        std::filesystem::rename(temp_file_name, user_keys_path_);
         keys_ = std::move(keys);
-        auto temp_keys_file = std::tmpfile();
-        if ( !temp_keys_file ) throw std::runtime_error("failed to open temp file");
     }
 private:
     void init()
     {
-        // check config dir exists
-        auto dir_status = std::filesystem::status(user_dir_path_);
-        if ( ! std::filesystem::exists(dir_status) ) return; // no config dir, fair enough
-        if ( ! std::filesystem::is_directory(dir_status) ) throw std::runtime_error("config dir isn't a dir");
         auto keys_status = std::filesystem::status(user_keys_path_);
         if ( ! std::filesystem::exists(keys_status) ) return; // no keys file, fair enough
-        if ( ! std::filesystem::is_regular_file(keys_status) ) throw std::runtime_error("keys file is not regular file");
-        auto keys_perms = keys_status.permissions();
+        validate_key_file(keys_status);
+    }
+    void validate_key_file(const std::filesystem::file_status& status)
+    {
+        if ( ! std::filesystem::is_regular_file(status) ) throw std::runtime_error("keys file is not regular file");
+        auto keys_perms = status.permissions();
         if ( ( keys_perms & ( std::filesystem::perms::group_all |
                               std::filesystem::perms::others_all ) )
                  != std::filesystem::perms::none ) throw std::runtime_error("keys file incorrect perms");
     }
-    std::filesystem::path user_dir_path_;
     std::filesystem::path user_keys_path_;
     keys_data_type keys_;
 };
@@ -178,6 +278,7 @@ public:
             states_[i].display_name = rotating_string(keys[i].id, 20);
             states_[i].key_info = keys[i];
         }
+        if ( states_.size() == 0 ) std::cout << "\n"; // For the single "No keys..." line
         asio_context_.post(boost::bind(&totps_display::update, this));
     }
 private:
@@ -191,6 +292,10 @@ private:
                       << " | " << std::setw(8) << states_[i].totp
                       << " | " << std::setw(3) << states_[i].seconds_to_update << "s"
                       << " |" << std::endl;
+        }
+        if ( states_.size() == 0 )
+        {
+            std::cout << "No keys..." << std::endl;
         }
         timer_.expires_from_now(boost::posix_time::seconds(1));
         timer_.async_wait(boost::bind(&totps_display::update, this));
@@ -230,21 +335,137 @@ private:
 
 };
 
-int main()
+enum class import_format
 {
-    config c;
-    std::ifstream thef(OATHSTUFF_DIR "/authenticator.txt");
-    std::unique_ptr<keys_reader> reader =
-        std::make_unique<keys_reader_authenticator>();
-    auto keys = reader->read_keys(thef); c.save_keys(keys);
+    authenticator
+};
+enum import_format to_import_format(const std::string& s)
+{
+    if ( s == "authenticator" ) return import_format::authenticator;
+    throw std::runtime_error("unrecognised import_format: " + s);
+}
+const std::string& to_string(const enum import_format i)
+{
+    switch( i )
+    {
+    case import_format::authenticator :
+    {
+        static const std::string authenticator_as_string("authenticator");
+        return authenticator_as_string;
+    }
+    default: throw std::runtime_error("invalid import_format");
+    }
+}
+struct import_options_type
+{
+    std::string format;
+    std::string file_path;
+    int verbose;
+};
+std::ostream& operator<< (std::ostream& os, const struct import_options_type& import_options)
+{
+    os << "{ \"format\": \"" << import_options.format << "\"";
+    if ( import_options.file_path.size() > 0 )
+    {
+        os << ", \"file_path\": \"" << import_options.file_path << "\"";
+    }
+    os << ", \"verbose\": " << ( import_options.verbose ? "true" : "false" );
+    return os << " }";
+}
+const struct import_options_type import_options_default = { "authenticator", "", false };
+struct import_options_type import_options = import_options_default;
+void usage()
+{
+    std::cout << "Usage: otps import [OPTIONS]\n"
+              << "\n"
+              << "  imports a list of keys\n"
+              << "\n"
+              << "Options:\n"
+              << "  -h, --help                : display help\n"
+              << "  -f, --format format-spec  : use format-spec formatter, supported: authenticator\n"
+              << "  -i  --input path          : path to file to import, default: stdin\n"
+              << "  -v, --verbose             : enable verbose output\n"
+              << std::endl;
+    std::cout << "Defaults:\n"
+              << import_options_default
+              << std::endl;
+}
+struct import_options_type read_import_options(int argc, char* argv[])
+{
+    struct import_options_type result = import_options_default;
+    static struct option long_options[] =
+    {
+        { "help",    no_argument,       0, 'h' },
+        { "format",  required_argument, 0, 'f' },
+        { "input",   required_argument, 0, 'i' },
+        { "verbose", no_argument,       &result.verbose, 1 },
+        {0, 0, 0, 0}
+    };
+    int opt_id = 0;
+    while ( opt_id != -1 )
+    {
+        int opt_idx = 0;
+        opt_id = getopt_long(argc, argv, "hf:i:v", long_options, &opt_idx);
+        if ( opt_id == -1 )
+        {
+            // end of options
+            break;
+        }
+        switch (opt_id)
+        {
+        case 'h' : usage();                           break;
+        case 'f' : result.format    = optarg; break;
+        case 'i' : result.file_path = optarg; break;
+        case 'v' : result.verbose   = 1;      break;
+        case 0   : break;
+        default  : // fall-through
+        {
+            usage();
+            std::exit(EXIT_FAILURE);
+        }
+        }
+    }
+    std::cout << "Import Options:\n"
+              << result
+              << std::endl;
+    return result;
+}
+void import_keys(int argc, char* argv[], config_file& c)
+{
+    ++optind;
+    auto import_options = read_import_options(argc, argv);
+
+    // only authenticator import is supported, they can't select anything else
+    keys_reader_authenticator auth_importer;
+    std::ifstream ifs;
+    std::istream* is;
+    if ( import_options.file_path.size() > 0 )
+    {
+        ifs.open(import_options.file_path.c_str());
+        is = &ifs;
+    }
+    else
+    {
+        is = &std::cin;
+    }
+    auto new_keys = auth_importer.read_keys(*is);
+    c.append_keys(new_keys);
+}
+int main(int argc, char* argv[])
+{
+    config_file c;
+    if ( argc > 1 )
+    {
+        if ( strcmp(argv[1], "import") == 0 )
+        {
+            import_keys(argc, argv, c);
+            return 0;
+        }
+    }
+
     boost::asio::io_context asio_context;
-    totps_display display(asio_context, keys);
+    totps_display display(asio_context, c.read_keys());
     asio_context.run();
 
-    //rotating_string rot13("jimmyJango", 5);
-    //for ( size_t i = 0; i < 10; ++i )
-    //{
-    //    std::cout << i << ": " << rot13.get() << std::endl;
-    //}
     return 0;
 }
