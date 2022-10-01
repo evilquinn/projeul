@@ -45,6 +45,8 @@ coord operator+(coord lhs, coord rhs)
     return lhs += rhs;
 }
 const coord end_of_stroke = { 0, 65535 };
+
+// image resolution and a 1-d buffer initialised to all white
 struct image_buffer
 {
     explicit image_buffer(coord res) :
@@ -77,6 +79,8 @@ std::ostream& operator<< (std::ostream& os, const strokes_type strokes)
     return os;
 }
 
+// scans line for successive coordinates,
+// returns all strokes in the line
 strokes_type line_to_strokes(const std::string& line)
 {
     size_t pos = 0;
@@ -89,7 +93,7 @@ strokes_type line_to_strokes(const std::string& line)
             return result;
         }
         size_t delim = line.find_first_of("^", pos);
-        coord c = { 0, 65535 };
+        coord c = end_of_stroke;
         sscanf(line.data()+pos, "%d,%d", &c.x, &c.y);
         if ( c == end_of_stroke )
         {
@@ -110,6 +114,7 @@ strokes_type line_to_strokes(const std::string& line)
     return result;
 }
 
+// scans input for coordinates, returns all strokes in input
 strokes_type sig_to_strokes(std::istream& is)
 {
     std::string line;
@@ -123,14 +128,16 @@ strokes_type sig_to_strokes(std::istream& is)
     return result;
 }
 
+// draw an individual pixel
 void draw_pixel(coord c, image_buffer& image)
 {
     if ( c.x < 0 || c.x > image.resolution.x ) throw std::runtime_error("x coord out of range");
     if ( c.y < 0 || c.y > image.resolution.y ) throw std::runtime_error("y coord out of range");
     size_t coord_pos = c.y * image.resolution.x + c.x;
-    image.buf[coord_pos] = 0x0;
+    image.buf[coord_pos] = 0x0; // paint it black.
 }
 
+// draw a single point for a given coordinate and pen size
 void draw_point(coord c, size_t point_size, image_buffer& image)
 {
     if ( c.x < 0 || c.x > image.resolution.x ) throw std::runtime_error("x coord out of range");
@@ -158,6 +165,7 @@ void draw_point(coord c, size_t point_size, image_buffer& image)
     }
 }
 
+// draw a line between two coordinates for a given pen size
 void draw_line(coord from, coord to, size_t pen_size, image_buffer& image)
 {
     // draw all points on the line
@@ -178,6 +186,7 @@ void draw_line(coord from, coord to, size_t pen_size, image_buffer& image)
     }
 }
 
+// draw lines between all coordinates in a stroke for a given pen size
 void draw_stroke(const stroke_type& stroke, size_t pen_size, image_buffer& image)
 {
     if ( stroke.size() == 1 )
@@ -193,6 +202,7 @@ void draw_stroke(const stroke_type& stroke, size_t pen_size, image_buffer& image
     }
 }
 
+// draw lines between all coordinates in each stroke for a given pen size
 void draw_strokes(const strokes_type& strokes, size_t pen_size, image_buffer& image)
 {
     for ( size_t i = 0; i < strokes.size(); ++i )
@@ -201,6 +211,7 @@ void draw_strokes(const strokes_type& strokes, size_t pen_size, image_buffer& im
     }
 }
 
+// returns max dimensions of the series of strokes
 coord strokes_dimensions(const strokes_type& strokes)
 {
     coord dimensions = { 0, 0 };
@@ -215,6 +226,7 @@ coord strokes_dimensions(const strokes_type& strokes)
     return dimensions;
 }
 
+// generate a png image from a series of strokes, send to stdout
 void strokes_to_png(const strokes_type& strokes)
 {
     //determine this later
@@ -272,12 +284,15 @@ void strokes_to_png(const strokes_type& strokes)
      * currently be PNG_COMPRESSION_TYPE_BASE and PNG_FILTER_TYPE_BASE.
      * REQUIRED.
      */
-    png_set_IHDR(png_ptr, info_ptr, resolution_x, resolution_y, 8,
+    png_set_IHDR(png_ptr, info_ptr, resolution_x, resolution_y, 1,
         PNG_COLOR_TYPE_GRAY, PNG_INTERLACE_NONE,
         PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
     // write the header info
     png_write_info(png_ptr, info_ptr);
+
+    // convert our byte-per-pixel buffer to bit-per-pixel on saving
+    png_set_packing(png_ptr);
 
     /* In this example, "image" is a one-dimensional array of bytes. */
     /* Guard against integer overflow. */
@@ -286,17 +301,12 @@ void strokes_to_png(const strokes_type& strokes)
         png_error(png_ptr, "Image data buffer would be too large");
     }
 
-    //png_byte image[resolution_y * resolution_x];
-    // fill white
-    //std::memset(image, 0xFF, sizeof(image)/sizeof(image[0]));
 
-    struct image_buffer image(resolution);
     // draw the signature
-    const size_t pen_size = 2;
+    struct image_buffer image(resolution);
+    const size_t pen_size = 1;
     draw_strokes(strokes, pen_size, image);
 
-
-    png_bytep row_pointers[resolution_y];
 
     if (resolution_y > PNG_UINT_32_MAX / (sizeof (png_bytep)))
     {
@@ -304,6 +314,7 @@ void strokes_to_png(const strokes_type& strokes)
     }
 
     /* Set up pointers into your "image" byte array. */
+    png_bytep row_pointers[resolution_y];
     for ( size_t i = 0; i < resolution_y; ++i)
     {
         row_pointers[i] = image.buf.data() + i * resolution_x;
