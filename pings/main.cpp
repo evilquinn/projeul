@@ -7,6 +7,9 @@
 #include <cstring>
 #include <cmath>
 #include <vector>
+#include <boost/lexical_cast.hpp>
+
+#include <getopt.h>
 
 #include <png.h>
 
@@ -46,6 +49,13 @@ coord operator+(coord lhs, coord rhs)
 }
 const coord end_of_stroke = { 0, 65535 };
 
+struct config_type
+{
+    size_t pen_size;
+    float scale_factor;
+};
+const struct config_type default_config = { 1, 1 };
+
 // image resolution and a 1-d buffer initialised to all white
 struct image_buffer
 {
@@ -80,8 +90,8 @@ std::ostream& operator<< (std::ostream& os, const strokes_type strokes)
 }
 
 // scans line for successive coordinates,
-// returns all strokes in the line
-strokes_type line_to_strokes(const std::string& line)
+// returns all strokes in the line appropriately scaled
+strokes_type line_to_strokes(const std::string& line, float scale_factor)
 {
     size_t pos = 0;
     strokes_type result;
@@ -106,6 +116,7 @@ strokes_type line_to_strokes(const std::string& line)
                 new_stroke = false;
                 result.push_back(stroke_type());
             }
+            c = coord{ static_cast<int>(c.x * scale_factor), static_cast<int>(c.y * scale_factor) };
             result.back().push_back(c);
         }
         pos = delim;
@@ -114,15 +125,15 @@ strokes_type line_to_strokes(const std::string& line)
     return result;
 }
 
-// scans input for coordinates, returns all strokes in input
-strokes_type sig_to_strokes(std::istream& is)
+// scans input for coordinates, sreturns all strokes in input appropriately scaled
+strokes_type sig_to_strokes(std::istream& is, float scale_factor)
 {
     std::string line;
     strokes_type result;
     while ( std::getline(is, line) )
     {
         // newline is a new stroke. because.
-        const strokes_type& next_strokes = line_to_strokes(line);
+        const strokes_type& next_strokes = line_to_strokes(line, scale_factor);
         result.insert(result.end(), next_strokes.begin(), next_strokes.end());
     }
     return result;
@@ -202,15 +213,6 @@ void draw_stroke(const stroke_type& stroke, size_t pen_size, image_buffer& image
     }
 }
 
-// draw lines between all coordinates in each stroke for a given pen size
-void draw_strokes(const strokes_type& strokes, size_t pen_size, image_buffer& image)
-{
-    for ( size_t i = 0; i < strokes.size(); ++i )
-    {
-        draw_stroke(strokes[i], pen_size, image);
-    }
-}
-
 // returns max dimensions of the series of strokes
 coord strokes_dimensions(const strokes_type& strokes)
 {
@@ -226,21 +228,28 @@ coord strokes_dimensions(const strokes_type& strokes)
     return dimensions;
 }
 
-// generate a png image from a series of strokes, send to stdout
-void strokes_to_png(const strokes_type& strokes)
+// draw lines between all coordinates in each stroke for a given pen size
+struct image_buffer draw_strokes(const strokes_type& strokes, size_t pen_size)
 {
-    //determine this later
     const coord boundary_size = { 20, 20 };
     const coord resolution = strokes_dimensions(strokes) + boundary_size;
-    const size_t resolution_x = resolution.x;
-    const size_t resolution_y = resolution.y;
+    struct image_buffer image(resolution);
+
+    for ( size_t i = 0; i < strokes.size(); ++i )
+    {
+        draw_stroke(strokes[i], pen_size, image);
+    }
+
+    return image;
+}
+
+// generate a png image from an image, send to stdout
+void to_png(image_buffer& image, FILE* out_file)
+{
+    const size_t resolution_x = image.resolution.x;
+    const size_t resolution_y = image.resolution.y;
     png_structp png_ptr;
     png_infop info_ptr;
-
-    // was debugging:
-    //FILE* fp = std::fopen("./my.png", "wb");
-    //if (fp == NULL) throw std::runtime_error("fopen(\"./my.png\", \"wb\") returned NULL");
-    //std::unique_ptr<FILE, int(*)(FILE*)> filecloser(fp, &std::fclose);
 
     /* Create and initialize the png_struct with the desired error handler
      * functions.  If you want to use the default stderr and longjump method,
@@ -272,8 +281,7 @@ void strokes_to_png(const strokes_type& strokes)
         throw std::runtime_error("setjump(png_jmpbuf(png_ptr)) returned non-zero");
     }
 
-    //png_init_io(png_ptr, fp); // debug
-    png_init_io(png_ptr, ::stdout);
+    png_init_io(png_ptr, out_file);
 
     /* Set the image information here.  Width and height are up to 2^31,
      * bit_depth is one of 1, 2, 4, 8 or 16, but valid values also depend on
@@ -301,13 +309,6 @@ void strokes_to_png(const strokes_type& strokes)
         png_error(png_ptr, "Image data buffer would be too large");
     }
 
-
-    // draw the signature
-    struct image_buffer image(resolution);
-    const size_t pen_size = 1;
-    draw_strokes(strokes, pen_size, image);
-
-
     if (resolution_y > PNG_UINT_32_MAX / (sizeof (png_bytep)))
     {
         png_error(png_ptr, "Image is too tall to process in memory");
@@ -327,12 +328,75 @@ void strokes_to_png(const strokes_type& strokes)
     png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
-int main()
+void usage()
 {
-    strokes_type strokes = sig_to_strokes(std::cin);
+    std::cout << "Usage: sig2png [OPTIONS]\n"
+              << "\n"
+              << "  Consumes signature data coordinates and produces a png image\n"
+              << "\n"
+              << "Options:\n"
+              << "  -h, --help                     : display help\n"
+              << "  -p, --pen-size <pen-size>      : number of pixels\n"
+              << "  -s, --scale <scale-factor>     : scale factor to scale image to\n"
+              << std::endl;
+}
+
+struct config_type parse_options(int argc, char* argv[])
+{
+    struct config_type result = default_config;
+    static struct option long_options[] =
+    {
+        { "help",                no_argument,       0, 'h' },
+        { "pen-size",            required_argument, 0, 'p' },
+        { "scale",               required_argument, 0, 's' },
+        {0, 0, 0, 0}
+    };
+    int opt_id = 0;
+    while ( opt_id != -1 )
+    {
+        int opt_idx = 0;
+        opt_id = getopt_long(argc, argv, "hp:s:", long_options, &opt_idx);
+        if ( opt_id == -1 )
+        {
+            // end of options
+            break;
+        }
+        switch (opt_id)
+        {
+        case 'h' : usage();                                                    break;
+        case 'p' : result.pen_size      = boost::lexical_cast<size_t>(optarg); break;
+        case 's' : result.scale_factor  = boost::lexical_cast<float>(optarg);  break;
+        case 0   : break;
+        default  : // fall-through
+        {
+            std::cout << "Unrecognised option: " << opt_id << std::endl;
+            usage();
+            exit(EXIT_FAILURE);
+        }
+        }
+    }
+    return result;
+}
+
+int main(int argc, char* argv[])
+{
+    struct config_type config = parse_options(argc, argv);
+
+    // parse the strokes
+    strokes_type strokes = sig_to_strokes(std::cin, config.scale_factor);
+
     //std::stringstream ss(data);
     //strokes_type strokes = sig_to_strokes(ss);
     //std::cout << "signature:\n" << strokes << std::endl;
-    strokes_to_png(strokes);
+
+    // draw the signature
+    const size_t pen_size = config.pen_size;
+    struct image_buffer image = draw_strokes(strokes, pen_size);
+
+    //FILE* fp = std::fopen("./my.png", "wb");
+    //if (fp == NULL) throw std::runtime_error("fopen(\"./my.png\", \"wb\") returned NULL");
+    //std::unique_ptr<FILE, int(*)(FILE*)> filecloser(fp, &std::fclose);
+
+    to_png(image, ::stdout);
     return 0;
 }
