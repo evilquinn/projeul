@@ -56,6 +56,7 @@ struct config_type
 };
 const struct config_type default_config = { 1, 1 };
 
+typedef std::vector<unsigned char> byte_vector;
 // image resolution and a 1-d buffer initialised to all white
 struct image_buffer
 {
@@ -64,7 +65,7 @@ struct image_buffer
         buf(resolution.x * resolution.y, 0xFF)
     {}
     coord resolution;
-    std::vector<unsigned char> buf;
+    byte_vector buf;
 };
 typedef std::vector<coord> stroke_type;
 std::ostream& operator<<(std::ostream& os, const stroke_type stroke)
@@ -243,8 +244,31 @@ struct image_buffer draw_strokes(const strokes_type& strokes, size_t pen_size)
     return image;
 }
 
+
+// set up to be called during libpng's writes
+void to_png_write_data_callback(png_structp png_ptr, png_bytep data, size_t length)
+{
+    byte_vector* memory_buf = reinterpret_cast<byte_vector*>(png_get_io_ptr(png_ptr));
+    if ( !memory_buf ) throw std::runtime_error("to_png_write_data_callback's png_get_io_ptr returned NULL");
+    memory_buf->insert(memory_buf->end(), data, data + length);
+}
+
+// set up to be called during libpng's writer's flushes
+void to_png_flush_data_callback(png_structp png_ptr)
+{
+    byte_vector* memory_buf = reinterpret_cast<byte_vector*>(png_get_io_ptr(png_ptr));
+    if ( !memory_buf ) throw std::runtime_error("to_png_flush_data_callback's png_get_io_ptr returned NULL");
+    for ( auto&& byte : *memory_buf )
+    {
+        std::cout << byte;
+    }
+    memory_buf->clear();
+}
+
+
+
 // generate a png image from an image, send to stdout
-void to_png(image_buffer& image, FILE* out_file)
+void to_png(image_buffer& image, byte_vector& memory_buf)
 {
     const size_t resolution_x = image.resolution.x;
     const size_t resolution_y = image.resolution.y;
@@ -281,7 +305,8 @@ void to_png(image_buffer& image, FILE* out_file)
         throw std::runtime_error("setjump(png_jmpbuf(png_ptr)) returned non-zero");
     }
 
-    png_init_io(png_ptr, out_file);
+    // try to write to the memory buffer
+    png_set_write_fn(png_ptr, &memory_buf, to_png_write_data_callback, to_png_flush_data_callback);
 
     /* Set the image information here.  Width and height are up to 2^31,
      * bit_depth is one of 1, 2, 4, 8 or 16, but valid values also depend on
@@ -386,7 +411,7 @@ int main(int argc, char* argv[])
     strokes_type strokes = sig_to_strokes(std::cin, config.scale_factor);
 
     //std::stringstream ss(data);
-    //strokes_type strokes = sig_to_strokes(ss);
+    //strokes_type strokes = sig_to_strokes(ss, config.scale_factor);
     //std::cout << "signature:\n" << strokes << std::endl;
 
     // draw the signature
@@ -397,6 +422,12 @@ int main(int argc, char* argv[])
     //if (fp == NULL) throw std::runtime_error("fopen(\"./my.png\", \"wb\") returned NULL");
     //std::unique_ptr<FILE, int(*)(FILE*)> filecloser(fp, &std::fclose);
 
-    to_png(image, ::stdout);
+    byte_vector memory_buf;
+    to_png(image, memory_buf);
+
+    for ( auto&& byte : memory_buf )
+    {
+        std::cout << byte;
+    }
     return 0;
 }
