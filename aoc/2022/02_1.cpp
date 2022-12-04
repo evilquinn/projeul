@@ -13,6 +13,10 @@ static const int rock_score = 1;
 static const int paper_score = 2;
 static const int scissors_score = 3;
 
+static const char lose = 'X';
+static const char draw = 'Y';
+static const char win = 'Z';
+
 static const int lose_score = 0;
 static const int draw_score = 3;
 static const int win_score = 6;
@@ -66,7 +70,7 @@ int game_score(const std::string& game)
     return result_score(game) + rhs_play_score(game);
 }
 
-int count_scores(std::istream& input)
+int count_scores_1(std::istream& input)
 {
     int result = 0;
     std::string game_line;
@@ -80,17 +84,68 @@ int count_scores(std::istream& input)
     return result;
 }
 
+char should_play_a(char lhs, char strategy)
+{
+    if ( strategy == draw ) return lhs;
+    if ( strategy == lose ) return lhs == rock ? scissors :
+                                   lhs == paper ? rock :
+                                   paper;
+    return lhs == rock ? paper :
+           lhs == paper ? scissors :
+           rock;
+}
+
+void test_should_play_a()
+{
+    using test_data_type = std::vector<std::pair<std::string, int> >;
+    test_data_type test_data = {
+        { "A X", scissors },
+        { "B X", rock },
+        { "C X", paper },
+        { "A Y", rock },
+        { "B Y", paper },
+        { "C Y", scissors },
+        { "A Z", paper },
+        { "B Z", scissors },
+        { "C Z", rock }
+    };
+    for ( auto&& datum : test_data )
+    {
+        if ( should_play_a(datum.first[0], datum.first[2]) != datum.second ) throw std::runtime_error("Test case failed");
+    }
+}
+
+int count_scores_2(std::istream& input)
+{
+    int result = 0;
+    std::string game_line;
+    while(std::getline(input, game_line))
+    {
+        if ( game_line == "" ) continue;
+        if ( game_line.size() != 3 ) throw std::runtime_error("Invalid game string");
+        game_line[2] = should_play_a(game_line[0], game_line[2]); // replace strategy with appropriate play
+        result += game_score(game_line);
+    }
+    return result;
+}
+
 
 int main()
 {
     test_result_score();
+    test_should_play_a();
 
     std::ifstream input(PROJEUL_AOC_PATH "/02_input.txt");
     if ( !input ) throw std::runtime_error("Failed to open input file");
 
-    int result = count_scores(input);
+    int result = count_scores_1(input);
     std::cout << "Part 1 result: " << result << std::endl;
 
+    input.clear();
+    input.seekg(0);
+    if ( !input ) throw std::runtime_error("Failed to rewind input file");
+    int result2 = count_scores_2(input);
+    std::cout << "Part 2 result: " << result2 << std::endl;
 
 
 
