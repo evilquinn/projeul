@@ -24,7 +24,6 @@ int count_can_contain(const std::vector<bag>& bags, std::string containee)
 {
     std::set<std::string> containers;
 
-    auto curr_size = containers.size();
     for ( auto&& bag : bags )
     {
         if ( bag.contains.count(containee) )

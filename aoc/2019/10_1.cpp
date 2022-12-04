@@ -292,7 +292,7 @@ using namespace map_util; // someday..
 
 map_type eliminate_obstructed(const map_type& map, const coord origin)
 {
-    coord_util::coord_incrementer incr = { map.empty() ? 0 : map[0].size() };
+    coord_util::coord_incrementer incr = { map.empty() ? 0 : static_cast<ptrdiff_t>(map[0].size()) };
     const coord lim = limit(map);
     auto result = map;
     // go right, then left
@@ -364,7 +364,7 @@ size_t count_asteroids(const map_type& map)
 }
 coord find_best(const map_type& map)
 {
-    coord_util::coord_incrementer incr = { map.empty() ? 0 : map[0].size() };
+    coord_util::coord_incrementer incr = { map.empty() ? 0 : static_cast<ptrdiff_t>(map[0].size()) };
     size_t best_count = 0;
     coord best_coord;
     std::cout << "map:\n" << map << "\n";

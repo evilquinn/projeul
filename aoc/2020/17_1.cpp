@@ -292,7 +292,6 @@ int main()
         for ( size_t i = 0; i < 6; ++i )
         {
             cyc.cycle();
-            auto count = cyc.count_actives();
         }
         auto result = cyc.count_actives();
         std::cout << "result: " << result << std::endl;

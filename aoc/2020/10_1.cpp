@@ -72,8 +72,6 @@ public:
     {
         // count how many times there's a sequence of 3 adapters sep'd by 1
         size_t one = 0;
-        size_t two = 0;
-        size_t three = 0;
         size_t count = 1;
         for ( size_t i = 0; i < diffs_.size(); ++i )
         {

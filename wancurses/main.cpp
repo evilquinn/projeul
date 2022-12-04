@@ -145,7 +145,7 @@ private:
         if ( BUTTON_DOUBLE_CLICK(event.bstate,   5) ) mouse_state_str += "Mouse 5 dboule-click;";
         if ( BUTTON_TRIPLE_CLICK(event.bstate,   5) ) mouse_state_str += "Mouse 5 triple-click;";
 
-        mvwprintw(status_bar_, 0, 0, "Mouse: id=%d, x=%d, y=%d, z=%d, bstate=0x%08lx, desc=%s\n",
+        mvwprintw(status_bar_, 0, 0, "Mouse: id=%d, x=%d, y=%d, z=%d, bstate=0x%08x, desc=%s\n",
                   event.id, event.y, event.x, event.z, event.bstate, mouse_state_str.c_str());
         prepend_to_tail(event.y, event.x);
     }

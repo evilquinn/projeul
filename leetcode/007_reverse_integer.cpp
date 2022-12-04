@@ -24,7 +24,7 @@
 #include <cmath>
 #include <limits>
 #include <functional>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
 
 class solution {

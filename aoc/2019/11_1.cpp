@@ -119,7 +119,7 @@ public:
     {
         coord limit = coord_bound();
         coord_util::coord_incrementer incr = { limit.x };
-        size_t last_y = 0;
+        ptrdiff_t last_y = 0;
         for ( coord i = { 0, 0 }; within_limit(i, limit); incr(i) )
         {
             if ( i.y != last_y )

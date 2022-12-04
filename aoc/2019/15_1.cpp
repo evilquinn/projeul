@@ -98,7 +98,7 @@ public:
                     return stop;
                 }
                 retreating_ = true;
-                if ( goal_value_ > 0 && curr_->value > farthest_from_goal_ )
+                if ( goal_value_ > 0 && static_cast<ptrdiff_t>(curr_->value) > farthest_from_goal_ )
                 {
                     farthest_from_goal_ = curr_->value;
                 }

@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& os, const map_type& map)
 coord_util::coord limit(const map_type& map)
 {
     if ( map.empty() ) return { 0, 0 };
-    return { map[0].size(), map.size() };
+    return { static_cast<ptrdiff_t>(map[0].size()), static_cast<ptrdiff_t>(map.size()) };
 }
 
 const map_type::value_type::value_type& at(const map_type& map, coord_util::coord c)

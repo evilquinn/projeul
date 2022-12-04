@@ -8,7 +8,7 @@
 #include <iterator>
 #include <map>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <aoc/path_def.hpp>
 #include <aoc/computer.hpp>
@@ -35,7 +35,7 @@ public:
     }
     computer::take_output_cb tracker_hook()
     {
-        return boost::bind(&tracker::track, this, _1);
+        return boost::bind(&tracker::track, this, boost::placeholders::_1);
     }
 private:
     coord_util::coord pos_;
