@@ -30,7 +30,7 @@ stacks_type parse_stacks(std::istream& input)
     return stacks;
 }
 
-void apply_move(std::string const& line, stacks_type& stacks)
+void apply_move_9000(std::string const& line, stacks_type& stacks)
 {
     int move = 0, from = 0, to = 0;
     std::sscanf(line.c_str(), "move %d from %d to %d", &move, &from, &to);
@@ -42,13 +42,35 @@ void apply_move(std::string const& line, stacks_type& stacks)
     }
 }
 
-stacks_type apply_moves(std::istream& input, stacks_type stacks)
+stacks_type apply_moves_9000(std::istream& input, stacks_type stacks)
 {
     std::string line;
     while(std::getline(input, line))
     {
         if(line == "") break;
-        apply_move(line, stacks);
+        apply_move_9000(line, stacks);
+    }
+    return stacks;
+}
+
+void apply_move_9001(std::string const& line, stacks_type& stacks)
+{
+    int move = 0, from = 0, to = 0;
+    std::sscanf(line.c_str(), "move %d from %d to %d", &move, &from, &to);
+    if ( stacks[from].size() < unsigned(move) ) throw std::runtime_error("Not enough crates in stack to move");
+    auto start_move = std::prev(stacks[from].end(), move);
+    auto end_move = stacks[from].end();
+    stacks[to].insert(stacks[to].end(), start_move, end_move);
+    stacks[from].erase(start_move, end_move);
+}
+
+stacks_type apply_moves_9001(std::istream& input, stacks_type stacks)
+{
+    std::string line;
+    while(std::getline(input, line))
+    {
+        if(line == "") break;
+        apply_move_9001(line, stacks);
     }
     return stacks;
 }
@@ -69,8 +91,13 @@ int main()
     std::ifstream input(PROJEUL_AOC_PATH "/05_input.txt");
     if ( !input ) throw std::runtime_error("Failed to open input file");
 
-    auto p1 = get_tops(apply_moves(input, parse_stacks(input)));
+    auto p1 = get_tops(apply_moves_9000(input, parse_stacks(input)));
     std::cout << "Part 1 result: " << p1 << std::endl;
+
+    input.clear();
+    input.seekg(0);
+    auto p2 = get_tops(apply_moves_9001(input, parse_stacks(input)));
+    std::cout << "Part 2 result: " << p2 << std::endl;
 
     return 0;
 }
