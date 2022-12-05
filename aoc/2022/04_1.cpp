@@ -26,6 +26,25 @@ int count_fully_contained_pairs(std::istream& is)
     return result;
 }
 
+bool is_overlapping(std::string const& line)
+{
+    section_range_type lhs = { 0, 0 }, rhs = { 0, 0 };
+    std::sscanf(line.c_str(), "%d-%d,%d-%d", &lhs.first, &lhs.second, &rhs.first, &rhs.second);
+    if ( lhs.first > rhs.second || lhs.second < rhs.first ) return false;
+    return true;
+}
+
+int count_overlapping_pairs(std::istream& is)
+{
+    int result = 0;
+    std::string line;
+    while(std::getline(is, line))
+    {
+        if ( is_overlapping(line) ) ++result;
+    }
+    return result;
+}
+
 int main()
 {
     std::ifstream input(PROJEUL_AOC_PATH "/04_input.txt");
@@ -33,6 +52,13 @@ int main()
 
     int p1 = count_fully_contained_pairs(input);
     std::cout << "Part 1 result: " << p1 << std::endl;
+
+    input.clear();
+    input.seekg(0);
+    if ( !input ) throw std::runtime_error("Failed to rewind input file");
+
+    int p2 = count_overlapping_pairs(input);
+    std::cout << "Part 2 result: " << p2 << std::endl;
 
     return 0;
 }
