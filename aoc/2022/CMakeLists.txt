@@ -10,3 +10,5 @@ add_executable ( aoc_2022_03_1 03_1.cpp )
 add_executable ( aoc_2022_04_1 04_1.cpp )
 
 add_executable ( aoc_2022_05_1 05_1.cpp )
+
+add_executable ( aoc_2022_06_1 06_1.cpp )
