@@ -114,6 +114,23 @@ size_t sum_dirs_smaller_than(filesystem_type const& fs, size_t threshold)
     return result;
 }
 
+size_t smallest_dir_size_to_del()
+{
+    size_t unused = 70000000 - all_files["/"]->size;
+    size_t needs = 30000000 - unused;
+    file* best = all_files["/"].get();
+    for ( auto&& file_entry : all_files )
+    {
+        if ( file_entry.second->type == file_type::dir &&
+             file_entry.second->size > needs &&
+             file_entry.second->size < best->size )
+        {
+            best = file_entry.second.get();
+        }
+    }
+    return best->size;
+}
+
 
 int main()
 {
@@ -126,6 +143,9 @@ int main()
 
     auto p1 = sum_dirs_smaller_than(all_files, 100000);
     std::cout << "Part 1 result: " << p1 << std::endl;
+
+    auto p2 = smallest_dir_size_to_del();
+    std::cout << "Part 2 result: " << p2 << std::endl;
 
     return 0;
 }
