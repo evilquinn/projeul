@@ -12,16 +12,18 @@
 
 #include <aoc/path_def.hpp>
 
+enum class file_type { file, dir };
 struct file
 {
     std::string full_path;
     std::string name;
     file* parent;
     size_t size;
+    file_type type;
     std::map<std::string, file*> files;
 
-    file(std::string const& full_path, file* parent) : full_path(full_path), name(name_from_path(full_path)), parent(parent), size(0) {}
-    file(std::string const& full_path, file* parent, size_t size) : full_path(full_path), name(name_from_path(full_path)), parent(parent), size(size) {}
+    file(std::string const& full_path, file* parent) : full_path(full_path), name(name_from_path(full_path)), parent(parent), size(0), type(file_type::dir) {}
+    file(std::string const& full_path, file* parent, size_t size) : full_path(full_path), name(name_from_path(full_path)), parent(parent), size(size), type(file_type::file) {}
     std::string name_from_path(std::filesystem::path const& path)
     {
         return path.filename();
@@ -97,9 +99,8 @@ struct instruction_handler
 size_t file_size(file* const file)
 {
     if (file->size != 0 ) return file->size;
-    size_t result = 0;
-    std::for_each(file->files.begin(), file->files.end(), [&](auto const& entry){ result += file_size(entry.second); });
-    return result;
+    std::for_each(file->files.begin(), file->files.end(), [&](auto const& entry){ file->size += file_size(entry.second); });
+    return file->size;
 }
 
 size_t sum_dirs_smaller_than(filesystem_type const& fs, size_t threshold)
@@ -108,7 +109,7 @@ size_t sum_dirs_smaller_than(filesystem_type const& fs, size_t threshold)
     for ( auto&& file_entry : fs )
     {
         auto size = file_size(file_entry.second.get());
-        if ( size <= threshold && file_entry.second->size == 0 ) result += size;
+        if ( size <= threshold && file_entry.second->type == file_type::dir ) result += size;
     }
     return result;
 }
