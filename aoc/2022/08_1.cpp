@@ -10,8 +10,9 @@ struct tree_type
 {
     int height;
     bool visible;
-    tree_type() : height(0), visible(false) {}
-    tree_type(int height) : height(height), visible(false) {}
+    int scenic_score;
+    tree_type() : height(0), visible(false), scenic_score(1) {}
+    tree_type(int height) : height(height), visible(false), scenic_score(1) {}
 };
 bool operator< (tree_type const& lhs, tree_type const& rhs)
 {
@@ -103,6 +104,55 @@ size_t count_visible(map_type& tree_map)
     return result;
 }
 
+int max_scenic(map_type& tree_map)
+{
+    int result = 0;
+    coord boundary = max_coord(tree_map);
+    for ( auto&& entry : tree_map )
+    {
+        if ( entry.first.x == 0 || entry.first.x == boundary.x || entry.first.y == 0 || entry.first.y == boundary.y )
+        {
+            entry.second.scenic_score = 0;
+            continue;
+        }
+        // go right
+        int distance = 0;
+        for ( coord c = coord{ entry.first.x + 1, entry.first.y }; c.x <= boundary.x; ++c.x )
+        {
+            ++distance;
+            if ( tree_map[c].height >= entry.second.height ) break;
+        }
+        entry.second.scenic_score *= distance;
+        // go left
+        distance = 0;
+        for ( coord c = coord{ entry.first.x - 1, entry.first.y }; c.x >= 0; --c.x )
+        {
+            ++distance;
+            if ( tree_map[c].height >= entry.second.height ) break;
+        }
+        entry.second.scenic_score *= distance;
+        // go down
+        distance = 0;
+        for ( coord c = coord{ entry.first.x, entry.first.y + 1}; c.y <= boundary.y; ++c.y )
+        {
+            ++distance;
+            if ( tree_map[c].height >= entry.second.height ) break;
+        }
+        entry.second.scenic_score *= distance;
+        // go up
+        distance = 0;
+        for ( coord c = coord{ entry.first.x, entry.first.y - 1}; c.y >= 0; --c.y )
+        {
+            ++distance;
+            if ( tree_map[c].height >= entry.second.height ) break;
+        }
+        entry.second.scenic_score *= distance;
+
+        if ( entry.second.scenic_score > result ) result = entry.second.scenic_score;
+    }
+    return result;
+}
+
 int main()
 {
     std::ifstream input(PROJEUL_AOC_PATH "/08_input.txt");
@@ -112,6 +162,9 @@ int main()
 
     auto p1 = count_visible(tree_map);
     std::cout << "Part 1 result: " << p1 << std::endl;
+
+    auto p2 = max_scenic(tree_map);
+    std::cout << "Part 2 result: " << p2 << std::endl;
 
     return 0;
 }
