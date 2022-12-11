@@ -17,3 +17,6 @@ add_executable ( aoc_2022_07_1 07_1.cpp )
 
 add_executable ( aoc_2022_08_1 08_1.cpp )
 target_link_libraries( aoc_2022_08_1 PRIVATE coord)
+
+add_executable ( aoc_2022_09_1 09_1.cpp )
+target_link_libraries( aoc_2022_09_1 PRIVATE coord)

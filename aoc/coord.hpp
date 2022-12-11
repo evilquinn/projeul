@@ -7,7 +7,13 @@
 namespace coord_util
 {
 
-struct coord { ptrdiff_t x = 0; ptrdiff_t y = 0; };
+struct coord
+{
+    ptrdiff_t x = 0;
+    ptrdiff_t y = 0;
+    coord() : x(0), y(0) {}
+    coord(ptrdiff_t x, ptrdiff_t y) : x(x), y(y) {}
+};
 
 bool operator< (const coord& a, const coord& b);
 std::ostream& operator<< (std::ostream& os, const coord& c);
