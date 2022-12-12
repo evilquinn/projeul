@@ -1,21 +1,19 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <set>
 
 #include <aoc/path_def.hpp>
 #include <aoc/coord.hpp>
 
 using coord_util::coord;
-
-coord head( 0, 0 );
-coord tail = head;
+using knots_type = std::vector<coord>;
+using visited_type = std::set<coord>;
 
 const coord right( 1, 0 );
 const coord left( -1, 0 );
 const coord up( 0, -1 );
 const coord down( 0, 1 );
-
-std::set<coord> visited = { tail };
 
 coord direction_coord(char d)
 {
@@ -29,28 +27,27 @@ coord direction_coord(char d)
     }
 }
 
-void move(char d)
+void move(char d, knots_type& knots, visited_type& visits)
 {
+    if ( knots.size() < 2 ) throw std::runtime_error("Not enough knots!");
     coord dir = direction_coord(d);
-    head += dir;
-    coord diff = head - tail;
-
-    if      ( diff.x < -1 ) ++diff.x;
-    else if ( diff.x >  1 ) --diff.x;
-    else if ( diff.y < -1 ) ++diff.y;
-    else if ( diff.y >  1 ) --diff.y;
-    else
+    knots[0] += dir;
+    for ( size_t i = 0; i < knots.size() - 1; ++i )
     {
-        if ( diff.x < 0 ) ++diff.x;
-        if ( diff.x > 0 ) --diff.x;
-        if ( diff.y < 0 ) ++diff.y;
-        if ( diff.y > 0 ) --diff.y;
+        const coord diff = knots[i] - knots[1+i];
+        coord move_by = diff;
+        if ( move_by.x < -1 ) ++move_by.x;
+        if ( move_by.x >  1 ) --move_by.x;
+        if ( move_by.y < -1 ) ++move_by.y;
+        if ( move_by.y >  1 ) --move_by.y;
+        if ( diff == move_by ) break;
+
+        knots[i+1] += move_by;
     }
-    tail += diff;
-    visited.insert(tail);
+    visits.insert(knots.back());
 }
 
-void apply_moves(std::istream& input)
+void apply_moves(std::istream& input, knots_type& knots, visited_type& visits)
 {
     std::string line;
     while(std::getline(input, line))
@@ -60,7 +57,7 @@ void apply_moves(std::istream& input)
         sscanf(line.c_str(), "%c %d", &d, &by);
         for ( int i = 0; i < by; ++i )
         {
-            move(d);
+            move(d, knots, visits);
         }
     }
 }
@@ -71,9 +68,19 @@ int main()
     std::ifstream input(PROJEUL_AOC_PATH "/09_input.txt");
     if ( !input ) throw std::runtime_error("Failed to open input file");
 
-    apply_moves(input);
-    auto p1 = visited.size();
+    knots_type p1_knots(2, coord( 0, 0 ));
+    visited_type p1_visited = { p1_knots.back() };
+    apply_moves(input, p1_knots, p1_visited);
+    auto p1 = p1_visited.size();
     std::cout << "Part 1 result: " << p1 << std::endl;
+
+    input.clear();
+    input.seekg(0);
+    knots_type p2_knots(10, coord( 0, 0 ));
+    visited_type p2_visited = { p2_knots.back() };
+    apply_moves(input, p2_knots, p2_visited);
+    auto p2 = p2_visited.size();
+    std::cout << "Part 2 result: " << p2 << std::endl;
 
     return 0;
 }
