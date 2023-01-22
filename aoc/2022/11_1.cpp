@@ -6,20 +6,30 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 
 #include <aoc/path_def.hpp>
+
+#define AOC_2022_11_PART_1 0
+
+
+using worry_level_type = boost::multiprecision::cpp_int;
+//using worry_level_type = int;
 
 struct monkey
 {
     int id; // id
-    std::deque<int> items; // list of items
-    std::function<int(int)> operation; // operation affects worry level during inspection
-    std::function<bool(int)> test; // determines which monkey to throw to
+    std::deque<worry_level_type> items; // list of items
+    std::function<worry_level_type(worry_level_type)> operation; // operation affects worry level during inspection
+    std::function<bool(worry_level_type)> test; // determines which monkey to throw to
     int true_id; // id of monkey to throw to if test is true
     int false_id; // id of monkey to throw to if test is false
-    int inspected; // number of times monkey inspects items
+    worry_level_type inspected; // number of times monkey inspects items
+    static worry_level_type normaliser;
     monkey() : id(0), items(), true_id(0), false_id(0), inspected(0) {}
 };
+
+worry_level_type monkey::normaliser = 1;
 
 std::istream& operator>>(std::istream& input, monkey& monkey)
 {
@@ -45,20 +55,30 @@ std::istream& operator>>(std::istream& input, monkey& monkey)
     sscanf(line.c_str(), "  Operation: new = old %c %3s", &op, op_by);
     int op_by_val = 0;
     if ( strcmp(op_by, "old") != 0 ) { op_by_val = boost::lexical_cast<int>(op_by); }
-    monkey.operation = [op, op_by_val](int worry_level)
+    monkey.operation = [op, op_by_val](worry_level_type worry_level)
     {
-        int local_by_val = op_by_val;
+        worry_level_type local_by_val = op_by_val;
         if ( op_by_val == 0 ) { local_by_val = worry_level; }
-        return (op == '+' ? worry_level + local_by_val : worry_level * local_by_val);
+        worry_level_type result;
+        if ( op == '+' )
+        {
+            result = worry_level + local_by_val;
+        }
+        else
+        {
+            result = worry_level * local_by_val;
+        }
+        return result;
     };
     // parse monkey.test
     std::getline(input, line);
     int div_by = 0;
     sscanf(line.c_str(), "  Test: divisible by %d", &div_by);
-    monkey.test = [div_by](int worry_level)
+    monkey.test = [div_by](worry_level_type worry_level)
     {
         return worry_level % div_by == 0;
     };
+    monkey::normaliser *= div_by;
     // parse monkey.true_id
     std::getline(input, line);
     sscanf(line.c_str(), "    If true: throw to monkey %d", &monkey.true_id);
@@ -91,8 +111,12 @@ void do_turn(monkeys_type& monkeys, monkey& monkey)
         auto& item = monkey.items.front();
         item = monkey.operation(item);
         monkey.inspected++;
-        // relief
+#if AOC_2022_11_PART_1
+        // relief (part 1 only)
         item /= 3;
+#else
+        item %= monkey::normaliser;
+#endif
         // throw
         monkey_throw(monkeys, monkey);
     }
@@ -110,6 +134,7 @@ void do_rounds(monkeys_type& monkeys, int rounds)
 {
     for ( int i = 0; i < rounds; i++ )
     {
+        std::cout << "doing round " << i+1 << std::endl;
         do_round(monkeys);
     }
 }
@@ -134,16 +159,22 @@ int main()
     if ( !input ) throw std::runtime_error("Failed to open input file");
 
     auto monkeys = read_monkeys(input);
+#if AOC_2022_11_PART_1
+    // part 1
     do_rounds(monkeys, 20);
-    std::vector<monkey> most_inspected(2);
+#else
+    // part 2
+    do_rounds(monkeys, 10000);
+#endif
+    auto most_inspected = monkeys_type(2);
     std::partial_sort_copy(monkeys.begin(), monkeys.end(),
                            most_inspected.begin(), most_inspected.end(),
                            [](const monkey& lhs, const monkey& rhs)
                            {
-                               return lhs.inspected > rhs.inspected; }
-                           );
-    auto p1 = most_inspected[0].inspected * most_inspected[1].inspected;
-    std::cout << "Part 1 result: " << p1 << std::endl;
+                               return lhs.inspected > rhs.inspected;
+                           });
+    auto result = most_inspected[0].inspected * most_inspected[1].inspected;
+    std::cout << "Result: " << result << std::endl;
 
     return 0;
 }
