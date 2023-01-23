@@ -2,6 +2,7 @@
 #ifndef AOC_COORD_HPP
 #define AOC_COORD_HPP
 
+#include <cstddef>
 #include <iosfwd>
 
 namespace coord_util
