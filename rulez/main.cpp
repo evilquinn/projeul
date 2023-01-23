@@ -3,7 +3,9 @@
 #include <map>
 #include <string>
 #include <boost/property_tree/ptree.hpp>
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/property_tree/json_parser.hpp>
+#undef BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/lexical_cast.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string.hpp>

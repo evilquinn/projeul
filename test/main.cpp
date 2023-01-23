@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <asio_context.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <signal_handler.hpp>
 
 static void run_all_tests( int* argc, char** argv, int& result )
