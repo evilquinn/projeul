@@ -3,12 +3,12 @@
 #include <fstream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 #include <aoc/coord.hpp>
 
 #include <aoc/path_def.hpp>
 
-using map_type = std::vector<std::vector<int> >;
 using coord = coord_util::coord;
 
 const coord up    = coord( 0, -1);
@@ -17,34 +17,64 @@ const coord left  = coord(-1,  0);
 const coord right = coord( 1,  0);
 const std::vector<coord> explorables = { up, down, left, right };
 
-coord map_limit_coord(map_type const& map)
+struct map_type
 {
-    if ( map.size() == 0 ) throw std::runtime_error("empty map!");
-    return coord(map.back().size(), map.size());
-}
+    typedef std::vector<std::vector<int> > value_type;
+    value_type map;
 
-map_type::value_type::value_type const& map_at(map_type const& map, coord c)
-{
-    if ( ! ( c < map_limit_coord(map) ) ) throw std::runtime_error("c not in map");
-    return map[c.y][c.x];
-}
-
-map_type::value_type::value_type& map_at(map_type& map, coord c)
-{
-    return const_cast<map_type::value_type::value_type&>(
-               map_at(const_cast<map_type const&>(map), c));
-}
-
-map_type read_map(std::istream& is)
-{
-    map_type result;
-    std::string line;
-    while(std::getline(is, line))
+    map_type() {}
+    map_type(coord dimensions) : map(dimensions.y, std::vector<int>(dimensions.x, 0))
     {
-        result.emplace_back(line.begin(), line.end());
     }
-    return result;
-}
+
+    coord dimensions() const
+    {
+        if ( map.size() == 0 ) return coord(0, 0);
+        return coord(map.back().size(), map.size());
+    }
+
+    value_type::value_type::value_type const& at(coord c) const
+    {
+        if ( ! ( c < dimensions() ) ) throw std::runtime_error("c not in map");
+        return map[c.y][c.x];
+    }
+
+    value_type::value_type::value_type& at(coord c)
+    {
+        return const_cast<value_type::value_type::value_type&>(
+                   const_cast<map_type const&>(*this).at(c));
+    }
+
+    static map_type read_map(std::istream& is)
+    {
+        map_type result;
+        std::string line;
+        while(std::getline(is, line))
+        {
+            result.map.emplace_back(line.begin(), line.end());
+        }
+        return result;
+    }
+
+    coord find_next(value_type::value_type::value_type target, coord start_pos = coord(0, 0)) const
+    {
+        coord limit = dimensions();
+        coord_util::coord_incrementer incr{limit.x};
+        for ( coord i = start_pos; within_limit(i, limit); incr(i) )
+        {
+            if ( at(i) == target ) return i;
+        }
+        throw std::runtime_error("Failed to find target");
+    }
+
+    coord incr(coord c, int by) const
+    {
+        coord limit = dimensions();
+        coord_util::coord_incrementer incrementer{limit.x};
+        incrementer(c, by);
+        return c;
+    }
+};
 
 struct path_finder
 {
@@ -53,25 +83,70 @@ struct path_finder
         coord pos;
         int cost;
     };
-    int find_shortest_path(map_type& map)
+    int find_shortest_path(map_type map)
     {
-        map_type exploring_map = init_explore(map);
+        auto start = map.find_next('S');
+        map.at(start) = 'a';
+        return find_shortest_path_from(map, start);
+    }
 
-        auto start = find_start(map);
-        map_at(map, start) = 'a';
-        auto target = find_first(map, 'E');
-        map_at(map, target) = 'z';
+    std::vector<int> find_shortest_paths(map_type map)
+    {
+        std::vector<int> results;
+        auto start = map.find_next('S');
+        map.at(start) = 'a';
+        start = map.find_next('a');
+        auto limit = map.dimensions();
+        coord_util::coord_incrementer incr{limit.x};
+        while ( within_limit(start, limit) )
+        {
+            try
+            {
+                results.push_back(find_shortest_path_from(map, start));
+            }
+            catch(const std::exception& ex)
+            {
+                // blocked path? meh
+            }
+            incr(start);
+            try
+            {
+                start = map.find_next('a', start);
+            }
+            catch(const std::exception& e)
+            {
+                // we're done
+                break;
+            }
+        }
+        return results;
+    }
+    int find_shortest_path_from(map_type map, coord from)
+    {
+        map_type exploring_map(map.dimensions());
+
+        try
+        {
+            auto start = map.find_next('S');
+            map.at(start) = 'a';
+        }
+        catch ( std::exception const& ex)
+        {
+            // meh, fine
+        }
+        auto target = map.find_next('E');
+        map.at(target) = 'z';
         auto lower_limit = coord(-1, -1);
-        auto upper_limit = map_limit_coord(map);
+        auto upper_limit = map.dimensions();
 
-        auto explore_queue = std::queue<exploring_state>({ { start, 0 } });
+        auto explore_queue = std::queue<exploring_state>({ { from, 0 } });
         do
         {
             // pop off next to explore
             auto current_explore = explore_queue.front();
             explore_queue.pop();
             // explore it
-            auto& current_cost = map_at(exploring_map, current_explore.pos);
+            auto& current_cost = exploring_map.at(current_explore.pos);
             if ( current_cost != 0 )
             {
                 // already got here before, nothing further to explore on this path
@@ -85,8 +160,8 @@ struct path_finder
 
                 if ( coord_util::within_limit(lower_limit, cand) // not outside lower bound
                   && coord_util::within_limit(cand, upper_limit) // not outside upper bound
-                  && map_at(exploring_map, cand) == 0 //not already explored
-                  && map_at(map, cand) <= map_at(map, current_explore.pos) + 1 //isn't too high
+                  && exploring_map.at(cand) == 0 //not already explored
+                  && map.at(cand) <= map.at(current_explore.pos) + 1 //isn't too high
                 )
                 {
                     // have we won!?
@@ -99,34 +174,6 @@ struct path_finder
 
         throw std::runtime_error("Failed to find target!?");
     }
-
-    coord find_start(map_type const& map)
-    {
-        return find_first(map, 'S');
-    }
-
-    coord find_first(map_type const& map, int target)
-    {
-        coord limit = map_limit_coord(map);
-        coord_util::coord_incrementer incr{limit.x};
-        for ( coord i = coord(0, 0); i < limit; incr(i) )
-        {
-            if ( map[i.y][i.x] == target ) return i;
-        }
-        throw std::runtime_error("Failed to find target");
-    }
-
-    map_type init_explore(map_type const& map)
-    {
-        map_type result = map;
-        coord limit = map_limit_coord(map);
-        coord_util::coord_incrementer incr{limit.x};
-        for ( coord i = coord(0, 0); within_limit(i, limit); incr(i) )
-        {
-            map_at(result, i) = 0;
-        }
-        return result;
-    }
 };
 
 int main()
@@ -134,10 +181,14 @@ int main()
     std::ifstream input(PROJEUL_AOC_PATH "/12_input.txt");
     if ( !input ) throw std::runtime_error("Failed to open input file");
 
-    auto map = read_map(input);
+    auto map = map_type::read_map(input);
     path_finder hero;
     auto result = hero.find_shortest_path(map);
     std::cout << "Result: " << result << std::endl;
+
+    auto results = hero.find_shortest_paths(map);
+    std::sort(results.begin(), results.end());
+    std::cout << "Result: " << results[0] << std::endl;
 
     return 0;
 }
