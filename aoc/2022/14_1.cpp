@@ -71,7 +71,7 @@ map_type read_map(std::istream& is)
     return result;
 }
 
-int fill_map(map_type& map)
+int fill_map(map_type map, bool with_floor = false)
 {
     int result = 0;
     /**
@@ -85,36 +85,45 @@ int fill_map(map_type& map)
             return lhs.first.y < rhs.first.y;
         });
     auto y_limit = coord_with_lowest_y->first.y;
+    auto floor_limit = y_limit + 2;
 
     const coord sand_from(500, 0);
 
     bool abyss = false;
     while( !abyss )
     {
-        auto unit = sand_from + down;
+        if ( ! is_clear(map, sand_from) ) break;
+        auto unit = sand_from;
         bool falling = true;
         while( falling )
         {
-            if ( unit.y == y_limit )
+            if ( ! with_floor )
             {
-                abyss = true;
-                break;
+                if ( unit.y == y_limit )
+                {
+                    abyss = true;
+                    break;
+                }
             }
-            if ( is_clear(map, unit + down) )
+            auto next = unit + down;
+            if ( is_clear(map, next) && next.y != floor_limit )
             {
-                unit += down;
+                unit = next;
                 continue;
             }
-            if ( is_clear(map, unit + down_left) )
+            next = unit + down_left;
+            if ( is_clear(map, next) && next.y != floor_limit  )
             {
-                unit += down_left;
+                unit = next;
                 continue;
             }
-            if ( is_clear(map, unit + down_right) )
+            next = unit + down_right;
+            if ( is_clear(map, next) && next.y != floor_limit  )
             {
-                unit += down_right;
+                unit = next;
                 continue;
             }
+
             map[unit] = sand;
             ++result;
             falling = false;
@@ -131,6 +140,9 @@ int main()
     auto map = read_map(input);
     auto result = fill_map(map);
     std::cout << "Result: " << result << std::endl;
+
+    auto result2 = fill_map(map, true);
+    std::cout << "Result2: " << result2 << std::endl;
 
     return 0;
 }
