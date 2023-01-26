@@ -38,6 +38,10 @@ bool operator< (packet_value const& lhs, packet_value const& rhs)
         return lhs.value < nrhs.value;
     }
 }
+bool operator== (packet_value const& lhs, packet_value const& rhs)
+{
+    return lhs.value == rhs.value;
+}
 
 struct packet_pair
 {
@@ -125,6 +129,19 @@ int main()
         }
     }
     std::cout << "Result: " << result << std::endl;
+
+    auto div2 = packet_value{list_type(1, packet_value{list_type{1, packet_value{2}}})};
+    auto div6 = packet_value{list_type(1, packet_value{list_type{1, packet_value{6}}})};
+    packets.push_back(div2);
+    packets.push_back(div6);
+    std::sort(packets.begin(), packets.end());
+    auto div2_pos = std::find(packets.begin(), packets.end(), div2);
+    auto div6_pos = std::find(packets.begin(), packets.end(), div6);
+    auto result2 = ( std::distance(packets.begin(), div2_pos) + 1 ) * ( std::distance(packets.begin(), div6_pos) + 1 );
+    std::cout << "Result: " << result2 << std::endl;
+
+
+
 
     return 0;
 }
