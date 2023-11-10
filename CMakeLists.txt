@@ -12,7 +12,10 @@ enable_testing()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # CXX settings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -Werror")
+if( NOT ${CMAKE_CXX_STANDARD} )
+    set(CMAKE_CXX_STANDARD=17)
+endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 option(ENABLE_NO_PIE
        "Enables --no-pie compiler option (netbeans executable workaround)" OFF)
 if ( ${ENABLE_NO_PIE} )
@@ -20,7 +23,6 @@ if ( ${ENABLE_NO_PIE} )
 endif()
 
 # debug settings
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3")
 option(ENABLE_COVERAGE "Enable code coverage metrics for debug builds" OFF)
 if ( ${ENABLE_COVERAGE} )
     set(CMAKE_CXX_FLAGS_DEBUG
