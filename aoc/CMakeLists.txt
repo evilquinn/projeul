@@ -13,3 +13,4 @@ add_subdirectory(2019)
 add_subdirectory(2020)
 
 add_subdirectory(2022)
+add_subdirectory(2023)
