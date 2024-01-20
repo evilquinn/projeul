@@ -18,7 +18,6 @@ namespace ansi_escapes
 {
 static const std::string escape = "\33[";
 static const char move_up   = 'A';
-static const char move_down = 'B';
 static const char move_left = 'D';
 std::string move_by(char d, int n)
 {

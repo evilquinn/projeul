@@ -90,7 +90,6 @@ track to_track(const std::string& s)
 {
     auto tok_start = s.begin();
     coord from;
-    coord next;
     track result;
     while(true)
     {

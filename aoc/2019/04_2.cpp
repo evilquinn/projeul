@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <cstdint>
 
 using password = std::array<uint8_t, 6>;
 

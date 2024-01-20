@@ -3,6 +3,7 @@
 #define UTILS_HPP_
 
 #include <stddef.h>
+#include <cstdint>
 #include <map>
 #include <set>
 #include <vector>

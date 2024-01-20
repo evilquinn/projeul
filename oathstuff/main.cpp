@@ -38,6 +38,7 @@ typedef std::vector<key_data> keys_data_type;
 class keys_reader
 {
 public:
+    virtual ~keys_reader(){}
     virtual keys_data_type read_keys(std::istream& is) const = 0;
 };
 class keys_reader_authenticator : public keys_reader

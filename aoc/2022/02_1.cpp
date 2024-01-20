@@ -15,7 +15,6 @@ static const int scissors_score = 3;
 
 static const char lose = 'X';
 static const char draw = 'Y';
-static const char win = 'Z';
 
 static const int lose_score = 0;
 static const int draw_score = 3;

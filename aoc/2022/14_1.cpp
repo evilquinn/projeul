@@ -49,8 +49,8 @@ void read_line(std::string const& line, map_type& map)
     for ( size_t i = 1; i < line_coords.size(); ++i )
     {
         coord distance = line_coords[i] - line_coords[i-1];
-        coord unit( distance.x == 0 ? 0 : distance.x / abs(distance.x),
-                    distance.y == 0 ? 0 : distance.y / abs(distance.y) );
+        coord unit( distance.x == 0 ? 0 : distance.x / labs(distance.x),
+                    distance.y == 0 ? 0 : distance.y / labs(distance.y) );
         for ( coord j = line_coords[i-1]; !(j == line_coords[i]); j += unit )
         {
             map[j] = rock;

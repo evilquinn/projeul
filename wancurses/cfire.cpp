@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <random>
+#include <cstring>
 
 #include <ncurses/ncurses.h>
 
@@ -23,7 +24,9 @@ int main()
     auto height = getmaxy(stdscr);
     auto size = width * height;
     char c[] = { ' ', '.', ':', '^', '*', 'x', 's', 'S', '#', '$' };
-    int b[size+width+1] = { 0 };
+    const int buffer_size = size + width + 1;
+    int b[buffer_size];
+    memset(b, 0, buffer_size);
 
     init_pair(1, 0, 0);
     init_pair(2, 1, 0);

@@ -271,10 +271,10 @@ void pe84::run()
             auto cc = select_cc();
             switch ( cc )
             {
-            case chance::A2GO:
+            case community_chest::A2GO:
                 pos = tile::GO;
                 break;
-            case chance::GO2J:
+            case community_chest::GO2J:
                 pos = tile::JAIL;
                 break;
             default: /* don't really care */

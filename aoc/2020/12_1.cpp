@@ -13,13 +13,8 @@
 namespace aoc = coord_util;
 
 
-const char north   = 'N';
-const char south   = 'S';
-const char east    = 'E';
-const char west    = 'W';
 const char left    = 'L';
 const char right   = 'R';
-const char forward = 'F';
 
 enum quadrant
 {

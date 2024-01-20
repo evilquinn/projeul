@@ -8,7 +8,6 @@
 namespace status
 {
 static const char tree = '#';
-static const char empty = '.';
 } // end namespace status
 
 namespace
