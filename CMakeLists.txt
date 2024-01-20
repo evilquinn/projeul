@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # CXX settings
 if( NOT ${CMAKE_CXX_STANDARD} )
-    set(CMAKE_CXX_STANDARD=17)
+    set(CMAKE_CXX_STANDARD=20)
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 option(ENABLE_NO_PIE
