@@ -12,8 +12,8 @@ enable_testing()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # CXX settings
-if( NOT ${CMAKE_CXX_STANDARD} )
-    set(CMAKE_CXX_STANDARD=20)
+if( NOT CMAKE_CXX_STANDARD )
+    set(CMAKE_CXX_STANDARD 20)
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 option(ENABLE_NO_PIE
@@ -32,6 +32,7 @@ endif()
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 option(BUILD_TESTS "Builds tests" OFF) # tests? pfft.
 
+message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
 message("CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 message("BUILD_BOOST=${BUILD_BOOST}")
 message("BUILD_TESTS=${BUILD_TESTS}")
