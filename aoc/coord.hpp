@@ -21,8 +21,15 @@ template<typename T>
 struct basic_coord_incrementer
 {
     T x_limit = 0;
+    T x_origin = 0;
     void operator()(basic_coord<T>& c, T by = 1) const;
 };
+
+template<typename T>
+basic_coord_incrementer<T> make_incrementer(const basic_coord<T>& limit, const basic_coord<T>& origin = { 0, 0 })
+{
+    return basic_coord_incrementer<T>(limit.x, origin.x);
+}
 
 template<typename T>
 std::ostream& operator<< (std::ostream& os, const basic_coord<T>& c)
@@ -82,7 +89,7 @@ void basic_coord_incrementer<T>::operator()(basic_coord<T>& c, T by) const
             if ( ++c.x >= x_limit )
             {
                 ++c.y;
-                c.x = 0;
+                c.x = x_origin;
             }
         }
     }
@@ -90,7 +97,7 @@ void basic_coord_incrementer<T>::operator()(basic_coord<T>& c, T by) const
     {
         for ( ; by < 0; ++by )
         {
-            if ( c.x == 0 )
+            if ( c.x == x_origin )
             {
                 --c.y;
                 c.x = x_limit-1;
