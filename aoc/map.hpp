@@ -16,11 +16,11 @@ typedef map_type::value_type::value_type value_type;
 
 std::ostream& operator<<(std::ostream& os, const line_type& line);
 std::ostream& operator<<(std::ostream& os, const map_type& map);
-coord_util::coord limit(const map_type& map);
-const map_type::value_type::value_type& at(const map_type& map, coord_util::coord c);
-map_type::value_type::value_type& at(map_type& map, coord_util::coord c);
-bool is_set(const map_type& map, coord_util::coord c, map_type::value_type::value_type v);
-void set(map_type& map, coord_util::coord c, map_type::value_type::value_type v);
+coord_util::basic_coord<std::ptrdiff_t> limit(const map_type& map);
+const map_type::value_type::value_type& at(const map_type& map, coord_util::basic_coord<std::ptrdiff_t> c);
+map_type::value_type::value_type& at(map_type& map, coord_util::basic_coord<std::ptrdiff_t> c);
+bool is_set(const map_type& map, coord_util::basic_coord<std::ptrdiff_t> c, map_type::value_type::value_type v);
+void set(map_type& map, coord_util::basic_coord<std::ptrdiff_t> c, map_type::value_type::value_type v);
 size_t count(const map_type& map, map_type::value_type::value_type v);
 map_type to_map(std::istream& map_input);
 map_type to_map(const std::string& s);

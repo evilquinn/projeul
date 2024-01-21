@@ -15,10 +15,13 @@
 #include <aoc/map.hpp>
 #include <aoc/coord.hpp>
 
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
+using coord_incrementer = coord_util::basic_coord_incrementer<std::ptrdiff_t>;
+
 class tracker
 {
 public:
-    std::map<coord_util::coord, char> map;
+    std::map<coord, char> map;
     tracker(){}
     void track(size_t val)
     {
@@ -38,15 +41,15 @@ public:
         return boost::bind(&tracker::track, this, boost::placeholders::_1);
     }
 private:
-    coord_util::coord pos_;
+    coord pos_;
 };
 std::ostream& operator<< (std::ostream& os, const tracker& tracker)
 {
     if ( !os || tracker.map.empty()) return os;
-    coord_util::coord map_boundary = tracker.map.rbegin()->first + coord_util::coord{ 1, 1 };
-    coord_util::coord_incrementer incr = { map_boundary.x };
+    coord map_boundary = tracker.map.rbegin()->first + coord{ 1, 1 };
+    coord_incrementer incr = { map_boundary.x };
     std::string eol;
-    for ( coord_util::coord c; coord_util::within_limit(c, map_boundary); incr(c) )
+    for ( coord c; coord_util::within_limit(c, map_boundary); incr(c) )
     {
         if ( c.x == 0 ) os << eol;
         eol = "\n";
@@ -84,15 +87,15 @@ public:
     }
     size_t sum_align_params()
     {
-        coord_util::coord bound = martin_.map.rbegin()->first;
+        coord bound = martin_.map.rbegin()->first;
         size_t result = 0;
         for ( auto&& elem : martin_.map )
         {
             if ( elem.second != '#' ) continue;
-            if ( elem.first.x == 0       || martin_.map.at(coord_util::coord{elem.first.x - 1, elem.first.y }) != '#' ) continue;
-            if ( elem.first.x == bound.x || martin_.map.at(coord_util::coord{elem.first.x + 1, elem.first.y }) != '#' ) continue;
-            if ( elem.first.y == 0       || martin_.map.at(coord_util::coord{elem.first.x, elem.first.y - 1 }) != '#' ) continue;
-            if ( elem.first.y == bound.y || martin_.map.at(coord_util::coord{elem.first.x, elem.first.y + 1 }) != '#' ) continue;
+            if ( elem.first.x == 0       || martin_.map.at(coord{elem.first.x - 1, elem.first.y }) != '#' ) continue;
+            if ( elem.first.x == bound.x || martin_.map.at(coord{elem.first.x + 1, elem.first.y }) != '#' ) continue;
+            if ( elem.first.y == 0       || martin_.map.at(coord{elem.first.x, elem.first.y - 1 }) != '#' ) continue;
+            if ( elem.first.y == bound.y || martin_.map.at(coord{elem.first.x, elem.first.y + 1 }) != '#' ) continue;
             result += ( elem.first.x * elem.first.y );
         }
         return result;

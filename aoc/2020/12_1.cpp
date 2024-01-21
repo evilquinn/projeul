@@ -10,7 +10,10 @@
 
 #include <aoc/path_def.hpp>
 #include <aoc/coord.hpp>
-namespace aoc = coord_util;
+namespace aoc
+{
+    using coord = coord_util::basic_coord<std::ptrdiff_t>;
+}
 
 
 const char left    = 'L';

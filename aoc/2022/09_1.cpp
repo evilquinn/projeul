@@ -6,7 +6,7 @@
 #include <aoc/path_def.hpp>
 #include <aoc/coord.hpp>
 
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
 using knots_type = std::vector<coord>;
 using visited_type = std::set<coord>;
 

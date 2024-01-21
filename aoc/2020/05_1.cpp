@@ -17,7 +17,7 @@ static const int lowest = 0;
 static const int num_rows = 128;
 static const int num_cols = 8;
 
-coord_util::coord find_seat(const std::string& seat_spec)
+coord_util::basic_coord<std::ptrdiff_t> find_seat(const std::string& seat_spec)
 {
     int seat_row_begin = lowest;
     int seat_row_end = num_rows;
@@ -34,7 +34,7 @@ coord_util::coord find_seat(const std::string& seat_spec)
         default  : throw 42;
         }
     }
-    return coord_util::coord{ seat_row_begin, seat_col_begin };
+    return coord_util::basic_coord<std::ptrdiff_t>{ seat_row_begin, seat_col_begin };
 }
 
 size_t find_seat_id(const std::string& seat_spec)

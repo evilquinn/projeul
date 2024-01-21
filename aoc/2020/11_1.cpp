@@ -10,7 +10,10 @@
 #include <aoc/coord.hpp>
 #include <aoc/path_def.hpp>
 
-namespace aoc = coord_util;
+namespace aoc
+{
+    using coord = coord_util::basic_coord<std::ptrdiff_t>;
+}
 
 static const aoc::coord coord_zero = {  0,  0 };
 static const aoc::coord up         = {  0, -1 };

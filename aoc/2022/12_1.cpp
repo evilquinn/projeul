@@ -9,7 +9,8 @@
 
 #include <aoc/path_def.hpp>
 
-using coord = coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
+using coord_incrementer = coord_util::basic_coord_incrementer<std::ptrdiff_t>;
 
 const coord up    = coord( 0, -1);
 const coord down  = coord( 0,  1);
@@ -59,7 +60,7 @@ struct map_type
     coord find_next(value_type::value_type::value_type target, coord start_pos = coord(0, 0)) const
     {
         coord limit = dimensions();
-        coord_util::coord_incrementer incr{limit.x};
+        coord_incrementer incr{limit.x};
         for ( coord i = start_pos; within_limit(i, limit); incr(i) )
         {
             if ( at(i) == target ) return i;
@@ -70,7 +71,7 @@ struct map_type
     coord incr(coord c, int by) const
     {
         coord limit = dimensions();
-        coord_util::coord_incrementer incrementer{limit.x};
+        coord_incrementer incrementer{limit.x};
         incrementer(c, by);
         return c;
     }
@@ -97,7 +98,7 @@ struct path_finder
         map.at(start) = 'a';
         start = map.find_next('a');
         auto limit = map.dimensions();
-        coord_util::coord_incrementer incr{limit.x};
+        coord_incrementer incr{limit.x};
         while ( within_limit(start, limit) )
         {
             try

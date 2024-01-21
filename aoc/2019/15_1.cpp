@@ -19,7 +19,7 @@
 #include "../path_def.hpp"
 
 
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
 
 namespace
 {

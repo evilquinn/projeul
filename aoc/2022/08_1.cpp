@@ -18,7 +18,7 @@ bool operator< (tree_type const& lhs, tree_type const& rhs)
 {
     return lhs.height < rhs.height;
 }
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
 using map_type = std::map<coord, tree_type>;
 
 map_type read_map(std::istream& input)

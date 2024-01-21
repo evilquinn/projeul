@@ -27,13 +27,13 @@ std::ostream& operator<<(std::ostream& os, const map_type& map)
     return os;
 }
 
-coord_util::coord limit(const map_type& map)
+coord_util::basic_coord<std::ptrdiff_t> limit(const map_type& map)
 {
     if ( map.empty() ) return { 0, 0 };
     return { static_cast<ptrdiff_t>(map[0].size()), static_cast<ptrdiff_t>(map.size()) };
 }
 
-const map_type::value_type::value_type& at(const map_type& map, coord_util::coord c)
+const map_type::value_type::value_type& at(const map_type& map, coord_util::basic_coord<std::ptrdiff_t> c)
 {
     auto bound = limit(map);
     if ( ! within_limit( c, bound ) )
@@ -44,16 +44,16 @@ const map_type::value_type::value_type& at(const map_type& map, coord_util::coor
     }
     return map[c.y][c.x];
 }
-map_type::value_type::value_type& at(map_type& map, coord_util::coord c)
+map_type::value_type::value_type& at(map_type& map, coord_util::basic_coord<std::ptrdiff_t> c)
 {
     return const_cast< map_type::value_type::value_type& >(at(
                const_cast< const map_type& >(map), c));
 }
-bool is_set(const map_type& map, coord_util::coord c, map_type::value_type::value_type v)
+bool is_set(const map_type& map, coord_util::basic_coord<std::ptrdiff_t> c, map_type::value_type::value_type v)
 {
     return at(map, c) == v;
 }
-void set(map_type& map, coord_util::coord c, map_type::value_type::value_type v)
+void set(map_type& map, coord_util::basic_coord<std::ptrdiff_t> c, map_type::value_type::value_type v)
 {
     at(map, c) = v;
 }

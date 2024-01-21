@@ -89,7 +89,8 @@
 #include <limits>
 
 
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
+using coord_incrementer = coord_util::basic_coord_incrementer<std::ptrdiff_t>;
 
 
 class robot_brain
@@ -118,7 +119,7 @@ public:
     std::ostream& to_ostream(std::ostream& os) const
     {
         coord limit = coord_bound();
-        coord_util::coord_incrementer incr = { limit.x };
+        coord_incrementer incr = { limit.x };
         ptrdiff_t last_y = 0;
         for ( coord i = { 0, 0 }; within_limit(i, limit); incr(i) )
         {
@@ -284,7 +285,7 @@ private:
     }
     computer comp_;
     computer::executable exe_;
-    coord_util::coord curr_pos_;
+    coord_util::basic_coord<std::ptrdiff_t> curr_pos_;
     std::map<coord, computer::size_type> blocks_;
     direction curr_dir_;
     std::set<coord> painted_;

@@ -16,7 +16,10 @@
 #include <aoc/path_def.hpp>
 #include <aoc/coord.hpp>
 
-namespace aoc = coord_util; // ffs
+namespace aoc
+{
+    using coord = coord_util::basic_coord<std::ptrdiff_t>;
+}
 
 aoc::coord map_end(const std::map<aoc::coord, char>& map)
 {
@@ -204,7 +207,7 @@ public:
             for ( auto&& direction : explore_directions )
             {
                 auto cand = explore_pos.first.second + direction;
-                if ( aoc::within_limit(cand, coord_zero) || aoc::within_limit(map_.rbegin()->first, cand) ) continue; // not on map
+                if ( coord_util::within_limit(cand, coord_zero) || coord_util::within_limit(map_.rbegin()->first, cand) ) continue; // not on map
                 if ( cand == explore_pos.first.first ) continue; // came this way
                 if ( map_[cand] == '#' ) continue; // wall
                 auto cand_goal_path = explore_pos.second;

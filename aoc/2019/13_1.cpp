@@ -28,7 +28,7 @@
 #include <map>
 
 
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
 
 typedef std::array<ptrdiff_t, 2> coord_type;
 std::ostream& operator<< (std::ostream& os, const coord_type& c)

@@ -2,78 +2,78 @@
 #ifndef AOC_COORD_HPP
 #define AOC_COORD_HPP
 
-#include <cstddef>
 #include <iostream>
 
 namespace coord_util
 {
 
-struct coord
+template<typename T>
+struct basic_coord
 {
-    ptrdiff_t x = 0;
-    ptrdiff_t y = 0;
-    coord() : x(0), y(0) {}
-    coord(ptrdiff_t x, ptrdiff_t y) : x(x), y(y) {}
+    typedef T value_type;
+    T x = 0;
+    T y = 0;
+    basic_coord() : x(0), y(0) {}
+    basic_coord(T x, T y) : x(x), y(y) {}
 };
 
-bool operator< (const coord& a, const coord& b);
-std::ostream& operator<< (std::ostream& os, const coord& c);
-coord& operator+= (coord& lhs, coord rhs);
-coord operator+ (coord lhs, coord rhs);
-coord& operator-= (coord& lhs, coord rhs);
-coord operator- (coord lhs, coord rhs);
-bool within_limit(const coord& a, const coord& b);
-bool operator==(const coord& a, const coord& b);
-
-struct coord_incrementer
+template<typename T>
+struct basic_coord_incrementer
 {
-    ptrdiff_t x_limit = 0;
-    void operator()(coord& c, ptrdiff_t by = 1) const;
+    T x_limit = 0;
+    void operator()(basic_coord<T>& c, T by = 1) const;
 };
 
-// implementation - move to some included header perhaps?
-
-inline std::ostream& operator<< (std::ostream& os, const coord& c)
+template<typename T>
+std::ostream& operator<< (std::ostream& os, const basic_coord<T>& c)
 {
     return os << "{ " << c.x << ", " << c.y << " }";
 }
-inline coord& operator+= (coord& lhs, coord rhs)
+template<typename T>
+basic_coord<T>& operator+= (basic_coord<T>& lhs, basic_coord<T> rhs)
 {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
     return lhs;
 }
-inline coord operator+ (coord lhs, coord rhs)
+template<typename T>
+basic_coord<T> operator+ (basic_coord<T> lhs, basic_coord<T> rhs)
 {
     return lhs += rhs;
 }
-inline coord& operator-= (coord& lhs, coord rhs)
+template<typename T>
+basic_coord<T>& operator-= (basic_coord<T>& lhs, basic_coord<T> rhs)
 {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
     return lhs;
 }
-inline coord operator- (coord lhs, coord rhs)
+template<typename T>
+basic_coord<T> operator- (basic_coord<T> lhs, basic_coord<T> rhs)
 {
     return lhs -= rhs;
 }
 
-inline bool within_limit(const coord& a, const coord& b)
+template<typename T>
+bool within_limit(const basic_coord<T>& a, const basic_coord<T>& b)
 {
     return a.x < b.x && a.y < b.y;
 }
-inline bool operator<(const coord& a, const coord& b)
+template<typename T>
+bool operator<(const basic_coord<T>& a, const basic_coord<T>& b)
 {
     if ( a.y < b.y ) return true;
     else if ( a.y > b.y ) return false;
     else return ( a.x < b.x );
 }
-inline bool operator==(const coord& a, const coord& b)
+template<typename T>
+bool operator==(const basic_coord<T>& a, const basic_coord<T>& b)
 {
     return a.x == b.x && a.y == b.y;
 }
 
-inline void coord_incrementer::operator()(coord& c, ptrdiff_t by) const
+template<typename T>
+void basic_coord_incrementer<T>::operator()(basic_coord<T>& c, T by) const
 {
     if ( by > 0 )
     {

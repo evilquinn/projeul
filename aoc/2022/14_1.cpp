@@ -11,7 +11,7 @@
 #include <aoc/coord.hpp>
 
 
-using coord_util::coord;
+using coord = coord_util::basic_coord<std::ptrdiff_t>;
 using map_type = std::map<coord, char>;
 
 const coord down(0, 1);
