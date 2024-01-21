@@ -12,7 +12,6 @@ target_link_libraries ( 2020_03_1 map )
 add_executable ( 2020_04_1 04_1.cpp )
 
 add_executable ( 2020_05_1 05_1.cpp )
-target_link_libraries ( 2020_05_1 coord )
 
 add_executable ( 2020_06_1 06_1.cpp )
 
@@ -26,10 +25,8 @@ add_executable ( 2020_09_1 09_1.cpp )
 add_executable ( 2020_10_1 10_1.cpp )
 
 add_executable ( 2020_11_1 11_1.cpp )
-target_link_libraries ( 2020_11_1 coord )
 
 add_executable ( 2020_12_1 12_1.cpp )
-target_link_libraries ( 2020_12_1 coord )
 
 add_executable ( 2020_13_1 13_1.cpp )
 

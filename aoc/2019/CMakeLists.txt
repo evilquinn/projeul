@@ -33,32 +33,26 @@ add_executable ( 09_1 09_1.cpp )
 target_link_libraries( 09_1 computer )
 
 add_executable ( 10_1 10_1.cpp )
-target_link_libraries( 10_1 coord
-                            map )
+target_link_libraries( 10_1 map )
 
 add_executable ( 11_1 11_1.cpp )
-target_link_libraries( 11_1 computer
-                            coord )
+target_link_libraries( 11_1 computer )
 
 add_executable ( 12_1 12_1.cpp )
 
 add_executable ( 13_1 13_1.cpp )
-target_link_libraries( 13_1 computer
-                            coord )
+target_link_libraries( 13_1 computer )
 
 add_executable ( 14_1 14_1.cpp )
 
 add_executable ( 14_2 14_2.cpp )
 
 add_executable ( 15_1 15_1.cpp )
-target_link_libraries( 15_1 computer
-                            coord )
+target_link_libraries( 15_1 computer )
 
 add_executable ( 16_1 16_1.cpp )
 
 add_executable ( 2019_17_1 17_1.cpp )
-target_link_libraries( 2019_17_1 computer
-                                 coord )
+target_link_libraries( 2019_17_1 computer )
 
 add_executable ( 2019_18_1 18_1.cpp )
-target_link_libraries( 2019_18_1 coord )
