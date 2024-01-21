@@ -49,6 +49,28 @@ std::ostream& operator<< (std::ostream& os, const subsets_t& subsets)
     }
     return os << " ]";
 }
+subset_t smallest_subset_for(const subsets_t& subsets)
+{
+    subset_t result;
+    for ( auto&& subset : subsets )
+    {
+        for ( auto&& colour : subset )
+        {
+            if ( colour.second > result[colour.first] ) result[colour.first] = colour.second;
+        }
+    }
+    return result;
+}
+size_t power_of(const subset_t& subset)
+{
+    if ( subset.size() == 0 ) return 0;
+    size_t result = 1;
+    for ( auto&& colour : subset )
+    {
+        result *= colour.second;
+    }
+    return result;
+}
 struct game
 {
     int id;
@@ -69,6 +91,15 @@ std::ostream& operator<< (std::ostream& os, const games_t& games)
         sep = ", ";
     }
     return os << " ]";
+}
+size_t games_power_sum(const games_t& games)
+{
+    size_t result = 0;
+    for ( auto&& game : games )
+    {
+        result += power_of(smallest_subset_for(game.subsets));
+    }
+    return result;
 }
 
 game parse_game_line(std::string_view line)
@@ -144,6 +175,7 @@ int main()
         result += to_sum;
     }
     std::cout << "Part 1 result: " << result << std::endl;
+    std::cout << "Part 2 result: " << games_power_sum(games) << std::endl;
 
     return 0;
 }
