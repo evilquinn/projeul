@@ -13,6 +13,7 @@ ExternalProject_Add(websocketpp_dl
         URL_HASH SHA256=${SHA256}
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
+        PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/websocketpp_0.8.2_c++20.patch
         INSTALL_COMMAND cp -r ${INCLUDE_DIR_SOURCE} ${INCLUDE_DIR}/. )
 
 file(MAKE_DIRECTORY ${INCLUDE_DIR})
