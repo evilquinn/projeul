@@ -99,6 +99,27 @@ size_t count_cards_score(cards_t const& cards)
     return result;
 }
 
+size_t count_total_cards(cards_t const& cards)
+{
+    std::map<size_t, size_t> card_counts;
+    for ( auto&& card : cards )
+    {
+        card_counts[card.id] += 1;
+        std::vector<int> matches;
+        std::set_intersection(card.winning.begin(), card.winning.end(), card.mine.begin(), card.mine.end(), std::back_inserter(matches));
+        for ( size_t i = 1; i <= matches.size(); ++i )
+        {
+            card_counts[card.id+i] += card_counts[card.id];
+        }
+    }
+    size_t result = 0;
+    for ( auto&& count : card_counts )
+    {
+        result += count.second;
+    }
+    return result;
+}
+
 std::string example = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53\n"
                       "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19\n"
                       "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1\n"
@@ -113,6 +134,7 @@ int main()
     std::ifstream is(PROJEUL_AOC_PATH "/04_input.txt");
     auto cards = parse_cards(is);
     std::cout << "Part 1 result: " << count_cards_score(cards) << std::endl;
+    std::cout << "Part 2 result: " << count_total_cards(cards) << std::endl;
     //std::cout << cards << std::endl;
 
     return 0;
