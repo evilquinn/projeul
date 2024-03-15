@@ -66,6 +66,7 @@ add_subdirectory(scratch)
 add_subdirectory(sorts)
 add_subdirectory(sudoku)
 add_subdirectory(spirit)
+add_subdirectory(timezone)
 add_subdirectory(wancurses)
 add_subdirectory(ws)
 
