@@ -1,0 +1,45 @@
+
+
+#include <chrono>
+#include <iostream>
+
+using namespace std::literals::chrono_literals;
+
+std::ostream& operator<<(std::ostream& os, const std::chrono::time_zone& tz) {
+  return os << "{ \"name\": \"" << tz.name() << "\" }";
+}
+std::ostream& operator<<(std::ostream& os, const std::chrono::time_zone_link& tzl) {
+  return os << "{ \"name\": \"" << tzl.name() << "\", \"target\": \"" << tzl.target() << "\" }";
+}
+std::ostream& operator<<(std::ostream& os, const std::chrono::leap_second& ls) {
+  return os << "{ \"date\": \"" << ls.date() << "\" }";
+}
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& data) {
+  os << "[";
+  std::string sep = " ";
+  for (auto&& datum : data) {
+    os << sep << datum;
+    sep = ", ";
+  }
+  return os << " ]";
+}
+std::ostream& operator<<(std::ostream& os, const std::chrono::tzdb& tzdb) {
+  os << "{ \"version\": \"" << tzdb.version << "\", \"zones\": " << tzdb.zones
+     << ", \"links\": " << tzdb.links << ", \"leap_seconds\": " << tzdb.leap_seconds << " }";
+  return os;
+}
+std::ostream& operator<<(std::ostream& os, const std::chrono::tzdb_list& tzdb_list) {
+  os << "[";
+  std::string sep = " ";
+  for (auto&& tzdb : tzdb_list) {
+    os << sep << tzdb;
+    sep = ", ";
+  }
+  return os << " ]";
+}
+int main() {
+  const auto& tzdb_list = std::chrono::get_tzdb_list();
+  std::cout << tzdb_list << std::endl;
+  return 0;
+}
