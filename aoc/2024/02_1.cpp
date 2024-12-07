@@ -1,5 +1,4 @@
 
-#include <aoc/path_def.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <fstream>
@@ -7,6 +6,7 @@
 #include <iterator>
 #include <numeric>
 #include <vector>
+#include "../path_def.hpp"
 
 std::string test_string =
     "7 6 4 2 1\n"
@@ -81,7 +81,7 @@ reports_type read_reports(std::istream& input)
  *
  */
 
-bool check_is_safe(const report_type& report)
+bool check_is_safe(const report_type& report, int dampen)
 {
     std::vector<int> diffs;
     std::adjacent_difference(
@@ -90,44 +90,69 @@ bool check_is_safe(const report_type& report)
     // maybe a adjacent_difference again but with custom binary_op?
     // ...but I'd want binary_op to see/reference/use the acc...
     // ...maybe a transform_reduce..
-    bool safe = true;
-    int dir   = 0;
-    for (auto pos = diffs.begin() + 1; pos != diffs.end(); ++pos)
+    int dir = 0;
+    for (auto i = 1U; i < diffs.size(); ++i)
     {
         if (dir == 0)
         {
-            dir = *pos;
+            dir = diffs[i];
         }
 
-        if ((dir < 0 && *pos < 0) || (dir > 0 && *pos > 0))
+        if ((dir < 0 && diffs[i] < 0) || (dir > 0 && diffs[i] > 0))
         {
-            auto mag = std::abs(*pos);
+            auto mag = std::abs(diffs[i]);
             if (mag == std::clamp(mag, 1, 3))
             {
                 // still safe
             }
             else
             {
-                safe = false;
-                break;
+                if (dampen > 0)
+                {
+                    auto reduced_report_a = report;
+                    reduced_report_a.erase(reduced_report_a.begin());
+                    auto reduced_report_b = report;
+                    reduced_report_b.erase(reduced_report_b.begin() + i - 1);
+                    auto reduced_report_c = report;
+                    reduced_report_c.erase(reduced_report_c.begin() + i);
+                    --dampen;
+                    return check_is_safe(reduced_report_a, dampen) ||
+                           check_is_safe(reduced_report_b, dampen) ||
+                           check_is_safe(reduced_report_c, dampen);
+                }
+                else
+                    return false;
             }
         }
         else
         {
-            safe = false;
-            break;
+            if (dampen > 0)
+            {
+                auto reduced_report_a = report;
+                reduced_report_a.erase(reduced_report_a.begin());
+                auto reduced_report_b = report;
+                reduced_report_b.erase(reduced_report_b.begin() + i - 1);
+                auto reduced_report_c = report;
+                reduced_report_c.erase(reduced_report_c.begin() + i);
+                --dampen;
+                return check_is_safe(reduced_report_a, dampen) ||
+                       check_is_safe(reduced_report_b, dampen) ||
+                       check_is_safe(reduced_report_c, dampen);
+            }
+            else
+                return false;
         }
     }
 
-    return safe;
+    return true;
 }
 
-int count_safe_reports(const reports_type& reports)
+int count_safe_reports(const reports_type& reports, const int dampen = 0)
 {
     int result = 0;
     for (auto&& report : reports)
     {
-        if (check_is_safe(report))
+        if (check_is_safe(report, dampen))
         {
             ++result;
         }
@@ -137,6 +162,8 @@ int count_safe_reports(const reports_type& reports)
 
 int main()
 {
+    std::stringstream test_input(test_string);
+    auto test_reports = read_reports(test_input);
     std::string input_path(PROJEUL_AOC_PATH "/02_input.txt");
     std::ifstream input(input_path);
     if (!input)
@@ -146,5 +173,7 @@ int main()
 
     auto result = count_safe_reports(reports);
     std::cout << "Part 1 result: " << result << std::endl;
+    auto result2 = count_safe_reports(reports, 1);
+    std::cout << "Part 2 result: " << result2 << std::endl;
     return 0;
 }
