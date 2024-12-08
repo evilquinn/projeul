@@ -29,6 +29,11 @@ const std::vector<coord> directions = { { -1, -1 }, { 0, -1 }, { 1, -1 },
                                         { -1, 0 },  { 1, 0 },  { -1, 1 },
                                         { 0, 1 },   { 1, 1 } };
 
+const std::vector<coord> corners = { { -1, -1 },
+                                     { 1, -1 },
+                                     { -1, 1 },
+                                     { 1, 1 } };
+
 std::ostream& operator<<(std::ostream& os, const text_type& text)
 {
     const auto limit = text.empty()
@@ -61,7 +66,6 @@ text_type read_text(std::istream& input)
         }
         ++y;
     }
-    std::cout << result << std::endl;
     return result;
 }
 
@@ -82,7 +86,6 @@ size_t count_needles(const std::string& needle, const text_type& haystack)
      */
     for (coord c = origin; within_limit(c, limit); increment(c))
     {
-        std::cout << "trying: " << c << std::endl;
         if (haystack.at(c) == needle.at(0))
         {
             for (auto&& direction : directions)
@@ -102,10 +105,50 @@ size_t count_needles(const std::string& needle, const text_type& haystack)
                 }
                 if (match)
                 {
-                    std::cout << "found match, origin: " << c
-                              << ", direction: " << direction << std::endl;
                     ++result;
                 }
+            }
+        }
+    }
+    return result;
+}
+
+size_t count_crossed_needles(const std::string& needle,
+                             const text_type& haystack)
+{
+    if (needle.size() != 3)
+        throw std::runtime_error("Unexpect size of needle");
+    size_t result     = 0;
+    const auto origin = coord{ 0, 0 };
+    const auto olimit = origin - coord{ 1, 1 };
+    const auto limit  = haystack.empty()
+                            ? origin
+                            : std::prev(haystack.end())->first + coord{ 1, 1 };
+    auto increment    = make_incrementer(limit);
+    /**
+     * check every coordinate in the text for the middle letter of needle
+     * if found, examine haystack at each corner modifier and count instances
+     * of first or last letters of needle.  If there's exactly 2 of each AND
+     * opposite corners aren't equal, increment the count
+     */
+    for (coord c = origin; within_limit(c, limit); increment(c))
+    {
+        if (haystack.at(c) == needle.at(1))
+        {
+            std::map<char, int> corner_counts;
+            for (auto&& corner : corners)
+            {
+                coord c_c = c + corner;
+                if (within_limit(olimit, c_c) && within_limit(c_c, limit))
+                {
+                    ++corner_counts[haystack.at(c_c)];
+                }
+            }
+            if (corner_counts[needle.at(0)] == 2 &&
+                corner_counts[needle.at(2)] == 2 &&
+                haystack.at(c + corners[0]) != haystack.at(c + corners[3]))
+            {
+                ++result;
             }
         }
     }
@@ -125,5 +168,7 @@ int main()
     auto text   = read_text(input);
     auto result = count_needles(needle, text);
     std::cout << "Part 1 result: " << result << std::endl;
+    auto result2 = count_crossed_needles("MAS", text);
+    std::cout << "Part 2 result: " << result2 << std::endl;
     return 0;
 }
