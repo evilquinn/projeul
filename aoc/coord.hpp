@@ -112,4 +112,15 @@ void basic_coord_incrementer<T>::operator()(basic_coord<T>& c, T by) const
 
 } // end namaspace coord_util
 
+template<typename T>
+struct std::hash<coord_util::basic_coord<T>>
+{
+    std::size_t operator()(const coord_util::basic_coord<T>& c) const noexcept
+    {
+        std::size_t h1 = std::hash<T>{}(c.x);
+        std::size_t h2 = std::hash<T>{}(c.y);
+        return h1 ^ (h2 << 1); // or use boost::hash_combine
+    }
+};
+
 #endif // AOC_COORD_HPP
