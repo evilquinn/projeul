@@ -4,6 +4,7 @@
 #include <string>
 #include <signal_handler.hpp>
 
+#include <utility> // asio need this
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
