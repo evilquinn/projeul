@@ -105,6 +105,36 @@ size_t count_antinodes(const map_type& map)
     return antinodes.size();
 }
 
+size_t count_antinodes2(const map_type& map)
+{
+    const auto olimit = coord{ -1, -1 };
+    const auto limit  = std::prev(map.end())->first + coord{ 1, 1 };
+    auto ants         = map_antennas(map);
+    std::set<coord> antinodes;
+    for (auto&& antenna : ants)
+    {
+        auto& ant_locs = antenna.second;
+        for (size_t i = 0; i < ant_locs.size(); ++i)
+        {
+            for (size_t j = 0; j < ant_locs.size(); ++j)
+            {
+                if (i == j)
+                {
+                    continue;
+                }
+                auto distance = ant_locs[j] - ant_locs[i];
+                for (auto cand = ant_locs[i] + distance;
+                     within_limit(olimit, cand) && within_limit(cand, limit);
+                     cand += distance)
+                {
+                    antinodes.insert(cand);
+                }
+            }
+        }
+    }
+    return antinodes.size();
+}
+
 int main()
 {
     std::string input_path(PROJEUL_AOC_PATH "/08_input.txt");
@@ -119,5 +149,8 @@ int main()
 
     auto result = count_antinodes(map);
     std::cout << "Part 1 result: " << result << std::endl;
+
+    auto result2 = count_antinodes2(map);
+    std::cout << "Part 2 result: " << result2 << std::endl;
     return 0;
 }
