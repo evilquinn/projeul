@@ -79,11 +79,22 @@ equations_type read_equations(std::istream& is)
     return result;
 }
 
+struct concatter
+{
+    result_type operator()(const result_type& lhs, const result_type& rhs) const
+    {
+        // bleugh, performance later
+        std::stringstream cat;
+        cat << lhs << rhs;
+        return boost::lexical_cast<result_type>(cat.str());
+    }
+};
 typedef std::function<result_type(const result_type&, const result_type&)>
     operation_type;
 const std::vector<operation_type> operations = {
     std::plus<result_type>{},
-    std::multiplies<result_type>{}
+    std::multiplies<result_type>{},
+    concatter{}
 };
 bool is_solvable(const equation_type& equation)
 {
