@@ -46,6 +46,7 @@ size_t compacted_checksum(std::string const& input)
         });
     if (first_empty == disk.end())
         throw std::runtime_error("No empty slots!?");
+
     auto last_file =
         std::find_if(disk.rbegin(), disk.rend(), [](const file_type& file) {
             return file.first != -1;
@@ -105,17 +106,84 @@ size_t compacted_checksum(std::string const& input)
     size_t idx    = 0;
     for (auto it = disk.begin(); it != disk.end(); ++it)
     {
-        if (it->first == -1)
-        {
-            if (it->second == 0)
-                continue;
-            else
-                break;
-        }
-
         // magic
         size_t next_idx = idx + it->second;
-        for (size_t i = idx; i < next_idx; ++i)
+        for (size_t i = idx; i < next_idx && it->first != -1; ++i)
+        {
+            result += it->first * i;
+        }
+        idx = next_idx;
+    }
+    return result;
+}
+
+size_t compacted_checksum2(std::string const& input)
+{
+    auto disk = examine_disk(input);
+
+    auto is_not_empty = [](const file_type& file) {
+        return file.first != -1;
+    };
+    auto last_file = std::find_if(disk.rbegin(), disk.rend(), is_not_empty);
+    if (last_file == disk.rend())
+        throw std::runtime_error("No file!?");
+
+    // 'member, last_file is reverse iterator!
+
+    //TODO need to not allow moving things to the right!!! 333
+
+    // finished when there's no more files to attempt to move
+    while (last_file != disk.rend())
+    {
+        auto last_id = last_file->first;
+        // find an empty slot to take the file, otherwise find the next file
+        // to move
+        auto is_empty = [](const file_type& file) {
+            return file.first == -1;
+        };
+        auto first_empty = std::find_if(disk.begin(), last_file.base(), is_empty);
+        while (first_empty != last_file.base() &&
+               first_empty->second < last_file->second)
+        {
+            first_empty =
+                std::find_if(std::next(first_empty), last_file.base(), is_empty);
+        }
+        if (first_empty == last_file.base() ||
+            first_empty->second < last_file->second)
+        {
+            last_file = std::find_if(std::next(last_file),
+                                     disk.rend(),
+                                     [last_id](const file_type& file) {
+                                         return file.first != -1 &&
+                                                file.first < last_id;
+                                     });
+            continue;
+        }
+
+        // can fully move last_file into first_empty, erase last_file,
+        // potentially reduce or erase first_empty
+        int remaining = first_empty->second - last_file->second;
+        disk.insert(first_empty, *last_file);
+        auto empty_me = last_file;
+
+        last_file =
+            std::find_if(std::next(last_file),
+                         disk.rend(),
+                         [last_id](const file_type& file) {
+                             return file.first != -1 && file.first < last_id;
+                         });
+        empty_me->first     = -1;
+        first_empty->second = remaining;
+    }
+
+    // now checksum
+    size_t result = 0;
+    size_t idx    = 0;
+    for (auto it = disk.begin(); it != disk.end(); ++it)
+    {
+        // magic
+        size_t next_idx = idx + it->second;
+        for (size_t i = idx; i < next_idx && it->first != -1; ++i)
         {
             result += it->first * i;
         }
@@ -134,8 +202,12 @@ int main()
 
     std::string input_string;
     std::getline(input, input_string);
+
     auto result = compacted_checksum(input_string);
     std::cout << "Part 1 result: " << result << std::endl;
+
+    auto result2 = compacted_checksum2(input_string);
+    std::cout << "Part 2 result: " << result2 << std::endl;
 
     return 0;
 }
