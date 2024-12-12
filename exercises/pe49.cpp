@@ -39,8 +39,8 @@ void pe49::run()
      */
     primes_      = prime_sieve( PE49_MAX_PRIMES );
     size_t first = 1487;
-    size_t second;
-    size_t third;
+    size_t second = 0;
+    size_t third = 0;
     bool solved = false;
 
     do

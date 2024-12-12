@@ -3,7 +3,7 @@
 
 int main() {
   int ch, count=0;
-  MEVENT event;
+  MEVENT event = {0};
 
   initscr();
   raw();
