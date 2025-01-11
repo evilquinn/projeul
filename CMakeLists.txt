@@ -29,6 +29,13 @@ if ( ${ENABLE_COVERAGE} )
         "${CMAKE_CXX_FLAGS_DEBUG} -ftest-coverage -fprofile-arcs -pg")
 endif()
 
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message("CCACHE_FOUND=${CCACHE_FOUND}")
+    set(CMAKE_C_COMPILER_LAUNCHER ccache)
+    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+endif()
+
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
 option(BUILD_TESTS "Builds tests" OFF) # tests? pfft.
 
