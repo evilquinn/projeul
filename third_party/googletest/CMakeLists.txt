@@ -1,5 +1,7 @@
 
-if ( ${BUILD_TESTS} )
+if ( NOT ${BUILD_TESTS} )
+    return()
+endif()
 
 message("<googletest>")
 
@@ -14,5 +16,3 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 message("</googletest>")
-
-endif()

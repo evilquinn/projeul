@@ -1,7 +1,12 @@
 
+if(NOT ${BUILD_BOOST})
+    return()
+endif()
+
 message("<boost>")
 set(BOOST_ENABLE_CMAKE ON)
-set(BOOST_INCLUDE_LIBRARIES filesystem system date_time regex program_options lexical_cast algorithm multiprecision asio thread foreach format spirit property_tree stacktrace)
+set(BOOST_INCLUDE_LIBRARIES filesystem system date_time regex program_options lexical_cast algorithm
+                            multiprecision asio thread foreach format spirit property_tree stacktrace)
 
 FetchContent_Declare(
     boost

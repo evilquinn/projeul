@@ -49,6 +49,8 @@ if ( ${ENABLE_COVERAGE} )
         "${CMAKE_CXX_FLAGS_DEBUG} -ftest-coverage -fprofile-arcs -pg")
 endif()
 
+find_package(Boost REQUIRED)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(accumulator)
 add_subdirectory(ansi)
@@ -85,7 +87,7 @@ add_subdirectory(ws)
 add_executable(projeul main.cpp)
 
 target_link_libraries(projeul signal_handler
-Boost::program_options
+                              Boost::program_options
                               exercises)
 
 if ( ${BUILD_TESTS} )
