@@ -8,6 +8,7 @@ add_executable ( 005_longest_palindromic_substring 005_longest_palindromic_subst
 add_executable ( 006_zigzag_conversion 006_zigzag_conversion.cpp )
 add_executable ( 007_reverse_integer 007_reverse_integer.cpp )
 target_link_libraries( 007_reverse_integer PRIVATE Boost::bind Boost::function)
+target_compile_options( 007_reverse_integer PRIVATE -Wno-deprecated-declarations)
 add_executable ( 008_string_to_integer_atoi 008_string_to_integer_atoi.cpp )
 target_link_libraries( 008_string_to_integer_atoi PRIVATE Boost::lexical_cast )
 #target_compile_options( 008_string_to_integer_atoi PRIVATE "-ftrapv" )

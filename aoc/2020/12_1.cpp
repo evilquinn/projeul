@@ -64,7 +64,7 @@ public:
             auto action = to_action(action_string);
             take_action(action);
         }
-        return ::abs(pos_.x) + ::abs(pos_.y);
+        return std::abs(pos_.x) + std::abs(pos_.y);
     }
     void take_action(const action& action)
     {
@@ -123,7 +123,7 @@ public:
             }
             else // ( side == right )
             {
-                waypoint_.x = ::abs(prev.y);
+                waypoint_.x = std::abs(prev.y);
                 waypoint_.y = prev.x;
             }
             break;
@@ -133,7 +133,7 @@ public:
             if ( side == left )
             {
                 waypoint_.x = prev.y;
-                waypoint_.y = ::abs(prev.x);
+                waypoint_.y = std::abs(prev.x);
             }
             else // ( side == right )
             {
@@ -161,11 +161,11 @@ public:
             if ( side == left )
             {
                 waypoint_.x = prev.y;
-                waypoint_.y = ::abs(prev.x);
+                waypoint_.y = std::abs(prev.x);
             }
             else // ( side == right )
             {
-                waypoint_.x = ::abs(prev.y);
+                waypoint_.x = std::abs(prev.y);
                 waypoint_.y = prev.x;
             }
             break;
