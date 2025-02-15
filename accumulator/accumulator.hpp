@@ -6,7 +6,7 @@
 class accumulator
 {
 public:
-    accumulator() : count_(0), sum_(0.0), sum_squares_(0.0) {}
+    accumulator() : count_(0), sum_(0.0), sum_squares_(0.0), is_population_(false) {}
     template <typename Arithmetic>
     void accumulate(const Arithmetic& n)
     {
@@ -23,11 +23,15 @@ public:
     double total() { return sum_; }
     double mean() { return sum_ / count_; }
 
-#if 0
+#if 1
     double stddev()
     {
-        return std::sqrt((sum_squares_ - ((sum_ * sum_) / count_)) /
-                         (count_ - 1));
+        auto divisor = count_;
+        if (!is_population_)
+        {
+            divisor = count_ - 1;
+        }
+        return std::sqrt((sum_squares_ - ((sum_ * sum_) / count_)) / divisor);
     }
 #else
     double variance()
@@ -37,13 +41,19 @@ public:
     }
     double stddev()
     {
-        const auto correction = (double)count_ / (count_ - 1);
+        double correction = 1;
+        if (!is_population_)
+        {
+            correction = (double)count_ / (count_ - 1);
+        }
         return std::sqrt(variance() * correction);
     }
 #endif
+    void set_population(bool is_population) { is_population_ = is_population; }
 
 private:
     size_t count_;
     double sum_;
     double sum_squares_;
+    bool is_population_;
 };
