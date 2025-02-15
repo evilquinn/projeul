@@ -1,9 +1,7 @@
 
 message("<boost>")
 set(BOOST_ENABLE_CMAKE ON)
-#set(BOOST_INCLUDE_LIBRARIES filesystem system date_time regex program_options)
-#set(BOOST_INCLUDE_LIBRARIES "filesystem;system;date_time;regex;program_options" CACHE STRING "List of libraries to build (default: all but excluded and incompatible)")
-#set(BOOST_EXCLUDE_LIBRARIES "bimap graph" CACHE STRING "List of libraries to exlude from build (default: none)")
+set(BOOST_INCLUDE_LIBRARIES filesystem system date_time regex program_options lexical_cast algorithm multiprecision asio thread foreach format spirit property_tree stacktrace)
 
 FetchContent_Declare(
     boost
