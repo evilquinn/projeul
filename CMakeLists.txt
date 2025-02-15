@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.26)
 
 option(USE_CLANG "Use clang to build." OFF)
 if ( ${USE_CLANG} )
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/clang.toolchain.cmake")
 endif()
 
-project(projeul C CXX)
+project(projeul VERSION 2.0 LANGUAGES C CXX)
 
 enable_testing()
 
