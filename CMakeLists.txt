@@ -37,7 +37,7 @@ if(CCACHE_FOUND)
 endif()
 
 option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
-option(BUILD_TESTS "Builds tests" OFF) # tests? pfft.
+option(BUILD_TESTS "Builds tests" ON) # tests? pfft.
 
 message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
 message("CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")

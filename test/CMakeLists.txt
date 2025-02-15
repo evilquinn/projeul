@@ -23,7 +23,7 @@ target_link_libraries(test_projeul poker
                                    number_lists
                                    asio_context
                                    signal_handler
-                                   gmock
+                                   GTest::gmock
                                    exercises)
 
 if( ${ENABLE_COVERAGE} )

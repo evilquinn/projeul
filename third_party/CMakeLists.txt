@@ -1,9 +1,8 @@
 
 include(ExternalProject)
+include(FetchContent)
 
-#if ( ${BUILD_TESTS} )
-    add_subdirectory(googletest)
-#endif()
+add_subdirectory(googletest)
 add_subdirectory(boost)
 add_subdirectory(fmt)
 add_subdirectory(websocketpp)
