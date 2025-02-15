@@ -15,19 +15,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if( NOT CMAKE_CXX_STANDARD )
     set(CMAKE_CXX_STANDARD 20)
 endif()
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
-option(ENABLE_NO_PIE
-       "Enables --no-pie compiler option (netbeans executable workaround)" OFF)
-if ( ${ENABLE_NO_PIE} )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -no-pie")
-endif()
-
-# debug settings
-option(ENABLE_COVERAGE "Enable code coverage metrics for debug builds" OFF)
-if ( ${ENABLE_COVERAGE} )
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -ftest-coverage -fprofile-arcs -pg")
-endif()
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -46,6 +33,21 @@ message("BUILD_TESTS=${BUILD_TESTS}")
 message("ENABLE_COVERAGE=${ENABLE_COVERAGE}")
 
 add_subdirectory(third_party)
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+option(ENABLE_NO_PIE
+       "Enables --no-pie compiler option (netbeans executable workaround)" OFF)
+if ( ${ENABLE_NO_PIE} )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -no-pie")
+endif()
+
+# debug settings
+option(ENABLE_COVERAGE "Enable code coverage metrics for debug builds" OFF)
+if ( ${ENABLE_COVERAGE} )
+    set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -ftest-coverage -fprofile-arcs -pg")
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(accumulator)
@@ -83,7 +85,7 @@ add_subdirectory(ws)
 add_executable(projeul main.cpp)
 
 target_link_libraries(projeul signal_handler
-                              boost_program_options
+Boost::program_options
                               exercises)
 
 if ( ${BUILD_TESTS} )

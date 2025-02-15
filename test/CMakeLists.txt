@@ -24,6 +24,7 @@ target_link_libraries(test_projeul poker
                                    asio_context
                                    signal_handler
                                    GTest::gmock
+                                   Boost::format
                                    exercises)
 
 if( ${ENABLE_COVERAGE} )

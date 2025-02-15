@@ -6,6 +6,6 @@ target_link_libraries(profile_triangles number_lists
 
 add_executable(profile_calc_prime_factors calc_prime_factors_profile.cpp
                                           ../exercises/pe47.cpp)
-target_link_libraries(profile_calc_prime_factors utils
+target_link_libraries(profile_calc_prime_factors PRIVATE utils
                                                  number_lists
-                                                 gmock_main)
+                                                 gmock_main Boost::foreach)

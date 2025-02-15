@@ -5,7 +5,7 @@ add_library ( sudoku square.cpp
                      solver.cpp
                      util.cpp )
 
-target_link_libraries ( sudoku PUBLIC boost )
+target_link_libraries ( sudoku PUBLIC Boost::variant Boost::optional)
 
 add_executable ( solver solver_main.cpp )
 
@@ -18,7 +18,7 @@ endif()
 
 add_executable ( cli cli_main.cpp )
 
-target_link_libraries ( cli sudoku
+target_link_libraries ( cli PRIVATE sudoku
                             signal_handler
                             pthread
-                            asio_user_input )
+                            asio_user_input Boost::lexical_cast)

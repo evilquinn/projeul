@@ -1,6 +1,6 @@
 
 add_compile_definitions(PROJEUL_AOC_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
-link_libraries( boost )
+link_libraries( Boost::algorithm Boost::lexical_cast Boost::dynamic_bitset)
 
 add_executable ( 01_1 01_1.cpp )
 

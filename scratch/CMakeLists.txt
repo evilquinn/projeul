@@ -2,7 +2,7 @@
 add_executable ( dreturn dreturn.cpp )
 
 add_executable ( readbuf readbuf.cpp )
-target_link_libraries( readbuf boost )
+target_link_libraries( readbuf PRIVATE Boost::foreach )
 
 add_executable ( dirent_poc dirent_poc.cpp )
 

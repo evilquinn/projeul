@@ -1,4 +1,5 @@
 #include <utility>
+#include <map>
 #include <boost/asio.hpp>
 #include <boost/asio/posix/descriptor.hpp>
 #include <boost/bind/bind.hpp>

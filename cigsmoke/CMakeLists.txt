@@ -5,4 +5,4 @@ add_executable ( cigsmoke main.cpp
                           agent.cpp )
 
 target_link_libraries ( cigsmoke PUBLIC signal_handler
-                                        asio_context )
+                                        asio_context Boost::random)

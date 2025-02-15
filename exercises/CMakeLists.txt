@@ -62,6 +62,6 @@ add_library(exercises STATIC pe_register.cpp
 
 target_link_libraries ( exercises PUBLIC utils
                                          number_lists
-                                         poker )
+                                         poker Boost::multiprecision Boost::tokenizer Boost::foreach)
 
 target_include_directories( exercises PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
