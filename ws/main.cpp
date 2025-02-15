@@ -124,7 +124,7 @@ std::ostream & operator<< (std::ostream & out, connectioner const & data)
 
 class endpointer {
 public:
-    endpointer ()
+    endpointer () : next_id_(0)
     {
         endpoint_.clear_access_channels(websocketpp::log::alevel::all);
         endpoint_.clear_error_channels(websocketpp::log::elevel::all);

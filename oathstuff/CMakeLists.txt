@@ -1,3 +1,2 @@
 add_executable ( oathstuff main.cpp )
-target_link_libraries ( oathstuff boost_regex
-                                  oath )
+target_link_libraries ( oathstuff PRIVATE boost_regex oath )

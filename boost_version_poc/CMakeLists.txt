@@ -1,0 +1,3 @@
+
+add_executable(boost_version_poc boost_version_poc.cpp)
+target_link_libraries(boost_version_poc PRIVATE boost)

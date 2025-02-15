@@ -36,7 +36,7 @@ if(CCACHE_FOUND)
     set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif()
 
-option(BUILD_BOOST "Downloads and builds required boost libraries" OFF)
+option(BUILD_BOOST "Downloads and builds required boost libraries" ON)
 option(BUILD_TESTS "Builds tests" ON) # tests? pfft.
 
 message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
@@ -51,6 +51,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(accumulator)
 add_subdirectory(ansi)
 add_subdirectory(aoc)
+add_subdirectory(boost_version_poc)
 add_subdirectory(chunker)
 add_subdirectory(fmt_poc)
 add_subdirectory(number_lists)

@@ -6,14 +6,14 @@ if ( ${BUILD_BOOST} )
 include( ExternalProject )
 
 set( URL
-  "https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2" )
-set( SHA256 "5721818253e6a0989583192f96782c4a98eb6204965316df9f5ad75819225ca9" )
+  "https://archives.boost.io/release/1.75.0/source/boost_1_75_0.tar.gz" )
+set( SHA256 "aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a" )
 set( INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR} )
 set( INCLUDE_DIR ${INSTALL_DIR}/include )
 set( LIB_DIR ${INSTALL_DIR}/lib )
 
 ExternalProject_Add( external_boost
-        PREFIX boost
+        #PREFIX boost
         URL ${URL}
         URL_HASH SHA256=${SHA256}
         BUILD_IN_SOURCE 1
@@ -23,11 +23,14 @@ ExternalProject_Add( external_boost
             --with-libraries=date_time
             --with-libraries=program_options
             --with-libraries=iostreams
-            --prefix=<INSTALL_DIR>
+            --with-libraries=regex
+            --with-libraries=thread
+            --prefix=${INSTALL_DIR}
         BUILD_COMMAND
         ./b2 -d0 link=static variant=release threading=multi runtime-link=static
         INSTALL_COMMAND ./b2 -d0 install
-        INSTALL_DIR ${INSTALL_DIR} )
+        #INSTALL_DIR ${INSTALL_DIR}
+        BUILD_BYPRODUCTS ${LIB_DIR}/libboost_program_options.a ${LIB_DIR}/libboost_system.a ${LIB_DIR}/libboost_regex.a)
 
 file(MAKE_DIRECTORY ${INCLUDE_DIR})
 
@@ -57,5 +60,15 @@ add_library( boost_program_options STATIC IMPORTED GLOBAL)
 set_target_properties( boost_program_options PROPERTIES
     IMPORTED_LOCATION ${LIB_DIR}/libboost_program_options${LIB_SUFFIX} )
 target_link_libraries( boost_program_options INTERFACE boost )
+
+add_library( boost_regex STATIC IMPORTED GLOBAL)
+set_target_properties( boost_regex PROPERTIES
+    IMPORTED_LOCATION ${LIB_DIR}/libboost_regex${LIB_SUFFIX} )
+target_link_libraries( boost_regex INTERFACE boost )
+
+add_library( boost_thread STATIC IMPORTED GLOBAL)
+set_target_properties( boost_thread PROPERTIES
+    IMPORTED_LOCATION ${LIB_DIR}/libboost_thread${LIB_SUFFIX} )
+target_link_libraries( boost_thread INTERFACE boost )
 
 endif()
