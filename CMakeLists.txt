@@ -48,6 +48,7 @@ message("ENABLE_COVERAGE=${ENABLE_COVERAGE}")
 add_subdirectory(third_party)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(accumulator)
 add_subdirectory(ansi)
 add_subdirectory(aoc)
 add_subdirectory(chunker)
