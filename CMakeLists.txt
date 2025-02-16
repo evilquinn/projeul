@@ -35,7 +35,10 @@ message("ENABLE_COVERAGE=${ENABLE_COVERAGE}")
 add_subdirectory(third_party)
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-vla-cxx-extension")
+add_compile_options(-Wall -Wextra -Werror)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-Wno-vla-cxx-extension)
+endif()
 option(ENABLE_NO_PIE
        "Enables --no-pie compiler option (netbeans executable workaround)" OFF)
 if ( ${ENABLE_NO_PIE} )

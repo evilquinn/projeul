@@ -1,5 +1,5 @@
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
+add_compile_options(-Wno-error)
 
 add_executable( wancurses main.cpp )
 target_link_libraries( wancurses ncurses
