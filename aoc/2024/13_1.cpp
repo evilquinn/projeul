@@ -6,6 +6,8 @@
 #include <fstream>
 #include <vector>
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include "../coord.hpp"
 #include "../path_def.hpp"
 
@@ -26,7 +28,8 @@ std::string test_string =
     "Button B: X+27, Y+71\n"
     "Prize: X=18641, Y=10279\n";
 
-using coord = coord_util::basic_coord<int>;
+using longint = boost::multiprecision::cpp_int;
+using coord = coord_util::basic_coord<longint>;
 
 struct machine_params
 {
@@ -66,16 +69,24 @@ machine_params_list read_input(std::istream& is)
         std::vector<coord*> vals = { &result.back().a, &result.back().b, &result.back().p };
         for (auto&& val : vals)
         {
-            auto res = sscanf(line.c_str(), "%*[^:]: X%*1[+=]%d, Y%*1[+=]%d", &val->x, &val->y);
+            int x, y;
+            auto res = sscanf(line.c_str(), "%*[^:]: X%*1[+=]%d, Y%*1[+=]%d", &x, &y);
             if (res != 2)
                 throw std::runtime_error(std::string("Failed to parse coord from: ") + line);
+            val->x = x;
+            val->y = y;
             std::getline(is, line);
+            if(!is || line.size() == 0 )
+            {
+                val->x += 10000000000000;
+                val->y += 10000000000000;
+            }
         }
     }
     return result;
 }
 
-int token_cost(const machine_params& p)
+longint token_cost(const machine_params& p)
 {
     // 2-equations-2-unknowns, refactor then substitute
     // AXi + BXj == PX
@@ -104,9 +115,9 @@ int token_cost(const machine_params& p)
     return 3 * i + j;
 }
 
-int cost_all_prizes(const machine_params_list& ps)
+longint cost_all_prizes(const machine_params_list& ps)
 {
-    int result = 0;
+    longint result = 0;
     for(auto&& p : ps)
     {
         result += token_cost(p);
