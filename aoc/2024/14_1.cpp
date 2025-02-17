@@ -90,14 +90,44 @@ void do_move(const coord& map_size, robot_type& rob)
     }
 }
 
-void do_moves(const coord& map, robot_list_type& robots, size_t moves)
+void draw_robots(std::ostream& os, const coord& map_size, const robot_list_type& robots)
 {
+    std::vector<char> buffer(map_size.x * map_size.y, '.');
     for (auto&& robot : robots)
     {
-        for (size_t i = 0; i < moves; ++i)
+        auto& cur = buffer[map_size.x * robot.pos.y + robot.pos.x];
+        if (cur == '.')
+        {
+            cur = '1';
+        }
+        else
+        {
+            ++cur;
+        }
+    }
+    for (size_t i = 0; i < buffer.size(); ++i)
+    {
+        if (i > 0 && i % map_size.x == 0)
+        {
+            os << "\n";
+        }
+        os << buffer[i];
+    }
+    os << std::endl;
+}
+
+void do_moves(const coord& map, robot_list_type& robots, size_t moves)
+{
+    static std::ofstream robout("./robout.txt");
+
+    for (size_t i = 0; i < moves; ++i)
+    {
+        for (auto&& robot : robots)
         {
             do_move(map, robot);
         }
+        robout << "elapsed: " << i + 1 << "s" << std::endl;
+        draw_robots(robout, map, robots);
     }
 }
 
@@ -137,7 +167,8 @@ size_t calc_safety(const coord& map, const robot_list_type& robots)
         }
     }
     auto result = tl * tr * bl * br;
-    if (result == 0) throw std::runtime_error("ZERO");
+    if (result == 0)
+        throw std::runtime_error("ZERO");
     return result;
 }
 
@@ -151,11 +182,11 @@ int main()
 
     std::stringstream tis(test_string);
     auto test_input = read_input(tis);
-    const coord test_map_size{11, 7};
+    const coord test_map_size{ 11, 7 };
 
     auto input = read_input(input_file);
-    const coord map_size{101, 103};
-    do_moves(map_size, input, 100);
+    const coord map_size{ 101, 103 };
+    do_moves(map_size, input, 10000);
     auto result = calc_safety(map_size, input);
 
     std::cout << "Part 1 result: " << result << std::endl;
