@@ -3,12 +3,13 @@
 #include <cstdio>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
 
 #include "../coord.hpp"
 #include "../path_def.hpp"
 
-std::string test_input =
+std::string test_string =
     "Button A: X+94, Y+34\n"
     "Button B: X+22, Y+67\n"
     "Prize: X=8400, Y=5400\n"
@@ -30,15 +31,15 @@ using coord = coord_util::basic_coord<int>;
 struct machine_params
 {
     machine_params() {}
-    machine_params(coord a, coord b, coord p) : A(a), B(b), prize(p) {}
-    coord A;
-    coord B;
-    coord prize;
+    machine_params(coord a, coord b, coord p) : a(a), b(b), p(p) {}
+    coord a;
+    coord b;
+    coord p;
 };
 
 std::ostream& operator<<(std::ostream& os, const machine_params& p)
 {
-    return os << "{ A: " << p.A << ", B: " << p.B << ", prize: " << p.prize << " }";
+    return os << "{ a: " << p.a << ", b: " << p.b << ", p: " << p.p << " }";
 }
 
 using machine_params_list = std::vector<machine_params>;
@@ -62,7 +63,7 @@ machine_params_list read_input(std::istream& is)
     while (std::getline(is, line))
     {
         result.emplace_back();
-        std::vector<coord*> vals = { &result.back().A, &result.back().B, &result.back().prize };
+        std::vector<coord*> vals = { &result.back().a, &result.back().b, &result.back().p };
         for (auto&& val : vals)
         {
             auto res = sscanf(line.c_str(), "%*[^:]: X%*1[+=]%d, Y%*1[+=]%d", &val->x, &val->y);
@@ -76,22 +77,55 @@ machine_params_list read_input(std::istream& is)
 
 int token_cost(const machine_params& p)
 {
+    // 2-equations-2-unknowns, refactor then substitute
+    // AXi + BXj == PX
+    // AYi + BYj == PY
+    // refactor by x:
+    // i = (PX - BXj)/AX
+    // substitute into y:
+    // AY(PX - BXj)/AX + BYj = PY
+    // (AY*PX - AY*BXj)/AX + BYj = PY
+    // AY*PX - AY*BXj + AX*BYj = AX*PY
+    // AX*BYj - AY*BXj = AX*PY - AY*PX
+    // (AX*BY - AY*BX)j = (AX*PY - AY*PX)
+    // j = (AX*PY - AY*PX)/(AX*BY - AY*BX) *** j in terms of known values, go! ***
+    // i = (PX - BXj) / AX                 *** i in terms of known values, go! ***
+    // phew!
+
+    auto j = (p.a.x * p.p.y - p.a.y * p.p.x) / (p.a.x * p.b.y - p.a.y * p.b.x);
+    auto i = (p.p.x - p.b.x * j) / p.a.x;
+
+    // and check
+    if ((p.a.x * i + p.b.x * j != p.p.x) || ((p.a.y * i + p.b.y * j != p.p.y)))
+    {
+        return 0;
+    }
+
+    return 3 * i + j;
+}
+
+int cost_all_prizes(const machine_params_list& ps)
+{
     int result = 0;
-
-    auto b3 = p.B + p.B + p.B;
-
-    // magic
-
+    for(auto&& p : ps)
+    {
+        result += token_cost(p);
+    }
     return result;
 }
 
 int main()
 {
-    size_t result = 0;
-    std::stringstream is(test_input);
-    auto input = read_input(is);
-    std::cout << "input:\n" << input << std::endl;
-    std::cout << "Part 1 result: " << result << std::endl;
+    std::string input_path(PROJEUL_AOC_PATH "/13_input.txt");
+    std::ifstream input_file(input_path);
+    if (!input_file)
+        throw std::runtime_error(
+            std::string("Error reading input file: ").append(input_path));
+    auto input = read_input(input_file);
+
+    std::stringstream tis(test_string);
+    auto test_input = read_input(tis);
+    std::cout << "Part 1 result: " << cost_all_prizes(input) << std::endl;
 
     return 0;
 }
