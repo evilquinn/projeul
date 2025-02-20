@@ -4,24 +4,25 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <set>
 #include <sstream>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "../coord.hpp"
 #include "../path_def.hpp"
 
 const std::string test_string =
-    "########\n"
-    "#..O.O.#\n"
-    "##@.O..#\n"
-    "#...O..#\n"
-    "#.#.O..#\n"
-    "#...O..#\n"
-    "#......#\n"
-    "########\n"
+    "#######\n"
+    "#...#.#\n"
+    "#.....#\n"
+    "#..OO@#\n"
+    "#..O..#\n"
+    "#.....#\n"
+    "#######\n"
     "\n"
-    "<^^>>>vv<v>>v<<\n";
+    "<vv<<^^<<^^\n";
 
 using coord      = coord_util::basic_coord<int>;
 using map_type   = std::map<coord, char>;
@@ -83,10 +84,25 @@ map_moves read_input(std::istream& is)
             break;  // go to parse the next section
         for (int x = 0; (unsigned)x < line.size(); ++x)
         {
-            auto ch                   = line[x];
-            result.map[coord{ x, y }] = ch;
+            auto ch = line[x];
+            if (ch == 'O')
+            {
+                ch = '[';
+            }
+            result.map[coord{ 2 * x, y }] = ch;
             if (ch == '@')
-                result.pos = coord{ x, y };
+            {
+                result.pos = coord{ 2 * x, y };
+            }
+            if (ch == '[')
+            {
+                ch = ']';
+            }
+            else if (ch == '@')
+            {
+                ch = '.';
+            }
+            result.map[coord{ 1 + (2 * x), y }] = ch;
         }
         ++y;
     }
@@ -104,7 +120,8 @@ class mover
 {
 public:
     mover() : i_(0), data_(), o_limit_(0, 0), limit_(0, 0) {}
-    mover(map_moves data) : i_(0), data_(std::move(data)), o_limit_(0, 0), limit_(std::prev(std::end(data_.map))->first)
+    mover(map_moves data)
+        : i_(0), data_(std::move(data)), o_limit_(1, 0), limit_(std::prev(std::prev(std::end(data_.map)))->first)
     {
     }
 
@@ -122,41 +139,89 @@ public:
         auto dir              = data_.moves[i_++];
         auto dirmod           = dir_modifiers.at(dir);
         bool is_space_to_move = false;
-        coord space           = data_.pos;
-        for (coord cand = data_.pos + dirmod; within_limit(o_limit_, cand) && within_limit(cand, limit_);
-             cand += dirmod)
+        std::vector<coord> spaces;
+        std::vector<std::vector<coord>> needs_moved = { { data_.pos } };
+        for (
+            std::vector<coord> cands = { data_.pos + dirmod }; [&]() {
+                for (auto&& cand : cands)
+                {
+                    if (!within_limit(o_limit_, cand) || !within_limit(cand, limit_))
+                        return false;
+                }
+                return true;
+            }();
+            [&]() {
+                for (auto&& cand : cands)
+                {
+                    cand += dirmod;
+                }
+            }())
         {
-            auto& ch = data_.map[cand];
-            if (ch == '.')
+            spaces.clear();
+            std::set<coord> next_cands;
+            for (auto&& cand : cands)
             {
-                space            = cand;
+                auto& ch = data_.map[cand];
+                if (ch == '.')
+                {
+                    spaces.push_back(cand);
+                    continue;
+                }
+                else if (ch == '#')
+                {
+                    // poison cands so we break out next
+                    next_cands.insert(o_limit_);
+                    break;
+                }
+                else if (ch == '[')
+                {
+                    next_cands.insert(cand);
+                    if (dir == '^' || dir == 'v')
+                    {
+                        next_cands.insert(cand + dir_modifiers.at('>'));
+                    }
+                    continue;
+                }
+                else if (ch == ']')
+                {
+                    next_cands.insert(cand);
+                    if (dir == '^' || dir == 'v')
+                    {
+                        next_cands.insert(cand + dir_modifiers.at('<'));
+                    }
+                    continue;
+                }
+            }
+            if (spaces == cands)
+            {
                 is_space_to_move = true;
                 break;
             }
-            else if (ch == '#')
-                break;
-            else if (ch == 'O')
-                continue;
+            // next_cands.insert(spaces.begin(), spaces.end());
+            cands = std::vector<coord>(next_cands.begin(), next_cands.end());
+            needs_moved.push_back(cands);
         }
         if (is_space_to_move)
         {
-            auto invmod = inv_modifiers.at(dir);
-            for (auto to = space; to != data_.pos; to += invmod)
+            // now work back from needs_moved, and pull in everything between them and original pos.
+            for (auto needs_riter = needs_moved.rbegin(); needs_riter != needs_moved.rend(); ++needs_riter)
             {
-                auto from     = to + invmod;
-                data_.map[to] = data_.map[from];
+                for (auto&& tile : *needs_riter)
+                {
+                    data_.map[tile + dirmod] = std::exchange(data_.map[tile], '.');
+                }
             }
-            data_.map[data_.pos] = '.';
             data_.pos += dirmod;
         }
         return i_ != data_.moves.size();
     }
+
     size_t calc_gps()
     {
         size_t result = 0;
         for (auto&& tile : data_.map)
         {
-            if (tile.second == 'O')
+            if (tile.second == '[')
             {
                 result += (tile.first.x + (tile.first.y * 100));
             }
@@ -165,7 +230,7 @@ public:
     }
     friend std::ostream& operator<<(std::ostream&, const mover&);
 
-private:
+    // private:
     size_t i_;
     map_moves data_;
     coord o_limit_;
@@ -183,17 +248,17 @@ int main()
 {
 #if 0
     auto test_stream = std::stringstream(test_string);
-    auto test_input = read_input(test_stream);
-    auto test_mover = mover(std::move(test_input));
+    auto test_input  = read_input(test_stream);
+    auto test_mover  = mover(std::move(test_input));
 
     bool more = true;
-    while(more) {
+    while (more)
+    {
         more = test_mover.move_one();
         std::cout << test_mover << std::endl;
     }
     std::cout << "Part 1 test: \n" << test_mover.calc_gps() << std::endl;
-#endif
-
+#else
     std::string input_path(PROJEUL_AOC_PATH "/15_input.txt");
     std::ifstream input_file(input_path);
     if (!input_file)
@@ -207,6 +272,8 @@ int main()
     }
 
     std::cout << "Part 1 result: \n" << mr_move.calc_gps() << std::endl;
+
+#endif
 
     return 0;
 }
