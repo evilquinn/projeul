@@ -60,6 +60,37 @@ bool is_invalid(size_t v)
     return std::equal(vstr.data(), vstr.data() + mid, vstr.data() + mid, vstr.data() + vstr.size());
 }
 
+bool is_really_invalid(size_t v)
+{
+    auto vstr = std::to_string(v);
+    auto len  = vstr.size();
+    for (auto i = 1U; i <= len/2; ++i)
+    {
+        if (len % i != 0)
+        {
+            continue;
+        }
+        auto checks = (len / i) - 1;
+        auto cand   = std::string_view(vstr.data(), i);
+
+        bool potential = true;
+        for (auto c = 0U; c < checks; ++c)
+        {
+            auto check = std::string_view(vstr.data() + ((i * c) + cand.size()), cand.size());
+            if (cand != check)
+            {
+                potential = false;
+                break;
+            }
+        }
+        if (potential)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 size_t count_invalid(const ranges_t& ranges)
 {
     size_t result = 0;
@@ -67,7 +98,7 @@ size_t count_invalid(const ranges_t& ranges)
     {
         for (auto i = range.first; i < range.second + 1; ++i)
         {
-            if (is_invalid(i))
+            if (is_really_invalid(i))
             {
                 result += i;
             }
