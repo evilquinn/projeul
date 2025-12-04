@@ -76,21 +76,30 @@ struct dial
     }
     int rotate_left(int dist)
     {
-        val_ -= dist;
-        while (val_ < lbound_)
-        {
-            val_ = rbound_ - abs(val_);
+        while(dist) {
+            --val_;
+            --dist;
+            if(val_ == 0) {
+                ++pass_;
+            }
+            if(val_ == -1) {
+                val_ = 99;
+            }
         }
-        if (val_ == 0)
-            ++pass_;
         return val_;
     }
     int rotate_right(int dist)
     {
-        val_ += dist;
-        val_ %= rbound_;
-        if (val_ == 0)
-            ++pass_;
+        while(dist) {
+            ++val_;
+            --dist;
+            if(val_ == 100) {
+                val_ = 0;
+            }
+            if(val_ == 0) {
+                ++pass_;
+            }
+        }
         return val_;
     }
 };
@@ -104,10 +113,11 @@ int main()
 
     std::cout << "hello" << std::endl;
 
-    //std::stringstream test_input;
-    //test_input << test_string;
-    //auto test_data = read_input(test_input);
+    std::stringstream test_input;
+    test_input << test_string;
 
+
+    //auto data = read_input(test_input);
     auto data = read_input(input);
     dial d;
     for (auto&& rotation : data)
