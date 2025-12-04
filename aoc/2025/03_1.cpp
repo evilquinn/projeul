@@ -2,9 +2,12 @@
 #include <algorithm>
 #include <aoc/path_def.hpp>
 #include <charconv>
+#include <cmath>
 #include <cstdio>
+#include <format>
 #include <fstream>
 #include <iostream>
+#include <span>
 #include <sstream>
 #include <vector>
 
@@ -23,33 +26,35 @@ std::string test_string =
     "234234234234278\n"
     "818181911112111\n";
 
-using bank_t  = std::vector<int>;
-using banks_t = std::vector<bank_t>;
+using bank_t      = std::vector<int>;
+using banks_t     = std::vector<bank_t>;
+using bank_span_t = std::span<const bank_t::value_type>;
 
-size_t largest_joltage(const bank_t& bank)
+size_t largest_joltage(bank_span_t bank, size_t num_batteries = 2)
 {
-    if (bank.size() < 2)
-        throw std::runtime_error("bank.size() is less than 2");
-    auto last_element = std::prev(bank.end());
-    auto max          = std::max_element(bank.begin(), bank.end());
-    if (max != last_element)
+    if (bank.size() < num_batteries)
     {
-        auto next_max = std::max_element(std::next(max), bank.end());
-        return *max * 10 + *next_max;
+        throw std::runtime_error(std::format("bank.size() is less than {}", num_batteries));
     }
-    else
+    auto next_num_batteries = num_batteries - 1;
+    auto search_end         = std::prev(bank.end(), next_num_batteries);
+    auto max                = std::max_element(bank.begin(), search_end);
+    if (next_num_batteries == 0)
     {
-        auto prev_max = std::max_element(bank.begin(), max);
-        return *prev_max * 10 + *max;
+        return *max;
     }
+    auto next_begin = std::next(max);
+    auto next_size  = bank.size() - std::distance(bank.begin(), next_begin);
+    return *max * std::pow(10, next_num_batteries) +
+           largest_joltage(bank_span_t{ next_begin, next_size }, next_num_batteries);
 }
 
-size_t count_joltages(const banks_t banks)
+size_t count_joltages(const banks_t banks, size_t num_batteries = 2)
 {
     size_t result = 0;
     for (auto&& bank : banks)
     {
-        result += largest_joltage(bank);
+        result += largest_joltage(bank_span_t{ bank.data(), bank.size() }, num_batteries);
     }
     return result;
 }
@@ -80,7 +85,7 @@ int main()
     std::istringstream iss(test_string);
 
     auto data   = parse_banks(ifs);
-    auto result = count_joltages(data);
+    auto result = count_joltages(data, 12);
 
     std::cout << "result: " << result << std::endl;
 
