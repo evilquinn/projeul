@@ -38,13 +38,14 @@ std::vector<coord_t> surrounding_coords = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 
 
 const coord_t lbound{ -1, -1 };
 
-size_t count_accessible(const map_t& map)
+size_t remove_accessible(map_t& map)
 {
     size_t result = 0;
     if (map.size() == 0)
     {
         return result;
     }
+    std::vector<coord_t> accessible;
     const auto ubound = std::prev(map.end())->first + coord_t{ 1, 1 };
     for (auto&& tile : map)
     {
@@ -67,8 +68,29 @@ size_t count_accessible(const map_t& map)
         }
         if (cand_count < 4)
         {
+            accessible.push_back(c);
             ++result;
         }
+    }
+    for (auto&& removable : accessible)
+    {
+        map[removable] = '.';
+    }
+    return result;
+}
+
+size_t remove_all(map_t& map)
+{
+    size_t result     = 0;
+    bool some_removed = true;
+    while (some_removed)
+    {
+        auto removed = remove_accessible(map);
+        if (removed == 0)
+        {
+            some_removed = false;
+        }
+        result += removed;
     }
     return result;
 }
@@ -99,7 +121,7 @@ int main()
     std::istringstream iss(test_string);
 
     auto data   = read_input(ifs);
-    auto result = count_accessible(data);
+    auto result = remove_all(data);
 
     std::cout << "result: " << result << std::endl;
 
