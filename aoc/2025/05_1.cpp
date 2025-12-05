@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <aoc/path_def.hpp>
 #include <format>
 #include <fstream>
@@ -90,6 +91,53 @@ size_t count_fresh(const database_t& database)
     return result;
 }
 
+size_t count_fresh_ids(const database_t& database)
+{
+    auto sorted_fresh_ranges = database.fresh_ranges;
+    std::sort(sorted_fresh_ranges.begin(),
+              sorted_fresh_ranges.end(),
+              [](const fresh_range_t& lhs, const fresh_range_t& rhs) { return lhs.first < rhs.first; });
+    for (auto it = sorted_fresh_ranges.begin();
+         it != std::prev(sorted_fresh_ranges.end()) && it != sorted_fresh_ranges.end();
+         ++it)
+    {
+        auto next_it      = std::next(it);
+        bool keep_looking = true;
+        while (keep_looking)
+        {
+            if (next_it->second < it->second)
+            {
+                // fully within, just delete the next_it
+                next_it = sorted_fresh_ranges.erase(next_it);
+                if (next_it == sorted_fresh_ranges.end())
+                {
+                    break;
+                }
+            }
+            else if (next_it->first <= it->second)
+            {
+                // partially within, merge then delete next_it
+                it->second = next_it->second;
+                next_it    = sorted_fresh_ranges.erase(next_it);
+                if (next_it == sorted_fresh_ranges.end())
+                {
+                    break;
+                }
+            }
+            if (next_it->first > it->second)
+            {
+                keep_looking = false;
+            }
+        }
+    }
+    size_t result = 0;
+    for (auto&& range : sorted_fresh_ranges)
+    {
+        result += range.second + 1 - range.first;
+    }
+    return result;
+}
+
 int main()
 {
     std::string input_path(PROJEUL_AOC_PATH "/05_input.txt");
@@ -103,6 +151,9 @@ int main()
     auto result = count_fresh(data);
 
     std::cout << "result: " << result << std::endl;
+
+    auto part2_result = count_fresh_ids(data);
+    std::cout << "result2: " << part2_result << std::endl;
 
     std::cout << "hello" << std::endl;
 
