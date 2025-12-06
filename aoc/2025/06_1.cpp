@@ -99,7 +99,59 @@ sums_t read_sums(std::istream& is)
     return result;
 }
 
-size_t count_sums(const sums_t& sums) {
+auto is_op = boost::is_any_of("+*");
+
+sums_t read_mad_sums(std::istream& is)
+{
+    sums_t result;
+
+    std::vector<std::vector<char>> lines;
+    std::string line;
+    while (std::getline(is, line))
+    {
+        std::vector<char> vline;
+        std::copy(line.begin(), line.end(), std::back_inserter(vline));
+        lines.push_back(std::move(vline));
+    }
+
+    auto max_length =
+        std::max_element(lines.begin(), lines.end(), [](const std::vector<char>& lhs, const std::vector<char>& rhs) {
+            return lhs.size() < rhs.size();
+        })->size();
+    for (auto&& line : lines)
+    {
+        line.resize(max_length, ' ');
+    }
+    for (size_t x = 0; x < max_length; ++x)
+    {
+        if (is_op(lines.back()[x]))
+        {
+            result.push_back({});
+            result.back().op = lines.back()[x];
+        }
+        std::string col;
+        for (size_t y = 0; y < lines.size(); ++y)
+        {
+            auto& c = lines[y][x];
+            if (boost::is_any_of(" *+")(c))
+            {
+                continue;
+            }
+            col.push_back(lines[y][x]);
+        }
+        size_t num = 0;
+        std::sscanf(col.c_str(), "%zu", &num);
+        if (num != 0)
+        {
+            result.back().nums.push_back(num);
+        }
+    }
+
+    return result;
+}
+
+size_t count_sums(const sums_t& sums)
+{
     size_t result = 0;
     for (auto&& sum : sums)
     {
@@ -117,7 +169,7 @@ int main()
 
     std::istringstream iss(test_string);
 
-    auto data = read_sums(ifs);
+    auto data     = read_mad_sums(ifs);
     size_t result = count_sums(data);
 
     std::cout << "result: " << result << std::endl;
