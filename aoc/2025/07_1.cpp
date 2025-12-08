@@ -136,6 +136,65 @@ size_t count_splits(const map_t& map)
     return result;
 }
 
+size_t count_timelines(const map_t& map)
+{
+    auto ubound = std::prev(map.end())->first + coord_t{ 1, 1 };
+    auto start  = coord_t{ 0, 0 };
+    for (auto&& tile : map)
+    {
+        if (tile.second == 'S')
+        {
+            start = tile.first;
+            break;
+        }
+    }
+
+    std::map<coord_t, size_t> timelines;
+    std::queue<coord_t> next_tile;
+    timelines[start + below] = 1;
+    next_tile.push(start + below);
+    while (next_tile.size() > 0)
+    {
+        auto pos = next_tile.front();
+        next_tile.pop();
+        auto below_pos = pos + below;
+        if (!within_limit(below_pos, ubound))
+        {
+            continue;
+        }
+        if (map.at(below_pos) == '^')
+        {
+            auto below_left = below_pos + left;
+            if (!timelines.contains(below_left))
+            {
+                next_tile.push(below_left);
+            }
+            timelines[below_left] += timelines[pos];
+
+            auto below_right = below_pos + right;
+            if (!timelines.contains(below_right))
+            {
+                next_tile.push(below_right);
+            }
+            timelines[below_right] += timelines[pos];
+        }
+        else
+        {
+            if (!timelines.contains(below_pos))
+            {
+                next_tile.push(below_pos);
+            }
+            timelines[below_pos] += timelines[pos];
+        }
+    }
+    size_t result = 0;
+    for (coord_t bottom{ 0, ubound.y - 1 }; within_limit(bottom, ubound); ++bottom.x)
+    {
+        result += timelines[bottom];
+    }
+    return result;
+}
+
 int main()
 {
     std::string input_path(PROJEUL_AOC_PATH "/07_input.txt");
@@ -145,8 +204,8 @@ int main()
 
     std::istringstream iss(test_string);
 
-    auto data = read_input(ifs);
-    auto result = count_splits(data);
+    auto data   = read_input(ifs);
+    auto result = count_timelines(data);
 
     std::cout << "result: " << result << std::endl;
 
