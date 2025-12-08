@@ -90,31 +90,39 @@ distances_t map_distances(const coords_t& coords)
 }
 
 using circuits_t = std::vector<std::set<coord_t>>;
-circuits_t connect_circuits(const coords_t& coords, const distances_t& distances, size_t connections)
+std::tuple<circuits_t, std::pair<coord_t, coord_t>> connect_circuits(const coords_t& coords,
+                                                                     const distances_t& distances,
+                                                                     size_t connections)
 {
-    circuits_t result;
+    std::tuple<circuits_t, std::pair<coord_t, coord_t>> result;
+    auto& [circuits, last_connection] = result;
     for (auto&& coord : coords)
     {
-        result.push_back({ coord });
+        circuits.push_back({ coord });
     }
     for (size_t i = 0; i < connections; ++i)
     {
         auto& distance = *std::next(distances.begin(), i);
         auto circuit_it_first =
-            std::find_if(result.begin(), result.end(), [&distance](const std::set<coord_t>& circuit) {
+            std::find_if(circuits.begin(), circuits.end(), [&distance](const std::set<coord_t>& circuit) {
                 return circuit.find(distance.second.first) != circuit.end();
             });
         auto circuit_it_second =
-            std::find_if(result.begin(), result.end(), [&distance](const std::set<coord_t>& circuit) {
+            std::find_if(circuits.begin(), circuits.end(), [&distance](const std::set<coord_t>& circuit) {
                 return circuit.find(distance.second.second) != circuit.end();
             });
         if (circuit_it_first == circuit_it_second)
         {
             continue;
         }
+        last_connection = distance.second;
 
         circuit_it_first->insert(circuit_it_second->begin(), circuit_it_second->end());
-        result.erase(circuit_it_second);
+        circuits.erase(circuit_it_second);
+        if (circuits.size() == 1)
+        {
+            break;
+        }
     }
     return result;
 }
@@ -122,12 +130,14 @@ circuits_t connect_circuits(const coords_t& coords, const distances_t& distances
 size_t largest_product(circuits_t& circuits)
 {
     size_t result = 1;
+    int sort_num  = std::min(circuits.size(), 3UL);
     std::partial_sort(
         circuits.begin(),
-        std::next(circuits.begin(), 3),
+        std::next(circuits.begin(), sort_num),
         circuits.end(),
         [](const std::set<coord_t>& lhs, const std::set<coord_t>& rhs) { return lhs.size() > rhs.size(); });
-    for(auto it = circuits.begin(); it != std::next(circuits.begin(), 3); ++it) {
+    for (auto it = circuits.begin(); it != std::next(circuits.begin(), sort_num); ++it)
+    {
         result *= it->size();
     }
     return result;
@@ -142,10 +152,10 @@ int main()
 
     std::istringstream iss(test_string);
 
-    auto coords    = read_coords(ifs);
-    auto distances = map_distances(coords);
-    auto circuits  = connect_circuits(coords, distances, 1000);
-    size_t result  = largest_product(circuits);
+    auto coords                      = read_coords(ifs);
+    auto distances                   = map_distances(coords);
+    auto [circuits, last_connection] = connect_circuits(coords, distances, -1);
+    size_t result                    = last_connection.first.x * last_connection.second.x;
 
     std::cout << "result: " << result << std::endl;
 
