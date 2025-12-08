@@ -9,4 +9,5 @@ add_executable ( aoc_2025_05_1 05_1.cpp )
 add_executable ( aoc_2025_06_1 06_1.cpp )
 target_link_libraries(aoc_2025_06_1 PRIVATE Boost::algorithm)
 add_executable ( aoc_2025_07_1 07_1.cpp )
+add_executable ( aoc_2025_08_1 08_1.cpp )
 
