@@ -6,6 +6,7 @@
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 struct c_text_data

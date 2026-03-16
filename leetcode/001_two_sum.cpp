@@ -39,7 +39,7 @@ public:
         std::vector<int> result;
         std::unordered_map<int, int> nums_hash;
         int idx = -1;
-        std::find_if(nums.begin(),
+        auto _ = std::find_if(nums.begin(),
                      nums.end(),
                      [&](const int& val)
                      {

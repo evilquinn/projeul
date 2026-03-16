@@ -49,6 +49,7 @@
  */
 #include <iostream>
 #include <vector>
+#include <functional>
 #include <boost/lexical_cast.hpp>
 
 class solution {

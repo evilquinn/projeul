@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 
 typedef std::pair<std::string, size_t> chem_type;

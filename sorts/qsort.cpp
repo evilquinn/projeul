@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <thread>
 #include <iomanip>
+#include <functional>
 #include <cmath>
 #include <boost/lexical_cast.hpp>
 

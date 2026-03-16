@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 #include "../path_def.hpp"
 

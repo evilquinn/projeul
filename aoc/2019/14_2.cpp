@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <boost/lexical_cast.hpp>

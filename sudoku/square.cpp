@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sudoku/square.hpp>
 #include <sudoku/util.hpp>
-
+#include <algorithm>
 
 evilquinn::sudoku::square::square( coord pos, const size_t num_candidates )
     : pos_( pos ), candidates_()
